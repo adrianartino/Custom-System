@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -55,7 +56,7 @@ ROOT_URLCONF = 'djangoCS.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['C:/Users/Ernesto Fierro/Desktop/Custom System Escritorio/Custom-System/djangoCS/djangoCS/Plantillas'],
+        'DIRS': ['C:/Users/AuxSistemas/Desktop/Escritorio CS/djangoCS/djangoCS/Plantillas'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -78,9 +79,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'customsystem',
-        'USER': 'artino',
+        'USER': 'root',
         'PASSWORD': 'CustomCo',
-        'HOST': '192.168.10.240',
+        'HOST': 'localhost',
         'PORT': '3306',
     }
 }
@@ -128,3 +129,7 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
