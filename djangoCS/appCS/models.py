@@ -15,7 +15,7 @@ class Empleados(models.Model):
     id_area=models.ForeignKey(Areas, on_delete=models.CASCADE)
     puesto=models.CharField(max_length=80)
     correo=models.EmailField(max_length=80)
-    contraseña=models.CharField(max_length=15, null=True)
+    contraseña=models.CharField(max_length=40, null=True)
     activo=models.CharField(max_length=2)
 
 
