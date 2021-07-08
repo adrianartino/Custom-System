@@ -19,5 +19,5 @@ from appCS import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('prueba/', views.prueba),
+    path('login/', views.login),
 ]
