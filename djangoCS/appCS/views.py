@@ -34,23 +34,24 @@ def login(request):
                 request.session['nombres'] = nombres
                 request.session['apellidos'] = apellidos
 
-                return redirect('/inicio') #redirecciona a url de inicio
+                return redirect('/inicio/') #redirecciona a url de inicio
 
             #Si la contraseña esta mal..
             else:
                 hayError = True
                 error = "Ha ingresado mal la contraseña"
-                return render(request, "Login/muestra.html", {"hayError": hayError, "textoError":error})
+                return render(request, "Login/login.html", {"hayError": hayError, "textoError":error})
 
         #Si no se encuentra a nadie con ese correo...
         else:
-            jajaja = 2
-
-            
-
-
-
+            hayError = True
+            error = "No se ha encontrado al usuario"
+            return render(request, "Login/login.html", {"hayError":hayError, "textoError":error})
 
     #se carga la pagina por primera vez.
-    return render(request, "Login/muestra.html")
+    return render(request, "Login/login.html")
+
+def inicio(request):
+
+    return render(request, "Inicio/inicio.html")
     

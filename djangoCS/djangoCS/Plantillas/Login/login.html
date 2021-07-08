@@ -100,5 +100,20 @@
     	<script src={% static 'vendor/countdowntime/countdowntime.js' %}></script>
     <!--===============================================================================================-->
     	<script src={% static 'js/main.js' %}></script>
+
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
+		{% if hayError %}
+		<script type="text/javascript">
+			Swal.fire({
+				icon: 'error',
+				title: 'Algo salio mal..',
+				text: ' {{textoError}}',
+				footer: '<span style="color: red!important"> Corrige tus datos para ingresar a Bustop! </span>',
+				width: '40%'
+			});
+		</script>
+		{% endif %}
+
 </body>
 </html>
