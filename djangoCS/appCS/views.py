@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.shortcuts import redirect
 from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora
 
 # Create your views here.
@@ -18,10 +19,10 @@ def login(request):
             for dato in datosUsuario:
                 id = dato.id_empleado
                 nombres = dato.nombre
-                apellidos = dato.id_area
+                apellidos = dato.apellidos
                 puesto = dato.puesto
                 correo = dato.correo
-                contraReal = dato.constraseña
+                contraReal = dato.contraseña
                 activo = dato.activo
 
             #Si la contraseña es igual...
