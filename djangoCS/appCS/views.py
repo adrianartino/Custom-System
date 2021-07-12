@@ -54,5 +54,119 @@ def login(request):
 
 def inicio(request):
 
-    return render(request, "Inicio/inicio.html")
-    
+    estaEnInicio = True
+
+    return render(request, "Inicio/inicio.html", {"estaEnInicio":estaEnInicio})
+
+def verAreas(request):
+
+    estaEnVerAreas = True
+
+    return render(request, "Areas/verAreas.html", {"estaEnVerAreas":estaEnVerAreas})
+
+def agregarAreas(request):
+
+    estaEnAgregarAreas = True
+
+    return render(request,"Areas/agregarAreas.html", {"estaEnAgregarAreas": estaEnAgregarAreas})
+
+def verEmpleados(request):
+
+    estaEnVerEmpleados = True
+            
+    return render(request,"Empleados/verEmpleados.html", {"estaEnVerEmpleados": estaEnVerEmpleados})
+
+def agregarEmpleados(request):
+
+    estaEnAgregarEmpleados = True
+
+    return render(request,"Empleados/agregarEmpleados.html", {"estaEnAgregarEmpleados": estaEnAgregarEmpleados})
+
+def verEquipos(request):
+
+    estaEnVerEquipos = True
+
+    return render(request, "Equipos/verEquipos.html", {"estaEnVerEquipos": estaEnVerEquipos})
+
+def agregarEquipos(request):
+
+    estaEnAgregarEquipos = True
+
+    return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos": estaEnAgregarEquipos})
+
+def verImpresoras(request):
+
+    estaEnVerImpresoras = True
+
+    return render(request,"Impresoras/verImpresoras.html",{"estaEnVerImpresoras": estaEnVerImpresoras})
+
+def agregarImpresoras(request):
+
+    estaEnAgregarImpresoras = True
+    return render(request, "Impresoras/agregarImpresoras.html",{"estaEnAgregarImpresoras": estaEnAgregarImpresoras})
+
+def verInsumos(request):
+
+    Insumos = True
+    estaEnVerInsumos = True
+    return render(request, "Insumos/agregarInsumos.html",{"Insumos": Insumos, "estaEnVerInsumos":estaEnVerInsumos})
+
+def agregarInsumos(request):
+
+    estaEnAgregarInsumos = True
+    Insumos = True
+    return render(request,"Insumos/agregarInsumos.html",{"estaEnAgregarInsumos": estaEnAgregarInsumos, "Insumos": Insumos})
+
+def verProgramas(request):
+
+    estaEnVerProgramas = True
+
+    return render(request,"Programas/verProgramas.html",{"estaEnVerProgramas": estaEnVerProgramas})
+
+def agregarProgramas(request):
+
+    estaEnAgregarProgramas = True
+
+    return render(request,"Programas/agregarProgramas.html",{"estaEnAgregarProgramas": estaEnAgregarProgramas})
+
+def calendarioMant(request):
+
+    estaEnCalendario = True
+    return render(request,"Mantenimiento/calendarioMant.html", {"estaEnCalendario": estaEnCalendario})
+
+def formularioMant(request):
+    estaEnFormulario = True
+
+    return render(request,"Mantenimiento/formularioMant.html",{"estaEnFormulario": estaEnFormulario})
+
+def verCarta(request):
+    estaEnVerCarta = True
+    return render(request,"cartaCompromiso/verCarta.html", {"estaEnVerCarta": estaEnVerCarta})
+
+def agregarCarta(request):
+    estaEnAgregarCarta = True
+    return render(request, "cartaCompromiso/agregarCarta.html",{"estaEnAgregarCarta": estaEnAgregarCarta})
+
+def EmpleadosBitacora(request):
+    estaEnEmpleadosBitacora = True
+    return render(request, "Bitacora/Empleados.html",{"estaEnEmpleadosBitacora": estaEnEmpleadosBitacora})
+
+def EquiposBitacora(request):
+    estaEnEquiposBitacora = True
+    return render(request, "Bitacora/Equipos.html",{"estaEnEquiposBitacora": estaEnEquiposBitacora})
+
+def ImpresorasBitacora(request):
+    estaEnImpresorasBitacora = True
+    return render(request, "Bitacora/Impresoras.html",{"estaEnImpresorasBitacora": estaEnImpresorasBitacora})
+
+def MantenimientoBitacora(request):
+    estaEnMantenimientoBitacora = True
+    return render(request, "Bitacora/Mantenimiento.html",{"estaEnMantenimientoBitacora": estaEnMantenimientoBitacora})
+
+def CartuchosBitacora(request):
+    estaEnCartuchosBitacora = True
+    return render(request, "Bitacora/Cartuchos.html",{"estaEnCartuchosBitacora": estaEnCartuchosBitacora})
+
+def CartasBitacora(request):
+    estaEnCartasBitacora = True
+    return render(request, "Bitacora/Cartas.html",{"estaEnCartasBitacora": estaEnCartasBitacora})
