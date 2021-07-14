@@ -2,16 +2,121 @@
 {% load static %}
 
 {% block titulo %}
-Ver Areas
+Ver Empleados
 {% endblock %}
 
 {% block estilos %}
+<!-- JQuery DataTable Css -->
+<link href={% static 'panel/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css' %} rel="stylesheet">
 {% endblock %}
 
 {% block contenido %}
-<p >Aqui ba a ir ver empleados</p>
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h2>
+                    EMPLEADOS DE CUSTOM & CO
+                </h2>
+                <ul class="header-dropdown m-r--5">
+                    <li class="dropdown">
+                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <i class="material-icons">more_vert</i>
+                        </a>
+                        <ul class="dropdown-menu pull-right">
+                            <li><a href="javascript:void(0);">Action</a></li>
+                            <li><a href="javascript:void(0);">Another action</a></li>
+                            <li><a href="javascript:void(0);">Something else here</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                        <thead>
+                            <tr>
+                                <th>ID Empleado</th>
+                                <th>Nombre</th>
+                                <th>Apellidos</th>
+                                <th>Área</th>
+                                <th>Puesto</th>
+                                <th>Correo</th>
+                                <th>Contraseña</th>
+                                <th>Activo</th>
+                                
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>ID Empleado</th>
+                                <th>Nombre</th>
+                                <th>Apellidos</th>
+                                <th>Área</th>
+                                <th>Puesto</th>
+                                <th>Correo</th>
+                                <th>Contraseña</th>
+                                <th>Activo</th>
+                                
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Blanca Yesenia</td>
+                                <td>Gaeta Talamantes</td>
+                                <td>Sistemas</td>
+                                <td>Auxiliar de sistemas</td>
+                                <td>sistemas@customco.com.mx</td>
+                                <td>sistemasCustom0817</td>
+                                <td>A</td>
+                                
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Mónica</td>
+                                <td>Arriaga</td>
+                                <td>Administración</td>
+                                <td>Recursos humanos</td>
+                                <td>rhumanos@customco.com.mx</td>
+                                <td>recursosh098</td>
+                                <td>A</td>
+                                
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Ana</td>
+                                <td>Gutierrez</td>
+                                <td>Subdirección</td>
+                                <td>Subdirectora</td>
+                                <td>ana@customco.com.mx</td>
+                                <td>subdireccion093</td>
+                                <td>A</td>
+                                
+                            </tr>
+                            
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block estilosJs %}
+<script src={% static 'panel/plugins/jquery-datatable/jquery.dataTables.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.flash.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/jszip.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/pdfmake.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/vfs_fonts.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.html5.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.print.min.js' %}></script>
 
+<!-- Custom Js -->
+   
+<script src={% static 'panel/js/pages/tables/jquery-datatable.js' %}></script>
 {% endblock %}

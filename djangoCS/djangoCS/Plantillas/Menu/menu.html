@@ -12,9 +12,7 @@
         {% endblock %}
     </title>
 
-    {% block estilos %}
-
-    {% endblock %}
+    
         <!-- Favicon-->
     <link rel="icon" type="image/png" href={% static 'images/icons/co.ico' %}/>
 
@@ -37,11 +35,17 @@
     <!-- Morris Chart Css-->
     <link href={% static 'panel/plugins/morrisjs/morris.css' %} rel="stylesheet" />
 
+    {% block estilos %}
+
+    {% endblock %}
+
     <!-- Custom Css -->
     <link href={% static 'panel/css/style.css' %} rel="stylesheet">
 
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
     <link href={% static 'panel/css/themes/all-themes.css' %} rel="stylesheet" />
+
+    
 
     
     
@@ -705,9 +709,7 @@
     
     
 
-    {% block estilosJs %}
-
-    {% endblock %}
+    
     <!-- Jquery Core Js -->
     <script src={% static 'panel/plugins/jquery/jquery.min.js' %} ></script>
 
@@ -743,12 +745,17 @@
     <!-- Sparkline Chart Plugin Js -->
     <script src={% static 'panel/plugins/jquery-sparkline/jquery.sparkline.js' %}></script>
 
+    {% block estilosJs %}
+
+    {% endblock %}
     <!-- Custom Js -->
     <script src={% static 'panel/js/admin.js' %}></script>
     <script src={% static 'panel/js/pages/index.js' %}></script>
 
     <!-- Demo Js -->
     <script src={% static 'panel/js/demo.js' %}></script>
+
+    
 
     
 </body>
