@@ -6,8 +6,31 @@ Ver Empleados
 {% endblock %}
 
 {% block estilos %}
+<!-- Favicon-->
+<link rel="icon" href={% static 'images/icons/co.ico' %} type="image/x-icon">
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+
+<!-- Bootstrap Core Css -->
+<link href={% static 'panel/plugins/bootstrap/css/bootstrap.css' %} rel="stylesheet">
+
+<!-- Waves Effect Css -->
+<link href={% static 'panel/plugins/node-waves/waves.css' %} rel="stylesheet" />
+
+<!-- Animation Css -->
+<link href={% static 'panel/plugins/animate-css/animate.css' %} rel="stylesheet" />
+
 <!-- JQuery DataTable Css -->
 <link href={% static 'panel/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css' %} rel="stylesheet">
+
+
+<!-- Custom Css -->
+<link href={% static 'panel/css/style.css' %} rel="stylesheet">
+
+<!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+<link href={% static 'panel/css/themes/all-themes.css' %} rel="stylesheet" />
 {% endblock %}
 
 {% block contenido %}
@@ -65,7 +88,7 @@ Ver Empleados
                                 <td>1</td>
                                 <td>Blanca Yesenia</td>
                                 <td>Gaeta Talamantes</td>
-                                <td>Sistemas</td>
+                                <td> <label class="label bg-green">Sistemas</label> </td>
                                 <td>Auxiliar de sistemas</td>
                                 <td>sistemas@customco.com.mx</td>
                                 <td>sistemasCustom0817</td>
@@ -76,7 +99,7 @@ Ver Empleados
                                 <td>2</td>
                                 <td>Mónica</td>
                                 <td>Arriaga</td>
-                                <td>Administración</td>
+                                <td> <label class="label bg-red">Administración</label> </td>
                                 <td>Recursos humanos</td>
                                 <td>rhumanos@customco.com.mx</td>
                                 <td>recursosh098</td>
@@ -87,7 +110,7 @@ Ver Empleados
                                 <td>3</td>
                                 <td>Ana</td>
                                 <td>Gutierrez</td>
-                                <td>Subdirección</td>
+                                <td> <label class="label bg-cyan">Subdirección</label> </td>
                                 <td>Subdirectora</td>
                                 <td>ana@customco.com.mx</td>
                                 <td>subdireccion093</td>
@@ -106,6 +129,22 @@ Ver Empleados
 {% endblock %}
 
 {% block estilosJs %}
+<!-- Jquery Core Js -->
+<script src={% static 'panel/plugins/jquery/jquery.min.js' %}></script>
+
+<!-- Bootstrap Core Js -->
+<script src={% static 'panel/plugins/bootstrap/js/bootstrap.js' %}></script>
+
+<!-- Select Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-select/js/bootstrap-select.js' %}></script>
+
+<!-- Slimscroll Plugin Js -->
+<script src={% static 'panel/plugins/jquery-slimscroll/jquery.slimscroll.js' %}></script>
+
+<!-- Waves Effect Plugin Js -->
+<script src={% static 'panel/plugins/node-waves/waves.js' %}></script>
+
+<!-- Jquery DataTable Plugin Js -->
 <script src={% static 'panel/plugins/jquery-datatable/jquery.dataTables.js' %}></script>
 <script src={% static 'panel/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js' %}></script>
 <script src={% static 'panel/plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js' %}></script>
@@ -117,6 +156,9 @@ Ver Empleados
 <script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.print.min.js' %}></script>
 
 <!-- Custom Js -->
-   
+<script src={% static 'panel/js/admin.js' %}></script>
 <script src={% static 'panel/js/pages/tables/jquery-datatable.js' %}></script>
+
+<!-- Demo Js -->
+<script src={% static 'panel/js/demo.js' %}></script>
 {% endblock %}

@@ -42,6 +42,7 @@ urlpatterns = [
     path("BitacoraImpresoras/", views.ImpresorasBitacora),
     path("BitacoraMantenimiento/", views.MantenimientoBitacora),
     path("BitacoraCartuchos/", views.CartuchosBitacora),
-    path("BitacoraCartas/", views.CartasBitacora)
+    path("BitacoraCartas/", views.CartasBitacora),
+    path("DescargarPDF/", views.descargarPDF)
     
 ]

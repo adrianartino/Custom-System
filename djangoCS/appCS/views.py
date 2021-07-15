@@ -1,3 +1,7 @@
+import mimetypes
+import os
+from django.http import response
+from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.shortcuts import redirect
 from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora
@@ -170,3 +174,22 @@ def CartuchosBitacora(request):
 def CartasBitacora(request):
     estaEnCartasBitacora = True
     return render(request, "Bitacora/Cartas.html",{"estaEnCartasBitacora": estaEnCartasBitacora})
+
+def descargarPDF(request):
+
+     if request.method == "POST":
+        
+        idEquipo = request.POST['idEquipo']
+
+        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        nombreArchivo = idEquipo+".pdf"
+        ubicacionArchivo = BASE_DIR + '/media/pdfequipos/'+ nombreArchivo
+
+        path = open(ubicacionArchivo, 'rb')
+
+        mime_type, _= mimetypes.guess_type(ubicacionArchivo)
+        response = HttpResponse(path, content_type=mime_type)
+        response['Content-Disposition'] = "attachment; filename=%s" %nombreArchivo
+        return response
+
+        #return render(request, "Equipos/equipo.html", {"idEquipo":BASE_DIR})

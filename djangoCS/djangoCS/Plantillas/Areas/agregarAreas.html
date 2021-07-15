@@ -2,10 +2,34 @@
 {% load static %}
 
 {% block titulo %}
-Ver Areas
+Agregar Areas
 {% endblock %}
 
 {% block estilos %}
+<!-- Favicon-->
+<link rel="icon" href={% static 'images/icons/co.ico' %} type="image/x-icon">
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+
+<!-- Bootstrap Core Css -->
+<link href={% static 'panel/plugins/bootstrap/css/bootstrap.css' %} rel="stylesheet">
+
+<!-- Waves Effect Css -->
+<link href={% static 'panel/plugins/node-waves/waves.css' %} rel="stylesheet" />
+
+<!-- Animation Css -->
+<link href={% static 'panel/plugins/animate-css/animate.css' %} rel="stylesheet" />
+
+<!-- Sweet Alert Css -->
+<link href={% static 'panel/plugins/sweetalert/sweetalert.css' %}rel="stylesheet" />
+
+<!-- Custom Css -->
+<link href={% static 'panel/css/style.css' %} rel="stylesheet">
+
+<!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+<link href={% static 'panel/css/themes/all-themes.css' %} rel="stylesheet" />
 {% endblock %}
 
 {% block contenido %}
@@ -31,25 +55,77 @@ Ver Areas
                 </ul>
             </div>
             <div class="body">
-                <form>
+                <form id="form_validation" method="POST">{% csrf_token %}
 
                     <div class="form-group form-float">
                         <label for="email_address">Nombre de área</label>
                         <div class="form-line">
-                            <input type="text" id="password" class="form-control">
+                            <input onkeypress='return soloLetras(event)' type="text" id="password" class="form-control" pattern="[A-Za-z ]{3,80}" title="No se permiten caracteres especiales." required>
                             <label class="form-label">Ingresa el nombre del área</label>
                         </div>
                     </div>
 
                     
-                    <button type="button" class="btn btn-primary m-t-15 waves-effect">Dar de alta</button>
+                    <button type="submit" class="btn btn-primary m-t-15 waves-effect">Dar de alta</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+
 {% endblock %}
 
 {% block estilosJs %}
+<script>
+    function soloLetras(e) {
+        key = e.keyCode || e.which;
+        tecla = String.fromCharCode(key).toLowerCase();
+        letras = " áéíóúabcdefghijklmnñopqrstuvwxyz";
+        especiales = "8-37-39-46";
+
+        tecla_especial = false
+        for (var i in especiales) {
+            if (key == especiales[i]) {
+                tecla_especial = true;
+                break;
+            }
+        }
+
+        if (letras.indexOf(tecla) == -1 && !tecla_especial) {
+            return false;
+        }
+    }
+
+    function validaNumericos(event) {
+        if (event.charCode >= 48 && event.charCode <= 57) {
+            return true;
+        }
+        return false;
+    }
+</script>
+
+<!-- Jquery Core Js -->
+<script src={% static 'panel/plugins/jquery/jquery.min.js' %}></script>
+
+<!-- Bootstrap Core Js -->
+<script src={% static 'panel/plugins/bootstrap/js/bootstrap.js' %}></script>
+
+<!-- Select Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-select/js/bootstrap-select.js' %}></script>
+
+<!-- Slimscroll Plugin Js -->
+<script src={% static 'panel/plugins/jquery-slimscroll/jquery.slimscroll.js' %}></script>
+
+<!-- Sweet Alert Plugin Js -->
+<script src={% static 'panel/plugins/sweetalert/sweetalert.min.js' %}></script>
+
+<!-- Waves Effect Plugin Js -->
+<script src={% static 'panel/plugins/node-waves/waves.js' %}></script>
+
+<!-- Custom Js -->
+<script src={% static 'panel/js/admin.js' %}></script>
+
+<script src={% static 'panel/js/demo.js' %}></script>
 
 {% endblock %}
