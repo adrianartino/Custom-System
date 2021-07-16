@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block titulo %}
-Ver Areas
+Realizar carta
 {% endblock %}
 
 {% block estilos %}
@@ -25,6 +25,9 @@ Ver Areas
 <!-- Morris Chart Css-->
 <link href={% static 'panel/plugins/morrisjs/morris.css' %} rel="stylesheet" />
 
+<!-- Bootstrap Select Css -->
+<link href={% static 'panel/plugins/bootstrap-select/css/bootstrap-select.css' %} rel="stylesheet" />
+
 <!-- Custom Css -->
 <link href={% static 'panel/css/style.css' %} rel="stylesheet">
 
@@ -33,7 +36,378 @@ Ver Areas
 {% endblock %}
 
 {% block contenido %}
-<p >Aqui ba a ir agregar carta </p>
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h2>
+                    Nueva Carta
+                </h2>
+                
+                <ul class="header-dropdown m-r--5">
+                    <li class="dropdown">
+                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <i class="material-icons">more_vert</i>
+                        </a>
+                        <ul class="dropdown-menu pull-right">
+                            <li><a href="javascript:void(0);">Action</a></li>
+                            <li><a href="javascript:void(0);">Another action</a></li>
+                            <li><a href="javascript:void(0);">Something else here</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="body">
+                <center>
+                    <h1>CARTA COMPROMISO REFERENTE AL USO DEL EQUIPO DE COMPUTO.</h1>
+                    <img src={% static 'images/custom.png' %} width="200"  alt="User" />
+                </center>
+                <h3>El empleado se compromete a:</h3>
+                <p class="m-t-10 m-b-30">
+                    1. Utilizar el equipo de cómputo solo para desarrollar programas, proyectos o tareas de interés de la EMPRESA Custom&Co S.A de S.v.
+                </p>
+                <p class="m-t-10 m-b-30">
+                    2. Utilizar solo el software autorizado por la EMPRESA así como no instalar software no autorizado por el departamento de sistemas.
+                </p>
+                <p class="m-t-10 m-b-30">
+                    3. Respetar la seguridad de los equipos y no intentar violar el acceso de cualquier equipo de cómputo, programa, o página web a los cuales no tenga
+                    autorización.
+                </p>
+                <p class="m-t-10 m-b-30">
+                    4. Utilizar los servicios de internet en forma responsable y no consultar o intentar consultar sitios que contengan material inadecuado, material que consuma
+                     los recursos de internet como páginas de videos, redes sociales, podcast, música en línea, etcétera. El uso de la red será monitoriada constantemente.
+                </p>
+                <p class="m-t-10 m-b-30">
+                    5. Dar buen uso al material e instalaciones, para no inferir con la operación normal de los equipos de cómputo y de comunicación de la empresa.
+                </p>
+                <p class="m-t-10 m-b-30">
+                    6. No mover o extraer partes del equipo de cómputo.
+                </p>
+                <p class="m-t-10 m-b-30">
+                    7. En ningún equipo de cómputo deben estar instalados programas de juegos, pasatiempos y/o programas innecesarios para el ámbito laboral, así como archivos
+                     personales del empleado, el equipo es responsabilidad del empleado pero se considera activo de la EMPRESA por lo que respetando este principio no se 
+                     debe abusar de la confianza depositada en el EMPLEADO para usar esta herramienta de trabajo.
+                </p>
+                <p class="m-t-10 m-b-30">
+                    8. Es responsabilidad del usuario tomar las precauciones necesarias para el buen funcionamiento del equipo de cómputo que le fue asignado.
+                </p>
+                <p class="m-t-10 m-b-30">
+                    9. La capacidad del almacenamiento del equipo de cómputo será única y exclusivamente para información, material, y archivos referentes a la empresa. 
+                    No está permitido almacenar archivos que no estén relacionados a su trabajo, como los archivos personales de música, video, imágenes, juegos, entre otros.
+                </p>
+                <p class="m-t-10 m-b-30">
+                    10. No deberá pegarle etiquetas o estampas decorativas al equipo o periféricos.
+                </p>
+                <p class="m-t-10 m-b-30">
+                    11. No está autorizado el uso de los recursos (equipo de cómputo, periféricos y software) con fines lucrativos, actividad comercial o cualquier actividad 
+                    que no correspondan al giro de la empresa.
+                </p>
+                <p class="m-t-10 m-b-30">
+                    12. Queda expresamente prohibido el uso de aplicaciones de intercambio de archivos punto a punto (como por ejemplo Ares, eMule, Torrents, Limewire) y servidores 
+                    de descarga (como MEGA, FILEFACTORY, entre otros).
+                </p>
+                <p class="m-t-10 m-b-30">
+                    13. Apagar correctamente el equipo de cómputo al final de la jornada laboral.
+                </p>
+                <p class="m-t-10 m-b-30">
+                    14. El EMPLEADO deberá utilizar de manera correcta el correo electrónico, no podrá cambiar la firma proporcionada por la EMPRESA ni el fondo 
+                    de escritorio de su equipo.
+                </p>
+                <p class="m-t-10 m-b-30">
+                    15. En caso de requerir software adicional se debe de solicitar al departamento de sistemas vía correo electrónico y este  deberá proporcionarcelo a la brevedad 
+                    o realizar la gestión necesaria para adquirir la licencia de software, en todo caso el departamento de sistemas deberá informarle el estado de su solicitud.
+                </p>
+                <p class="m-t-10 m-b-30">
+                    16. El personal de sistemas es el único autorizado para remover o instalar componentes.
+                </p>
+                <p class="m-t-10 m-b-30">
+                    17. El departamento de sistemas es el único autorizado para:
+                </p>
+                <p class="m-t-10 m-b-30">
+                    - Asignar equipo de cómputo.
+                </p>
+                <p class="m-t-10 m-b-30">
+                    - Realizar actualizaciones de Hardware en caso de que lo requiera.
+                </p>
+                <p class="m-t-10 m-b-30">
+                    - Actualización y mantenimiento correctivo del equipo.
+                </p>
+                <p class="m-t-10 m-b-30">
+                    - Actualización de paquetería de oficina, antivirus y sistemas de la empresa.
+                </p>
+                <p class="m-t-10 m-b-30">
+                    - Respaldo de información (documentos y correos).
+                </p>
+                <h4 style="text-align: justify;">
+                    El equipo de cómputo que se me ha asignado puede ser solicitado por el departamento de sistemas sin previo aviso para llevar a cabo una auditoría. 
+                    En caso de comprobarse mal uso del equipo de cómputo, se notificarán las irregularidades a los departamentos correspondientes para emitir una sanción 
+                    adecuada. Las sanciones aplicables a considerar por el departamento de sistemas y la gerencia administrativa son, levantamiento de un acta administrativa 
+                    o el retiro definitivo del equipo.
+                </h4>
+                {% if compuSeleccionada %}
+
+                {% else %}
+                <div class="body">
+                    <form id="form_validation" action="/agregarCarta/" method="POST">{% csrf_token %}
+                        <div class="row clearfix">
+                            <div class="col-md-3">
+                                
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email_address">Equipo:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <i class="material-icons">computer</i>
+                                    </span>
+                                    <div class="form-line">
+                                        <select class="form-control show-tick" name="compuSeleccionada">
+                                            <option value="Laptop HP Pavillion z35">Laptop HP Pavillion z35</option>
+                                            <option value="Laptop Lenovo ThinkPad">Laptop Lenovo ThinkPad</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-md-3">
+                                
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email_address">Empleado:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <i class="material-icons">user</i>
+                                    </span>
+                                    <div class="form-line">
+                                        <select class="form-control show-tick" name="empleadoSeleccionado">
+                                            <option value="Mónica Arriaga Administración">Mónica Arriaga - Administración</option>
+                                            <option value="Blanca Talamantes Sistemas">Blanca Talamantes Sistemas</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                
+                            </div>
+                        </div>
+                        <center>
+                            <button type="submit" class="btn btn-primary m-t-15 waves-effect">Preguardar Carta</button>
+                        </center>
+                        
+                    </form>
+                </div>
+                <center>
+                    <h2>Fecha: 16 de Julio del 2021</h2>
+                </center>
+                {% endif %}
+                
+                {% if compuSeleccionada %}
+
+                <p class="m-t-10 m-b-30">
+                    Por medio de la presente hago constar que he recibido del departamento de sistemas de la empresa Custom&Co S.A de C.V. equipo de cómputo que consta de:
+                </p>
+                <h2>{{compuSeleccionada}}</h2>
+
+                <div class="row clearfix">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="card">
+                            <div class="header">
+                                <h2>
+                                    CARACTERÍSTICAS DE EQUIPO
+                                </h2>
+                                <ul class="header-dropdown m-r--5">
+                                    <li class="dropdown">
+                                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                            <i class="material-icons">more_vert</i>
+                                        </a>
+                                        <ul class="dropdown-menu pull-right">
+                                            <li><a href="javascript:void(0);">Action</a></li>
+                                            <li><a href="javascript:void(0);">Another action</a></li>
+                                            <li><a href="javascript:void(0);">Something else here</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                                        <thead>
+                                            <tr>
+                                                <th>ID Equipo</th>
+                                                <th>Tipo</th>
+                                                <th>Marca</th>
+                                                <th>Modelo</th>
+                                                <th>Color</th>
+                                                <th>Imagen</th>
+                                                <th>Memoria RAM</th>
+                                                <th>Procesador</th>
+                                                <th>Sistema Operativo</th>
+                                                <th>Propietario</th>
+                                                <th>Área</th>
+                                                <th>Estado</th>
+                                                <th>Activo</th>
+                                                
+                                    
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <th>ID Equipo</th>
+                                                <th>Tipo</th>
+                                                <th>Marca</th>
+                                                <th>Modelo</th>
+                                                <th>Color</th>
+                                                <th>Imagen</th>
+                                                <th>Memoria RAM</th>
+                                                <th>Procesador</th>
+                                                <th>Sistema Operativo</th>
+                                                <th>Propietario</th>
+                                                <th>Área</th>
+                                                <th>Estado</th>
+                                                <th>Activo</th>
+                                                
+                                            </tr>
+                                        </tfoot>
+                                        <tbody>
+                                            <tr>
+                                                <form action="/DescargarPDF/" method="POST">{% csrf_token %}
+                                                    <th>
+                                                        <input type="text" name="idEquipo" value="{{arreglo.0}}" readonly size="1">
+                                                        <div>
+                                                            <br>
+                                                            <br>
+                                                            <center>
+                                                                <button type="submit">PDF</button>
+                                                            </center>
+                                                        </div>
+                                                        
+                                                    </th>
+                                                </form>
+                                                    
+                                                    <th>{{arreglo.1}}</th>
+                                                    <th>{{arreglo.2}}</th>
+                                                    <th>{{arreglo.3}}</th>
+                                                    <th>
+                                                        <center>
+                                                            <img src="{% static 'images/laptophpP.jpg' %}" width="60%" alt="lap">
+                                                        </center>
+                                                    </th>
+                                                    <th>{{arreglo.4}}</th>
+                                                    <th>{{arreglo.5}}</th>
+                                                    <th>{{arreglo.6}}</th>
+                                                    <th>{{arreglo.7}}</th>
+                                                    <th>{{arreglo.8}}</th>
+                                                    <th>{{arreglo.9}}</th>
+                                                    <th>{{arreglo.10}}</th>
+                                                
+                                                
+                                                
+                                            </tr>
+                                            
+                                            
+                                            
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+                <p class="m-t-10 m-b-30">
+                    El cual me es confiado para uso exclusivo del desempeño de mis actividades laborales asignadas. Se me entregó una copia de la política y estoy consciente de que "Toda la información
+                    que los equipos puedan contener, almacenar o procesar es considerada confidencial, por lo que me comprometo a mantener activo el bloqueo del eqeuipo mediante contraseña para evitar 
+                    el acceso no autorizado".
+                </p>
+                <p class="m-t-10 m-b-30">
+                    Así mismo en cso de tener el equipo un daño o perjuicio por mal uso u operación, este será bajo mi responsabilidad y costo según lo establecido en la "POLÍTICA DE ASIGNACIÓN Y USO DE EQUIPO DE CÓMPUTO"
+                    vigente, la cual se me entrega una copia junto con esta responsiva.
+                </p>
+                <div class="row clearfix">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="card">
+                            <div class="header">
+                                <h2>
+                                    DATOS DE EMPLEADO
+                                </h2>
+                                <ul class="header-dropdown m-r--5">
+                                    <li class="dropdown">
+                                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                            <i class="material-icons">more_vert</i>
+                                        </a>
+                                        <ul class="dropdown-menu pull-right">
+                                            <li><a href="javascript:void(0);">Action</a></li>
+                                            <li><a href="javascript:void(0);">Another action</a></li>
+                                            <li><a href="javascript:void(0);">Something else here</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                                        <thead>
+                                            <tr>
+                                                <th>ID Empleado</th>
+                                                <th>Nombre</th>
+                                                <th>Apellidos</th>
+                                                <th>Área</th>
+                                                <th>Puesto</th>
+                                                <th>Correo</th>
+                                            
+                                                <th>Activo</th>
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <th>ID Empleado</th>
+                                                <th>Nombre</th>
+                                                <th>Apellidos</th>
+                                                <th>Área</th>
+                                                <th>Puesto</th>
+                                                <th>Correo</th>
+                                             
+                                                <th>Activo</th>
+                                                
+                                            </tr>
+                                        </tfoot>
+                                        <tbody>
+                                            <tr>
+                                                <td>{{arregloEmpl.0}}</td>
+                                                <td>{{arregloEmpl.1}}</td>
+                                                <td>{{arregloEmpl.2}}</td>
+                                                <td>{{arregloEmpl.3}}</td>
+                                                <td>{{arregloEmpl.4}}</td>
+                                                <td>{{arregloEmpl.5}}</td>
+                                                <td>{{arregloEmpl.7}}</td>
+                                                
+                                                
+                                            </tr>
+                                      
+                                            
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+
+                {% endif %}
+                
+
+                
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block estilosJs %}
@@ -49,8 +423,40 @@ Ver Areas
 <!-- Slimscroll Plugin Js -->
 <script src={% static 'panel/plugins/jquery-slimscroll/jquery.slimscroll.js' %}></script>
 
+<!-- Bootstrap Colorpicker Js -->
+<script src={% static 'panel/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js' %}></script>
+
+<!-- Dropzone Plugin Js -->
+<script src={% static 'panel/plugins/dropzone/dropzone.js' %}></script>
+
+<!-- Input Mask Plugin Js -->
+<script src={% static 'panel/plugins/jquery-inputmask/jquery.inputmask.bundle.js' %}></script>
+
+<!-- Multi Select Plugin Js -->
+<script src={% static 'panel/plugins/multi-select/js/jquery.multi-select.js' %}></script>
+
+<!-- Jquery Spinner Plugin Js -->
+<script src={% static 'panel/plugins/jquery-spinner/js/jquery.spinner.js' %}></script>
+
+<!-- Bootstrap Tags Input Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js' %}></script>
+
+<!-- noUISlider Plugin Js -->
+<script src={% static 'panel/plugins/nouislider/nouislider.js' %}></script>
+
 <!-- Waves Effect Plugin Js -->
 <script src={% static 'panel/plugins/node-waves/waves.js' %}></script>
+
+<!-- Jquery DataTable Plugin Js -->
+<script src={% static 'panel/plugins/jquery-datatable/jquery.dataTables.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.flash.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/jszip.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/pdfmake.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/vfs_fonts.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.html5.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.print.min.js' %}></script>
 
 <!-- Jquery CountTo Plugin Js -->
 <script src={% static 'panel/plugins/jquery-countto/jquery.countTo.js' %}></script>
@@ -75,6 +481,9 @@ Ver Areas
 <!-- Custom Js -->
 <script src={% static 'panel/js/admin.js' %}></script>
 <script src={% static 'panel/js/pages/index.js' %}></script>
+<script src={% static 'panel/js/pages/tables/jquery-datatable.js' %}></script>
+<script src={% static 'panel/js/pages/forms/advanced-form-elements.js' %}></script>
+
 
 <!-- Demo Js -->
 <script src={% static 'panel/js/demo.js' %}></script>

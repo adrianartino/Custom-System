@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block titulo %}
-Ver Areas
+Mantenimiento a pc
 {% endblock %}
 
 {% block estilos %}
@@ -22,21 +22,141 @@ Ver Areas
 <!-- Animation Css -->
 <link href={% static 'panel/plugins/animate-css/animate.css' %} rel="stylesheet" />
 
-<!-- Morris Chart Css-->
-<link href={% static 'panel/plugins/morrisjs/morris.css' %} rel="stylesheet" />
+<!-- Bootstrap Select Css -->
+<link href={% static 'panel/plugins/bootstrap-select/css/bootstrap-select.css' %} rel="stylesheet" />
 
 <!-- Custom Css -->
 <link href={% static 'panel/css/style.css' %} rel="stylesheet">
 
 <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
 <link href={% static 'panel/css/themes/all-themes.css' %} rel="stylesheet" />
+
 {% endblock %}
 
 {% block contenido %}
-<p >Aqui ba a ir formulario</p>
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h2>
+                    MANTENIMINETO A EQUIPOS
+                </h2>
+                <ul class="header-dropdown m-r--5">
+                    <li class="dropdown">
+                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <i class="material-icons">more_vert</i>
+                        </a>
+                        <ul class="dropdown-menu pull-right">
+                            <li><a href="javascript:void(0);">Action</a></li>
+                            <li><a href="javascript:void(0);">Another action</a></li>
+                            <li><a href="javascript:void(0);">Something else here</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="body">
+                <form id="form_validation" method="POST">{% csrf_token %}
+                    <div class="row clearfix">
+                        <div class="col-md-8">
+                            <label for="email_address">Equipo:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">computer</i>
+                                </span>
+                                <div class="form-line">
+                                    <select class="form-control show-tick">
+                                        <option>Laptop HP Pavillion z35 - Monica Arriaga</option>
+                                        <option>Laptop Lenovo ThinkPad - Lupita Lopez</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="email_address">Operación:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">copyright</i>
+                                </span>
+                                <div class="form-line">
+                                    <select class="form-control show-tick">
+                                        <option>Mantenimiento</option>
+                                        <option>Formatear</option>
+                                        <option>Instalación de software</option>
+                                        <option>Activación de software</option>
+                                        <option>Respaldo de información</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                        
+                        
+                    </div>
+
+                    
+                    
+
+                    <div class="row clearfix">
+                        <div class="col-md-6">
+                            <label for="email_address">Observaciones:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">rate_review</i>
+                                </span>
+                               
+                                <div class="form-group form-float">
+                                    <div class="form-line">
+                                        <textarea style="border: 1px;" name="description" cols="30" rows="5" class="form-control no-resize" required></textarea>
+                                     
+                                    </div>
+                                </div>
+                               
+                                
+                            </div>
+                        </div> 
+                       
+                       
+                    </div>
+
+
+
+                    <button type="submit" class="btn btn-primary m-t-15 waves-effect">Guardar Mantenimineto</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block estilosJs %}
+<script>
+    function soloLetras(e) {
+        key = e.keyCode || e.which;
+        tecla = String.fromCharCode(key).toLowerCase();
+        letras = " áéíóúabcdefghijklmnñopqrstuvwxyz";
+        especiales = "8-37-39-46";
+
+        tecla_especial = false
+        for (var i in especiales) {
+            if (key == especiales[i]) {
+                tecla_especial = true;
+                break;
+            }
+        }
+
+        if (letras.indexOf(tecla) == -1 && !tecla_especial) {
+            return false;
+        }
+    }
+
+    function validaNumericos(event) {
+        if (event.charCode >= 48 && event.charCode <= 57) {
+            return true;
+        }
+        return false;
+    }
+</script>
 <!-- Jquery Core Js -->
 <script src={% static 'panel/plugins/jquery/jquery.min.js' %}></script>
 
@@ -49,33 +169,47 @@ Ver Areas
 <!-- Slimscroll Plugin Js -->
 <script src={% static 'panel/plugins/jquery-slimscroll/jquery.slimscroll.js' %}></script>
 
+<!-- Bootstrap Colorpicker Js -->
+<script src={% static 'panel/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js' %}></script>
+
+<!-- Dropzone Plugin Js -->
+<script src={% static 'panel/plugins/dropzone/dropzone.js' %}></script>
+
+<!-- Input Mask Plugin Js -->
+<script src={% static 'panel/plugins/jquery-inputmask/jquery.inputmask.bundle.js' %}></script>
+
+<!-- Multi Select Plugin Js -->
+<script src={% static 'panel/plugins/multi-select/js/jquery.multi-select.js' %}></script>
+
+<!-- Jquery Spinner Plugin Js -->
+<script src={% static 'panel/plugins/jquery-spinner/js/jquery.spinner.js' %}></script>
+
+<!-- Bootstrap Tags Input Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js' %}></script>
+
+<!-- noUISlider Plugin Js -->
+<script src={% static 'panel/plugins/nouislider/nouislider.js' %}></script>
+
 <!-- Waves Effect Plugin Js -->
 <script src={% static 'panel/plugins/node-waves/waves.js' %}></script>
 
-<!-- Jquery CountTo Plugin Js -->
-<script src={% static 'panel/plugins/jquery-countto/jquery.countTo.js' %}></script>
-
-<!-- Morris Plugin Js -->
-<script src={% static 'panel/plugins/raphael/raphael.min.js' %}></script>
-<script src={% static 'panel/plugins/morrisjs/morris.js' %}></script>
-
-<!-- ChartJs -->
-<script src={% static 'panel/plugins/chartjs/Chart.bundle.js' %}></script>
-
-<!-- Flot Charts Plugin Js -->
-<script src={% static 'panel/plugins/flot-charts/jquery.flot.js' %}></script>
-<script src={% static 'panel/plugins/flot-charts/jquery.flot.resize.js' %}></script>
-<script src={% static 'panel/plugins/flot-charts/jquery.flot.pie.js' %}></script>
-<script src={% static 'panel/plugins/flot-charts/jquery.flot.categories.js' %}></script>
-<script src={% static 'panel/plugins/flot-charts/jquery.flot.time.js' %}></script>
-
-<!-- Sparkline Chart Plugin Js -->
-<script src={% static 'panel/plugins/jquery-sparkline/jquery.sparkline.js' %}></script>
+<!-- Jquery DataTable Plugin Js -->
+<script src={% static 'panel/plugins/jquery-datatable/jquery.dataTables.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.flash.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/jszip.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/pdfmake.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/vfs_fonts.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.html5.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.print.min.js' %}></script>
 
 <!-- Custom Js -->
 <script src={% static 'panel/js/admin.js' %}></script>
-<script src={% static 'panel/js/pages/index.js' %}></script>
+<script src={% static 'panel/js/pages/tables/jquery-datatable.js' %}></script>
+<script src={% static 'panel/js/pages/forms/advanced-form-elements.js' %}></script>
 
 <!-- Demo Js -->
 <script src={% static 'panel/js/demo.js' %}></script>
+
 {% endblock %}

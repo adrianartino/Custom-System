@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block titulo %}
-Ver Areas
+Agregar Impresoras
 {% endblock %}
 
 {% block estilos %}
@@ -22,21 +22,195 @@ Ver Areas
 <!-- Animation Css -->
 <link href={% static 'panel/plugins/animate-css/animate.css' %} rel="stylesheet" />
 
-<!-- Morris Chart Css-->
-<link href={% static 'panel/plugins/morrisjs/morris.css' %} rel="stylesheet" />
+<!-- Bootstrap Select Css -->
+<link href={% static 'panel/plugins/bootstrap-select/css/bootstrap-select.css' %} rel="stylesheet" />
 
 <!-- Custom Css -->
 <link href={% static 'panel/css/style.css' %} rel="stylesheet">
 
 <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
 <link href={% static 'panel/css/themes/all-themes.css' %} rel="stylesheet" />
+
 {% endblock %}
 
 {% block contenido %}
-<p >Aqui ba a ir agregar impresoras</p>
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h2>
+                    AGREGAR IMPRESORAS
+                </h2>
+                <ul class="header-dropdown m-r--5">
+                    <li class="dropdown">
+                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <i class="material-icons">more_vert</i>
+                        </a>
+                        <ul class="dropdown-menu pull-right">
+                            <li><a href="javascript:void(0);">Action</a></li>
+                            <li><a href="javascript:void(0);">Another action</a></li>
+                            <li><a href="javascript:void(0);">Something else here</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="body">
+                <form id="form_validation" method="POST">{% csrf_token %}
+                    <div class="row clearfix">
+                        <div class="col-md-4">
+                            <label for="email_address">Marca:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">copyright</i>
+                                </span>
+                                <div class="form-line">
+                                    <select class="form-control show-tick">
+                                        <option>HP</option>
+                                        <option>XEROX</option>
+                                        <option>SAMSUNG</option>
+                                        <option>EPSON</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                     
+                        
+                        <div class="col-md-4">
+                            <label for="email_address">Modelo:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">branding_watermark</i>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" class="form-control date" placeholder="Ingresar Modelo">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="email_address">No. Serie:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">pin</i>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" class="form-control date" placeholder="Ingresar número de serie">
+                                </div>
+                            </div>
+                        </div>
+                 
+                    </div>
+                <div class="row clearfix">
+
+                    <div class="col-md-3">
+                        <label for="email_address">Imagen de impresora:</label>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">add_photo_alternate</i>
+                            </span>
+                            <div class="form-line">
+                                <input type="file" name="imgeimpresora" id="txtimagen">
+                            </div>
+                        </div>
+                    </div>  
+                    
+
+                    
+                        <div class="col-md-3">
+                            <label for="email_address">Tipo:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">print</i>
+                                </span>
+                                <div class="form-line">
+                                    <select class="form-control show-tick">
+                                        <option>Laser Blanco-Negro</option>
+                                        <option>Inyección de tinta Color/Blanco-Negro</option>
+                                        
+                                    </select>
+                                </div>
+                            </div>
+                        </div> 
+                        <div class="col-md-2">
+                            <label for="email_address">Área:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">work</i>
+                                </span>
+                                <div class="form-line">
+                                    <select class="form-control show-tick">
+                                        <option>Administración</option>
+                                        <option>Sistemas</option>
+                                        <option>Almacen</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="email_address">Estado:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">build</i>
+                                </span>
+                                <div class="form-line">
+                                    <select class="form-control show-tick">
+                                        <option>Funcional</option>
+                                        <option>Reparación</option>
+                                        <option>Basura</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="checkbox" id="md_checkbox_28" class="filled-in chk-col-cyan" checked />
+                            <label for="md_checkbox_28">Por conexión en red</label>
+                            <div>
+                                <input type="checkbox" id="md_checkbox_30" class="filled-in chk-col-green" checked />
+                                <label for="md_checkbox_30">Esta activo</label>
+                            </div>
+                            
+                        </div>
+                        
+
+                       
+                    </div>
+                    
+                    
+                    <button type="submit" class="btn btn-primary m-t-15 waves-effect">Guardar Impresora</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block estilosJs %}
+<script>
+    function soloLetras(e) {
+        key = e.keyCode || e.which;
+        tecla = String.fromCharCode(key).toLowerCase();
+        letras = " áéíóúabcdefghijklmnñopqrstuvwxyz";
+        especiales = "8-37-39-46";
+
+        tecla_especial = false
+        for (var i in especiales) {
+            if (key == especiales[i]) {
+                tecla_especial = true;
+                break;
+            }
+        }
+
+        if (letras.indexOf(tecla) == -1 && !tecla_especial) {
+            return false;
+        }
+    }
+
+    function validaNumericos(event) {
+        if (event.charCode >= 48 && event.charCode <= 57) {
+            return true;
+        }
+        return false;
+    }
+</script>
 <!-- Jquery Core Js -->
 <script src={% static 'panel/plugins/jquery/jquery.min.js' %}></script>
 
@@ -49,33 +223,47 @@ Ver Areas
 <!-- Slimscroll Plugin Js -->
 <script src={% static 'panel/plugins/jquery-slimscroll/jquery.slimscroll.js' %}></script>
 
+<!-- Bootstrap Colorpicker Js -->
+<script src={% static 'panel/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js' %}></script>
+
+<!-- Dropzone Plugin Js -->
+<script src={% static 'panel/plugins/dropzone/dropzone.js' %}></script>
+
+<!-- Input Mask Plugin Js -->
+<script src={% static 'panel/plugins/jquery-inputmask/jquery.inputmask.bundle.js' %}></script>
+
+<!-- Multi Select Plugin Js -->
+<script src={% static 'panel/plugins/multi-select/js/jquery.multi-select.js' %}></script>
+
+<!-- Jquery Spinner Plugin Js -->
+<script src={% static 'panel/plugins/jquery-spinner/js/jquery.spinner.js' %}></script>
+
+<!-- Bootstrap Tags Input Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js' %}></script>
+
+<!-- noUISlider Plugin Js -->
+<script src={% static 'panel/plugins/nouislider/nouislider.js' %}></script>
+
 <!-- Waves Effect Plugin Js -->
 <script src={% static 'panel/plugins/node-waves/waves.js' %}></script>
 
-<!-- Jquery CountTo Plugin Js -->
-<script src={% static 'panel/plugins/jquery-countto/jquery.countTo.js' %}></script>
-
-<!-- Morris Plugin Js -->
-<script src={% static 'panel/plugins/raphael/raphael.min.js' %}></script>
-<script src={% static 'panel/plugins/morrisjs/morris.js' %}></script>
-
-<!-- ChartJs -->
-<script src={% static 'panel/plugins/chartjs/Chart.bundle.js' %}></script>
-
-<!-- Flot Charts Plugin Js -->
-<script src={% static 'panel/plugins/flot-charts/jquery.flot.js' %}></script>
-<script src={% static 'panel/plugins/flot-charts/jquery.flot.resize.js' %}></script>
-<script src={% static 'panel/plugins/flot-charts/jquery.flot.pie.js' %}></script>
-<script src={% static 'panel/plugins/flot-charts/jquery.flot.categories.js' %}></script>
-<script src={% static 'panel/plugins/flot-charts/jquery.flot.time.js' %}></script>
-
-<!-- Sparkline Chart Plugin Js -->
-<script src={% static 'panel/plugins/jquery-sparkline/jquery.sparkline.js' %}></script>
+<!-- Jquery DataTable Plugin Js -->
+<script src={% static 'panel/plugins/jquery-datatable/jquery.dataTables.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.flash.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/jszip.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/pdfmake.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/vfs_fonts.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.html5.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.print.min.js' %}></script>
 
 <!-- Custom Js -->
 <script src={% static 'panel/js/admin.js' %}></script>
-<script src={% static 'panel/js/pages/index.js' %}></script>
+<script src={% static 'panel/js/pages/tables/jquery-datatable.js' %}></script>
+<script src={% static 'panel/js/pages/forms/advanced-form-elements.js' %}></script>
 
 <!-- Demo Js -->
 <script src={% static 'panel/js/demo.js' %}></script>
+
 {% endblock %}

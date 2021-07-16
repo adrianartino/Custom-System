@@ -33,6 +33,7 @@ urlpatterns = [
     path('agregarInsumos/', views.agregarInsumos),
     path('verProgramas/', views.verProgramas),
     path('agregarProgramas/', views.agregarProgramas),
+    path('asignarProgramas/', views.asignarProgramas),
     path('calendarioMant/',views.calendarioMant),
     path('formularioMant/', views.formularioMant),
     path('verCarta/', views.verCarta),
@@ -43,6 +44,8 @@ urlpatterns = [
     path("BitacoraMantenimiento/", views.MantenimientoBitacora),
     path("BitacoraCartuchos/", views.CartuchosBitacora),
     path("BitacoraCartas/", views.CartasBitacora),
-    path("DescargarPDF/", views.descargarPDF)
+    path("DescargarPDF/", views.descargarPDF),
+    path("ProgramaPorArea/",views.ProgramasporArea),
+    path("verProgramasPorArea/", views.verProgramasPorArea)
     
 ]

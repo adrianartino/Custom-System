@@ -32,7 +32,7 @@ class Equipos (models.Model):
     memoriaram=models.CharField(max_length=80)
     procesador=models.CharField(max_length=80)
     sistemaoperativo=models.CharField(max_length=80)
-    id_empleado=models.ForeignKey(Empleados, on_delete=models.CASCADE)
+    id_empleado=models.ForeignKey(Empleados, on_delete=models.CASCADE, null = True)
     estado=models.CharField(max_length=80)
     activo=models.CharField(max_length=2)
 
@@ -70,6 +70,7 @@ class Cartuchos (models.Model):
     cantidad=models.IntegerField()
     nuserie=models.CharField(max_length=10)
     color=models.CharField(max_length=80)
+    imagenCartucho=models.ImageField(upload_to="cartuchos", null = True)
     id_impresora=models.ForeignKey(Impresoras, on_delete=models.CASCADE)
 
 class CalendarioMantenimiento (models.Model):
@@ -88,6 +89,7 @@ class Programas (models.Model):
     sistemaoperativo_arq=models.CharField(max_length=80)
     memoria_ram=models.CharField(max_length=80)
     procesador=models.CharField(max_length=80)
+    imagenPrograma=models.ImageField(upload_to="programas", null = True)
 
     def __str__(self):
         return self.id_programa

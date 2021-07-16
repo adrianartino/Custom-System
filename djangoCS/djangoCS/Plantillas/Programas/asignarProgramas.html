@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block titulo %}
-Ver Impresoras
+asignar programas por area
 {% endblock %}
 
 {% block estilos %}
@@ -39,7 +39,7 @@ Ver Impresoras
         <div class="card">
             <div class="header">
                 <h2>
-                    IMPRESORAS DE CUSTOM & CO
+                    ASIGNAR PROGRAMAS POR ÁREA
                 </h2>
                 <ul class="header-dropdown m-r--5">
                     <li class="dropdown">
@@ -59,74 +59,87 @@ Ver Impresoras
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                         <thead>
                             <tr>
-                                <th>ID Impresora</th>
-                                <th>Marca</th>
-                                <th>Modelo</th>
-                                <th>No. Serie</th>
-                                <th>Imagen</th>
-                                <th>Tipo</th>
-                                <th>En red</th>
-                                <th>Dirección IP</th>
-                                <th>Estado</th>
-                                <th>Activo</th>
-                                <th>Área</th>
+                                <th>ID Programa</th>
+                                <th>Nombre</th>
+                                <th>Administración</th>
+                                <th>Sistemas</th>
+                                <th>Almacen</th>
+                           
+                                
+                    
                                 
                             </tr>
                         </thead>
-                        <tfoot>
-                            <tr>
-                                <th>ID Impresora</th>
-                                <th>Marca</th>
-                                <th>Modelo</th>
-                                <th>No. Serie</th>
-                                <th>Imagen</th>
-                                <th>Tipo</th>
-                                <th>En red</th>
-                                <th>Dirección IP</th>
-                                <th>Estado</th>
-                                <th>Activo</th>
-                                <th>Área</th>
-                                
-                            </tr>
-                        </tfoot>
+                       
                         <tbody>
                             <tr>
-                                <th>1</th>
-                                <th>HP</th>
-                                <th>OfficeJet Pro 7740 Series</th>
-                                <th>G5J3880123</th>
-                                <th>
-                                    <center>
-                                        <img src="{% static 'images/I1.jpg' %}" width="60%" alt="lap">
-                                    </center>
-                                </th>
-                                <th>Inyección de tinta multifuncion Color/Blanco-Negro</th>
-                                <th>SI</th>
-                                <th>192.168.10.13</th>
-                                <th>Funcinal</th>
-                                <th>A</th>
-                                <th><label class="label bg-red">Administración</label> </th>
+                                <form action="/DescargarPDF/" method="POST">{% csrf_token %}
+                                    <th>
+                                        <input type="text" name="idPrograma" value="1" readonly size="1">
+                                        <div>
+                                            <br>
+                                            <br>
+                                            <center>
+                                                <button type="submit">Guardar</button>
+                                            </center>
+                                        </div>
+                                        
+                                    </th>
+                                </form>
+                                <th>Office 2019</th>
+                                    <th>
+                                        <input type="checkbox" id="md_checkbox_1" class="filled-in chk-col-cyan" checked />
+                                        <label for="md_checkbox_1"></label>
+                                    </th>
+                                    <th>
+                                        <input type="checkbox" id="md_checkbox_2" class="filled-in chk-col-cyan" checked />
+                                        <label for="md_checkbox_2"></label>
+                                    </th>
+                                    <th>
+                                        <input type="checkbox" id="md_checkbox_3" class="filled-in chk-col-cyan" checked />
+                                        <label for="md_checkbox_3"></label>
+                                    </th>
+                                  
+                                    
+                                
                                 
                             </tr>
                             <tr>
-                                <th>2</th>
-                                <th>XEROX</th>
-                                <th>WorkCentre 3335</th>
-                                <th>5BT735692</th>
-                                <th>
-                                    <center>
-                                        <img src="{% static 'images/I2.jpg' %}" width="60%" alt="lap">
-                                    </center>
-                                </th>
-                                <th>Láser Blanco-Negro</th>
-                                <th>SI</th>
-                                <th>192.168.10.14</th>
-                                <th>Funcinal</th>
-                                <th>A</th>
-                                <th><label class="label bg-red">Administración</label> </th>
+                                <form action="/DescargarPDF/" method="POST">{% csrf_token %}
+                                    <th>
+                                        <input type="text" name="idPrograma" value="2" readonly size="1">
+                                        <div>
+                                            <br>
+                                            <br>
+                                            <center>
+                                                <button type="submit">Guardar</button>
+                                            </center>
+                                        </div>
+                                        
+                                    </th>
+                                </form>
+                                <th>AutoCAD 2018</th>
+                                    <th>
+                                        <input type="checkbox" id="md_checkbox_4" class="filled-in chk-col-cyan" checked />
+                                        <label for="md_checkbox_4"></label>
+                                    </th>
+                                    <th>
+                                        <input type="checkbox" id="md_checkbox_5" class="filled-in chk-col-cyan" checked />
+                                        <label for="md_checkbox_5"></label>
+                                    </th>
+                                    <th>
+                                        <input type="checkbox" id="md_checkbox_6" class="filled-in chk-col-cyan" checked />
+                                        <label for="md_checkbox_6"></label>
+                                    </th>
+                                  
+                                    
+                                
                                 
                             </tr>
-                         
+                            
+                            
+                     
+                            
                             
                             
                         </tbody>

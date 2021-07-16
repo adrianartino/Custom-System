@@ -343,6 +343,16 @@
                     <li class="active">
                     {% else %}
                     <li >
+                    {% if estaEnAsignarProgramas %}
+                    <li class="active">
+                    {% else %}
+                    <li >
+                    {% if estaEnverProgramasPorArea %}
+                    <li class="active">
+                    {% else %}
+                     <li>
+                    {% endif %}
+                    {% endif %}
                     {% endif %}
                     {% endif %}
                         <a href="javascript:void(0);" class="menu-toggle">
@@ -355,15 +365,30 @@
                              {% else %}
                              <li>
                             {% endif %}
-                                <a href="/verProgramas/">Ver programas por área</a>
+                                <a href="/verProgramas/">Ver programas</a>
                             </li>
                             {% if estaEnAgregarProgramas %}
                             <li class="active">
                             {% else %}
                             <li>
                             {% endif %}
-                                <a href="/agregarProgramas/">Asignar programas</a>
+                                <a href="/agregarProgramas/">Agregar programas</a>
                             </li>
+                            {% if estaEnAsignarProgramas %}
+                            <li class="active">
+                            {% else %}
+                            <li>
+                            {% endif %}
+                                <a href="/asignarProgramas/">Asignar programas por área</a>
+                            </li>
+                            {% if estaEnverProgramasPorArea %}
+                            <li class="active">
+                            {% else %}
+                            <li>
+                            {% endif %}
+                                
+                                    <a href="/ProgramaPorArea/">Ver programas por área</a>
+                                </li>
                         </ul>
                     </li>
                     {% if estaEnCalendario %}

@@ -1,0 +1,140 @@
+{% extends "Menu/menu.html" %}
+{% load static %}
+
+{% block titulo %}
+Ver Programas por area
+{% endblock %}
+
+{% block estilos %}
+<!-- Favicon-->
+<link rel="icon" href={% static 'images/icons/co.ico' %} type="image/x-icon">
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+
+<!-- Bootstrap Core Css -->
+<link href={% static 'panel/plugins/bootstrap/css/bootstrap.css' %} rel="stylesheet">
+
+<!-- Waves Effect Css -->
+<link href={% static 'panel/plugins/node-waves/waves.css' %} rel="stylesheet" />
+
+<!-- Animation Css -->
+<link href={% static 'panel/plugins/animate-css/animate.css' %} rel="stylesheet" />
+
+<!-- Custom Css -->
+<link href={% static 'panel/css/style.css' %} rel="stylesheet">
+
+<!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+<link href={% static 'panel/css/themes/all-themes.css' %} rel="stylesheet" />
+{% endblock %}
+
+{% block contenido %}
+<div class="block-header">
+    <h2>Selección de Áreas</h2>
+</div>
+<div class="row">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box-4 hover-zoom-effect">
+            <form action="/verProgramasPorArea/" method="POST">{% csrf_token %}
+                <div class="icon">
+                    <button style="border: 0; background-color: Transparent;">
+                        <i class="material-icons col-red">work</i>
+                    </button>
+                </div>
+                <div class="content">
+                    <div class="text">
+                        <input type="text" style="border: 0;" value="Administración" name="nombreArea">
+                    </div>
+                    <div class="number">8 Programas</div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box-4 hover-zoom-effect">
+            <form action="/verProgramasPorArea/" method="POST">{% csrf_token %}
+                <div class="icon">
+                    <button style="border: 0; background-color: Transparent;">
+                        <i class="material-icons col-green">build </i>
+                    </button>
+                </div>
+                <div class="content">
+                    <div class="text">
+                        <input type="text" style="border: 0;" value="Almacen" name="nombreArea">
+                    </div>
+                    <div class="number">7 Programas</div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box-4 hover-zoom-effect">
+            <form action="/verProgramasPorArea/" method="POST">{% csrf_token %}
+                <div class="icon">
+                    <button style="border: 0; background-color: Transparent;">
+                        <i class="material-icons col-cyan">api</i>
+                    </button>
+                </div>
+                <div class="content">
+                    <div class="text">
+                        <input type="text" style="border: 0;" value="Especialistas" name="nombreArea">
+                    </div>
+                    <div class="number">18 Programas</div>
+                </div>
+            </form>
+            
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box-4 hover-zoom-effect">
+            <form action="/verProgramasPorArea/" method="POST">{% csrf_token %}
+                <div class="icon">
+                    <button style="border: 0; background-color: Transparent;">
+                        <i class="material-icons col-pink">paid</i>
+                    </button>
+                </div>
+                <div class="content">
+                    <div class="text">
+                        <input type="text" style="border: 0;" value="Ventas" name="nombreArea">
+                    </div>
+                    <div class="number">12 Programas</div>
+                </div>
+            </form>
+            
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block estilosJs %}
+<!-- Jquery Core Js -->
+<script src={% static 'panel/plugins/jquery/jquery.min.js' %}></script>
+
+<!-- Bootstrap Core Js -->
+<script src={% static 'panel/plugins/bootstrap/js/bootstrap.js' %}></script>
+
+<!-- Select Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-select/js/bootstrap-select.js' %}></script>
+
+<!-- Slimscroll Plugin Js -->
+<script src={% static 'panel/plugins/jquery-slimscroll/jquery.slimscroll.js' %}></script>
+
+<!-- Waves Effect Plugin Js -->
+<script src={% static 'panel/plugins/node-waves/waves.js' %}></script>
+
+<!-- Jquery CountTo Plugin Js -->
+<script src={% static 'panel/plugins/jquery-countto/jquery.countTo.js' %}></script>
+
+<!-- Sparkline Chart Plugin Js -->
+<script src={% static 'panel/plugins/jquery-sparkline/jquery.sparkline.js' %}></script>
+
+<!-- Custom Js -->
+<script src={% static 'panel/js/admin.js' %}></script>
+<script src={% static 'panel/js/helpers.js' %}></script>
+<script src={% static 'panel/js/pages/widgets/infobox/infobox-5.js' %}></script>
+
+<!-- Demo Js -->
+<script src={% static 'panel/js/demo.js' %}></script>
+{% endblock %}

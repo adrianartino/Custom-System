@@ -113,7 +113,7 @@ def verInsumos(request):
 
     Insumos = True
     estaEnVerInsumos = True
-    return render(request, "Insumos/agregarInsumos.html",{"Insumos": Insumos, "estaEnVerInsumos":estaEnVerInsumos})
+    return render(request, "Insumos/verInsumos.html",{"Insumos": Insumos, "estaEnVerInsumos":estaEnVerInsumos})
 
 def agregarInsumos(request):
 
@@ -133,6 +133,30 @@ def agregarProgramas(request):
 
     return render(request,"Programas/agregarProgramas.html",{"estaEnAgregarProgramas": estaEnAgregarProgramas})
 
+def asignarProgramas(request):
+
+    estaEnAsignarProgramas = True
+
+    return render(request,"Programas/asignarProgramas.html",{"estaEnAsignarProgramas": estaEnAsignarProgramas})
+
+def ProgramasporArea(request):
+
+    estaEnverProgramasPorArea = True
+
+    return render(request,"Programas/verProgramasArea.html",{"estaEnverProgramasPorArea": estaEnverProgramasPorArea})
+
+def verProgramasPorArea(request):
+
+    if request.method == "POST":
+        
+        nombreArea = request.POST['nombreArea']
+        #nombreArea = Administracion
+
+        estaEnverProgramasPorArea = True
+        return render(request, "Programas/tablaProgArea.html",{"estaEnverProgramasPorArea": estaEnverProgramasPorArea, "nombreArea":nombreArea})
+
+    
+
 def calendarioMant(request):
 
     estaEnCalendario = True
@@ -148,6 +172,34 @@ def verCarta(request):
     return render(request,"cartaCompromiso/verCarta.html", {"estaEnVerCarta": estaEnVerCarta})
 
 def agregarCarta(request):
+
+    if request.method == "POST":
+        
+        compuSeleccionada = request.POST['compuSeleccionada']
+        empleSeleccionado = request.POST['empleadoSeleccionado']
+
+        arregloEmpleado = empleSeleccionado.split(' ')
+        #[0] - Monica
+        #[1] - Arriaga
+        #[2] - Administracion
+
+        datosEmpleado = ["2",	"Mónica",	"Arriaga",	"Administración	", "Recursos humanos", 	"rhumanos@customco.com.mx", 	"recursosh098","A"	]
+
+        #compuSeleccionada = Laptop Lenovo ThinkPad
+
+        arreglitoCompu = compuSeleccionada.split(' ')
+        #[0] - Laptop
+        #[1] - Lenovo
+        #[2] - Pavilion 087
+
+        #hACER Consulta en tabla de equipos.
+
+        arregloDatosCompu = ["1", "Laptop", "HP", "Pavillion 087", "Negro",	"8 GB", "Intel Core i7", "Windows 10 Home 64 bits", "Blanca Gaeta",	"Sistemas",	"Funcional"	, "A"]
+
+        
+        estaEnAgregarCarta = True
+        return render(request, "cartaCompromiso/agregarCarta.html",{"estaEnAgregarCarta": estaEnAgregarCarta, "compuSeleccionada":compuSeleccionada, "arreglo":arregloDatosCompu, "arregloEmpl": datosEmpleado})
+
     estaEnAgregarCarta = True
     return render(request, "cartaCompromiso/agregarCarta.html",{"estaEnAgregarCarta": estaEnAgregarCarta})
 
