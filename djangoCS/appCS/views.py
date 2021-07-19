@@ -205,9 +205,29 @@ def agregarCarta(request):
     estaEnAgregarCarta = True
     return render(request, "cartaCompromiso/agregarCarta.html",{"estaEnAgregarCarta": estaEnAgregarCarta})
 
-def verBitacora(request):
+def BitacorasEquipos(request):
+    estaEnEquiposBitacora = True
+    return render(request, "Bitacora/Bitacoras.html",{"estaEnEquiposBitacora": estaEnEquiposBitacora})
+
+def BitacorasImpresoras(request):
+    estaEnImpresorasBitacora = True
+    return render(request, "Bitacora/Bitacoras.html",{"estaEnImpresorasBitacora": estaEnImpresorasBitacora})
+
+def BitacorasEmpleados(request):
     estaEnEmpleadosBitacora = True
-    return render(request, "Bitacora/Empleados.html",{"estaEnEmpleadosBitacora": estaEnEmpleadosBitacora})
+    return render(request, "Bitacora/Bitacoras.html",{"estaEnEmpleadosBitacora": estaEnEmpleadosBitacora})
+
+def BitacorasMantenimiento(request):
+    estaEnMantenimientoBitacora = True
+    return render(request, "Bitacora/Bitacoras.html",{"estaEnMantenimientoBitacora": estaEnMantenimientoBitacora})
+
+def BitacorasCartuchos(request):
+    estaEnCartuchosBitacora = True
+    return render(request, "Bitacora/Bitacoras.html",{"estaEnCartuchosBitacora": estaEnCartuchosBitacora})
+
+def BitacorasCartas(request):
+    estaEnCartasBitacora = True
+    return render(request, "Bitacora/Bitacoras.html",{"estaEnCartasBitacora": estaEnCartasBitacora})
 
 
 
