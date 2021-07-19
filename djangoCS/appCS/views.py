@@ -5,6 +5,8 @@ from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.shortcuts import redirect
 from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora
+import base64
+from django.core.files.base import ContentFile
 
 # Create your views here.
 def login(request):
@@ -203,29 +205,11 @@ def agregarCarta(request):
     estaEnAgregarCarta = True
     return render(request, "cartaCompromiso/agregarCarta.html",{"estaEnAgregarCarta": estaEnAgregarCarta})
 
-def EmpleadosBitacora(request):
+def verBitacora(request):
     estaEnEmpleadosBitacora = True
     return render(request, "Bitacora/Empleados.html",{"estaEnEmpleadosBitacora": estaEnEmpleadosBitacora})
 
-def EquiposBitacora(request):
-    estaEnEquiposBitacora = True
-    return render(request, "Bitacora/Equipos.html",{"estaEnEquiposBitacora": estaEnEquiposBitacora})
 
-def ImpresorasBitacora(request):
-    estaEnImpresorasBitacora = True
-    return render(request, "Bitacora/Impresoras.html",{"estaEnImpresorasBitacora": estaEnImpresorasBitacora})
-
-def MantenimientoBitacora(request):
-    estaEnMantenimientoBitacora = True
-    return render(request, "Bitacora/Mantenimiento.html",{"estaEnMantenimientoBitacora": estaEnMantenimientoBitacora})
-
-def CartuchosBitacora(request):
-    estaEnCartuchosBitacora = True
-    return render(request, "Bitacora/Cartuchos.html",{"estaEnCartuchosBitacora": estaEnCartuchosBitacora})
-
-def CartasBitacora(request):
-    estaEnCartasBitacora = True
-    return render(request, "Bitacora/Cartas.html",{"estaEnCartasBitacora": estaEnCartasBitacora})
 
 def descargarPDF(request):
 
@@ -245,3 +229,15 @@ def descargarPDF(request):
         return response
 
         #return render(request, "Equipos/equipo.html", {"idEquipo":BASE_DIR})
+
+def guardarImagen(request):
+    estaEnAgregarCarta = True
+
+    if request.method == "POST":
+        
+        canvasLargo = request.POST['canvasData']
+        format, imgstr = canvasLargo.split(';base64,')
+        ext = format.split('/')[-1]
+        archivo = ContentFile(base64.b64decode(imgstr), name= 'canvas.' + ext)
+
+    return render(request, "cartaCompromiso/agregarCarta.html",{"estaEnAgregarCarta": estaEnAgregarCarta})

@@ -38,14 +38,10 @@ urlpatterns = [
     path('formularioMant/', views.formularioMant),
     path('verCarta/', views.verCarta),
     path('agregarCarta/', views.agregarCarta),
-    path("BitacoraEmpleados/", views.EmpleadosBitacora),
-    path("BitacoraEquipos/", views.EquiposBitacora),
-    path("BitacoraImpresoras/", views.ImpresorasBitacora),
-    path("BitacoraMantenimiento/", views.MantenimientoBitacora),
-    path("BitacoraCartuchos/", views.CartuchosBitacora),
-    path("BitacoraCartas/", views.CartasBitacora),
+    path("Bitacoras/", views.verBitacora),
     path("DescargarPDF/", views.descargarPDF),
     path("ProgramaPorArea/",views.ProgramasporArea),
-    path("verProgramasPorArea/", views.verProgramasPorArea)
+    path("verProgramasPorArea/", views.verProgramasPorArea),
+    path("guardarImagen/", views.guardarImagen)
     
 ]

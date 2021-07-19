@@ -455,82 +455,58 @@
                             
                         </ul>
                     </li>
-                    {% if estaEnEquiposBitacora %}
-                    <li class="active">
-                    {% else %}
-                    <li >
-                    {% if estaEnImpresorasBitacora %}
-                    <li class="active">
-                    {% else %}
-                    <li >
                     {% if estaEnEmpleadosBitacora %}
                     <li class="active">
                     {% else %}
                     <li >
-                    {% if estaEnMantenimientoBitacora %}
-                    <li class="active">
-                    {% else %}
-                    <li >
-                    {% if estaEnCartuchosBitacora %}
-                    <li class="active">
-                    {% else %}
-                    <li >
-                    {% if estaEnCartasBitacora %}
-                    <li class="active">
-                    {% else %}
-                    <li >
-                    {% endif %}
-                    {% endif %}
-                    {% endif %}
-                    {% endif %}
-                    {% endif %}
+                   
                     {% endif %}
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">import_contacts</i>
                             <span>Bitacora</span>
                         </a>
                         <ul class="ml-menu">
-                            {% if estaEnEquiposBitacora %}
+                            {% if estaEnEmpleadosBitacora %}
                             <li class="active">
                              {% else %}
                              <li>
                             {% endif %}
-                                <a href="/BitacoraEquipos/">Equipos</a>
-                            </li>
-                            {% if estaEnImpresorasBitacora %}
-                            <li class="active">
-                             {% else %}
-                             <li>
-                            {% endif %}
-                                <a href="/BitacoraImpresoras/">Impresoras</a>
+                                <a href="/Bitacoras/">Equipos</a>
                             </li>
                             {% if estaEnEmpleadosBitacora %}
                             <li class="active">
                              {% else %}
                              <li>
                             {% endif %}
-                                <a href="/BitacoraEmpleados/">Empleados</a>
+                                <a href="/Bitacoras/">Impresoras</a>
                             </li>
-                            {% if estaEnMantenimientoBitacora %}
+                            {% if estaEnEmpleadosBitacora %}
                             <li class="active">
                              {% else %}
                              <li>
                             {% endif %}
-                                <a href="/BitacoraMantenimiento/">Mantenimiento</a>
+                                <a href="/Bitacoras/">Empleados</a>
                             </li>
-                            {% if estaEnCartuchosBitacora %}
+                            {% if estaEnEmpleadosBitacora %}
                             <li class="active">
                              {% else %}
                              <li>
                             {% endif %}
-                                <a href="/BitacoraCartuchos/">Cartuchos</a>
+                                <a href="/Bitacoras/">Mantenimiento</a>
                             </li>
-                            {% if estaEnCartasBitacora %}
+                            {% if estaEnEmpleadosBitacora %}
                             <li class="active">
                              {% else %}
                              <li>
                             {% endif %}
-                                <a href="/BitacoraCartas/">Cartas</a>
+                                <a href="/Bitacoras/">Cartuchos</a>
+                            </li>
+                            {% if estaEnEmpleadosBitacora %}
+                            <li class="active">
+                             {% else %}
+                             <li>
+                            {% endif %}
+                                <a href="/Bitacoras/">Cartas</a>
                             </li>
                         </ul>
                     </li>

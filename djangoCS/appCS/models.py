@@ -105,5 +105,6 @@ class EquipoPrograma (models.Model):
 class Bitacora (models.Model):
     id_empleado=models.ForeignKey(Empleados, on_delete=models.CASCADE)
     tabla=models.CharField(max_length=80)
+    id_objeto=models.IntegerField()
     operacion=models.CharField(max_length=80)
     fecha_hora=models.DateTimeField()
