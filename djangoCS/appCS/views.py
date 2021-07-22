@@ -261,3 +261,40 @@ def guardarImagen(request):
         archivo = ContentFile(base64.b64decode(imgstr), name= 'canvas.' + ext)
 
     return render(request, "cartaCompromiso/agregarCarta.html",{"estaEnAgregarCarta": estaEnAgregarCarta})
+
+def editarEquipo(request):
+    
+    if request.method == "POST":
+        equipoRecibido = request.POST['idEquipo']
+        datosEquipo = []
+
+
+
+
+
+    return render(request, "Editar/editarEquipo.html")
+
+
+def editarEmpleado(request):
+
+    if request.method == "POST":
+
+        empleadoRecibido = request.POST['idEmpleadoEditar']
+
+        datosEmpleado = ["3","Ana", "Gutierrez", "5", "Subdirectora", "anda.gutierrez@customco.com.mx", "anaGut674#", "A"]
+
+        idArea = datosEmpleado[3]
+        nombreArea = "Almacen"
+
+
+
+        return render(request,"Editar/editarEmpleado.html", {"arregloDatos":datosEmpleado, "nombreArea":nombreArea})
+
+def editarArea(request):
+
+    if request.method == "POST":
+
+        areaRecibida = request.POST['idAreaEditar']
+        nombreAreaRecibida = "Almacen"
+
+        return render(request,"Editar/editarArea.html", {"areaAEditar":nombreAreaRecibida})

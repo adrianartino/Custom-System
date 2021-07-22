@@ -359,6 +359,9 @@
                             {% if Insumos %}
                             <i class="material-icons" style="color: #00917C;!important">local_printshop</i>
                             <span style="color: #00917C;!important"> Impresoras</span>
+                            {% else %}
+                            <i class="material-icons" >local_printshop</i>
+                            <span> Impresoras</span>
                             {% endif %}
                             {% endif %}
                             {% endif %}
@@ -460,8 +463,28 @@
                     {% endif %}
                     {% endif %}
                         <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">apps</i>
-                            <span>Programas</span>
+                            {% if estaEnVerProgramas %}
+                            <i class="material-icons" style="color: #00917C;!important">apps</i>
+                            <span style="color: #00917C;!important">Programas</span>
+                            {% else %}
+                            {% if estaEnAgregarProgramas %}
+                            <i class="material-icons" style="color: #00917C;!important">apps</i>
+                            <span style="color: #00917C;!important">Programas</span>
+                            {% else %}
+                            {% if estaEnAsignarProgramas %}
+                            <i class="material-icons" style="color: #00917C;!important">apps</i>
+                            <span style="color: #00917C;!important">Programas</span>
+                            {% else %}
+                            {% if estaEnverProgramasPorArea %}
+                            <i class="material-icons" style="color: #00917C;!important">apps</i>
+                            <span style="color: #00917C;!important">Programas</span>
+                            {% else %}
+                            <i class="material-icons" >apps</i>
+                            <span >Programas</span>
+                            {% endif %}
+                            {% endif %}
+                            {% endif %}
+                            {% endif %}
                         </a>
                         <ul class="ml-menu">
                             {% if estaEnVerProgramas %}
@@ -469,29 +492,44 @@
                              {% else %}
                              <li>
                             {% endif %}
-                                <a href="/verProgramas/">Ver programas</a>
+                                {% if estaEnVerProgramas %}
+                                <a href="/verProgramas/" style="color: #E40017;!important">Ver programas</a>
+                                {% else %}
+                                <a href="/verProgramas/" >Ver programas</a>
+                                {% endif %}
                             </li>
                             {% if estaEnAgregarProgramas %}
                             <li class="active">
                             {% else %}
                             <li>
                             {% endif %}
-                                <a href="/agregarProgramas/">Agregar programas</a>
+                                {% if estaEnAgregarProgramas %}
+                                <a href="/agregarProgramas/" style="color: #E40017;!important">Agregar programas</a>
+                                {% else %}
+                                <a href="/agregarProgramas/" >Agregar programas</a>
+                                {% endif %}
                             </li>
                             {% if estaEnAsignarProgramas %}
                             <li class="active">
                             {% else %}
                             <li>
                             {% endif %}
-                                <a href="/asignarProgramas/">Asignar programas por área</a>
+                                {% if estaEnAsignarProgramas %}
+                                <a href="/asignarProgramas/" style="color: #E40017;!important">Asignar programas por área</a>
+                                {% else %}
+                                <a href="/asignarProgramas/" >Asignar programas por área</a>
+                                {% endif %}
                             </li>
                             {% if estaEnverProgramasPorArea %}
                             <li class="active">
                             {% else %}
                             <li>
                             {% endif %}
-                                
-                                    <a href="/ProgramaPorArea/">Ver programas por área</a>
+                                    {% if estaEnverProgramasPorArea %}
+                                    <a href="/ProgramaPorArea/" style="color: #E40017;!important">Ver programas por área</a>
+                                    {% else %}
+                                    <a href="/ProgramaPorArea/" >Ver programas por área</a>
+                                    {% endif %}
                                 </li>
                         </ul>
                     </li>
@@ -506,8 +544,18 @@
                     {% endif %}
                     {% endif %}
                         <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">cleaning_services</i>
-                            <span>Mantenimiento</span>
+                            {% if estaEnCalendario %}
+                            <i class="material-icons" style="color: #00917C;!important">cleaning_services</i>
+                            <span style="color: #00917C;!important">Mantenimiento</span>
+                            {% else %}
+                            {% if estaEnFormulario %}
+                            <i class="material-icons" style="color: #00917C;!important">cleaning_services</i>
+                            <span style="color: #00917C;!important">Mantenimiento</span>
+                            {% else %}
+                            <i class="material-icons" >cleaning_services</i>
+                            <span >Mantenimiento</span>
+                            {% endif %}
+                            {% endif %}
                         </a>
                         <ul class="ml-menu">
                             {% if estaEnCalendario %}
@@ -515,14 +563,23 @@
                              {% else %}
                              <li>
                             {% endif %}
+                                {% if estaEnCalendario %}
+                                <a href="/calendarioMant/" style="color: #E40017;!important">Calendario de mantenimiento</a>
+                                {% else %}
+                                
                                 <a href="/calendarioMant/">Calendario de mantenimiento</a>
+                                {% endif %}
                             </li>
                             {% if estaEnFormulario %}
                             <li class="active">
                              {% else %}
                              <li>
                             {% endif %}
+                                {% if estaEnFormulario %} 
+                                <a href="/formularioMant/" style="color: #E40017;!important">Formulario de mantenimiento</a>
+                                {% else %}
                                 <a href="/formularioMant/">Formulario de mantenimiento</a>
+                                {% endif %}
                             </li>
                           
                         </ul>
@@ -538,8 +595,18 @@
                     {% endif %}
                     {% endif %}
                         <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">assignment</i>
-                            <span>Carta Compromiso</span>
+                            {% if estaEnVerCarta %}
+                            <i class="material-icons" style="color: #00917C;!important">assignment</i>
+                            <span style="color: #00917C;!important"> Carta Compromiso</span>
+                            {% else %}
+                            {% if estaEnAgregarCarta %}
+                            <i class="material-icons" style="color: #00917C;!important">assignment</i>
+                            <span style="color: #00917C;!important">Carta Compromiso</span>
+                            {% else %}
+                            <i class="material-icons" >assignment</i>
+                            <span >Carta Compromiso</span>
+                            {% endif %}
+                            {% endif %}
                         </a>
                         <ul class="ml-menu">
                             {% if estaEnVerCarta %}
@@ -547,14 +614,22 @@
                              {% else %}
                              <li>
                             {% endif %}
+                                {% if estaEnVerCarta %}
+                                <a href="/verCarta/" style="color: #E40017;!important">Ver cartas</a>
+                                {% else %}
                                 <a href="/verCarta/">Ver cartas</a>
+                                {% endif %}
                             </li>
                             {% if estaEnAgregarCarta %}
                             <li class="active">
                              {% else %}
                              <li>
                             {% endif %}
+                                {% if estaEnAgregarCarta %}
+                                <a href="/agregarCarta/" style="color: #E40017;!important">Realizar carta</a>
+                                {% else %}
                                 <a href="/agregarCarta/">Realizar carta</a>
+                                {% endif %}
                             </li>
                             
                         </ul>
@@ -591,8 +666,41 @@
                     {% endif %}  
                     {% endif %}
                         <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">import_contacts</i>
-                            <span>Bitacora</span>
+                            {% if estaEnEquiposBitacora %}
+                            <i class="material-icons" style="color: #00917C;!important">import_contacts</i>
+                            <span style="color: #00917C;!important">Bitacora</span>
+                             {% else %}
+                             {% if estaEnImpresorasBitacora %}
+                             <i class="material-icons" style="color: #00917C;!important">import_contacts</i>
+                            <span style="color: #00917C;!important">Bitacora</span>
+                             {% else %}
+                             {% if estaEnEmpleadosBitacora %}
+                             <i class="material-icons" style="color: #00917C;!important">import_contacts</i>
+                             <span style="color: #00917C;!important">Bitacora</span>
+                             {% else %}
+                            {% if estaEnMantenimientoBitacora %}
+                            <i class="material-icons" style="color: #00917C;!important">import_contacts</i>
+                            <span style="color: #00917C;!important">Bitacora</span>
+                             {% else %}
+                             {% if estaEnCartuchosBitacora %}
+                             <i class="material-icons" style="color: #00917C;!important">import_contacts</i>
+                            <span style="color: #00917C;!important">Bitacora</span>
+                             {% else %}
+
+                              {% if estaEnCartasBitacora %}
+                              <i class="material-icons" style="color: #00917C;!important">import_contacts</i>
+                              <span style="color: #00917C;!important">Bitacora</span>
+                              {% else %}
+                              <i class="material-icons" >import_contacts</i>
+                              <span >Bitacora</span>
+                              {% endif %}
+                              {% endif %}
+                              {% endif %}
+                              {% endif %}
+                              {% endif %}  
+                              {% endif %}
+                    
+                            
                         </a>
                         <ul class="ml-menu">
                             {% if estaEnEquiposBitacora %}
@@ -600,42 +708,68 @@
                              {% else %}
                              <li>
                             {% endif %}
+                                {% if estaEnEquiposBitacora %}
+                                <a href="/BitacorasEquipos/" style="color: #E40017;!important">Equipos</a>
+                                {% else %}
                                 <a href="/BitacorasEquipos/">Equipos</a>
+                                {% endif %}
                             </li>
                             {% if estaEnImpresorasBitacora %}
                             <li class="active">
                              {% else %}
                              <li>
                             {% endif %}
+                                {% if estaEnImpresorasBitacora %}
+                                <a href="/BitacorasImpresoras/" style="color: #E40017;!important">Impresoras</a>
+                                {% else %}
                                 <a href="/BitacorasImpresoras/">Impresoras</a>
+                                {% endif %}
                             </li>
                             {% if estaEnEmpleadosBitacora %}
                             <li class="active">
                              {% else %}
                              <li>
                             {% endif %}
+                                {% if estaEnEmpleadosBitacora %}
+                                <a href="/BitacorasEmpleados/" style="color: #E40017;!important">Empleados</a>
+                                {% else %}
                                 <a href="/BitacorasEmpleados/">Empleados</a>
+                                {% endif %}
+
+
                             </li>
                             {% if estaEnMantenimientoBitacora %}
                             <li class="active">
                              {% else %}
                              <li>
                             {% endif %}
+                                {% if estaEnMantenimientoBitacora %}
+                                <a href="/BitacorasMantenimiento/" style="color: #E40017;!important">Mantenimiento</a>
+                                {% else %}
                                 <a href="/BitacorasMantenimiento/">Mantenimiento</a>
+                                {% endif %}
                             </li>
                             {% if estaEnCartuchosBitacora %}
                             <li class="active">
                              {% else %}
                              <li>
                             {% endif %}
-                                <a href="/BitacorasCartuchos/">Cartuchos</a>
+                                {% if estaEnCartuchosBitacora %}
+                                <a href="/BitacorasCartuchos/" style="color: #E40017;!important">Cartuchos</a>
+                                {% else %}
+                                <a href="/BitacorasCartuchos/" >Cartuchos</a>
+                                {% endif %} 
                             </li>
                             {% if estaEnCartasBitacora %}
                             <li class="active">
                              {% else %}
                              <li>
                             {% endif %}
-                                <a href="/BitacorasCartas/">Cartas</a>
+                                {% if estaEnCartasBitacora %}
+                                <a href="/BitacorasCartas/" style="color: #E40017;!important">Cartas</a>
+                                {% else %}
+                                <a href="/BitacorasCartas/" >Cartas</a>
+                                {% endif %}
                             </li>
                         </ul>
                     </li>

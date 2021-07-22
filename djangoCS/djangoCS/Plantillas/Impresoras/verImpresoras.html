@@ -21,7 +21,8 @@ Ver Impresoras
 
 <!-- Animation Css -->
 <link href={% static 'panel/plugins/animate-css/animate.css' %} rel="stylesheet" />
-
+<!-- Bootstrap Select Css -->
+<link href={% static 'panel/plugins/bootstrap-select/css/bootstrap-select.css' %} rel="stylesheet" />
 <!-- JQuery DataTable Css -->
 <link href={% static 'panel/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css' %} rel="stylesheet">
 
@@ -53,8 +54,20 @@ Ver Impresoras
                         </ul>
                     </li>
                 </ul>
+                <br>
+                <label for="email_address">Estado impresora:</label>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">build</i>
+                        </span>
+                            <select class="form-control show-tick" id="filtroImpresora" onchange="cambioFiltro();">
+                                <option>Activo</option>
+                                <option>Baja</option>
+                                
+                            </select>
+                    </div>
             </div>
-            <div class="body">
+            <div class="body" id="divActivos">
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                         <thead>
@@ -70,6 +83,7 @@ Ver Impresoras
                                 <th>Estado</th>
                                 <th>Activo</th>
                                 <th>Área</th>
+                                <th>Editar</th>
                                 
                             </tr>
                         </thead>
@@ -86,6 +100,7 @@ Ver Impresoras
                                 <th>Estado</th>
                                 <th>Activo</th>
                                 <th>Área</th>
+                                <th>Editar</th>
                                 
                             </tr>
                         </tfoot>
@@ -106,6 +121,17 @@ Ver Impresoras
                                 <th>Funcinal</th>
                                 <th>A</th>
                                 <th><label class="label bg-red">Administración</label> </th>
+                                <form action="/editarArea/" method="POST">{% csrf_token %}
+                                    <th>
+                                        <input type="hidden" name="idImpresoraEditar" value="1">
+                                    
+                                        <center>
+                                         <button type="submit">Editar</button>
+                                        </center>
+                                        
+                                        
+                                    </th>
+                                </form>
                                 
                             </tr>
                             <tr>
@@ -124,6 +150,120 @@ Ver Impresoras
                                 <th>Funcinal</th>
                                 <th>A</th>
                                 <th><label class="label bg-red">Administración</label> </th>
+                                <form action="/editarArea/" method="POST">{% csrf_token %}
+                                    <th>
+                                        <input type="hidden" name="idImpresoraEditar" value="2">
+                                    
+                                        <center>
+                                         <button type="submit">Editar</button>
+                                        </center>
+                                        
+                                        
+                                    </th>
+                                </form>
+                                
+                            </tr>
+                         
+                            
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="body" id="divInactivos">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                        <thead>
+                            <tr>
+                                <th>ID Impresora</th>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>No. Serie</th>
+                                <th>Imagen</th>
+                                <th>Tipo</th>
+                                <th>En red</th>
+                                <th>Dirección IP</th>
+                                <th>Estado</th>
+                                <th>Activo</th>
+                                <th>Área</th>
+                                <th>Editar</th>
+                                
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>ID Impresora</th>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>No. Serie</th>
+                                <th>Imagen</th>
+                                <th>Tipo</th>
+                                <th>En red</th>
+                                <th>Dirección IP</th>
+                                <th>Estado</th>
+                                <th>Activo</th>
+                                <th>Área</th>
+                                <th>Editar</th>
+                                
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            <tr>
+                                <th>1</th>
+                                <th>HP</th>
+                                <th>OfficeJet Pro 7740 Series</th>
+                                <th>G5J3880123</th>
+                                <th>
+                                    <center>
+                                        <img src="{% static 'images/I1.jpg' %}" width="60%" alt="lap">
+                                    </center>
+                                </th>
+                                <th>Inyección de tinta multifuncion Color/Blanco-Negro</th>
+                                <th>SI</th>
+                                <th>192.168.10.13</th>
+                                <th>Funcinal</th>
+                                <th>I</th>
+                                <th><label class="label bg-red">Administración</label> </th>
+                                <form action="/editarArea/" method="POST">{% csrf_token %}
+                                    <th>
+                                        <input type="hidden" name="idImpresoraEditar" value="1">
+                                    
+                                        <center>
+                                         <button type="submit">Editar</button>
+                                        </center>
+                                        
+                                        
+                                    </th>
+                                </form>
+                                
+                            </tr>
+                            <tr>
+                                <th>2</th>
+                                <th>XEROX</th>
+                                <th>WorkCentre 3335</th>
+                                <th>5BT735692</th>
+                                <th>
+                                    <center>
+                                        <img src="{% static 'images/I2.jpg' %}" width="60%" alt="lap">
+                                    </center>
+                                </th>
+                                <th>Láser Blanco-Negro</th>
+                                <th>SI</th>
+                                <th>192.168.10.14</th>
+                                <th>Funcinal</th>
+                                <th>I</th>
+                                <th><label class="label bg-red">Administración</label> </th>
+                                <form action="/editarArea/" method="POST">{% csrf_token %}
+                                    <th>
+                                        <input type="hidden" name="idImpresoraEditar" value="2">
+                                    
+                                        <center>
+                                         <button type="submit">Editar</button>
+                                        </center>
+                                        
+                                        
+                                    </th>
+                                </form>
                                 
                             </tr>
                          
@@ -136,6 +276,27 @@ Ver Impresoras
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    function inicio(){
+        var div1 = document.getElementById("divInactivos");
+        div1.style.display = "none";/* bloquear u ocultar la tabla..*/
+    }
+    window.onload = inicio;
+    function cambioFiltro(){
+        var div = document.getElementById("divActivos");
+        var div1 = document.getElementById("divInactivos");
+        /* Si la tabla de Empleados Activos está activa..*/
+        if(div.style.display === "none"){
+            //Bloquear la tabla de empleados Activos.. 
+            div.style.display = "block";
+            div1.style.display = "none";
+        }else { //Si la tabla de empleados Activos está inactiva
+            div.style.display = "none"; //Desbloquear la tabla de empleados Activos
+            div1.style.display = "block";
+        }
+        
+    }
+</script>
 {% endblock %}
 
 {% block estilosJs %}
@@ -150,7 +311,26 @@ Ver Impresoras
 
 <!-- Slimscroll Plugin Js -->
 <script src={% static 'panel/plugins/jquery-slimscroll/jquery.slimscroll.js' %}></script>
+<!-- Bootstrap Colorpicker Js -->
+<script src={% static 'panel/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js' %}></script>
 
+<!-- Dropzone Plugin Js -->
+<script src={% static 'panel/plugins/dropzone/dropzone.js' %}></script>
+
+<!-- Input Mask Plugin Js -->
+<script src={% static 'panel/plugins/jquery-inputmask/jquery.inputmask.bundle.js' %}></script>
+
+<!-- Multi Select Plugin Js -->
+<script src={% static 'panel/plugins/multi-select/js/jquery.multi-select.js' %}></script>
+
+<!-- Jquery Spinner Plugin Js -->
+<script src={% static 'panel/plugins/jquery-spinner/js/jquery.spinner.js' %}></script>
+
+<!-- Bootstrap Tags Input Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js' %}></script>
+
+<!-- noUISlider Plugin Js -->
+<script src={% static 'panel/plugins/nouislider/nouislider.js' %}></script>
 <!-- Waves Effect Plugin Js -->
 <script src={% static 'panel/plugins/node-waves/waves.js' %}></script>
 

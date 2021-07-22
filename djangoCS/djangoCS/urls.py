@@ -47,6 +47,9 @@ urlpatterns = [
     path("DescargarPDF/", views.descargarPDF),
     path("ProgramaPorArea/",views.ProgramasporArea),
     path("verProgramasPorArea/", views.verProgramasPorArea),
-    path("guardarImagen/", views.guardarImagen)
+    path("guardarImagen/", views.guardarImagen),
+    path("editarEquipo/", views.editarEquipo),
+    path("editarEmpleado/", views.editarEmpleado),
+    path("editarArea/", views.editarArea)
     
 ]

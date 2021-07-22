@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block titulo %}
-Agregar Insumos
+Agregar Empleados
 {% endblock %}
 
 {% block estilos %}
@@ -39,7 +39,7 @@ Agregar Insumos
         <div class="card">
             <div class="header">
                 <h2>
-                    AGREGAR INSUMOS
+                    EDITAR EMPLEADO
                 </h2>
                 <ul class="header-dropdown m-r--5">
                     <li class="dropdown">
@@ -57,111 +57,97 @@ Agregar Insumos
             <div class="body">
                 <form id="form_validation" method="POST">{% csrf_token %}
                     <div class="row clearfix">
-                        <div class="col-md-2">
-                            <label for="email_address">Marca:</label>
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="material-icons">copyright</i>
-                                </span>
-                                    <select class="form-control show-tick">
-                                        <option>HP</option>
-                                        <option>XEROX</option>
-                                        <option>SAMSUNG</option>
-                                        <option>EPSON</option>
-                                    </select>
-                            </div>
-                        </div>
-                     
-                        
                         <div class="col-md-4">
-                            <label for="email_address">Modelo:</label>
+                            <label for="email_address">Nombre(s):</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
-                                    <i class="material-icons">branding_watermark</i>
+                                    <i class="material-icons">person</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar Modelo">
+                                    <input onkeypress='return soloLetras(event)' type="text" class="form-control date" placeholder="Ingresar nombre" 
+                                    pattern="[A-Za-z ]{3,80}" title="No se permiten caracteres especiales." value="{{arregloDatos.1}}" required>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-2">
-                            <label for="email_address">Cantidad:</label>
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="material-icons">format_list_numbered</i>
-                                </span>
-                                    <select class="form-control show-tick">
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                    </select>
-                            </div>
-                        </div>
                         <div class="col-md-4">
-                            <label for="email_address">No. Serie:</label>
+                            <label for="password">Apellidos:</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <input onkeypress='return soloLetras(event)'type="text" class="form-control date" placeholder="Ingresar apellidos"
+                                    pattern="[A-Za-z ]{3,80}" title="No se permiten caracteres especiales." value="{{arregloDatos.2}}" required>
+                                </div>
+                            </div>
+                        </div>    
+                    </div>
+
+                    <div class="row clearfix">
+                        <div class="col-md-4">
+                            <label for="email_address">Área:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
-                                    <i class="material-icons">pin</i>
+                                    <i class="material-icons">work</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar número de serie">
+                                    <select class="form-control show-tick">
+                                        {% if nombreArea == "Almacen" %}
+                                        <option>Sistemas</option>
+                                        <option>Administración</option>
+                                        <option selected>Almacen</option>
+                                        {% else %}
+                                        <option>Sistemas</option>
+                                        <option>Administración</option>
+                                        <option >Almacen</option>
+                                        {% endif %}
+                                    </select>
                                 </div>
                             </div>
                         </div>
-                 
-                    </div>
-                <div class="row clearfix">
-
-                    <div class="col-md-2">
-                        <label for="email_address">Color:</label>
-                        <div class="input-group">
-                            <span class="input-group-addon">
-                                <i class="material-icons">palette</i>
-                            </span>
-                                <select class="form-control show-tick">
-                                    <option>Negro</option>
-                                    <option>Tricolor</option>
-                                    <option>Amarillo</option>
-                                    <option>Cyan</option>
-                                    <option>Magenta</option>
-                                </select>
-                        </div>
-                    </div>
-                    
-
-                    
-                    <div class="col-md-4">
-                        <label for="email_address">Imagen de cartucho:</label>
-                        <div class="input-group">
-                            <span class="input-group-addon">
-                                <i class="material-icons">add_photo_alternate</i>
-                            </span>
-                            <div class="form-line">
-                                <input type="file" name="imagenCartucho" id="txtimagen">
+                        <div class="col-md-4">
+                            <label for="password">Puesto:</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <input onkeypress='return soloLetras(event)'type="text" class="form-control date" placeholder="Ingresar puesto"
+                                    pattern="[A-Za-z ]{3,80}" title="No se permiten caracteres especiales." value="{{arregloDatos.4}}" required>
+                                </div>
                             </div>
-                        </div>
-                    </div>  
-                        <div class="col-md-2">
-                            <label for="email_address">Impresora:</label>
+                        </div>    
+                    </div>
+
+                    <div class="row clearfix">
+                        <div class="col-md-4">
+                            <label for="email_address">Correo:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
-                                    <i class="material-icons">printer</i>
+                                    <i class="material-icons">email</i>
                                 </span>
-                                    <select class="form-control show-tick">
-                                        <option>Hp Laserjet blabla</option>
-                                        <option>Xerox Workcentre</option>
-                                    </select>
+                                <div class="form-line">
+                                    <input type="email" class="form-control date" placeholder="Ingresar Correo"
+                                    title="Ingrese un correo electrónico válido." value="{{arregloDatos.5}}" required>
+                                </div>
                             </div>
                         </div>
-                        
-                        
-
-                       
+                        <div class="col-md-4">
+                            <label for="password">Contraseña:</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <input type="password" class="form-control date" placeholder="Ingresar Contraseña"
+                                    pattern="{3,40}"title="Ingrese la contraseña." value="{{arregloDatos.6}}" required>
+                                </div>
+                            </div>
+                        </div>    
                     </div>
+
                     
                     
-                    <button type="submit" class="btn btn-primary m-t-15 waves-effect">Guardar Cartucho</button>
+                    {% if arregloDatos.7 == "A" %}
+                    <input type="checkbox" id="md_checkbox_1" class="filled-in chk-col-cyan" checked />
+                    <label for="md_checkbox_1"></label>
+                    {% else %}
+                    <input type="checkbox" id="remember_me" class="filled-in">
+                    {% endif %}
+                    <label for="remember_me">Activo</label>
+                    <br>
+                    <button type="submit" class="btn btn-primary m-t-15 waves-effect">Actualizar Empleado</button>
                 </form>
             </div>
         </div>
