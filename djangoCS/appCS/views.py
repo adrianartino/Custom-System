@@ -180,6 +180,8 @@ def agregarCarta(request):
         compuSeleccionada = request.POST['compuSeleccionada']
         empleSeleccionado = request.POST['empleadoSeleccionado']
 
+       
+
         arregloEmpleado = empleSeleccionado.split(' ')
         #[0] - Monica
         #[1] - Arriaga
@@ -198,7 +200,11 @@ def agregarCarta(request):
 
         arregloDatosCompu = ["1", "Laptop", "HP", "Pavillion 087", "Negro",	"8 GB", "Intel Core i7", "Windows 10 Home 64 bits", "Blanca Gaeta",	"Sistemas",	"Funcional"	, "A"]
 
-        
+        request.session['datosCompu'] = arregloDatosCompu
+        request.session['datosEmpleado'] = datosEmpleado
+
+        #Guardar datos en la tabla Carta de la base de datos
+
         estaEnAgregarCarta = True
         return render(request, "cartaCompromiso/agregarCarta.html",{"estaEnAgregarCarta": estaEnAgregarCarta, "compuSeleccionada":compuSeleccionada, "arreglo":arregloDatosCompu, "arregloEmpl": datosEmpleado})
 
@@ -290,11 +296,27 @@ def editarEmpleado(request):
 
         return render(request,"Editar/editarEmpleado.html", {"arregloDatos":datosEmpleado, "nombreArea":nombreArea})
 
-def editarArea(request):
+def editarImpresora(request):
 
     if request.method == "POST":
 
-        areaRecibida = request.POST['idAreaEditar']
-        nombreAreaRecibida = "Almacen"
+        idImpresora= request.POST['idImpresoraEditar']
+        datosImpresora = [idImpresora, "HP", "SAD34", "345SFSEA", "Inyección de tinta Color/Blanco-Negro", "si", "192.164.2.10", "Funcional", "A", "Administración"]
 
-        return render(request,"Editar/editarArea.html", {"areaAEditar":nombreAreaRecibida})
+        return render(request,"Editar/editarImpresora.html", {"impresoraAEditar":datosImpresora})
+
+def firmarCarta(request):
+
+    #Hacer consulta al ultimo registro de la tabla de cartas, para ver la ultima carta preguardada.
+    datosCarta = ["1", "2", "1", "23/07/2021"]
+    idEmpleado = datosCarta[1] # id 2 que corresponde a monica
+    idEquipo = datosCarta[2] # id 1 que corresponde a laptop hp
+
+    #Consulta a la tabla de empleado.
+    datosEmpleado = ["2",	"Mónica",	"Arriaga",	"Administración	", "Recursos humanos", 	"rhumanos@customco.com.mx", 	"recursosh098","A"	]
+    #Consulta a la tabla equipo
+    arregloDatosCompu = ["1", "Laptop", "HP", "Pavillion 087", "Negro",	"8 GB", "Intel Core i7", "Windows 10 Home 64 bits", "Blanca Gaeta",	"Sistemas",	"Funcional"	, "A"]
+
+    return render(request, "cartaCompromiso/firmarCarta.html", { "arreglo":arregloDatosCompu, "arregloEmpl": datosEmpleado}) 
+
+    

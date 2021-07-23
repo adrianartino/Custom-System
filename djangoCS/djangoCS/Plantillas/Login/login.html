@@ -1,114 +1,102 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Custom System</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Sign In | Bootstrap Based Admin Template - Material Design</title>
+    <!-- Favicon-->
+    <link rel="icon" href={% static 'images/icons/co.ico' %} type="image/x-icon">
 
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Tourney:wght@300&display=swap" rel="stylesheet">
-    <!--===============================================================================================-->
-  	<link rel="icon" type="image/png" href={% static 'images/icons/co.ico' %}/>
-    <!--===============================================================================================-->
-    	<link rel="stylesheet" type="text/css" href={% static 'vendor/bootstrap/css/bootstrap.min.css' %}>
-    <!--===============================================================================================-->
-    	<link rel="stylesheet" type="text/css" href={% static 'fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}>
-    <!--===============================================================================================-->
-    	<link rel="stylesheet" type="text/css" href={% static 'fonts/Linearicons-Free-v1.0.0/icon-font.min.css' %}>
-    <!--===============================================================================================-->
-    	<link rel="stylesheet" type="text/css" href={% static 'vendor/animate/animate.css' %}>
-    <!--===============================================================================================-->
-    	<link rel="stylesheet" type="text/css" href={% static 'vendor/css-hamburgers/hamburgers.min.css' %}>
-    <!--===============================================================================================-->
-    	<link rel="stylesheet" type="text/css" href={% static 'vendor/animsition/css/animsition.min.css' %}>
-    <!--===============================================================================================-->
-    	<link rel="stylesheet" type="text/css" href={% static 'vendor/select2/select2.min.css' %}>
-    <!--===============================================================================================-->
-    	<link rel="stylesheet" type="text/css" href={% static 'vendor/daterangepicker/daterangepicker.css' %}>
-    <!--===============================================================================================-->
-    	<link rel="stylesheet" type="text/css" href={% static 'css/util.css' %}>
-    	<link rel="stylesheet" type="text/css" href={% static 'css/main.css' %}>
-    <!--===============================================================================================-->
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+
+    <!-- Bootstrap Core Css -->
+<link href={% static 'panel/plugins/bootstrap/css/bootstrap.css' %} rel="stylesheet">
+
+<!-- Waves Effect Css -->
+<link href={% static 'panel/plugins/node-waves/waves.css' %} rel="stylesheet" />
+
+<!-- Animation Css -->
+<link href={% static 'panel/plugins/animate-css/animate.css' %} rel="stylesheet" />
+
+<!-- Custom Css -->
+<link href={% static 'panel/css/style.css' %} rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tourney:wght@800;900&display=swap" rel="stylesheet">
 </head>
-<body>
 
-    {% load bootstrap4 %}
-    <div class="limiter">
-		<div class="container-login100">
-			<div class="wrap-login100">
-				<div class="login100-form-title" style="background-image: url('{% static 'images/13.jpg' %}');">
-					<span class="login100-form-title-1" style="font-family: 'Tourney', cursive;">
-						Custom System
-					</span>
-					
-					<img style="width: 15%;" src="{% static 'images/custom.png' %}" alt="">
-				</div>
+<body class="login-page bg-image" style="background-image:url('{% static "images/imgOsc.png"%}'); no-repeat center center fixed; 
+-webkit-background-size: cover;
+-moz-background-size: cover;
+-o-background-size: cover;
+background-size: cover; ">
+    <div class="login-box" >
+        <div class="logo">
+            <center>
+				<h1 style="font-family: 'Tourney', cursive; font-size: 40px; color: whitesmoke;">Custom System</h1>
 
-				<form class="login100-form validate-form" action="/login/" method="POST">{% csrf_token %}
-					<div class="wrap-input100 validate-input m-b-26" data-validate="Usuario es requerido">
-						<span class="label-input100">Correo</span>
-						<input class="input100" type="text" name="username" placeholder="Ingresar usuario">
-						<span class="focus-input100"></span>
-					</div>
+			</center>
+        </div>
+        <div class="card">
+            <div class="body">
+                <form id="sign_in" method="POST">
+                    <div class="msg" style="font-family: 'Tourney', cursive; font-size: 15px; ">Iniciar Sesión</div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">person</i>
+                        </span>
+                        <div class="form-line">
+                            <input type="text" class="form-control" name="username" placeholder="Username" required autofocus>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">lock</i>
+                        </span>
+                        <div class="form-line">
+                            <input type="password" class="form-control" name="password" placeholder="Password" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-4 p-t-5">
+                        </div>
+                        <div class="col-xs-4">
+                            <button class="btn btn-block bg-pink waves-effect" type="submit">Entrar</button>
+                        </div>
+						<div class="col-xs-4 p-t-5">
+                        </div>
+                    </div>
+                    <div class="row m-t-15 m-b--20">
+						<center>
+							<a href="https://www.customco.com.mx/" style="font-family: 'Tourney', cursive; font-size: 15px; color: crimson;">Custom & Co S.A de C.V.</a>
 
-					<div class="wrap-input100 validate-input m-b-18" data-validate = "Contraseña es requerida">
-						<span class="label-input100">Constraseña</span>
-						<input class="input100" type="password" name="pass" placeholder="Ingresar contraseña">
-						<span class="focus-input100"></span>
-					</div>
+						</center>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
-					<div>
-						<br>
-					</div>
+    <!-- Jquery Core Js -->
+	<script src={% static 'panel/plugins/jquery/jquery.min.js' %}></script>
 
-					<div class="container-login100-form-btn">
-						<button class="login100-form-btn">
-							Entrar
-						</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
+	<!-- Bootstrap Core Js -->
+	<script src={% static 'panel/plugins/bootstrap/js/bootstrap.js' %}></script>
 
 
-    {% bootstrap_css %}
+    <!-- Waves Effect Plugin Js -->
+	<script src={% static 'panel/plugins/node-waves/waves.js' %}></script>
 
+    <!-- Validation Plugin Js -->
+    <script src={% static 'panel/plugins/jquery-validation/jquery.validate.js' %}></script>
 
-    {% bootstrap_javascript jquery='full' %}
-    <!--===============================================================================================-->
-    	<script src={% static 'vendor/jquery/jquery-3.2.1.min.js' %}></script>
-    <!--===============================================================================================-->
-    	<script src={% static 'vendor/animsition/js/animsition.min.js' %}></script>
-    <!--===============================================================================================-->
-    	<script src={% static 'vendor/bootstrap/js/popper.js' %}></script>
-    	<script src={% static 'vendor/bootstrap/js/bootstrap.min.js' %}></script>
-    <!--===============================================================================================-->
-    	<script src={% static 'vendor/select2/select2.min.js' %}></script>
-    <!--===============================================================================================-->
-    	<script src={% static 'vendor/daterangepicker/moment.min.js' %}></script>
-    	<script src={% static 'vendor/daterangepicker/daterangepicker.js' %}></script>
-    <!--===============================================================================================-->
-    	<script src={% static 'vendor/countdowntime/countdowntime.js' %}></script>
-    <!--===============================================================================================-->
-    	<script src={% static 'js/main.js' %}></script>
-
-		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-
-		{% if hayError %}
-		<script type="text/javascript">
-			Swal.fire({
-				icon: 'error',
-				title: 'Algo salio mal..',
-				text: ' {{textoError}}',
-				footer: '<span style="color: red!important"> Corrige tus datos para ingresar a Bustop! </span>',
-				width: '40%'
-			});
-		</script>
-		{% endif %}
-
+    <!-- Custom Js -->
+    <script src={% static 'panel/js/admin.js' %}></script>
+    <script src={% static 'panel/js/pages/examples/sign-in.js' %}></script>
 </body>
+
 </html>

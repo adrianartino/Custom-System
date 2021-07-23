@@ -87,7 +87,7 @@ Agregar Empleados
                                 <span class="input-group-addon">
                                     <i class="material-icons">work</i>
                                 </span>
-                                <div class="form-line">
+                               
                                     <select class="form-control show-tick">
                                         {% if nombreArea == "Almacen" %}
                                         <option>Sistemas</option>
@@ -99,7 +99,7 @@ Agregar Empleados
                                         <option >Almacen</option>
                                         {% endif %}
                                     </select>
-                                </div>
+                              
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -140,14 +140,15 @@ Agregar Empleados
                     
                     
                     {% if arregloDatos.7 == "A" %}
-                    <input type="checkbox" id="md_checkbox_1" class="filled-in chk-col-cyan" checked />
-                    <label for="md_checkbox_1"></label>
+                    <input type="checkbox" id="remember_me" class="filled-in chk-col-cyan" checked>
+                    <label for="remember_me">Activo</label>
                     {% else %}
                     <input type="checkbox" id="remember_me" class="filled-in">
-                    {% endif %}
                     <label for="remember_me">Activo</label>
+                    {% endif %}
+                    
                     <br>
-                    <button type="submit" class="btn btn-primary m-t-15 waves-effect">Actualizar Empleado</button>
+                    <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i class="material-icons">loop</i> Guardar Empleado</button>
                 </form>
             </div>
         </div>

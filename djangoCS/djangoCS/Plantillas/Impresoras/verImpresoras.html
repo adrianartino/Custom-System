@@ -81,10 +81,9 @@ Ver Impresoras
                                 <th>En red</th>
                                 <th>Dirección IP</th>
                                 <th>Estado</th>
-                                <th>Activo</th>
                                 <th>Área</th>
                                 <th>Editar</th>
-                                
+                                <th>Baja</th>
                             </tr>
                         </thead>
                         <tfoot>
@@ -98,10 +97,9 @@ Ver Impresoras
                                 <th>En red</th>
                                 <th>Dirección IP</th>
                                 <th>Estado</th>
-                                <th>Activo</th>
                                 <th>Área</th>
                                 <th>Editar</th>
-                                
+                                <th>Baja</th>
                             </tr>
                         </tfoot>
                         <tbody>
@@ -119,16 +117,28 @@ Ver Impresoras
                                 <th>SI</th>
                                 <th>192.168.10.13</th>
                                 <th>Funcinal</th>
-                                <th>A</th>
                                 <th><label class="label bg-red">Administración</label> </th>
-                                <form action="/editarArea/" method="POST">{% csrf_token %}
+                                <form action="/editarImpresora/" method="POST">{% csrf_token %}
                                     <th>
                                         <input type="hidden" name="idImpresoraEditar" value="1">
                                     
                                         <center>
-                                         <button type="submit">Editar</button>
+                                            <button type="submit" class="btn btn-warning waves-effect">
+                                                <i class="material-icons">edit</i>
+                                            </button>
                                         </center>
                                         
+                                        
+                                    </th>
+                                </form>
+                                <form action="/editarImpresora/" method="POST">{% csrf_token %}
+                                    <th>
+                                        <input type="hidden" name="idEmpleadoEditar" value="1">
+                                        <center>
+                                            <button type="submit" class="btn bg-red waves-effect">
+                                                <i class="material-icons">cancel</i>
+                                            </button>
+                                        </center>
                                         
                                     </th>
                                 </form>
@@ -148,16 +158,28 @@ Ver Impresoras
                                 <th>SI</th>
                                 <th>192.168.10.14</th>
                                 <th>Funcinal</th>
-                                <th>A</th>
                                 <th><label class="label bg-red">Administración</label> </th>
-                                <form action="/editarArea/" method="POST">{% csrf_token %}
+                                <form action="/editarImpresora/" method="POST">{% csrf_token %}
                                     <th>
                                         <input type="hidden" name="idImpresoraEditar" value="2">
                                     
                                         <center>
-                                         <button type="submit">Editar</button>
+                                            <button type="submit" class="btn btn-warning waves-effect">
+                                                <i class="material-icons">edit</i>
+                                            </button>
                                         </center>
                                         
+                                        
+                                    </th>
+                                </form>
+                                <form action="/editarImpresora/" method="POST">{% csrf_token %}
+                                    <th>
+                                        <input type="hidden" name="idEmpleadoEditar" value="1">
+                                        <center>
+                                            <button type="submit" class="btn bg-red waves-effect">
+                                                <i class="material-icons">cancel</i>
+                                            </button>
+                                        </center>
                                         
                                     </th>
                                 </form>
@@ -184,9 +206,8 @@ Ver Impresoras
                                 <th>En red</th>
                                 <th>Dirección IP</th>
                                 <th>Estado</th>
-                                <th>Activo</th>
                                 <th>Área</th>
-                                <th>Editar</th>
+                                <th>Alta</th>
                                 
                             </tr>
                         </thead>
@@ -201,9 +222,8 @@ Ver Impresoras
                                 <th>En red</th>
                                 <th>Dirección IP</th>
                                 <th>Estado</th>
-                                <th>Activo</th>
                                 <th>Área</th>
-                                <th>Editar</th>
+                                <th>Alta</th>
                                 
                             </tr>
                         </tfoot>
@@ -222,20 +242,19 @@ Ver Impresoras
                                 <th>SI</th>
                                 <th>192.168.10.13</th>
                                 <th>Funcinal</th>
-                                <th>I</th>
                                 <th><label class="label bg-red">Administración</label> </th>
-                                <form action="/editarArea/" method="POST">{% csrf_token %}
+                                <form action="/editarEquipo/" method="POST">{% csrf_token %}
                                     <th>
-                                        <input type="hidden" name="idImpresoraEditar" value="1">
-                                    
+                                        <input type="hidden" name="idEquipoEditar" value="1">
+                                        
                                         <center>
-                                         <button type="submit">Editar</button>
+                                            <button type="submit" class="btn bg-green waves-effect">
+                                                <i class="material-icons">upgrade</i>
+                                            </button>
                                         </center>
-                                        
-                                        
+                                    
                                     </th>
                                 </form>
-                                
                             </tr>
                             <tr>
                                 <th>2</th>
@@ -251,17 +270,17 @@ Ver Impresoras
                                 <th>SI</th>
                                 <th>192.168.10.14</th>
                                 <th>Funcinal</th>
-                                <th>I</th>
                                 <th><label class="label bg-red">Administración</label> </th>
-                                <form action="/editarArea/" method="POST">{% csrf_token %}
+                                <form action="/editarEquipo/" method="POST">{% csrf_token %}
                                     <th>
-                                        <input type="hidden" name="idImpresoraEditar" value="2">
-                                    
+                                        <input type="hidden" name="idEquipoEditar" value="1">
+                                        
                                         <center>
-                                         <button type="submit">Editar</button>
+                                            <button type="submit" class="btn bg-green waves-effect">
+                                                <i class="material-icons">upgrade</i>
+                                            </button>
                                         </center>
-                                        
-                                        
+                                    
                                     </th>
                                 </form>
                                 

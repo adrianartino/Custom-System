@@ -35,6 +35,7 @@ class Equipos (models.Model):
     id_empleado=models.ForeignKey(Empleados, on_delete=models.CASCADE, null = True)
     estado=models.CharField(max_length=80)
     activo=models.CharField(max_length=2)
+    fechaMant=models.DateField(null=True)
 
     def __str__(self):
         return self.id_equipo

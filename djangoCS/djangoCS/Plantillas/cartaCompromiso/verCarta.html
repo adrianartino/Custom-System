@@ -64,7 +64,7 @@ Ver carta
                                 <th>Equipo</th>
                                 <th>Fecha</th>
                                 <th>Firma</th>
-                               
+                                <th>Ver Carta</th>
                                 
                             </tr>
                         </thead>
@@ -74,7 +74,7 @@ Ver carta
                                 <th>Equipo</th>
                                 <th>Fecha</th>
                                 <th>Firma</th>
-                                
+                                <th>Ver Carta</th>
                             </tr>
                         </tfoot>
                         <tbody>
@@ -88,7 +88,15 @@ Ver carta
                                         <img src="{% static 'images/laptophpP.jpg' %}" width="60%" alt="lap">
                                     </center>
                                 </td>
-                             
+                                <form action="/verCartaCompleta/" method="POST">{% csrf_token %}
+                                    <th>
+                                        <input type="hidden" name="idEmpleadoEditar" value="1">
+                                        <center>
+                                            <button type="submit" class="btn bg-deep-purple waves-effect"> <i class="material-icons">visibility</i></button>
+                                        </center>
+                                        
+                                    </th>
+                                </form>
                                 
                             </tr>
                         

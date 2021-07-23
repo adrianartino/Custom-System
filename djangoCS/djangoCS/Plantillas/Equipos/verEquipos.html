@@ -265,8 +265,7 @@ Ver Equipos
                                 <th>Propietario</th>
                                 <th>Área</th>
                                 <th>Estado</th>
-                                <th>Activo</th>
-                                <th>Editar</th>
+                                <th>Alta</th>
                                 
                     
                                 
@@ -286,9 +285,8 @@ Ver Equipos
                                 <th>Propietario</th>
                                 <th>Área</th>
                                 <th>Estado</th>
-                                <th>Activo</th>
 
-                                <th>Editar</th>
+                                <th>Alta</th>
 
                                 
                             </tr>
@@ -322,7 +320,6 @@ Ver Equipos
                                     <th>Blanca Gaeta</th>
                                     <th>Sistemas</th>
                                     <th>Funcional</th>
-                                    <th>I</th>
                                     <form action="/editarEquipo/" method="POST">{% csrf_token %}
                                         <th>
                                             <input type="hidden" name="idEquipoEditar" value="1">
@@ -369,7 +366,6 @@ Ver Equipos
                                 <th>Monica Arriaga</th>
                                 <th>Administración</th>
                                 <th>Funcional</th>
-                                <th>I</th>
                                 <form action="/editarEquipo/" method="POST">{% csrf_token %}
                                     <th>
                                         <input type="hidden" name="idEquipoEditar" value="2">

@@ -1,8 +1,8 @@
-{% extends "Menu/menu.html" %}
+
 {% load static %}
 
 {% block titulo %}
-Realizar carta
+<title>Firmar Carta</title>
 {% endblock %}
 
 {% block estilos %}
@@ -33,6 +33,8 @@ Realizar carta
 
 <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
 <link href={% static 'panel/css/themes/all-themes.css' %} rel="stylesheet" />
+
+<link href={% static 'css/firma.css' %} rel="stylesheet" />
 <style>
     canvas {
         width: 500px;
@@ -151,63 +153,9 @@ Realizar carta
                     adecuada. Las sanciones aplicables a considerar por el departamento de sistemas y la gerencia administrativa son, levantamiento de un acta administrativa 
                     o el retiro definitivo del equipo.
                 </h4>
-                {% if compuSeleccionada %}
-
-                {% else %}
-                <div class="body">
-                    <form id="form_validation" action="/agregarCarta/" method="POST">{% csrf_token %}
-                        <div class="row clearfix">
-                            <div class="col-md-3">
-                                
-                            </div>
-                            <div class="col-md-6">
-                                <label for="email_address">Equipo:</label>
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <i class="material-icons">computer</i>
-                                    </span>
-                                        <select class="form-control show-tick" name="compuSeleccionada">
-                                            <option value="Laptop HP Pavillion z35">Laptop HP Pavillion z35</option>
-                                            <option value="Laptop Lenovo ThinkPad">Laptop Lenovo ThinkPad</option>
-                                        </select>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                
-                            </div>
-                        </div>
-                        <div class="row clearfix">
-                            <div class="col-md-3">
-                                
-                            </div>
-                            <div class="col-md-6">
-                                <label for="email_address">Empleado:</label>
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <i class="material-icons">person</i>
-                                    </span>
-                                        <select class="form-control show-tick" name="empleadoSeleccionado">
-                                            <option value="Mónica Arriaga Administración">Mónica Arriaga - Administración</option>
-                                            <option value="Blanca Talamantes Sistemas">Blanca Talamantes Sistemas</option>
-                                        </select>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                
-                            </div>
-                        </div>
-                        <center>
-                            <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i class="material-icons">save</i> Preguardar Carta</button>
-                        </center>
-                        
-                    </form>
-                </div>
-                <center>
-                    <h2>Fecha: 16 de Julio del 2021</h2>
-                </center>
-                {% endif %}
                 
-                {% if compuSeleccionada %}
+                
+               
 
                 <p class="m-t-10 m-b-30">
                     Por medio de la presente hago constar que he recibido del departamento de sistemas de la empresa Custom&Co S.A de C.V. equipo de cómputo que consta de:
@@ -398,19 +346,54 @@ Realizar carta
                 </div>
                 <center>
                     <h2>Fecha: 16 de Julio del 2021</h2>
+                    <img src="{% static 'images/qr2.jpeg' %}" width="10%" alt="qr">
                     <h2>Ingresar Firma Electrónica</h2>
-                    <div style="width: 550px;
-                    height: 350px;
-                    background-color: black;">
-                    <div>
+                    
                         <label for=""></label>
-                    </div>
-                        <canvas id="pizarra"></canvas>
-                        
-                    </div>
+                        <div class="contenedor">
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                     <canvas id="draw-canvas" width="620" height="360">
+                                         No tienes un buen navegador.
+                                     </canvas>
+                                 </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <input type="button" class="button" id="draw-submitBtn" value="Crear Imagen"></input>
+                                    <input type="button" class="button" id="draw-clearBtn" value="Borrar Canvas"></input>
+                    
+                                            <label>Color</label>
+                                            <input type="color" id="color">
+                                            <div>
+                                                <br>
+                                                <label>Tamaño Puntero</label>
+                                            <input type="range" id="puntero" min="1" default="1" max="5" width="10%">
+                                            </div>
+                                            
+                    
+                    
+                                </div>
+                    
+                            </div>
+                    
+                            <br/>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <textarea id="draw-dataUrl" class="form-control" rows="5">Para los que saben que es esto:</textarea>
+                                </div>
+                            </div>
+                            <br/>
+                            <div class="contenedor">
+                                <div class="col-md-12">
+                                    <img id="draw-image" src="" alt="Tu Imagen aparecera Aqui!"/>
+                                </div>
+                            </div>
+                        </div>
                     
                     <div>
-                        <button type="submit" class="btn btn-warning m-t-15 waves-effect" onclick="limpiar()"><i class="material-icons">delete_sweep</i> Limpiar</button>
+                       
                         <br><br>
                         <form action="/guardarImagen/" method="POST" id="form1">{% csrf_token %}
                             <input type="hidden" name="canvasData" id="my_hidden">
@@ -419,18 +402,8 @@ Realizar carta
         
                         </form>
                     </div>
-                    <br>
-                    <form action="/firmarCarta/" method="POST">{% csrf_token %}
-                        <input type="hidden" name="idEquipo" value="{{arreglo.1}}">
-                        <input type="hidden" name="idEmpleado" value="{{arregloEmpl.0}}">
-                        <button type="submit" class="btn bg-red waves-effect"><i class="material-icons">blur_on</i> QR</button>
-                    </form> 
-
                     
                 </center>
-                {% else %}
-
-                {% endif %}
                 
 
                 
@@ -439,129 +412,164 @@ Realizar carta
     </div>
 </div>
 <script>
-    function save(){
-        var canvas=document.getElementById('pizarra');
+   function save(){
+        var canvas=document.getElementById('draw-canvas');
         var inputVacio = document.getElementById('my_hidden');
         inputVacio.value=canvas.toDataURL();
         document.forms["form1"].submit();
     }
-    function limpiar(){
-        let miCanvas = document.querySelector('#pizarra');
-        let lineas = [];
-        let correccionX = 0;
-        let correccionY = 0;
-        let pintarLinea = false;
-        // Marca el nuevo punto
-        let nuevaPosicionX = 0;
-        let nuevaPosicionY = 0;
 
-        let posicion = miCanvas.getBoundingClientRect()
-        correccionX = posicion.x;
-        correccionY = posicion.y;
+    (function() { // Comenzamos una funcion auto-ejecutable
 
-        miCanvas.width = 500;
-        miCanvas.height = 300;
+// Obtenenemos un intervalo regular(Tiempo) en la pamtalla
+window.requestAnimFrame = (function (callback) {
+    return window.requestAnimationFrame ||
+                window.webkitRequestAnimationFrame ||
+                window.mozRequestAnimationFrame ||
+                window.oRequestAnimationFrame ||
+                window.msRequestAnimaitonFrame ||
+                function (callback) {
+                     window.setTimeout(callback, 1000/60);
+        // Retrasa la ejecucion de la funcion para mejorar la experiencia
+                };
+})();
 
-        
-    }
-    //======================================================================
-    // VARIABLES
-    //======================================================================
-    let miCanvas = document.querySelector('#pizarra');
-    let lineas = [];
-    let correccionX = 0;
-    let correccionY = 0;
-    let pintarLinea = false;
-    // Marca el nuevo punto
-    let nuevaPosicionX = 0;
-    let nuevaPosicionY = 0;
+// Traemos el canvas mediante el id del elemento html
+var canvas = document.getElementById("draw-canvas");
+var ctx = canvas.getContext("2d");
 
-    let posicion = miCanvas.getBoundingClientRect()
-    correccionX = posicion.x;
-    correccionY = posicion.y;
 
-    miCanvas.width = 500;
-    miCanvas.height = 300;
+// Mandamos llamar a los Elemetos interactivos de la Interfaz HTML
+var drawText = document.getElementById("draw-dataUrl");
+var drawImage = document.getElementById("draw-image");
+var clearBtn = document.getElementById("draw-clearBtn");
+var submitBtn = document.getElementById("draw-submitBtn");
+clearBtn.addEventListener("click", function (e) {
+    // Definimos que pasa cuando el boton draw-clearBtn es pulsado
+    clearCanvas();
+    drawImage.setAttribute("src", "");
+}, false);
+    // Definimos que pasa cuando el boton draw-submitBtn es pulsado
+submitBtn.addEventListener("click", function (e) {
+var dataUrl = canvas.toDataURL();
+drawText.innerHTML = dataUrl;
+drawImage.setAttribute("src", dataUrl);
+ }, false);
 
-    //======================================================================
-    // FUNCIONES
-    //======================================================================
+// Activamos MouseEvent para nuestra pagina
+var drawing = false;
+var mousePos = { x:0, y:0 };
+var lastPos = mousePos;
+canvas.addEventListener("mousedown", function (e)
+{
+/*
+  Mas alla de solo llamar a una funcion, usamos function (e){...}
+  para mas versatilidad cuando ocurre un evento
+*/
+    var tint = document.getElementById("color");
+    var punta = document.getElementById("puntero");
+    console.log(e);
+    drawing = true;
+    lastPos = getMousePos(canvas, e);
+}, false);
+canvas.addEventListener("mouseup", function (e)
+{
+    drawing = false;
+}, false);
+canvas.addEventListener("mousemove", function (e)
+{
+    mousePos = getMousePos(canvas, e);
+}, false);
 
-    /**
-     * Funcion que empieza a dibujar la linea
-     */
-    function empezarDibujo () {
-        pintarLinea = true;
-        lineas.push([]);
+// Activamos touchEvent para nuestra pagina
+canvas.addEventListener("touchstart", function (e) {
+    mousePos = getTouchPos(canvas, e);
+console.log(mousePos);
+e.preventDefault(); // Prevent scrolling when touching the canvas
+    var touch = e.touches[0];
+    var mouseEvent = new MouseEvent("mousedown", {
+        clientX: touch.clientX,
+        clientY: touch.clientY
+    });
+    canvas.dispatchEvent(mouseEvent);
+}, false);
+canvas.addEventListener("touchend", function (e) {
+e.preventDefault(); // Prevent scrolling when touching the canvas
+    var mouseEvent = new MouseEvent("mouseup", {});
+    canvas.dispatchEvent(mouseEvent);
+}, false);
+canvas.addEventListener("touchleave", function (e) {
+// Realiza el mismo proceso que touchend en caso de que el dedo se deslice fuera del canvas
+e.preventDefault(); // Prevent scrolling when touching the canvas
+var mouseEvent = new MouseEvent("mouseup", {});
+canvas.dispatchEvent(mouseEvent);
+}, false);
+canvas.addEventListener("touchmove", function (e) {
+e.preventDefault(); // Prevent scrolling when touching the canvas
+    var touch = e.touches[0];
+    var mouseEvent = new MouseEvent("mousemove", {
+        clientX: touch.clientX,
+        clientY: touch.clientY
+    });
+    canvas.dispatchEvent(mouseEvent);
+}, false);
+
+// Get the position of the mouse relative to the canvas
+function getMousePos(canvasDom, mouseEvent) {
+    var rect = canvasDom.getBoundingClientRect();
+/*
+  Devuelve el tamaño de un elemento y su posición relativa respecto
+  a la ventana de visualización (viewport).
+*/
+    return {
+        x: mouseEvent.clientX - rect.left,
+        y: mouseEvent.clientY - rect.top
     };
+}
+
+// Get the position of a touch relative to the canvas
+function getTouchPos(canvasDom, touchEvent) {
+    var rect = canvasDom.getBoundingClientRect();
+console.log(touchEvent);
+/*
+  Devuelve el tamaño de un elemento y su posición relativa respecto
+  a la ventana de visualización (viewport).
+*/
+    return {
+        x: touchEvent.touches[0].clientX - rect.left, // Popiedad de todo evento Touch
+        y: touchEvent.touches[0].clientY - rect.top
+    };
+}
+
+// Draw to the canvas
+function renderCanvas() {
+    if (drawing) {
+  var tint = document.getElementById("color");
+  var punta = document.getElementById("puntero");
+  ctx.strokeStyle = tint.value;
+  ctx.beginPath();
+        ctx.moveTo(lastPos.x, lastPos.y);
+        ctx.lineTo(mousePos.x, mousePos.y);
+  console.log(punta.value);
+    ctx.lineWidth = punta.value;
+        ctx.stroke();
+  ctx.closePath();
+        lastPos = mousePos;
+    }
+}
+
+function clearCanvas() {
+    canvas.width = canvas.width;
+}
+
+// Allow for animation
+(function drawLoop () {
+    requestAnimFrame(drawLoop);
+    renderCanvas();
+})();
+
+})();
     
-    /**
-     * Funcion que guarda la posicion de la nueva línea
-     */
-    function guardarLinea() {
-        lineas[lineas.length - 1].push({
-            x: nuevaPosicionX,
-            y: nuevaPosicionY
-        });
-    }
-
-    /**
-     * Funcion dibuja la linea
-     */
-    function dibujarLinea (event) {
-        event.preventDefault();
-        if (pintarLinea) {
-            let ctx = miCanvas.getContext('2d')
-            // Estilos de linea
-            ctx.lineJoin = ctx.lineCap = 'round';
-            ctx.lineWidth = 5;
-            // Color de la linea
-            ctx.strokeStyle = '#000000';
-            // Marca el nuevo punto
-            if (event.changedTouches == undefined) {
-                // Versión ratón
-                nuevaPosicionX = event.layerX;
-                nuevaPosicionY = event.layerY;
-            } else {
-                // Versión touch, pantalla tactil
-                nuevaPosicionX = event.changedTouches[0].pageX - correccionX;
-                nuevaPosicionY = event.changedTouches[0].pageY - correccionY;
-            }
-            // Guarda la linea
-            guardarLinea();
-            // Redibuja todas las lineas guardadas
-            ctx.beginPath();
-            lineas.forEach(function (segmento) {
-                ctx.moveTo(segmento[0].x, segmento[0].y);
-                segmento.forEach(function (punto, index) {
-                    ctx.lineTo(punto.x, punto.y);
-                });
-            });
-            ctx.stroke();
-        }
-    }
-
-    /**
-     * Funcion que deja de dibujar la linea
-     */
-    function pararDibujar () {
-        pintarLinea = false;
-        lineas = [];
-        guardarLinea();
-    }
-
-    //======================================================================
-    // EVENTOS
-    //======================================================================
-
-    // Eventos raton
-    miCanvas.addEventListener('mousedown', empezarDibujo, false);
-    miCanvas.addEventListener('mousemove', dibujarLinea, false);
-    miCanvas.addEventListener('mouseup', pararDibujar, false);
-
-    // Eventos pantallas táctiles
-    miCanvas.addEventListener('touchstart', empezarDibujo, false);
-    miCanvas.addEventListener('touchmove', dibujarLinea, false);
 
 </script>
 {% endblock %}

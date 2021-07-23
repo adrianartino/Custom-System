@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block titulo %}
-Agregar Impresoras
+Editar Impresoras
 {% endblock %}
 
 {% block estilos %}
@@ -39,7 +39,7 @@ Agregar Impresoras
         <div class="card">
             <div class="header">
                 <h2>
-                    AGREGAR IMPRESORAS
+                    EDITAR IMPRESORAS
                 </h2>
                 <ul class="header-dropdown m-r--5">
                     <li class="dropdown">
@@ -64,10 +64,17 @@ Agregar Impresoras
                                     <i class="material-icons">copyright</i>
                                 </span>
                                     <select class="form-control show-tick">
+                                        {% if impresoraAEditar.1 == "HP" %}
+                                        <option selected>HP</option>
+                                        <option>XEROX</option>
+                                        <option>SAMSUNG</option>
+                                        <option>EPSON</option>
+                                        {% else %}
                                         <option>HP</option>
                                         <option>XEROX</option>
                                         <option>SAMSUNG</option>
                                         <option>EPSON</option>
+                                        {% endif %}
                                     </select>
                             </div>
                         </div>
@@ -80,7 +87,7 @@ Agregar Impresoras
                                     <i class="material-icons">branding_watermark</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar Modelo">
+                                    <input type="text" class="form-control date" placeholder="Ingresar Modelo" value="{{impresoraAEditar.2}}">
                                 </div>
                             </div>
                         </div>
@@ -91,7 +98,7 @@ Agregar Impresoras
                                     <i class="material-icons">pin</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar número de serie">
+                                    <input type="text" class="form-control date" placeholder="Ingresar número de serie" value="{{impresoraAEditar.3}}">
                                 </div>
                             </div>
                         </div>
@@ -120,9 +127,13 @@ Agregar Impresoras
                                     <i class="material-icons">print</i>
                                 </span>
                                     <select class="form-control show-tick">
+                                        {% if impresoraAEditar.4 == "Inyección de tinta Color/Blanco-Negro" %}
+                                        <option>Laser Blanco-Negro</option>
+                                        <option selected>Inyección de tinta Color/Blanco-Negro</option>
+                                        {% else %}
                                         <option>Laser Blanco-Negro</option>
                                         <option>Inyección de tinta Color/Blanco-Negro</option>
-                                        
+                                        {% endif %}
                                     </select>
                             </div>
                         </div> 
@@ -133,9 +144,15 @@ Agregar Impresoras
                                     <i class="material-icons">work</i>
                                 </span>
                                     <select class="form-control show-tick">
+                                        {% if impresoraAEditar.9 == "Administración" %}
+                                        <option selected>Administración</option>
+                                        <option>Sistemas</option>
+                                        <option>Almacen</option>
+                                        {% else %}
                                         <option>Administración</option>
                                         <option>Sistemas</option>
                                         <option>Almacen</option>
+                                        {% endif %}
                                     </select>
                             </div>
                         </div>
@@ -145,10 +162,17 @@ Agregar Impresoras
                                 <span class="input-group-addon">
                                     <i class="material-icons">build</i>
                                 </span>
+                                    
                                     <select class="form-control show-tick">
+                                        {% if impresoraAEditar.7 == "Funcional" %}
+                                        <option selected>Funcional</option>
+                                        <option>Reparación</option>
+                                        <option>Basura</option>
+                                        {% else %}
                                         <option>Funcional</option>
                                         <option>Reparación</option>
                                         <option>Basura</option>
+                                        {% endif %}
                                     </select>
                             </div>
                         </div>
@@ -167,7 +191,7 @@ Agregar Impresoras
                     </div>
                     
                     
-                    <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i class="material-icons">print</i> Guardar Impresora</button>
+                    <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i class="material-icons">print</i> Actualizar Impresora</button>
                 </form>
             </div>
         </div>
