@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>Sign In | Bootstrap Based Admin Template - Material Design</title>
+    <title>Login | Custom System</title>
     <!-- Favicon-->
     <link rel="icon" href={% static 'images/icons/co.ico' %} type="image/x-icon">
 
@@ -46,32 +46,40 @@ background-size: cover; ">
             <div class="body">
                 <form id="sign_in" method="POST">
                     <div class="msg" style="font-family: 'Tourney', cursive; font-size: 15px; ">Iniciar Sesión</div>
-                    <div class="input-group">
-                        <span class="input-group-addon">
-                            <i class="material-icons">person</i>
-                        </span>
-                        <div class="form-line">
-                            <input type="text" class="form-control" name="username" placeholder="Username" required
-                                autofocus>
+                    <form action="/login/" method="POST">{% csrf_token %}
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">person</i>
+                            </span>
+                            <div class="form-line">
+                                {% if usuarioEncontrado %}
+                                <input type="text" class="form-control" name="username" placeholder="Username" required
+                                    autofocus value="{{correo}}">
+                                {% else %}
+                                <input type="text" class="form-control" name="username" placeholder="Username" required
+                                    autofocus>
+                                {% endif %}
+                            </div>
                         </div>
-                    </div>
-                    <div class="input-group">
-                        <span class="input-group-addon">
-                            <i class="material-icons">lock</i>
-                        </span>
-                        <div class="form-line">
-                            <input type="password" class="form-control" name="password" placeholder="Password" required>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">lock</i>
+                            </span>
+                            <div class="form-line">
+                                <input type="password" class="form-control" name="pass" placeholder="Password" required>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-4 p-t-5">
+                        <div class="row">
+                            <div class="col-xs-4 p-t-5">
+                            </div>
+                            <div class="col-xs-4">
+                                <button class="btn btn-block bg-pink waves-effect" type="submit">Entrar</button>
+                            </div>
+                            <div class="col-xs-4 p-t-5">
+                            </div>
                         </div>
-                        <div class="col-xs-4">
-                            <button class="btn btn-block bg-pink waves-effect" type="submit">Entrar</button>
-                        </div>
-                        <div class="col-xs-4 p-t-5">
-                        </div>
-                    </div>
+                    </form>
+
                     <div class="row m-t-15 m-b--20">
                         <center>
                             <a href="https://www.customco.com.mx/"
@@ -84,6 +92,18 @@ background-size: cover; ">
             </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    {% if hayError %}
+    <script type="text/javascript">
+        Swal.fire({
+            icon: 'error',
+            title: 'Algo salio mal..',
+            text: ' {{textoError}}',
+            footer: '<span style="color: red!important"> Corrige tus datos para ingresar a Custom System! </span>',
+            width: '40%'
+        });
+    </script>
+    {% endif %}
 
     <!-- Jquery Core Js -->
     <script src={% static 'panel/plugins/jquery/jquery.min.js' %}></script>

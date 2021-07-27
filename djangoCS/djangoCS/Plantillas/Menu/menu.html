@@ -135,8 +135,8 @@
                     
                 </div>
                 <div class="info-container">
-                    <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Blanca Gaeta</div>
-                    <div class="email">sistemas@customco.com.mx</div>
+                    <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{nombreCompleto}}</div>
+                    <div class="email">{{correo}}</div>
                     <div class="btn-group user-helper-dropdown">
                         <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
                         <ul class="dropdown-menu pull-right">
@@ -144,7 +144,7 @@
                             <li role="separator" class="divider"></li>
                             <li><a href="javascript:void(0);"><i class="material-icons">group</i>Editar perfil</a></li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="javascript:void(0);"><i class="material-icons">input</i>Salir</a></li>
+                            <li><a href="{% url 'salir' %}"><i class="material-icons">input</i>Salir</a></li>
                         </ul>
                     </div>
                 </div>

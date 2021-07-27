@@ -11,58 +11,100 @@ from django.core.files.base import ContentFile
 # Create your views here.
 def login(request):
 
-    #si se apretó el botón.
-    if request.method == "POST":
-        
-        correousuario = request.POST['username']
-        pwd = request.POST['pass']
+    #Si ya existe una sesión
+    if "idSesion" in request.session:
+      return redirect('/inicio/')
 
-        datosUsuario = Empleados.objects.filter(correo__icontains=correousuario)
+    #Si no hay una sesión iniciada
+    else:
 
-        #Si encontro a un usuario con ese correo...
-        if datosUsuario:
+        #si se apretó el botón.
+        if request.method == "POST":
+            
+            correousuario = request.POST['username']
+            pwd = request.POST['pass']
 
-            for dato in datosUsuario:
-                id = dato.id_empleado
-                nombres = dato.nombre
-                apellidos = dato.apellidos
-                puesto = dato.puesto
-                correo = dato.correo
-                contraReal = dato.contraseña
-                activo = dato.activo
+            datosUsuario = Empleados.objects.filter(correo__icontains=correousuario)
 
-            #Si la contraseña es igual...
-            if pwd == contraReal:
+            #Si encontro a un usuario con ese correo...
+            if datosUsuario:
 
-                usuarioLogueado = True
+                for dato in datosUsuario:
+                    id = dato.id_empleado
+                    nombres = dato.nombre
+                    apellidos = dato.apellidos
+                    puesto = dato.puesto
+                    correo = dato.correo
+                    contraReal = dato.contraseña
+                    activo = dato.activo
+                    area = dato.id_area
 
-                request.session['idSesion'] = id
-                request.session['correoSesion'] = correo
-                request.session['nombres'] = nombres
-                request.session['apellidos'] = apellidos
+                #Si la contraseña es igual...
+                if correousuario == correo and pwd == contraReal :
 
-                return redirect('/inicio/') #redirecciona a url de inicio
+                    usuarioLogueado = True #Para indicar que el usuario entro al sistema..
 
-            #Si la contraseña esta mal..
+                    request.session['idSesion'] = id
+                    request.session['correoSesion'] = correo
+                    request.session['nombres'] = nombres
+                    request.session['apellidos'] = apellidos
+                    request.session['recienIniciado'] = "primerInicio"
+
+                    return redirect('/inicio/') #redirecciona a url de inicio
+
+                #Si el correo está mal..
+                elif correousuario != correo :
+                    hayError = True
+                    error = "No se ha encontrado al usuario"
+                    return render(request, "Login/login.html", {"hayError": hayError, "textoError":error})
+
+                #Si la contraseña está mal..
+                elif pwd != contraReal:
+                    hayError = True
+                    usuarioEncontrado = True
+                    error = "La contraseña está mal"
+                    return render(request, "Login/login.html", {"hayError": hayError, "textoError":error, "correo":correo, "usuarioEncontrado":usuarioEncontrado})
+
+            #Si no se encuentra a nadie con ese correo...
             else:
                 hayError = True
-                error = "Ha ingresado mal la contraseña"
-                return render(request, "Login/login.html", {"hayError": hayError, "textoError":error})
+                error = "No se ha encontrado al usuario"
+                return render(request, "Login/login.html", {"hayError":hayError, "textoError":error})
 
-        #Si no se encuentra a nadie con ese correo...
-        else:
-            hayError = True
-            error = "No se ha encontrado al usuario"
-            return render(request, "Login/login.html", {"hayError":hayError, "textoError":error})
+        #se carga la pagina por primera vez.
+        return render(request, "Login/login.html")
 
-    #se carga la pagina por primera vez.
-    return render(request, "Login/login.html")
+def salir(request):
+
+   del request.session["idSesion"]
+   del request.session['correoSesion']
+   del request.session['nombres'] 
+   del request.session['apellidos'] 
+
+   return redirect('/login/')
 
 def inicio(request):
 
     estaEnInicio = True
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
 
-    return render(request, "Inicio/inicio.html", {"estaEnInicio":estaEnInicio})
+    #Si es la primera vez que inicia sesión..
+    if "recienIniciado" in request.session:
+        nombreCompleto = nombre + " " + apellidos #Blanca Yesenia Gaeta Talamantes
+
+        del request.session['recienIniciado']
+
+        recienIniciado = True
+
+
+        return render(request, "Inicio/inicio.html", {"estaEnInicio":estaEnInicio, "nombreCompleto":nombreCompleto, "correo":correo, "recienIniciado":recienIniciado, "nombre": nombre})
+
+    nombreCompleto = nombre + " " + apellidos #Blanca Yesenia Gaeta Talamantes
+
+
+    return render(request, "Inicio/inicio.html", {"estaEnInicio":estaEnInicio, "nombreCompleto":nombreCompleto, "correo":correo})
 
 def verAreas(request):
 
