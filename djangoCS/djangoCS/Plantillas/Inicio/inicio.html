@@ -251,7 +251,7 @@ Inicio
     </div>
 </div>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
+{% if recienIniciado %}
 <script type="text/javascript">
     swal(
         {
@@ -261,6 +261,7 @@ Inicio
         }
     );
 </script>
+{% endif %}
 
 {% endblock %}
 

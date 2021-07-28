@@ -84,39 +84,91 @@ def salir(request):
    return redirect('/login/')
 
 def inicio(request):
+    
+    #Si ya hay una sesión iniciada..
+    if "idSesion" in request.session:
+        
+        estaEnInicio = True
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
 
-    estaEnInicio = True
-    nombre = request.session['nombres']
-    apellidos = request.session['apellidos']
-    correo = request.session['correoSesion']
+        #Si es la primera vez que inicia sesión.. Bienvenida 
+        if "recienIniciado" in request.session:
+            nombreCompleto = nombre + " " + apellidos #Blanca Yesenia Gaeta Talamantes
 
-    #Si es la primera vez que inicia sesión..
-    if "recienIniciado" in request.session:
+            del request.session['recienIniciado']
+
+            recienIniciado = True
+            
+            return render(request, "Inicio/inicio.html", {"estaEnInicio":estaEnInicio, "nombreCompleto":nombreCompleto, "correo":correo, "recienIniciado":recienIniciado, "nombre": nombre})
+
+        #So no es la primera vez que inicia sesión
         nombreCompleto = nombre + " " + apellidos #Blanca Yesenia Gaeta Talamantes
-
-        del request.session['recienIniciado']
-
-        recienIniciado = True
-
-
-        return render(request, "Inicio/inicio.html", {"estaEnInicio":estaEnInicio, "nombreCompleto":nombreCompleto, "correo":correo, "recienIniciado":recienIniciado, "nombre": nombre})
-
-    nombreCompleto = nombre + " " + apellidos #Blanca Yesenia Gaeta Talamantes
-
-
-    return render(request, "Inicio/inicio.html", {"estaEnInicio":estaEnInicio, "nombreCompleto":nombreCompleto, "correo":correo})
+        return render(request, "Inicio/inicio.html", {"estaEnInicio":estaEnInicio, "nombreCompleto":nombreCompleto, "correo":correo})
+    
+    #Si le da al inicio y no hay una sesión iniciada..
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
 
 def verAreas(request):
 
     estaEnVerAreas = True
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    
+    nombreCompleto = nombre + " " + apellidos
+    
+    infoAreas = Areas.objects.all()
 
-    return render(request, "Areas/verAreas.html", {"estaEnVerAreas":estaEnVerAreas})
+    return render(request, "Areas/verAreas.html", {"estaEnVerAreas":estaEnVerAreas, "nombreCompleto":nombreCompleto, "correo":correo, "listaAreas": infoAreas})
 
 def agregarAreas(request):
 
     estaEnAgregarAreas = True
+    
+    colores = [
+                ["label bg-red", "radio_30", "with-gap radio-col-red", "Rojo"], #color.0 , color.1, color.2, color.3
+                ["label bg-pink", "radio_31", "with-gap radio-col-pink", "Rosa"],
+                ["label bg-purple", "radio_32", "with-gap radio-col-purple", "Morado"],
+                ["label bg-indigo", "radio_33", "with-gap radio-col-indigo", "Indigo"],
+                ["label bg-blue", "radio_34", "with-gap radio-col-blue", "Azul"],
+                ["label bg-cyan", "radio_35", "with-gap radio-col-cyan", "Cyan"],
+                ["label bg-teal", "radio_36", "with-gap radio-col-teal", "Aqua"],
+                ["label bg-green", "radio_37", "with-gap radio-col-green", "Verde"],
+                ["label bg-light-green", "radio_38", "with-gap radio-col-light-green", "Verde Bajo"],
+                ["label bg-lime", "radio_39", "with-gap radio-col-lime", "Lima"],
+                ["label bg-yellow", "radio_40", "with-gap radio-col-yellow", "Amarillo"],
+                ["label bg-amber", "radio_41", "with-gap radio-col-amber", "Ambar"],
+                ["label bg-orange", "radio_42", "with-gap radio-col-orange", "Naranja"],
+                ["label bg-deep-orange", "radio_43", "with-gap radio-col-deep-orange", "Naranja Oscuro"],
+                ["label bg-brown", "radio_44", "with-gap radio-col-brown", "Cafe"],
+                ["label bg-grey", "radio_45", "with-gap radio-col-grey", "Gris"],
+                ["label bg-blue-grey", "radio_46", "with-gap radio-col-blue-grey", "Gris Azulado"],
+                ["label bg-black", "radio_47", "with-gap radio-col-black", "Negro"]
+               ]
+    
+    nombresColores = ["Rojo", "Rosa", "Morado", "Indigo", "Azul", "Cyan", "Aqua", "Verde", "Verde bajo", "Verde Lima", "Amarillo", "Ambar", "Naranja", 
+                      "Naranja Oscuro", "Cafe", "Gris", "Gris Azulado", "Negro"]
+    
+    #Obtener lista de colores en la table areas
+    infoAreas = Areas.objects.all()
+    
+    coloresSi = []
+    coloresNo = []
+    
+    for color in colores: 
+        for area in infoAreas:
+            
+            if color[0] == area.color: 
+                coloresSi.append(color[0])
+                esta = True
+            else:
+                coloresNo.append(color[0])
+                
 
-    return render(request,"Areas/agregarAreas.html", {"estaEnAgregarAreas": estaEnAgregarAreas})
+    return render(request,"Areas/agregarAreas.html", {"estaEnAgregarAreas": estaEnAgregarAreas, "arregloColores":colores, "nombresColores":nombresColores, "infoAreas":infoAreas})
 
 def verEmpleados(request):
 

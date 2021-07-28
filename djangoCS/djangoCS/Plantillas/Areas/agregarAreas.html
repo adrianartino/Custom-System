@@ -22,6 +22,9 @@ Agregar Areas
 <!-- Animation Css -->
 <link href={% static 'panel/plugins/animate-css/animate.css' %} rel="stylesheet" />
 
+<!-- Bootstrap Select Css -->
+<link href={% static 'panel/plugins/bootstrap-select/css/bootstrap-select.css' %} rel="stylesheet" />
+
 <!-- Sweet Alert Css -->
 <link href={% static 'panel/plugins/sweetalert/sweetalert.css' %}rel="stylesheet" />
 
@@ -59,11 +62,40 @@ Agregar Areas
 
                     <div class="form-group form-float">
                         <label for="email_address">Nombre de área</label>
-                        <div class="form-line">
-                            <input onkeypress='return soloLetras(event)' type="text" id="password" class="form-control" pattern="[A-Za-z ]{3,80}" title="No se permiten caracteres especiales." required>
-                            <label class="form-label">Ingresa el nombre del área</label>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">work</i>
+                            </span>
+                            <div class="form-line">
+                                <input onkeypress='return soloLetras(event)' type="text" class="form-control date" placeholder="Ingresar nombre de área" 
+                                pattern="[A-Za-z ]{3,80}" title="No se permiten caracteres especiales." required>
+                            </div>
                         </div>
                     </div>
+                    <label for="email_address">Color:</label>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">palette</i>
+                        </span>
+                        <div class="demo-radio-button">
+                            {% for color in arregloColores %} <!--Recorrer el arreglo de colores-->
+                                {% for area in infoAreas %}<!--Recorrer el areglo de las areas para sacar colores que ya estén.-->
+                                    {% if color.0 == area.color %}
+                                    <input name="group5" type="radio" id="{{color.1}}" class="{{color.2}}" class="with-gap"  disabled/>
+                                    <label for="{{color.1}}" ><span class="{{color.0}}">{{color.3}}</span></label>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+
+                            
+
+
+                        </div>
+                    </div>
+
+                    {% for area in infoAreas %}
+                    <label for="as">{{area.color}}</label>
+                    {% endfor %}
 
                     
                     <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i class="material-icons">add_box</i> Dar de alta</button>
@@ -117,14 +149,50 @@ Agregar Areas
 <!-- Slimscroll Plugin Js -->
 <script src={% static 'panel/plugins/jquery-slimscroll/jquery.slimscroll.js' %}></script>
 
+<!-- Bootstrap Colorpicker Js -->
+<script src={% static 'panel/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js' %}></script>
+
+<!-- Dropzone Plugin Js -->
+<script src={% static 'panel/plugins/dropzone/dropzone.js' %}></script>
+
+<!-- Input Mask Plugin Js -->
+<script src={% static 'panel/plugins/jquery-inputmask/jquery.inputmask.bundle.js' %}></script>
+
+<!-- Multi Select Plugin Js -->
+<script src={% static 'panel/plugins/multi-select/js/jquery.multi-select.js' %}></script>
+
+<!-- Jquery Spinner Plugin Js -->
+<script src={% static 'panel/plugins/jquery-spinner/js/jquery.spinner.js' %}></script>
+
+<!-- Bootstrap Tags Input Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js' %}></script>
+
+<!-- noUISlider Plugin Js -->
+<script src={% static 'panel/plugins/nouislider/nouislider.js' %}></script>
+
 <!-- Sweet Alert Plugin Js -->
 <script src={% static 'panel/plugins/sweetalert/sweetalert.min.js' %}></script>
 
 <!-- Waves Effect Plugin Js -->
 <script src={% static 'panel/plugins/node-waves/waves.js' %}></script>
 
+<!-- Jquery DataTable Plugin Js -->
+<script src={% static 'panel/plugins/jquery-datatable/jquery.dataTables.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.flash.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/jszip.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/pdfmake.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/vfs_fonts.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.html5.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.print.min.js' %}></script>
+
+
 <!-- Custom Js -->
 <script src={% static 'panel/js/admin.js' %}></script>
+<script src={% static 'panel/js/pages/tables/jquery-datatable.js' %}></script>
+<script src={% static 'panel/js/pages/forms/advanced-form-elements.js' %}></script>
+
 
 <script src={% static 'panel/js/demo.js' %}></script>
 

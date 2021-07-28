@@ -61,75 +61,25 @@ Ver Areas
                             <tr>
                                 <th>ID Área</th>
                                 <th>Nombre</th>
-                                <th>Editar</th>
-                                
+                                <th>Color</th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
                                 <th>ID Área</th>
                                 <th>Nombre</th>
-                                <th>Editar</th>
+                                <th>Color</th>
                             </tr>
                         </tfoot>
                         <tbody>
+                            {% for area in listaAreas %}
                             <tr>
-                                <td>1</td>
-                                <td>Sistemas</td>
-                                <form action="/editarArea/" method="POST">{% csrf_token %}
-                                    <th>
-                                        <input type="hidden" name="idAreaEditar" value="1">
-                                    
-                                        <center>
-                                            <button type="submit" class="btn btn-warning waves-effect">
-                                                <i class="material-icons">edit</i>
-                                            </button>
-                                        </center>
-                                        
-                                        
-                                    </th>
-                                </form>
-                                
+                                <td>{{area.id_area}}</td>
+                                <td>{{area.nombre}}</td>
+                                <td><span class="{{area.color}}">{{area.color}}</span></td>
                             </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Administración</td>
-                                <form action="/editarArea/" method="POST">{% csrf_token %}
-                                    <th>
-                                        <input type="hidden" name="idAreaEditar" value="2">
-                                        
-                                        <center>
-                                            <button type="submit" class="btn btn-warning waves-effect">
-                                                <i class="material-icons">edit</i>
-                                            </button>    
-                                        </center>
-                                        
-                                        
-                                    </th>
-                                </form>
-                                
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>Almacen</td>
-                                <form action="/editarArea/" method="POST">{% csrf_token %}
-                                    <th>
-                                        <input type="hidden" name="idAreaEditar" value="3">
-                                        <center>
-                                            <button type="submit" class="btn btn-warning waves-effect">
-                                                <i class="material-icons">edit</i>
-                                            </button>
-                                        </center>
-                                    
-                                            
-                                    
-                                            
-                                    
-                                        
-                                    </th>
-                                </form>
-                                
-                            </tr>
+                            {% endfor %}
+                            
                             
                             
                         </tbody>
