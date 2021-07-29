@@ -102,17 +102,18 @@ Ver Empleados
                             </tr>
                         </tfoot>
                         <tbody>
+                            {% for empleado, area in lista %}
                             <tr>
-                                <td>1</td>
-                                <td>Blanca Yesenia</td>
-                                <td>Gaeta Talamantes</td>
-                                <td> <label class="label bg-green">Sistemas</label> </td>
-                                <td>Auxiliar de sistemas</td>
-                                <td>sistemas@customco.com.mx</td>
-                                <td>sistemasCustom0817</td>
+                                <td>{{empleado.id_empleado}}</td>
+                                <td>{{empleado.nombre}}</td>
+                                <td>{{empleado.apellidos}}</td>
+                                <td> <label class="{{area.1}}">{{area.0}}</label> </td>
+                                <td>{{empleado.puesto}}</td>
+                                <td>s{{empleado.correo}}</td>
+                                <td>{{empleado.contraseña}}</td>
                                 <form action="/editarEmpleado/" method="POST">{% csrf_token %}
                                     <th>
-                                        <input type="hidden" name="idEmpleadoEditar" value="1">
+                                        <input type="hidden" name="idEmpleadoEditar" value="{{empleado.id_empleado}}">
                                         <center>
                                             <button type="submit" class="btn btn-warning waves-effect">
                                                 <i class="material-icons">edit</i>
@@ -121,9 +122,9 @@ Ver Empleados
                                         
                                     </th>
                                 </form>
-                                <form action="/editarEmpleado/" method="POST">{% csrf_token %}
+                                <form action="/bajaEmpleado/" method="POST">{% csrf_token %}
                                     <th>
-                                        <input type="hidden" name="idEmpleadoEditar" value="1">
+                                        <input type="hidden" name="idEmpleadoBaja" value="{{empleado.id_empleado}}">
                                         <center>
                                             <button type="submit" class="btn bg-red waves-effect">
                                                 <i class="material-icons">cancel</i>
@@ -132,77 +133,16 @@ Ver Empleados
                                         
                                     </th>
                                 </form>
-                                
                             </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Mónica</td>
-                                <td>Arriaga</td>
-                                <td> <label class="label bg-red">Administración</label> </td>
-                                <td>Recursos humanos</td>
-                                <td>rhumanos@customco.com.mx</td>
-                                <td>recursosh098</td>
-                                <form action="/editarEmpleado/" method="POST">{% csrf_token %}
-                                    <th>
-                                        <input type="hidden" name="idEmpleadoEditar" value="2">
-                                        <center>
-                                            <button type="submit" class="btn btn-warning waves-effect">
-                                                <i class="material-icons">edit</i>
-                                            </button>
-                                        </center>
-                                        
-                                    </th>
-                                </form>
-                                <form action="/editarEmpleado/" method="POST">{% csrf_token %}
-                                    <th>
-                                        <input type="hidden" name="idEmpleadoEditar" value="1">
-                                        <center>
-                                            <button type="submit" class="btn bg-red waves-effect">
-                                                <i class="material-icons">cancel</i>
-                                            </button>
-                                        </center>
-                                        
-                                    </th>
-                                </form>
-                                
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>Ana</td>
-                                <td>Gutierrez</td>
-                                <td> <label class="label bg-cyan">Subdirección</label> </td>
-                                <td>Subdirectora</td>
-                                <td>ana@customco.com.mx</td>
-                                <td>subdireccion093</td>
-                                <form action="/editarEmpleado/" method="POST">{% csrf_token %}
-                                    <th>
-                                        <input type="hidden" name="idEmpleadoEditar" value="3">
-                                        <center>
-                                            <button type="submit" class="btn btn-warning waves-effect">
-                                                <i class="material-icons">edit</i>
-                                            </button>
-                                        </center>
-                                        
-                                    </th>
-                                </form>
-                                <form action="/editarEmpleado/" method="POST">{% csrf_token %}
-                                    <th>
-                                        <input type="hidden" name="idEmpleadoEditar" value="1">
-                                        <center>
-                                            <button type="submit" class="btn bg-red waves-effect">
-                                                <i class="material-icons">cancel</i>
-                                            </button>
-                                        </center>
-                                        
-                                    </th>
-                                </form>
-                                
-                            </tr>
+                            {% endfor %}
+                            
+                            
                             
                             
                         </tbody>
                     </table>
                 </div>
+                
             </div>
             <div class="body" id="divInactivos">
                 <div class="table-responsive">
@@ -235,18 +175,18 @@ Ver Empleados
                             </tr>
                         </tfoot>
                         <tbody>
-                            
+                            {% for empleado, area in lista1 %}
                             <tr>
-                                <td>2</td>
-                                <td>Mónica</td>
-                                <td>Arriaga</td>
-                                <td> <label class="label bg-red">Administración</label> </td>
-                                <td>Recursos humanos</td>
-                                <td>rhumanos@customco.com.mx</td>
-                                <td>recursosh098</td>
-                                <form action="/editarEmpleado/" method="POST">{% csrf_token %}
+                                <td>{{empleado.id_empleado}}</td>
+                                <td>{{empleado.nombre}}</td>
+                                <td>{{empleado.apellidos}}</td>
+                                <td> <label class="{{area.1}}">{{area.0}}</label> </td>
+                                <td>{{empleado.puesto}}</td>
+                                <td>{{empleado.correo}}</td>
+                                <td>{{empleado.contraseña}}</td>
+                                <form action="/altaEmpleado/" method="POST">{% csrf_token %}
                                     <th>
-                                        <input type="hidden" name="idEmpleadoEditar" value="3">
+                                        <input type="hidden" name="idEmpleadoAlta" value="{{empleado.id_empleado}}">
                                        
                                             <center>
                                                 <button type="submit" class="btn bg-green waves-effect">
@@ -257,37 +197,8 @@ Ver Empleados
                                         
                                     </th>
                                 </form>
-
-                                
-                              
-                                
                             </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>Ana</td>
-                                <td>Gutierrez</td>
-                                <td> <label class="label bg-cyan">Subdirección</label> </td>
-                                <td>Subdirectora</td>
-                                <td>ana@customco.com.mx</td>
-                                <td>subdireccion093</td>
-                                
-                                <form action="/editarEmpleado/" method="POST">{% csrf_token %}
-                                    <th>
-                                        <input type="hidden" name="idEmpleadoEditar" value="3">
-                                      
-                                            <center>
-                                                <button type="submit" class="btn bg-green waves-effect">
-                                                    <i class="material-icons">upgrade</i>
-                                                </button>
-                                            </center>
-                                    
-                                        
-                                    </th>
-                                </form>
-                                
-                            </tr>
-                            
-                            
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
@@ -295,6 +206,31 @@ Ver Empleados
         </div>
     </div>
 </div>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    {% if alta %}
+    <script type="text/javascript">
+        swal({
+            icon: 'success',
+            title: 'Wuu..!',
+            text: ' {{mensaje}}',
+            footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
+            width: '40%'
+        });
+    </script>
+    {% endif %}
+
+    {% if baja %}
+    <script type="text/javascript">
+        swal({
+            icon: 'error',
+            title: 'Wuu..!',
+            text: ' {{mensaje}}',
+            footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
+            width: '40%'
+        });
+    </script>
+    {% endif %}
+
 <script type="text/javascript">
     function inicio(){
         var div1 = document.getElementById("divInactivos");

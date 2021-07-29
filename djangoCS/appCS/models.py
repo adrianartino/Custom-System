@@ -7,7 +7,7 @@ class Areas (models.Model):
     color=models.CharField(max_length=80)
 
     def __str__(self):
-        return self.id_area
+        return str(self.id_area())
 
 class Empleados(models.Model):
     id_empleado=models.AutoField(primary_key=True)

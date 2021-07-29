@@ -51,9 +51,12 @@ urlpatterns = [
     path("guardarImagen/", views.guardarImagen),
     path("editarEquipo/", views.editarEquipo),
     path("editarEmpleado/", views.editarEmpleado),
+    path("editarEmpleadoBd/", views.editarEmpleadoBd),
     path("editarImpresora/", views.editarImpresora),
     path("firmarCarta/", views.firmarCarta),
-    path("salir/", views.salir, name="salir")
+    path("salir/", views.salir, name="salir"),
+    path("altaEmpleado/", views.altaEmpleado),
+    path("bajaEmpleado/", views.bajaEmpleado)
     
     
 ]

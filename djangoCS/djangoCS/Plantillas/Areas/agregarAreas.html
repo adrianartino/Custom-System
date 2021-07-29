@@ -58,7 +58,7 @@ Agregar Areas
                 </ul>
             </div>
             <div class="body">
-                <form id="form_validation" method="POST">{% csrf_token %}
+                <form id="form_validation" action= "/agregarAreas/" method="POST">{% csrf_token %}
 
                     <div class="form-group form-float">
                         <label for="email_address">Nombre de área</label>
@@ -67,7 +67,7 @@ Agregar Areas
                                 <i class="material-icons">work</i>
                             </span>
                             <div class="form-line">
-                                <input onkeypress='return soloLetras(event)' type="text" class="form-control date" placeholder="Ingresar nombre de área" 
+                                <input onkeypress='return soloLetras(event)' type="text" name="area" class="form-control date" placeholder="Ingresar nombre de área" 
                                 pattern="[A-Za-z ]{3,80}" title="No se permiten caracteres especiales." required>
                             </div>
                         </div>
@@ -78,13 +78,16 @@ Agregar Areas
                             <i class="material-icons">palette</i>
                         </span>
                         <div class="demo-radio-button">
-                            {% for color in arregloColores %} <!--Recorrer el arreglo de colores-->
-                                {% for area in infoAreas %}<!--Recorrer el areglo de las areas para sacar colores que ya estén.-->
-                                    {% if color.0 == area.color %}
-                                    <input name="group5" type="radio" id="{{color.1}}" class="{{color.2}}" class="with-gap"  disabled/>
-                                    <label for="{{color.1}}" ><span class="{{color.0}}">{{color.3}}</span></label>
-                                    {% endif %}
-                                {% endfor %}
+                            
+
+                            
+                            {% for colorSi in colorExiste %}
+                                <input name="colorElegido" type="radio" id="{{colorSi.1}}" class="{{colorSi.2}}" class="with-gap" value="{{colorNo.0}}"  disabled required/>
+                                <label for="{{colorSi.1}}" ><span class="{{colorSi.0}}">{{colorSi.3}}</span></label>
+                            {% endfor %}
+                            {% for colorNo in colorInexistente %}
+                                <input name="colorElegido" type="radio" id="{{colorNo.1}}" class="{{colorNo.2}}" value="{{colorNo.0}}" required/>
+                                <label for="{{colorNo.1}}" ><span class="{{colorNo.0}}">{{colorNo.3}}</span></label>
                             {% endfor %}
 
                             
@@ -93,9 +96,7 @@ Agregar Areas
                         </div>
                     </div>
 
-                    {% for area in infoAreas %}
-                    <label for="as">{{area.color}}</label>
-                    {% endfor %}
+                   
 
                     
                     <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i class="material-icons">add_box</i> Dar de alta</button>
@@ -104,6 +105,30 @@ Agregar Areas
         </div>
     </div>
 </div>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    {% if error %}
+    <script type="text/javascript">
+        swal({
+            icon: 'error',
+            title: 'Algo salio mal..',
+            text: ' {{mensaje}}',
+            footer: '<span style="color: red!important"> Corrige los datos a ingresar! </span>',
+            width: '40%'
+        });
+    </script>
+    {% endif %}
+
+    {% if guardado %}
+    <script type="text/javascript">
+        swal({
+            icon: 'success',
+            title: 'Wuu..!',
+            text: ' {{mensaje}}',
+            footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
+            width: '40%'
+        });
+    </script>
+    {% endif %}
 
 
 {% endblock %}

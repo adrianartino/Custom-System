@@ -55,9 +55,11 @@ Agregar Empleados
                 </ul>
             </div>
             <div class="body">
-                <form id="form_validation" method="POST">{% csrf_token %}
+                <form id="form_validation" action="/editarEmpleadoBd/" method="POST">{% csrf_token %}
+                    {% for empleado in datosEmpleadoEditar %}
                     <div class="row clearfix">
                         <div class="col-md-4">
+                            
                             <label for="email_address">Nombre(s):</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
@@ -65,7 +67,7 @@ Agregar Empleados
                                 </span>
                                 <div class="form-line">
                                     <input onkeypress='return soloLetras(event)' type="text" class="form-control date" placeholder="Ingresar nombre" 
-                                    pattern="[A-Za-z ]{3,80}" title="No se permiten caracteres especiales." value="{{arregloDatos.1}}" required>
+                                    pattern="[A-Za-z ]{3,80}" title="No se permiten caracteres especiales." value="{{empleado.nombre}}" name="nombreEditar" required>
                                 </div>
                             </div>
                         </div>
@@ -74,7 +76,7 @@ Agregar Empleados
                             <div class="form-group">
                                 <div class="form-line">
                                     <input onkeypress='return soloLetras(event)'type="text" class="form-control date" placeholder="Ingresar apellidos"
-                                    pattern="[A-Za-z ]{3,80}" title="No se permiten caracteres especiales." value="{{arregloDatos.2}}" required>
+                                    pattern="[A-Za-z ]{3,80}" title="No se permiten caracteres especiales." value="{{empleado.apellidos}}" name="apellidoEditar" required>
                                 </div>
                             </div>
                         </div>    
@@ -88,16 +90,11 @@ Agregar Empleados
                                     <i class="material-icons">work</i>
                                 </span>
                                
-                                    <select class="form-control show-tick">
-                                        {% if nombreArea == "Almacen" %}
-                                        <option>Sistemas</option>
-                                        <option>Administración</option>
-                                        <option selected>Almacen</option>
-                                        {% else %}
-                                        <option>Sistemas</option>
-                                        <option>Administración</option>
-                                        <option >Almacen</option>
-                                        {% endif %}
+                                    <select class="form-control show-tick" name="areaEditar">
+                                        <option value="{{empleado.id_area_id}}">{{nombreArea}}</option>
+                                        {% for areaNueva in areasNuevas %}
+                                        <option value="{{areaNueva.0}}">{{areaNueva.1}}</option>
+                                        {% endfor %}
                                     </select>
                               
                             </div>
@@ -107,7 +104,7 @@ Agregar Empleados
                             <div class="form-group">
                                 <div class="form-line">
                                     <input onkeypress='return soloLetras(event)'type="text" class="form-control date" placeholder="Ingresar puesto"
-                                    pattern="[A-Za-z ]{3,80}" title="No se permiten caracteres especiales." value="{{arregloDatos.4}}" required>
+                                    pattern="[A-Za-z ]{3,80}" title="No se permiten caracteres especiales." value="{{empleado.puesto}}" name="puestoEditar" required>
                                 </div>
                             </div>
                         </div>    
@@ -122,7 +119,7 @@ Agregar Empleados
                                 </span>
                                 <div class="form-line">
                                     <input type="email" class="form-control date" placeholder="Ingresar Correo"
-                                    title="Ingrese un correo electrónico válido." value="{{arregloDatos.5}}" required>
+                                    title="Ingrese un correo electrónico válido." value="{{empleado.correo}}" name="correoEditar" required>
                                 </div>
                             </div>
                         </div>
@@ -131,7 +128,7 @@ Agregar Empleados
                             <div class="form-group">
                                 <div class="form-line">
                                     <input type="password" class="form-control date" placeholder="Ingresar Contraseña"
-                                    pattern="{3,40}"title="Ingrese la contraseña." value="{{arregloDatos.6}}" required>
+                                    pattern="{3,40}"title="Ingrese la contraseña." value="{{empleado.contraseña}}" name="contraseñaEditar" required>
                                 </div>
                             </div>
                         </div>    
@@ -139,21 +136,37 @@ Agregar Empleados
 
                     
                     
-                    {% if arregloDatos.7 == "A" %}
-                    <input type="checkbox" id="remember_me" class="filled-in chk-col-cyan" checked>
+                    {% if empleado.activo == "A" %}
+                    <input type="checkbox" id="remember_me" class="filled-in chk-col-cyan" checked name="activoEditar" value="A"> 
                     <label for="remember_me">Activo</label>
-                    {% else %}
-                    <input type="checkbox" id="remember_me" class="filled-in">
+                    {% elif empleado.activo == "I" %}
+                    <input type="checkbox" id="remember_me" class="filled-in"  name="activoEditar" value="I">
                     <label for="remember_me">Activo</label>
                     {% endif %}
                     
                     <br>
-                    <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i class="material-icons">loop</i> Guardar Empleado</button>
+                    <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i class="material-icons">loop</i> Actualizar Empleado</button>
+                    {% endfor %}
                 </form>
             </div>
         </div>
     </div>
 </div>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    {% if editado %}
+    <script type="text/javascript">
+        swal({
+            icon: 'success',
+            title: 'Wujuu..!',
+            text: ' {{textoEdicion}}',
+            footer: '<span style="color: green!important"> Puedes ver los datos actualizados! </span>',
+            width: '40%'
+        });
+    </script>
+    {% endif %}
+
+
+
 {% endblock %}
 
 {% block estilosJs %}

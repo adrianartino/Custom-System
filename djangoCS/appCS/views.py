@@ -127,6 +127,14 @@ def verAreas(request):
 def agregarAreas(request):
 
     estaEnAgregarAreas = True
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    
+    nombreCompleto = nombre + " " + apellidos
+    
+    
+            
     
     colores = [
                 ["label bg-red", "radio_30", "with-gap radio-col-red", "Rojo"], #color.0 , color.1, color.2, color.3
@@ -159,89 +167,219 @@ def agregarAreas(request):
     coloresNo = []
     
     for color in colores: 
-        for area in infoAreas:
+        datosAreaCoincide = Areas.objects.filter(color__icontains=color[0])
+        if datosAreaCoincide:
+            coloresSi.append([color[0],color[1], color[2], color[3]] )
             
-            if color[0] == area.color: 
-                coloresSi.append(color[0])
-                esta = True
-            else:
-                coloresNo.append(color[0])
+        else:
+            coloresNo.append([color[0],color[1], color[2], color[3]])
+            
+    if request.method == "POST":
+        area = request.POST['area']
+        color = request.POST['colorElegido']
+        
+        
                 
+        areaExiste = Areas.objects.filter(nombre__icontains= area)
+        if areaExiste:
+            errorExiste= True
+            mensajeError = "El área " + area + " ya existe en la base de datos"
+            return render(request,"Areas/agregarAreas.html", {"estaEnAgregarAreas": estaEnAgregarAreas, "arregloColores":colores, "nombresColores":nombresColores,
+            "infoAreas":infoAreas, "colorExiste": coloresSi, "colorInexistente": coloresNo, "nombreCompleto":nombreCompleto, "correo":correo, "error": errorExiste,
+            "mensaje": mensajeError})
+        else:
+            
+            registro = Areas(nombre=area, color=color)
+            registro.save()
+            guardadoExito = True
+            mensajeExito = "El área " + area + " fue agregado exitosamente"
+            return render(request,"Areas/agregarAreas.html", {"estaEnAgregarAreas": estaEnAgregarAreas, "arregloColores":colores, "nombresColores":nombresColores,
+            "infoAreas":infoAreas, "colorExiste": coloresSi, "colorInexistente": coloresNo, "nombreCompleto":nombreCompleto, "correo":correo, "guardado": guardadoExito,
+            "mensaje": mensajeExito})
+            
 
-    return render(request,"Areas/agregarAreas.html", {"estaEnAgregarAreas": estaEnAgregarAreas, "arregloColores":colores, "nombresColores":nombresColores, "infoAreas":infoAreas})
+    return render(request,"Areas/agregarAreas.html", {"estaEnAgregarAreas": estaEnAgregarAreas, "arregloColores":colores, "nombresColores":nombresColores, "infoAreas":infoAreas, "colorExiste": coloresSi, "colorInexistente": coloresNo, "nombreCompleto":nombreCompleto, "correo":correo})
 
 def verEmpleados(request):
 
     estaEnVerEmpleados = True
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    nombreCompleto = nombre + " " + apellidos
+    
+    empleadosActivos = Empleados.objects.filter(activo__icontains= "A")
+    empleadosInactivos = Empleados.objects.filter(activo__icontains= "I")
+    
+    #empleados Actvos
+    areasEnActivos = []
+    datosAreasEnActivos = []
+    
+    for empleado in empleadosActivos:
+        areasEnActivos.append(empleado.id_area_id)
+        #areasEnActivos = ["1"]
+        
+    for id in areasEnActivos:
+        datosArea = Areas.objects.filter(id_area__icontains = id) #["1", "Sistemas", "rojo"]
+        
+        if datosArea:
+            for dato in datosArea:
+                nombreArea = dato.nombre
+                colorArea = dato.color
+        
+        datosAreasEnActivos.append([nombreArea, colorArea])
+        
+    lista = zip(empleadosActivos, datosAreasEnActivos)
+                
+    
+    #empleadosInactivos
+    areasEnInactivos = []
+    datosAreasEnInactivos = []
+    
+    for empleado in empleadosInactivos:
+        areasEnInactivos.append(empleado.id_area_id)
+        
+    for id in areasEnInactivos:
+        areasInactivos = Areas.objects.filter(id_area__contains = id)
             
-    return render(request,"Empleados/verEmpleados.html", {"estaEnVerEmpleados": estaEnVerEmpleados})
+        if areasInactivos:
+            for dato in areasInactivos:
+                nombreArea = dato.nombre
+                colorArea = dato.color
+                    
+        datosAreasEnInactivos.append([nombreArea, colorArea])
+            
+    lista1 = zip (empleadosInactivos, datosAreasEnInactivos)
+    
+    
+    if "idEmpleadoAlta" in request.session:
+        alta = True
+        mensaje = "Se dio de alta al empleado " + request.session['idEmpleadoAlta']
+        del request.session["idEmpleadoAlta"]
+        return render(request,"Empleados/verEmpleados.html", {"estaEnVerEmpleados": estaEnVerEmpleados, "nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"lista1":lista1, "alta":alta, "mensaje":mensaje})
+    
+    if "idEmpleadoBaja" in request.session:
+        baja = True
+        mensaje = "Se dio de baja al empleado " + request.session['idEmpleadoBaja']
+        del request.session["idEmpleadoBaja"]
+        return render(request,"Empleados/verEmpleados.html", {"estaEnVerEmpleados": estaEnVerEmpleados, "nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"lista1":lista1, "baja":baja, "mensaje":mensaje})
+    
+    return render(request,"Empleados/verEmpleados.html", {"estaEnVerEmpleados": estaEnVerEmpleados, "nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"lista1":lista1 })
 
 def agregarEmpleados(request):
 
     estaEnAgregarEmpleados = True
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    nombreCompleto = nombre + " " + apellidos
 
-    return render(request,"Empleados/agregarEmpleados.html", {"estaEnAgregarEmpleados": estaEnAgregarEmpleados})
+    return render(request,"Empleados/agregarEmpleados.html", {"estaEnAgregarEmpleados": estaEnAgregarEmpleados, "nombreCompleto":nombreCompleto, "correo":correo})
 
 def verEquipos(request):
 
     estaEnVerEquipos = True
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    nombreCompleto = nombre + " " + apellidos
 
-    return render(request, "Equipos/verEquipos.html", {"estaEnVerEquipos": estaEnVerEquipos})
+    return render(request, "Equipos/verEquipos.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo})
 
 def agregarEquipos(request):
 
     estaEnAgregarEquipos = True
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    nombreCompleto = nombre + " " + apellidos
 
-    return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos": estaEnAgregarEquipos})
+    return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos": estaEnAgregarEquipos, "nombreCompleto":nombreCompleto, "correo":correo})
 
 def verImpresoras(request):
 
     estaEnVerImpresoras = True
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    nombreCompleto = nombre + " " + apellidos
 
-    return render(request,"Impresoras/verImpresoras.html",{"estaEnVerImpresoras": estaEnVerImpresoras})
+    return render(request,"Impresoras/verImpresoras.html",{"estaEnVerImpresoras": estaEnVerImpresoras, "nombreCompleto":nombreCompleto, "correo":correo})
 
 def agregarImpresoras(request):
 
     estaEnAgregarImpresoras = True
-    return render(request, "Impresoras/agregarImpresoras.html",{"estaEnAgregarImpresoras": estaEnAgregarImpresoras})
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    nombreCompleto = nombre + " " + apellidos
+    return render(request, "Impresoras/agregarImpresoras.html",{"estaEnAgregarImpresoras": estaEnAgregarImpresoras, "nombreCompleto":nombreCompleto, "correo":correo})
 
 def verInsumos(request):
 
     Insumos = True
     estaEnVerInsumos = True
-    return render(request, "Insumos/verInsumos.html",{"Insumos": Insumos, "estaEnVerInsumos":estaEnVerInsumos})
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    nombreCompleto = nombre + " " + apellidos
+    return render(request, "Insumos/verInsumos.html",{"Insumos": Insumos, "estaEnVerInsumos":estaEnVerInsumos, "nombreCompleto":nombreCompleto, "correo":correo})
 
 def agregarInsumos(request):
 
     estaEnAgregarInsumos = True
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    nombreCompleto = nombre + " " + apellidos
     Insumos = True
-    return render(request,"Insumos/agregarInsumos.html",{"estaEnAgregarInsumos": estaEnAgregarInsumos, "Insumos": Insumos})
+    return render(request,"Insumos/agregarInsumos.html",{"estaEnAgregarInsumos": estaEnAgregarInsumos, "Insumos": Insumos, "nombreCompleto":nombreCompleto, "correo":correo})
 
 def verProgramas(request):
 
     estaEnVerProgramas = True
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    nombreCompleto = nombre + " " + apellidos
 
-    return render(request,"Programas/verProgramas.html",{"estaEnVerProgramas": estaEnVerProgramas})
+    return render(request,"Programas/verProgramas.html",{"estaEnVerProgramas": estaEnVerProgramas, "nombreCompleto":nombreCompleto, "correo":correo})
 
 def agregarProgramas(request):
 
     estaEnAgregarProgramas = True
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    nombreCompleto = nombre + " " + apellidos
 
-    return render(request,"Programas/agregarProgramas.html",{"estaEnAgregarProgramas": estaEnAgregarProgramas})
+    return render(request,"Programas/agregarProgramas.html",{"estaEnAgregarProgramas": estaEnAgregarProgramas, "nombreCompleto":nombreCompleto, "correo":correo})
 
 def asignarProgramas(request):
 
     estaEnAsignarProgramas = True
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    nombreCompleto = nombre + " " + apellidos
 
-    return render(request,"Programas/asignarProgramas.html",{"estaEnAsignarProgramas": estaEnAsignarProgramas})
+    return render(request,"Programas/asignarProgramas.html",{"estaEnAsignarProgramas": estaEnAsignarProgramas, "nombreCompleto":nombreCompleto, "correo":correo})
 
 def ProgramasporArea(request):
 
     estaEnverProgramasPorArea = True
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    nombreCompleto = nombre + " " + apellidos
 
-    return render(request,"Programas/verProgramasArea.html",{"estaEnverProgramasPorArea": estaEnverProgramasPorArea})
+    return render(request,"Programas/verProgramasArea.html",{"estaEnverProgramasPorArea": estaEnverProgramasPorArea, "nombreCompleto":nombreCompleto, "correo":correo})
 
 def verProgramasPorArea(request):
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    nombreCompleto = nombre + " " + apellidos
 
     if request.method == "POST":
         
@@ -249,25 +387,42 @@ def verProgramasPorArea(request):
         #nombreArea = Administracion
 
         estaEnverProgramasPorArea = True
-        return render(request, "Programas/tablaProgArea.html",{"estaEnverProgramasPorArea": estaEnverProgramasPorArea, "nombreArea":nombreArea})
+        return render(request, "Programas/tablaProgArea.html",{"estaEnverProgramasPorArea": estaEnverProgramasPorArea, "nombreArea":nombreArea, "nombreCompleto":nombreCompleto, "correo":correo})
 
     
 
 def calendarioMant(request):
 
     estaEnCalendario = True
-    return render(request,"Mantenimiento/calendarioMant.html", {"estaEnCalendario": estaEnCalendario})
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    nombreCompleto = nombre + " " + apellidos
+    return render(request,"Mantenimiento/calendarioMant.html", {"estaEnCalendario": estaEnCalendario, "nombreCompleto":nombreCompleto, "correo":correo})
 
 def formularioMant(request):
     estaEnFormulario = True
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    nombreCompleto = nombre + " " + apellidos
 
-    return render(request,"Mantenimiento/formularioMant.html",{"estaEnFormulario": estaEnFormulario})
+    return render(request,"Mantenimiento/formularioMant.html",{"estaEnFormulario": estaEnFormulario, "nombreCompleto":nombreCompleto, "correo":correo})
 
 def verCarta(request):
     estaEnVerCarta = True
-    return render(request,"cartaCompromiso/verCarta.html", {"estaEnVerCarta": estaEnVerCarta})
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    nombreCompleto = nombre + " " + apellidos
+    return render(request,"cartaCompromiso/verCarta.html", {"estaEnVerCarta": estaEnVerCarta, "nombreCompleto":nombreCompleto, "correo":correo})
 
 def agregarCarta(request):
+    
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    nombreCompleto = nombre + " " + apellidos
 
     if request.method == "POST":
         
@@ -300,34 +455,58 @@ def agregarCarta(request):
         #Guardar datos en la tabla Carta de la base de datos
 
         estaEnAgregarCarta = True
-        return render(request, "cartaCompromiso/agregarCarta.html",{"estaEnAgregarCarta": estaEnAgregarCarta, "compuSeleccionada":compuSeleccionada, "arreglo":arregloDatosCompu, "arregloEmpl": datosEmpleado})
+        return render(request, "cartaCompromiso/agregarCarta.html",{"estaEnAgregarCarta": estaEnAgregarCarta, "compuSeleccionada":compuSeleccionada, "arreglo":arregloDatosCompu, "arregloEmpl": datosEmpleado, "nombreCompleto":nombreCompleto, "correo":correo})
 
     estaEnAgregarCarta = True
-    return render(request, "cartaCompromiso/agregarCarta.html",{"estaEnAgregarCarta": estaEnAgregarCarta})
+    return render(request, "cartaCompromiso/agregarCarta.html",{"estaEnAgregarCarta": estaEnAgregarCarta, "nombreCompleto":nombreCompleto, "correo":correo})
 
 def BitacorasEquipos(request):
     estaEnEquiposBitacora = True
-    return render(request, "Bitacora/Bitacoras.html",{"estaEnEquiposBitacora": estaEnEquiposBitacora})
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    nombreCompleto = nombre + " " + apellidos
+    return render(request, "Bitacora/Bitacoras.html",{"estaEnEquiposBitacora": estaEnEquiposBitacora, "nombreCompleto":nombreCompleto, "correo":correo})
 
 def BitacorasImpresoras(request):
     estaEnImpresorasBitacora = True
-    return render(request, "Bitacora/Bitacoras.html",{"estaEnImpresorasBitacora": estaEnImpresorasBitacora})
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    nombreCompleto = nombre + " " + apellidos
+    return render(request, "Bitacora/Bitacoras.html",{"estaEnImpresorasBitacora": estaEnImpresorasBitacora, "nombreCompleto":nombreCompleto, "correo":correo})
 
 def BitacorasEmpleados(request):
     estaEnEmpleadosBitacora = True
-    return render(request, "Bitacora/Bitacoras.html",{"estaEnEmpleadosBitacora": estaEnEmpleadosBitacora})
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    nombreCompleto = nombre + " " + apellidos
+    return render(request, "Bitacora/Bitacoras.html",{"estaEnEmpleadosBitacora": estaEnEmpleadosBitacora, "nombreCompleto":nombreCompleto, "correo":correo})
 
 def BitacorasMantenimiento(request):
     estaEnMantenimientoBitacora = True
-    return render(request, "Bitacora/Bitacoras.html",{"estaEnMantenimientoBitacora": estaEnMantenimientoBitacora})
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    nombreCompleto = nombre + " " + apellidos
+    return render(request, "Bitacora/Bitacoras.html",{"estaEnMantenimientoBitacora": estaEnMantenimientoBitacora, "nombreCompleto":nombreCompleto, "correo":correo})
 
 def BitacorasCartuchos(request):
     estaEnCartuchosBitacora = True
-    return render(request, "Bitacora/Bitacoras.html",{"estaEnCartuchosBitacora": estaEnCartuchosBitacora})
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    nombreCompleto = nombre + " " + apellidos
+    return render(request, "Bitacora/Bitacoras.html",{"estaEnCartuchosBitacora": estaEnCartuchosBitacora, "nombreCompleto":nombreCompleto, "correo":correo})
 
 def BitacorasCartas(request):
     estaEnCartasBitacora = True
-    return render(request, "Bitacora/Bitacoras.html",{"estaEnCartasBitacora": estaEnCartasBitacora})
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    nombreCompleto = nombre + " " + apellidos
+    return render(request, "Bitacora/Bitacoras.html",{"estaEnCartasBitacora": estaEnCartasBitacora, "nombreCompleto":nombreCompleto, "correo":correo})
 
 
 
@@ -363,6 +542,11 @@ def guardarImagen(request):
     return render(request, "cartaCompromiso/agregarCarta.html",{"estaEnAgregarCarta": estaEnAgregarCarta})
 
 def editarEquipo(request):
+    estaEnCartasBitacora = True
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    nombreCompleto = nombre + " " + apellidos
     
     if request.method == "POST":
         equipoRecibido = request.POST['idEquipo']
@@ -372,32 +556,165 @@ def editarEquipo(request):
 
 
 
-    return render(request, "Editar/editarEquipo.html")
+    return render(request, "Editar/editarEquipo.html", {"nombreCompleto":nombreCompleto, "correo":correo})
 
 
 def editarEmpleado(request):
+    estaEnCartasBitacora = True
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    nombreCompleto = nombre + " " + apellidos
 
     if request.method == "POST":
-
+        
         empleadoRecibido = request.POST['idEmpleadoEditar']
+        
+        
+        datosEmpleadoEditar = Empleados.objects.filter(id_empleado__icontains = empleadoRecibido)
+        
+        if datosEmpleadoEditar:
+            for datoEditar in datosEmpleadoEditar:
+            
+                idareaEmpleado = datoEditar.id_area_id
+                
+        datosArea = Areas.objects.filter(id_area__icontains = idareaEmpleado)
+        if datosArea:
+            for nombreEditar in datosArea:
+                
+                nombreArea =  nombreEditar.nombre
+        
+        areas = Areas.objects.all()
+        
+        areasNuevas = []
+        
+        for dato in areas:
+            if idareaEmpleado == dato.id_area:
+                yaEsta = True
+            else:
+                areasNuevas.append([dato.id_area, dato.nombre])
+                
+        return render(request,"Editar/editarEmpleado.html", { "nombreCompleto":nombreCompleto, "correo":correo, "datosEmpleadoEditar": datosEmpleadoEditar, "nombreArea": nombreArea, "areasNuevas":areasNuevas})
 
-        datosEmpleado = ["3","Ana", "Gutierrez", "5", "Subdirectora", "anda.gutierrez@customco.com.mx", "anaGut674#", "A"]
-
-        idArea = datosEmpleado[3]
-        nombreArea = "Almacen"
-
-
-
-        return render(request,"Editar/editarEmpleado.html", {"arregloDatos":datosEmpleado, "nombreArea":nombreArea})
+def editarEmpleadoBd(request):
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    nombreCompleto = nombre + " " + apellidos
+    
+    if request.method == "POST":
+        
+        nombreEditar = request.POST['nombreEditar']
+        apellidoEditar = request.POST['apellidoEditar']
+        areaEditar = request.POST['areaEditar']
+        puestoEditar = request.POST['puestoEditar']
+        correoEditar = request.POST['correoEditar']
+        contraseñaEditar = request.POST['contraseñaEditar']
+        
+        if request.POST.get('activoEditar', False):
+            activoEditar = "A"
+        elif request.POST.get('activoEditar', True):
+            activoEditar = "I"
+        
+        
+        
+        areaInt = int(areaEditar)
+        
+        datosEmpleado = Empleados.objects.filter(correo__icontains = correoEditar)
+        
+        if datosEmpleado:
+            for dato in datosEmpleado:
+                idEmpleado = dato.id_empleado
+        
+        actualizacion = Empleados.objects.filter(correo__icontains = correoEditar).update(nombre=nombreEditar, apellidos=apellidoEditar,
+                                                                                          id_area=areaInt, puesto=puestoEditar, 
+                                                                                          correo=correoEditar, contraseña=contraseñaEditar, 
+                                                                                          activo=activoEditar)
+        
+        
+        editado = True
+        textoEdicion = "Se ha editado al empleado " + nombreEditar + " con éxito!"
+        
+        datosEmpleadoEditar = Empleados.objects.filter(id_empleado__icontains = idEmpleado)
+        
+        if datosEmpleadoEditar:
+            for datoEditar in datosEmpleadoEditar:
+            
+                idareaEmpleado = datoEditar.id_area_id
+                
+        datosArea = Areas.objects.filter(id_area__icontains = idareaEmpleado)
+        if datosArea:
+            for nombreEditar in datosArea:
+                
+                nombreArea =  nombreEditar.nombre
+        
+        areas = Areas.objects.all()
+        
+        areasNuevas = []
+        
+        for dato in areas:
+            if idareaEmpleado == dato.id_area:
+                yaEsta = True
+            else:
+                areasNuevas.append([dato.id_area, dato.nombre])
+                
+        return render(request,"Editar/editarEmpleado.html", { "nombreCompleto":nombreCompleto, "correo":correo, "datosEmpleadoEditar": datosEmpleadoEditar, "nombreArea": nombreArea, "areasNuevas":areasNuevas, "editado":editado, "textoEdicion":textoEdicion, "areaEditar":areaEditar})
+    
+def altaEmpleado(request):
+    
+    if request.method == "POST":
+    
+        idAlta= request.POST['idEmpleadoAlta']
+        
+        datosEmpleado = Empleados.objects.filter(id_empleado__icontains = idAlta)
+        
+        for dato in datosEmpleado:
+            nombre = dato.nombre
+            apellido = dato.apellidos
+            
+        nombreCompletoEmp = nombre + " " + apellido
+        
+        actualizacion = Empleados.objects.filter(id_empleado__icontains = idAlta).update(activo = "A")
+        
+        
+        request.session['idEmpleadoAlta'] = nombreCompletoEmp
+        
+        return redirect('/verEmpleados/')
+    
+def bajaEmpleado(request):
+    
+    if request.method == "POST":
+    
+        idBaja= request.POST['idEmpleadoBaja']
+        
+        datosEmpleado = Empleados.objects.filter(id_empleado__icontains = idBaja)
+        
+        for dato in datosEmpleado:
+            nombre = dato.nombre
+            apellido = dato.apellidos
+        
+        nombreCompletoEmp = nombre + " " + apellido
+        
+        actualizacion = Empleados.objects.filter(id_empleado__icontains = idBaja).update(activo = "I")
+        
+        request.session['idEmpleadoBaja'] = nombreCompletoEmp
+        
+        return redirect('/verEmpleados/')
+        
 
 def editarImpresora(request):
+    estaEnCartasBitacora = True
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    nombreCompleto = nombre + " " + apellidos
 
     if request.method == "POST":
 
         idImpresora= request.POST['idImpresoraEditar']
         datosImpresora = [idImpresora, "HP", "SAD34", "345SFSEA", "Inyección de tinta Color/Blanco-Negro", "si", "192.164.2.10", "Funcional", "A", "Administración"]
 
-        return render(request,"Editar/editarImpresora.html", {"impresoraAEditar":datosImpresora})
+        return render(request,"Editar/editarImpresora.html", {"impresoraAEditar":datosImpresora, "nombreCompleto":nombreCompleto, "correo":correo})
 
 def firmarCarta(request):
 
