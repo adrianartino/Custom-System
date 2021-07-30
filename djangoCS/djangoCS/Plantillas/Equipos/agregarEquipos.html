@@ -31,6 +31,8 @@ Agregar Equipos
 <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
 <link href={% static 'panel/css/themes/all-themes.css' %} rel="stylesheet" />
 
+<script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
+
 {% endblock %}
 
 {% block contenido %}
@@ -71,14 +73,15 @@ Agregar Equipos
                         </div>
                         <div class="col-md-3">
                             <label for="email_address">Marca:</label>
+                            
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">copyright</i>
                                 </span>
-                                    <select class="form-control show-tick">
-                                        <option>HP</option>
-                                        <option>DELL</option>
-                                        <option>Lenovo</option>
+                                    <select class="form-control show-tick" id="slick">
+                                        <option value="HP" ><span class="iconify" data-icon="simple-icons:hp" data-inline="false"></span> HP</option>
+                                        <option value="DELL">DELL</option>
+                                        <option value="Lenovo">Lenovo</option>
                                     </select>
                             </div>
                         </div>
@@ -201,6 +204,9 @@ Agregar Equipos
                                 </div>
                             </div>
                         </div>  
+                       
+                    </div>
+                    <div class="row clearfix">
                         <div class="col-md-3">
                             <label for="email_address">Ficha Técnica:</label>
                             <div class="input-group">
@@ -212,11 +218,6 @@ Agregar Equipos
                                 </div>
                             </div>
                         </div> 
-                       
-                       
-                        
-                        
-                        
                     </div>
 
                     
@@ -231,9 +232,11 @@ Agregar Equipos
         </div>
     </div>
 </div>
+
 {% endblock %}
 
 {% block estilosJs %}
+
 <script>
     function soloLetras(e) {
         key = e.keyCode || e.which;

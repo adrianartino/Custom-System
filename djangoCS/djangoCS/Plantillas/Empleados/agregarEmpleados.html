@@ -65,7 +65,7 @@ Agregar Empleados
                                 </span>
                                 <div class="form-line">
                                     <input onkeypress='return soloLetras(event)' type="text" class="form-control date" placeholder="Ingresar nombre" 
-                                    pattern="[A-Za-z ]{3,80}" title="No se permiten caracteres especiales." required>
+                                    pattern="[A-Za-z ]{3,80}" title="No se permiten caracteres especiales." name="nombreEm" required>
                                 </div>
                             </div>
                         </div>
@@ -74,7 +74,7 @@ Agregar Empleados
                             <div class="form-group">
                                 <div class="form-line">
                                     <input onkeypress='return soloLetras(event)'type="text" class="form-control date" placeholder="Ingresar apellidos"
-                                    pattern="[A-Za-z ]{3,80}" title="No se permiten caracteres especiales." required>
+                                    pattern="[A-Za-z ]{3,80}" title="No se permiten caracteres especiales." name="apellidoEm" required>
                                 </div>
                             </div>
                         </div>    
@@ -87,13 +87,10 @@ Agregar Empleados
                                 <span class="input-group-addon">
                                     <i class="material-icons">work</i>
                                 </span>
-                                <select class="form-control show-tick">
-                                        <option>Sistemas</option>
-                                        <option>Administración</option>
-                                        <option>Almacen</option>
-                                        <option>Especialista</option>
-                                        <option>Recursos Humanos</option>
-
+                                <select class="form-control show-tick" name="areaEm" >
+                                    {% for area in infoAreas %}
+                                        <option value="{{area.id_area}}" class="{{area.color}}">{{area.nombre}}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
                         </div>
@@ -102,7 +99,7 @@ Agregar Empleados
                             <div class="form-group">
                                 <div class="form-line">
                                     <input onkeypress='return soloLetras(event)'type="text" class="form-control date" placeholder="Ingresar puesto"
-                                    pattern="[A-Za-z ]{3,80}" title="No se permiten caracteres especiales." required>
+                                    pattern="[A-Za-z ]{3,80}" title="No se permiten caracteres especiales." name="puestoEm" required>
                                 </div>
                             </div>
                         </div>    
@@ -117,7 +114,7 @@ Agregar Empleados
                                 </span>
                                 <div class="form-line">
                                     <input type="email" class="form-control date" placeholder="Ingresar Correo"
-                                    title="Ingrese un correo electrónico válido." required>
+                                    title="Ingrese un correo electrónico válido." name="correoEm" required>
                                 </div>
                             </div>
                         </div>
@@ -126,7 +123,7 @@ Agregar Empleados
                             <div class="form-group">
                                 <div class="form-line">
                                     <input type="password" class="form-control date" placeholder="Ingresar Contraseña"
-                                    pattern="{3,40}"title="Ingrese la contraseña." required>
+                                    pattern="{3,40}"title="Ingrese la contraseña." name="contraEm" required>
                                 </div>
                             </div>
                         </div>    
@@ -135,7 +132,7 @@ Agregar Empleados
                     
                     
 
-                    <input type="checkbox" id="remember_me" class="filled-in">
+                    <input type="checkbox" id="remember_me" class="filled-in" name="activoEm">
                     <label for="remember_me">Activo</label>
                     <br>
                     <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i class="material-icons">person_add</i> Guardar Empleado</button>
@@ -144,6 +141,29 @@ Agregar Empleados
         </div>
     </div>
 </div>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    {% if yaExiste %}
+    <script type="text/javascript">
+        swal({
+            icon: 'error',
+            title: 'Algo salio mal..',
+            text: ' {{textoError}}',
+            footer: '<span style="color: red!important"> Corrige los datos a ingresar! </span>',
+            width: '40%'
+        });
+    </script>
+    {% endif %}
+    {% if noExiste %}
+    <script type="text/javascript">
+        swal({
+            icon: 'success',
+            title: 'Wujuu..',
+            text: ' {{textoExiste}}',
+            footer: '<span style="color: green!important"> Sigue navegando por Custom System! </span>',
+            width: '40%'
+        });
+    </script>
+    {% endif %}
 {% endblock %}
 
 {% block estilosJs %}
@@ -151,7 +171,7 @@ Agregar Empleados
     function soloLetras(e) {
         key = e.keyCode || e.which;
         tecla = String.fromCharCode(key).toLowerCase();
-        letras = " áéíóúabcdefghijklmnñopqrstuvwxyz";
+        letras = " áéíóúabcdefghijklmnñopqrstuvwxyzñ";
         especiales = "8-37-39-46";
 
         tecla_especial = false

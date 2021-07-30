@@ -274,7 +274,38 @@ def agregarEmpleados(request):
     correo = request.session['correoSesion']
     nombreCompleto = nombre + " " + apellidos
 
-    return render(request,"Empleados/agregarEmpleados.html", {"estaEnAgregarEmpleados": estaEnAgregarEmpleados, "nombreCompleto":nombreCompleto, "correo":correo})
+    info_areas = Areas.objects.only('id_area', 'nombre', 'color')
+
+    if request.method == "POST":
+
+        nombre_recibido = request.POST['nombreEm']
+        apellido_recibido = request.POST['apellidoEm']
+        area_recibida = request.POST['areaEm']
+        puesto_recibido = request.POST['puestoEm']
+        correo_recibido = request.POST['correoEm']
+        contra_recibida = request.POST['contraEm']
+
+        if request.POST.get('activoEm', False):
+            activo_recibido = "A"
+        elif request.POST.get('activoEm', True):
+            activo_recibido = "I"
+
+        lista_empleados = Empleados.objects.all()
+
+        for empleado in lista_empleados:
+            if empleado.apellidos == apellido_recibido and empleado.correo == correo_recibido:
+                yaExiste = True
+                texto_error = "El empleado "+ empleado.nombre + " ya existe en la Base de Datos!"
+                return render(request,"Empleados/agregarEmpleados.html", {"estaEnAgregarEmpleados": estaEnAgregarEmpleados, "nombreCompleto":nombreCompleto, "correo":correo, "infoAreas":info_areas, "yaExiste":yaExiste, "textoError":texto_error})
+            else:
+                noExiste = True
+                texto_existe = "El empleado "+ nombre_recibido + " fue agregado exitosamente!"
+                registro = Empleados(nombre=nombre_recibido, apellidos=apellido_recibido, 
+                id_area = Areas.objects.get(id_area = area_recibida), puesto=puesto_recibido, correo = correo_recibido, contraseña=contra_recibida, activo = activo_recibido )
+                registro.save()
+                return render(request,"Empleados/agregarEmpleados.html", {"estaEnAgregarEmpleados": estaEnAgregarEmpleados, "nombreCompleto":nombreCompleto, "correo":correo, "infoAreas":info_areas, "noExiste":noExiste, "textoExiste":texto_existe})
+
+    return render(request,"Empleados/agregarEmpleados.html", {"estaEnAgregarEmpleados": estaEnAgregarEmpleados, "nombreCompleto":nombreCompleto, "correo":correo, "infoAreas":info_areas})
 
 def verEquipos(request):
 
