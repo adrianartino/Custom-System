@@ -33,6 +33,7 @@ Agregar Equipos
 
 <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
 
+
 {% endblock %}
 
 {% block contenido %}
@@ -65,7 +66,7 @@ Agregar Equipos
                                 <span class="input-group-addon">
                                     <i class="material-icons">computer</i>
                                 </span>
-                                    <select class="form-control show-tick">
+                                    <select class="form-control show-tick" name="tipo">
                                         <option>Laptop</option>
                                         <option>Escritorio</option>
                                     </select>
@@ -76,12 +77,16 @@ Agregar Equipos
                             
                             <div class="input-group">
                                 <span class="input-group-addon">
-                                    <i class="material-icons">copyright</i>
+                                <img id = "marcaslap"  alt="mar">
                                 </span>
-                                    <select class="form-control show-tick" id="slick">
-                                        <option value="HP" ><span class="iconify" data-icon="simple-icons:hp" data-inline="false"></span> HP</option>
+                                    <select class="form-control show-tick" id="marcas" name="marca" onChange="cambiarImagen()" >
+                                        <option value="HP" selected> HP  </option>
                                         <option value="DELL">DELL</option>
                                         <option value="Lenovo">Lenovo</option>
+                                        <option value="ASUS">ASUS</option>
+                                        <option value="BENQ">BENQ</option>
+                                        <option value="MAC">MAC</option>
+                                        <option value="Toshiba">Toshiba</option>
                                     </select>
                             </div>
                         </div>
@@ -93,7 +98,7 @@ Agregar Equipos
                                     <i class="material-icons">branding_watermark</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar Modelo">
+                                    <input type="text" class="form-control date" placeholder="Ingresar Modelo" name="modelo">
                                 </div>
                             </div>
                         </div>
@@ -103,12 +108,13 @@ Agregar Equipos
                                 <span class="input-group-addon">
                                     <i class="material-icons">palette</i>
                                 </span>
-                                    <select class="form-control show-tick">
+                                    <select class="form-control show-tick" name="color">
                                         <option>Negro</option>
                                         <option>Gris</option>
                                         <option>Azul</option>
                                     </select>
                             </div>
+                            <input type="text" id="valorSelect" >
                         </div>  
                         
                         
@@ -124,7 +130,7 @@ Agregar Equipos
                                 <span class="input-group-addon">
                                     <i class="material-icons">trending_up</i>
                                 </span>
-                                    <select class="form-control show-tick">
+                                    <select class="form-control show-tick" name="memram">
                                         <option>1 GB</option>
                                         <option>2 GB</option>
                                         <option>4 GB</option>
@@ -142,7 +148,7 @@ Agregar Equipos
                                     <i class="material-icons">memory</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar procesador">
+                                    <input type="text" class="form-control date" placeholder="Ingresar procesador" name="procesador">
                                 </div>
                             </div>
                         </div> 
@@ -152,7 +158,7 @@ Agregar Equipos
                                 <span class="input-group-addon">
                                     <i class="material-icons">verified_user</i>
                                 </span>
-                                    <select class="form-control show-tick">
+                                    <select class="form-control show-tick" name="sisteop>
                                         <option>Windows XP</option>
                                         <option>Windows Vista</option>
                                         <option>Windows 7</option>
@@ -168,7 +174,7 @@ Agregar Equipos
                                 <span class="input-group-addon">
                                     <i class="material-icons">build</i>
                                 </span>
-                                    <select class="form-control show-tick">
+                                    <select class="form-control show-tick" name="estado">
                                         <option>Funcional</option>
                                         <option>Reparación</option>
                                         <option>Basura</option>
@@ -187,7 +193,7 @@ Agregar Equipos
                                 <span class="input-group-addon">
                                     <i class="material-icons">badge</i>
                                 </span>
-                                    <select class="form-control show-tick">
+                                    <select class="form-control show-tick" name="propietario">
                                         <option>Monica Arriaga</option>
                                         <option>Ana Gutierrez</option>
                                     </select>
@@ -263,7 +269,17 @@ Agregar Equipos
         }
         return false;
     }
-</script>
+
+    function cambiarImagen(){
+        var selection= document.getElementById('marcas');
+        var marca= selection.options[selection.selectedIndex].value;
+        var primeraparte="{% static 'images/"
+        var segundaparte = ".png' %}"
+        var todo = primeraparte+marca+segundaparte
+        document.getElementById('marcaslap').src= todo
+        document.getElementById('valorSelect').value=todo;
+    }
+</script>                        
 <!-- Jquery Core Js -->
 <script src={% static 'panel/plugins/jquery/jquery.min.js' %}></script>
 
