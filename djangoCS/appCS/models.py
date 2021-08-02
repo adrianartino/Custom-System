@@ -30,6 +30,7 @@ class Equipos (models.Model):
     modelo=models.CharField(max_length=80)
     color=models.CharField(max_length=80)
     imagen=models.ImageField(upload_to="imagenesequipos", null = True)
+    pdf=models.FileField(upload_to='pdfequipos', null=True)
     memoriaram=models.CharField(max_length=80)
     procesador=models.CharField(max_length=80)
     sistemaoperativo=models.CharField(max_length=80)

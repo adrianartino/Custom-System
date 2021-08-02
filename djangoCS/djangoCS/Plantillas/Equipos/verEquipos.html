@@ -114,119 +114,52 @@ Ver Equipos
                             </tr>
                         </tfoot>
                         <tbody>
+                            {% for equipo, empleado in lista %}
                             <tr>
-                                    <th>
-                                        <input type="text" style="border: none; background: none;"  name="idEquipo" value="1" readonly size="1">
-                                        
-                                     
-                                    </th>
-                                    <th>Laptop</th>
-                                    <th>HP</th>
-                                    <th>Pavillion 087</th>
-                                    <th>Negro</th>
-                                    <th>
-                                        <center>
-                                            <img src="{% static 'images/laptophpP.jpg' %}" width="60%" alt="lap">
-                                        </center>
-                                    </th>
-                                    <th>8 GB</th>
-                                    <th>Intel Core i7  </th>
-                                    <th>Windows 10 Home 64 bits</th>
-                                    <th>Blanca Gaeta</th>
-                                    <th>Sistemas</th>
-                                    <th>Funcional</th>
-                                    
-                                        <th>
-                                            <form action="/editarEquipo/" method="POST">{% csrf_token %}
-                                                <input type="hidden" name="idEquipo" value="1">
-                                                
-                                                <center>
-                                                    <button type="submit" class="btn btn-warning waves-effect">
-                                                        <i class="material-icons">edit</i>
-                                                    </button>
-                                                </center>
-                                                <br>
-                                            </form>
-                                            <form action="/DescargarPDF/" method="POST">{% csrf_token %}
-                                                
-                                                    <input type="hidden" name="idEquipo" value="1">
-                                                    
-                                                    <center>
-                                                        <button type="submit" class="btn bg-red waves-effect">
-                                                            <i class="material-icons">picture_as_pdf</i>
-                                                        </button>
-                                                    </center>
-                                                 
-                                            </form>
-                                        
-                                        </th>
-                                   
-                                    <form action="//" method="POST">{% csrf_token %}
-                                        <th>
-                                            <input type="hidden" name="idEmpleadoEditar" value="1">
-                                            <center>
-                                                <button type="submit" class="btn bg-red waves-effect">
-                                                    <i class="material-icons">cancel</i>
-                                                </button>
-                                            </center>
-                                            
-                                        </th>
-                                    </form>
-                                
-                                
-                                
-                            </tr>
-                            
-                            <tr>
-                                    <th>
-                                        <input type="text" style="border: none; background: none;" name="idEquipo" value="2" readonly size="1">
-                                      
-                                        
-                                     
-                                        
-                                    </th>
-                                <th>Laptop</th>
-                                <th>Toshiba</th>
-                                <th>Satelite</th>
-                                <th>Gris</th>
+                                <th>
+                                    <input type="text" style="border: none; background: none;"  name="idEquipo" value="{{equipo.id_equipo}}" readonly size="1">
+                                </th>
+                                <th>{{equipo.tipo}}</th>
+                                <th>{{equipo.marca}}</th>
+                                <th>{{equipo.modelo}} 087</th>
+                                <th>{{equipo.color}}</th>
                                 <th>
                                     <center>
-                                        <img src="{% static 'images/laptophpP.jpg' %}" width="60%" alt="lap">
+                                        <img src="{{equipo.imagen.url}}" width="20%" alt="lap">
                                     </center>
                                 </th>
-                                <th>4 GB</th>
-                                <th>AMD Rayzen 3</th>
-                                <th>Windows 7 Ultimate 64 bits</th>
-                                <th>Monica Arriaga</th>
-                                <th>Administración</th>
+                                <th>{{equipo.memoriaram}}</th>
+                                <th>{{equipo.procesador}}</th>
+                                <th>{{equipo.sistemaoperativo}}</th>
+                                <th>{{empleado.0}} {{empleado.1}}</th>
+                                <th><label class="{{empleado.3}}">{{empleado.2}}</label></th>
                                 <th>Funcional</th>
                                 
                                     <th>
                                         <form action="/editarEquipo/" method="POST">{% csrf_token %}
-                                        <input type="hidden" name="idEquipo" value="2">
-                                        <center>
-                                            <button type="submit" class="btn btn-warning waves-effect">
-                                                <i class="material-icons">edit</i>
-                                            </button>
-                                        </center>
-                                        <br>
-                                    </form>
+                                            <input type="hidden" name="idEquipo" value="{{equipo.id_equipo}}">
+                                            
+                                            <center>
+                                                <button type="submit" class="btn btn-warning waves-effect">
+                                                    <i class="material-icons">edit</i>
+                                                </button>
+                                            </center>
+                                            <br>
+                                        </form>
                                         <form action="/DescargarPDF/" method="POST">{% csrf_token %}
                                             
-                                            <input type="hidden" name="idEquipo" value="2">
-                                              
+                                                <input type="hidden" name="idEquipo" value="{{equipo.id_equipo}}">
+                                                
                                                 <center>
                                                     <button type="submit" class="btn bg-red waves-effect">
                                                         <i class="material-icons">picture_as_pdf</i>
                                                     </button>
                                                 </center>
                                              
-                                                
-                                          
                                         </form>
-                                       
+                                    
                                     </th>
-                                
+                               
                                 <form action="//" method="POST">{% csrf_token %}
                                     <th>
                                         <input type="hidden" name="idEmpleadoEditar" value="1">
@@ -238,12 +171,8 @@ Ver Equipos
                                         
                                     </th>
                                 </form>
-                           
-                                
                             </tr>
-                            
-                            
-                            
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
@@ -391,6 +320,7 @@ Ver Equipos
             </div>
         </div>
     </div>
+    
 </div>
 <script type="text/javascript">
     function inicio(){

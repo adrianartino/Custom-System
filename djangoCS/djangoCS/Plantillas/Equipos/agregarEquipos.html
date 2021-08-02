@@ -58,7 +58,7 @@ Agregar Equipos
                 </ul>
             </div>
             <div class="body">
-                <form id="form_validation" method="POST">{% csrf_token %}
+                <form id="form_validation" method="POST" enctype="multipart/form-data">{% csrf_token %}
                     <div class="row clearfix">
                         <div class="col-md-3">
                             <label for="email_address">Tipo:</label>
@@ -67,8 +67,8 @@ Agregar Equipos
                                     <i class="material-icons">computer</i>
                                 </span>
                                     <select class="form-control show-tick" name="tipo">
-                                        <option>Laptop</option>
-                                        <option>Escritorio</option>
+                                        <option value="Laptop">Laptop</option>
+                                        <option value="Escritorio">Escritorio</option>
                                     </select>
                             </div>
                         </div>
@@ -77,12 +77,13 @@ Agregar Equipos
                             
                             <div class="input-group">
                                 <span class="input-group-addon">
-                                <img id = "marcaslap"  alt="mar">
+                                <img id = "marcaslap" src="{% static 'images/HP.png' %}" alt="mar">
                                 </span>
                                     <select class="form-control show-tick" id="marcas" name="marca" onChange="cambiarImagen()" >
                                         <option value="HP" selected> HP  </option>
                                         <option value="DELL">DELL</option>
                                         <option value="Lenovo">Lenovo</option>
+                                        <option value="Acer">Acer</option>
                                         <option value="ASUS">ASUS</option>
                                         <option value="BENQ">BENQ</option>
                                         <option value="MAC">MAC</option>
@@ -109,12 +110,11 @@ Agregar Equipos
                                     <i class="material-icons">palette</i>
                                 </span>
                                     <select class="form-control show-tick" name="color">
-                                        <option>Negro</option>
-                                        <option>Gris</option>
-                                        <option>Azul</option>
+                                        <option value="Negro">Negro</option>
+                                        <option value="Gris">Gris</option>
+                                        <option value="Azul">Azul</option>
                                     </select>
                             </div>
-                            <input type="text" id="valorSelect" >
                         </div>  
                         
                         
@@ -131,13 +131,13 @@ Agregar Equipos
                                     <i class="material-icons">trending_up</i>
                                 </span>
                                     <select class="form-control show-tick" name="memram">
-                                        <option>1 GB</option>
-                                        <option>2 GB</option>
-                                        <option>4 GB</option>
-                                        <option>8 GB</option>
-                                        <option>12 GB</option>
-                                        <option>16 GB</option>
-                                        <option>32 GB</option>
+                                        <option value="1 GB">1 GB</option>
+                                        <option value="2 GB">2 GB</option>
+                                        <option value="3 GB">4 GB</option>
+                                        <option value="8 GB">8 GB</option>
+                                        <option value="12 GB">12 GB</option>
+                                        <option value="16 GB">16 GB</option>
+                                        <option value="32 GB">32 GB</option>
                                     </select>
                             </div>
                         </div> 
@@ -158,12 +158,12 @@ Agregar Equipos
                                 <span class="input-group-addon">
                                     <i class="material-icons">verified_user</i>
                                 </span>
-                                    <select class="form-control show-tick" name="sisteop>
-                                        <option>Windows XP</option>
-                                        <option>Windows Vista</option>
-                                        <option>Windows 7</option>
-                                        <option>Windows 8</option>
-                                        <option>Windows 10</option>
+                                    <select class="form-control show-tick" name="sisteop">
+                                        <option value="Windows XP">Windows XP</option>
+                                        <option value="Windows Vista">Windows Vista</option>
+                                        <option value="Windows 7">Windows 7</option>
+                                        <option value="Windows 8">Windows 8</option>
+                                        <option value="Windows 10">Windows 10</option>
                                         
                                     </select>
                             </div>
@@ -175,9 +175,9 @@ Agregar Equipos
                                     <i class="material-icons">build</i>
                                 </span>
                                     <select class="form-control show-tick" name="estado">
-                                        <option>Funcional</option>
-                                        <option>Reparación</option>
-                                        <option>Basura</option>
+                                        <option value="Funcional">Funcional</option>
+                                        <option value="Reparación">Reparación</option>
+                                        <option value="Basura">Basura</option>
                                     </select>
                             </div>
                         </div>
@@ -194,8 +194,11 @@ Agregar Equipos
                                     <i class="material-icons">badge</i>
                                 </span>
                                     <select class="form-control show-tick" name="propietario">
-                                        <option>Monica Arriaga</option>
-                                        <option>Ana Gutierrez</option>
+                                        <option value="nopropietario">Sin propietario</option>
+                                        {% for propietario in info_empleados %}
+                                        <option value="{{propietario.id_empleado}}">{{propietario.nombre}} {{propietario.apellidos}}</option>
+                                    
+                                        {% endfor %}
                                     </select>
                             </div>
                         </div>  
@@ -238,7 +241,29 @@ Agregar Equipos
         </div>
     </div>
 </div>
-
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    {% if compuSin %}
+    <script type="text/javascript">
+        swal({
+            icon: 'success',
+            title: 'Wujuu..',
+            text: ' {{textoCompu}}',
+            footer: '<span style="color: green!important"> Sigue navegando por Custom System! </span>',
+            width: '40%'
+        });
+    </script>
+    {% endif %}
+    {% if compuCon %}
+    <script type="text/javascript">
+        swal({
+            icon: 'success',
+            title: 'Wujuu..',
+            text: ' {{textoCompu}}',
+            footer: '<span style="color: green!important"> Sigue navegando por Custom System! </span>',
+            width: '40%'
+        });
+    </script>
+    {% endif %}
 {% endblock %}
 
 {% block estilosJs %}
@@ -273,8 +298,8 @@ Agregar Equipos
     function cambiarImagen(){
         var selection= document.getElementById('marcas');
         var marca= selection.options[selection.selectedIndex].value;
-        var primeraparte="{% static 'images/"
-        var segundaparte = ".png' %}"
+        var primeraparte="/static/images/"
+        var segundaparte = ".png"
         var todo = primeraparte+marca+segundaparte
         document.getElementById('marcaslap').src= todo
         document.getElementById('valorSelect').value=todo;

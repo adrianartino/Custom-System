@@ -314,8 +314,38 @@ def verEquipos(request):
     apellidos = request.session['apellidos']
     correo = request.session['correoSesion']
     nombreCompleto = nombre + " " + apellidos
+    
+    equiposActivos = Equipos.objects.filter(activo__icontains= "A")
+    equiposInactivos = Equipos.objects.filter(activo__icontains= "I")
+    
+     #empleados Actvos
+    empleadosEnActivos = []
+    datosAreasEnActivos = []
+    
+    for equipos in equiposActivos:
+        empleadosEnActivos.append(equipos.id_empleado_id)
+        #areasEnActivos = ["1"]
+        
+    for id in empleadosEnActivos:
+        datosEmpleado = Empleados.objects.filter(id_empleado__icontains = id) #["1", "Sistemas", "rojo"]
+        
+        if datosEmpleado:
+            for dato in datosEmpleado:
+                nombreEmpleado = dato.nombre
+                apellidosEmpleado = dato.apellidos
+                areaEmpleado = dato.id_area_id
+                datosArea = Areas.objects.filter(id_area__icontains=areaEmpleado)
+                
+                if datosArea:
+                    for dato in datosArea:
+                        nombreArea = dato.nombre
+                        color = dato.color
+        
+        datosAreasEnActivos.append([nombreEmpleado, apellidosEmpleado, nombreArea, color])
+        
+    lista = zip(equiposActivos, datosAreasEnActivos)
 
-    return render(request, "Equipos/verEquipos.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo})
+    return render(request, "Equipos/verEquipos.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "lista":lista})
 
 def agregarEquipos(request):
 
@@ -324,8 +354,74 @@ def agregarEquipos(request):
     apellidos = request.session['apellidos']
     correo = request.session['correoSesion']
     nombreCompleto = nombre + " " + apellidos
+    
+    info_empleados = Empleados.objects.only('id_empleado', 'nombre', 'apellidos')
+    empleadosEquipo = Equipos.objects.only('id_empleado_id')
+    empleadosiEq= []
+    empleadosnoEq= []
+    
+    if empleadosEquipo:
+    
+        for empleados in info_empleados:
+            for emplEq in empleadosEquipo:
+                if empleados.id_empleado == emplEq.id_empleado_id:
+                    empleadosiEq.append(empleados.id_empleado)
+                else:
+                    empleadosnoEq.append([empleados.id_empleado,empleados.nombre,empleados.apellidos])
+                    
+        return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos": estaEnAgregarEquipos, "nombreCompleto":nombreCompleto, "correo":correo,"info_empleados":empleadosnoEq })
+                
 
-    return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos": estaEnAgregarEquipos, "nombreCompleto":nombreCompleto, "correo":correo})
+    
+    if request.method == "POST":
+    
+        tipo_recibido = request.POST['tipo']
+        marca_recibido = request.POST['marca']
+        modelo_recibida = request.POST['modelo']
+        color_recibido = request.POST['color']
+        imagen_recibido = request.FILES.get('imgequipo')
+        pdf_recibido = request.FILES.get('pdf')
+        memoriaram_recibida = request.POST['memram']
+        procesador_recibida = request.POST['procesador']
+        sistemaop_recibida = request.POST['sisteop']
+        estado_recibida = request.POST['estado']
+        propietario_recibida = request.POST['propietario']
+
+        if request.POST.get('activoEm', False):
+            activo_recibido = "I"
+        elif request.POST.get('activoEm', True):
+            activo_recibido = "A"
+            
+        
+        
+            
+        if propietario_recibida == "nopropietario":
+            registroCompu=Equipos(tipo=tipo_recibido,marca=marca_recibido,modelo= modelo_recibida,
+                              color=color_recibido,imagen= imagen_recibido, pdf=pdf_recibido,
+                              memoriaram=memoriaram_recibida,procesador=procesador_recibida,sistemaoperativo= sistemaop_recibida,
+                              estado=estado_recibida, activo=activo_recibido)
+            registroCompu.save()
+            compuSin = True
+            textoCompu = "Se ha guardado "+tipo_recibido +" "+ marca_recibido + " " + modelo_recibida + " sin propietario!"
+            return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos": estaEnAgregarEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "compuSin": compuSin, "textoCompu":textoCompu})
+            
+            
+        elif propietario_recibida != "nopropietario":
+            infoEmpleado = Empleados.objects.filter(id_empleado__icontains=propietario_recibida)
+            
+            for dato in infoEmpleado:
+                nombre = dato.nombre
+                
+            compuCon= True
+            textoCompu = "Se ha guardado "+tipo_recibido +" "+ marca_recibido + " " + modelo_recibida + " asignada al empleado " + nombre +"!"
+            registroCompu=Equipos(tipo=tipo_recibido,marca=marca_recibido,modelo= modelo_recibida,
+                              color=color_recibido,imagen= imagen_recibido, pdf=pdf_recibido,
+                              memoriaram=memoriaram_recibida,procesador=procesador_recibida,sistemaoperativo= sistemaop_recibida,
+                              id_empleado =Empleados.objects.get(id_empleado = propietario_recibida),estado=estado_recibida, activo=activo_recibido)
+            registroCompu.save()
+            return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos": estaEnAgregarEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "compuCon": compuCon, "textoCompu":textoCompu})
+    
+    return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos": estaEnAgregarEquipos, "nombreCompleto":nombreCompleto, "correo":correo,"info_empleados": info_empleados})
 
 def verImpresoras(request):
 
