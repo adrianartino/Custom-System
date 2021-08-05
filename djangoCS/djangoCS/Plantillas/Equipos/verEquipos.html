@@ -40,7 +40,7 @@ Ver Equipos
         <div class="card">
             <div class="header">
                 <h2>
-                    EMPLEADOS DE CUSTOM & CO
+                    EQUIPOS DE CUSTOM & CO
                 </h2>
                 <ul class="header-dropdown m-r--5">
                     <li class="dropdown">
@@ -125,7 +125,7 @@ Ver Equipos
                                 <th>{{equipo.color}}</th>
                                 <th>
                                     <center>
-                                        <img src="{{equipo.imagen.url}}" width="20%" alt="lap">
+                                        <img src="{{equipo.imagen.url}}" width="40%" alt="lap">
                                     </center>
                                 </th>
                                 <th>{{equipo.memoriaram}}</th>
@@ -160,9 +160,9 @@ Ver Equipos
                                     
                                     </th>
                                
-                                <form action="//" method="POST">{% csrf_token %}
+                                <form action="/bajaEquipo/" method="POST">{% csrf_token %}
                                     <th>
-                                        <input type="hidden" name="idEmpleadoEditar" value="1">
+                                        <input type="hidden" name="idEquipoBaja" value="{{equipo.id_equipo}}">
                                         <center>
                                             <button type="submit" class="btn bg-red waves-effect">
                                                 <i class="material-icons">cancel</i>
@@ -221,6 +221,7 @@ Ver Equipos
                             </tr>
                         </tfoot>
                         <tbody>
+                            {% for equipoIna, empleadoIna in lista2 %}
                             <tr>
                                 <form action="/DescargarPDF/" method="POST">{% csrf_token %}
                                     <th>
@@ -234,24 +235,24 @@ Ver Equipos
                                      
                                     </th>
                                 </form>
-                                    <th>Laptop</th>
-                                    <th>HP</th>
-                                    <th>Pavillion 087</th>
-                                    <th>Negro</th>
+                                    <th>{{equipoIna.tipo}}</th>
+                                    <th>{{equipoIna.marca}}</th>
+                                    <th>{{equipoIna.modelo}}</th>
+                                    <th>{{equipoIna.color}}</th>
                                     <th>
                                         <center>
-                                            <img src="{% static 'images/laptophpP.jpg' %}" width="60%" alt="lap">
+                                            <img src="{{equipoIna.imagen.url}}" width="60%" alt="lap">
                                         </center>
                                     </th>
-                                    <th>8 GB</th>
-                                    <th>Intel Core i7  </th>
-                                    <th>Windows 10 Home 64 bits</th>
-                                    <th>Blanca Gaeta</th>
-                                    <th>Sistemas</th>
+                                    <th>{{equipoIna.memoriaram}}</th>
+                                    <th>{{equipoIna.procesador}}  </th>
+                                    <th>{{equipoIna.sistemaoperativo}}</th>
+                                    <th>{{empleadoIna.0}} {{empleadoIna.1}}</th>
+                                    <th><label class="{{empleadoIna.3}}">{{empleadoIna.2}}</label></th>
                                     <th>Funcional</th>
-                                    <form action="/editarEquipo/" method="POST">{% csrf_token %}
+                                    <form action="/altaEquipo/" method="POST">{% csrf_token %}
                                         <th>
-                                            <input type="hidden" name="idEquipoEditar" value="1">
+                                            <input type="hidden" name="idEquipoAlta" value="{{equipo.id_equipo}}">
                                             
                                             <center>
                                                 <button type="submit" class="btn bg-green waves-effect">
@@ -265,63 +266,45 @@ Ver Equipos
                                 
                                 
                             </tr>
-                            
-                            <tr>
-                                <form action="/DescargarPDF/" method="POST">{% csrf_token %}
-                                    <th>
-                                        <input type="text" style="border: none; background: none;" name="idEquipo" value="2" readonly size="1">
-                                      
-                                        <center>
-                                            <button type="submit" class="btn bg-red waves-effect">
-                                                <i class="material-icons">picture_as_pdf</i>
-                                            </button>
-                                        </center>
-                                     
-                                        
-                                    </th>
-                                </form>
-                                <th>Laptop</th>
-                                <th>Toshiba</th>
-                                <th>Satelite</th>
-                                <th>Gris</th>
-                                <th>
-                                    <center>
-                                        <img src="{% static 'images/laptophpP.jpg' %}" width="60%" alt="lap">
-                                    </center>
-                                </th>
-                                <th>4 GB</th>
-                                <th>AMD Rayzen 3</th>
-                                <th>Windows 7 Ultimate 64 bits</th>
-                                <th>Monica Arriaga</th>
-                                <th>Administración</th>
-                                <th>Funcional</th>
-                                <form action="/editarEquipo/" method="POST">{% csrf_token %}
-                                    <th>
-                                        <input type="hidden" name="idEquipoEditar" value="2">
-                                      
-                                        <center>
-                                            <button type="submit" class="btn bg-green waves-effect">
-                                                <i class="material-icons">upgrade</i>
-                                            </button>
-                                        </center>
-                                       
-                                    </th>
-                                </form>
-                           
-                                
-                            </tr>
+                           {% endfor %}
                             
                             
                             
                         </tbody>
                     </table>
+                    
                 </div>
             </div>
+           
             </div>
         </div>
     </div>
     
 </div>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    {% if bajaEquipo %}
+    <script type="text/javascript">
+        swal({
+            icon: 'error',
+            title: 'Wuu..!',
+            text: ' {{bajaExito}}',
+            footer: '<span style="color: red!important"> Vuelve a navegar por Custom System! </span>',
+            width: '40%'
+           
+        });
+    </script>
+    {% endif %}
+    {% if altaEquipo %}
+    <script type="text/javascript">
+        swal({
+            icon: 'success',
+            title: 'Wuu..!',
+            text: ' {{altaExito}}',
+            footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
+            width: '40%'
+        });
+    </script>
+    {% endif %}
 <script type="text/javascript">
     function inicio(){
         var div1 = document.getElementById("divInactivos");

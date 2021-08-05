@@ -55,7 +55,7 @@ Agregar Impresoras
                 </ul>
             </div>
             <div class="body">
-                <form id="form_validation" method="POST">{% csrf_token %}
+                <form action="/agregarImpresoras/" id="form_validation" method="POST">{% csrf_token %}
                     <div class="row clearfix">
                         <div class="col-md-4">
                             <label for="email_address">Marca:</label>
@@ -63,11 +63,11 @@ Agregar Impresoras
                                 <span class="input-group-addon">
                                     <i class="material-icons">copyright</i>
                                 </span>
-                                    <select class="form-control show-tick">
-                                        <option>HP</option>
-                                        <option>XEROX</option>
-                                        <option>SAMSUNG</option>
-                                        <option>EPSON</option>
+                                    <select class="form-control show-tick" name="marcas">
+                                        <option value="HP">HP</option>
+                                        <option value="XEROX ">XEROX</option>
+                                        <option value="SAMSUNG">SAMSUNG</option>
+                                        <option value="EPSON">EPSON</option>
                                     </select>
                             </div>
                         </div>
@@ -80,7 +80,7 @@ Agregar Impresoras
                                     <i class="material-icons">branding_watermark</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar Modelo">
+                                    <input type="text" class="form-control date" placeholder="Ingresar Modelo" name="modelos">
                                 </div>
                             </div>
                         </div>
@@ -91,7 +91,7 @@ Agregar Impresoras
                                     <i class="material-icons">pin</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar número de serie">
+                                    <input type="text" class="form-control date" placeholder="Ingresar número de serie" name="nserie">
                                 </div>
                             </div>
                         </div>
@@ -119,9 +119,9 @@ Agregar Impresoras
                                 <span class="input-group-addon">
                                     <i class="material-icons">print</i>
                                 </span>
-                                    <select class="form-control show-tick">
-                                        <option>Laser Blanco-Negro</option>
-                                        <option>Inyección de tinta Color/Blanco-Negro</option>
+                                    <select class="form-control show-tick" name="tipos">
+                                        <option value="Laser Blanco-Negro">Laser Blanco-Negro</option>
+                                        <option value="Inyección de tinta Color/Blanco-Negro">Inyección de tinta Color/Blanco-Negro</option>
                                         
                                     </select>
                             </div>
@@ -132,10 +132,10 @@ Agregar Impresoras
                                 <span class="input-group-addon">
                                     <i class="material-icons">work</i>
                                 </span>
-                                    <select class="form-control show-tick">
-                                        <option>Administración</option>
-                                        <option>Sistemas</option>
-                                        <option>Almacen</option>
+                                    <select class="form-control show-tick" name="areas">
+                                        {% for area in info_areas %}
+                                        <option value="{{area.id_area}}" class="{{area.color}}">{{area.nombre}}</option>
+                                        {% endfor %}
                                     </select>
                             </div>
                         </div>
@@ -145,18 +145,26 @@ Agregar Impresoras
                                 <span class="input-group-addon">
                                     <i class="material-icons">build</i>
                                 </span>
-                                    <select class="form-control show-tick">
-                                        <option>Funcional</option>
-                                        <option>Reparación</option>
-                                        <option>Basura</option>
+                                    <select class="form-control show-tick" name="estados">
+                                        <option value="Funcional">Funcional</option>
+                                        <option value="Reparación">Reparación</option>
+                                        <option value="Basura">Basura</option>
                                     </select>
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <input type="checkbox" id="md_checkbox_28" class="filled-in chk-col-cyan" checked />
+                            <input type="checkbox" id="md_checkbox_28" class="filled-in chk-col-cyan" checked name="red" onchange="comprobar(this)"/>
                             <label for="md_checkbox_28">Por conexión en red</label>
+                            <div class="input-group" id="divIP">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">rss_feed</i>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" class="form-control date" placeholder="Ingresar IP" name="ip">
+                                </div>
+                            </div>
                             <div>
-                                <input type="checkbox" id="md_checkbox_30" class="filled-in chk-col-green" checked />
+                                <input type="checkbox" id="md_checkbox_30" class="filled-in chk-col-green" checked name="acin"/>
                                 <label for="md_checkbox_30">Esta activo</label>
                             </div>
                             
@@ -173,6 +181,18 @@ Agregar Impresoras
         </div>
     </div>
 </div>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    {% if impresoraAgregada %}
+    <script type="text/javascript">
+        swal({
+            icon: 'success',
+            title: 'Wuu...!',
+            text: ' {{impresoraExito}}',
+            footer: '<span style="color: green!important"> Sigue navegando por Custom System! </span>',
+            width: '40%'
+        });
+    </script>
+    {% endif %}
 {% endblock %}
 
 {% block estilosJs %}
@@ -201,6 +221,15 @@ Agregar Impresoras
             return true;
         }
         return false;
+    }
+
+    function comprobar(obj){
+        if (obj.checked){
+            document.getElementById('divIP').style.display = "";
+        }
+        else{
+            document.getElementById('divIP').style.display = "none";
+        }
     }
 </script>
 <!-- Jquery Core Js -->

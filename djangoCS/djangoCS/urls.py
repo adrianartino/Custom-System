@@ -17,6 +17,8 @@ from os import name
 from django.contrib import admin
 from django.urls import path
 from appCS import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -56,7 +58,12 @@ urlpatterns = [
     path("firmarCarta/", views.firmarCarta),
     path("salir/", views.salir, name="salir"),
     path("altaEmpleado/", views.altaEmpleado),
-    path("bajaEmpleado/", views.bajaEmpleado)
-    
+    path("bajaEmpleado/", views.bajaEmpleado),
+    path("altaEquipo/", views.altaEquipo),
+    path("bajaEquipo/", views.bajaEquipo)
     
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
+    

@@ -321,9 +321,11 @@ def verEquipos(request):
      #empleados Actvos
     empleadosEnActivos = []
     datosAreasEnActivos = []
+  
     
     for equipos in equiposActivos:
         empleadosEnActivos.append(equipos.id_empleado_id)
+     
         #areasEnActivos = ["1"]
         
     for id in empleadosEnActivos:
@@ -344,8 +346,51 @@ def verEquipos(request):
         datosAreasEnActivos.append([nombreEmpleado, apellidosEmpleado, nombreArea, color])
         
     lista = zip(equiposActivos, datosAreasEnActivos)
+    
+         #empleados InActvos
+    empleadosEnInactivos = []
+    datosAreasEnInactivos = []
+    
+    
+    for equipos in equiposInactivos:
+        empleadosEnInactivos.append(equipos.id_empleado_id)
+       
+        #areasEnActivos = ["1"]
+        
+    for id in empleadosEnInactivos:
+        datosEmpleado = Empleados.objects.filter(id_empleado__icontains = id) #["1", "Sistemas", "rojo"]
+        
+        if datosEmpleado:
+            for dato in datosEmpleado:
+                nombreEmpleado = dato.nombre
+                apellidosEmpleado = dato.apellidos
+                areaEmpleado = dato.id_area_id
+                datosArea = Areas.objects.filter(id_area__icontains=areaEmpleado)
+                
+                if datosArea:
+                    for dato in datosArea:
+                        nombreArea = dato.nombre
+                        color = dato.color
+        
+        datosAreasEnInactivos.append([nombreEmpleado, apellidosEmpleado, nombreArea, color])
+        
+    lista2 = zip(equiposInactivos, datosAreasEnInactivos)
+    
+    if "idEquipoBaja" in request.session:
+        bajaEquipo=True
+        bajaExito= "Se dió de baja el " + request.session["idEquipoBaja"] + " con éxito!"
+        del request.session["idEquipoBaja"]
+        return render(request, "Equipos/verEquipos.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "lista2":lista2, "bajaEquipo":
+            bajaEquipo, "bajaExito": bajaExito})
+        
+    if "idEquipoAlta" in request.session:
+        altaEquipo= True
+        altaExito= "Se dió de alta el " + request.session["idEquipoAlta"] + " con éxito"
+        del request.session["idEquipoAlta"]
+        return render(request, "Equipos/verEquipos.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "lista2":lista2,
+                                                           "altaEquipo": altaEquipo, "altaExito":altaExito})
 
-    return render(request, "Equipos/verEquipos.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "lista":lista})
+    return render(request, "Equipos/verEquipos.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "lista2":lista2})
 
 def agregarEquipos(request):
 
@@ -440,7 +485,53 @@ def agregarImpresoras(request):
     apellidos = request.session['apellidos']
     correo = request.session['correoSesion']
     nombreCompleto = nombre + " " + apellidos
-    return render(request, "Impresoras/agregarImpresoras.html",{"estaEnAgregarImpresoras": estaEnAgregarImpresoras, "nombreCompleto":nombreCompleto, "correo":correo})
+    
+    info_areas = Areas.objects.only('id_area', 'nombre', 'color')
+    if request.method == "POST":
+        
+        marca_recibido = request.POST['marcas']
+        modelo_recibido = request.POST['modelos']
+        numserie_recibida = request.POST['nserie']
+        imagen_recibida = request.FILES.get('imgeimpresora')
+        tipo_recibida = request.POST['tipos']
+        areas_recibida = request.POST['areas']
+        estados_recibida = request.POST['estados']
+        
+        if request.POST.get('red', False):
+            red_recibido = "N"
+        elif request.POST.get('red', True):
+            red_recibido = "S"
+            
+        if request.POST.get('acin', False):
+            activo_recibido = "I"
+        elif request.POST.get('acin', True):
+            activo_recibido = "A"
+        
+        ip_recibida = request.POST['ip']
+        
+        if ip_recibida == "":
+            ip_recibida = "No ip"    
+    
+        registroImpresora=Impresoras(marca=marca_recibido, modelo= modelo_recibido,numserie=numserie_recibida,
+                                     imagen=imagen_recibida, tipo=tipo_recibida,enred=red_recibido, 
+                                     ip=ip_recibida, estado=estados_recibida, activo= activo_recibido,id_area = Areas.objects.get(id_area = areas_recibida))
+        registroImpresora.save()
+        impresoraAgregada = True
+        
+        impresoraExito= "La impresora " + marca_recibido + " " + modelo_recibido + " se guardó con éxito" 
+        return render(request, "Impresoras/agregarImpresoras.html",{"estaEnAgregarImpresoras": estaEnAgregarImpresoras, "nombreCompleto":nombreCompleto, "correo":correo, "info_areas": info_areas,
+                                                                    "impresoraAgregada":impresoraAgregada, "impresoraExito": impresoraExito})
+         
+    
+            
+    
+            
+        
+    
+    
+    
+    return render(request, "Impresoras/agregarImpresoras.html",{"estaEnAgregarImpresoras": estaEnAgregarImpresoras, "nombreCompleto":nombreCompleto, "correo":correo, "info_areas": info_areas})
+
 
 def verInsumos(request):
 
@@ -827,6 +918,50 @@ def bajaEmpleado(request):
         request.session['idEmpleadoBaja'] = nombreCompletoEmp
         
         return redirect('/verEmpleados/')
+    
+    
+def altaEquipo(request):
+    
+    if request.method == "POST":
+        
+        idAlta= request.POST['idEquipoAlta']
+        
+        datosEquipo = Equipos.objects.filter(id_equipo__icontains = idAlta)
+        
+        for dato in datosEquipo:
+            marca = dato.marca
+            modelo = dato.modelo
+        
+        equipo = marca + " " + modelo
+        
+        actualizacion = Equipos.objects.filter(id_equipo__icontains = idAlta).update(activo = "A")
+        
+        request.session['idEquipoAlta'] = equipo
+        
+    
+        return redirect('/verEquipos/')
+        
+  
+def bajaEquipo(request):
+    
+    if request.method == "POST":
+        
+        idBaja= request.POST['idEquipoBaja']
+        
+        datosEquipo = Equipos.objects.filter(id_equipo__icontains = idBaja)
+        
+        for dato in datosEquipo:
+            marca = dato.marca
+            modelo = dato.modelo
+        
+        equipo = marca + " " + modelo
+        
+        actualizacion = Equipos.objects.filter(id_equipo__icontains = idBaja).update(activo = "I")
+        
+        request.session['idEquipoBaja'] = equipo
+        
+    
+        return redirect('/verEquipos/')
         
 
 def editarImpresora(request):
