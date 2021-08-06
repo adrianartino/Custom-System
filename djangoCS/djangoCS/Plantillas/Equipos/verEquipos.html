@@ -148,7 +148,7 @@ Ver Equipos
                                         </form>
                                         <form action="/DescargarPDF/" method="POST">{% csrf_token %}
                                             
-                                                <input type="hidden" name="idEquipo" value="{{equipo.id_equipo}}">
+                                                <input type="hidden" name="idEquipopdf" value="{{equipo.id_equipo}}">
                                                 
                                                 <center>
                                                     <button type="submit" class="btn bg-red waves-effect">

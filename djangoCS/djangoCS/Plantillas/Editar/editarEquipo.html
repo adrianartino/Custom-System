@@ -55,102 +55,123 @@ Editar Equipos
                 </ul>
             </div>
             <div class="body">
-                <form id="form_validation" method="POST">{% csrf_token %}
+                {% for equipos, empleado in lista %}
+                <form id="form_validation" action="/editarEquipoBd/" method="POST">{% csrf_token %}
                     <div class="row clearfix">
                         <div class="col-md-3">
-                            <label for="email_address">Tipo:</label>
+                            <label for="email_address">Imagen:</label>
                             <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="material-icons">computer</i>
-                                </span>
-                               
-                                    <select class="form-control show-tick">
-                                        <option>Laptop</option>
-                                        <option>Escritorio</option>
-                                    </select>
-                                
+                                <img src="{{equipos.imagen.url}}" width="150" height="200" alt="lap">
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <label for="email_address">Marca:</label>
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="material-icons">copyright</i>
-                                </span>
-                                
-                                    <select class="form-control show-tick">
-                                        <option>HP</option>
-                                        <option>DELL</option>
-                                        <option>Lenovo</option>
-                                    </select>
-                               
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-3">
-                            <label for="email_address">Modelo:</label>
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="material-icons">branding_watermark</i>
-                                </span>
-                                <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar Modelo">
+                        <div class="col-md-9">
+                            <div class="row clearfix">
+                                <div class="col-md-4">
+                                    <label for="email_address">Tipo:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="material-icons">computer</i>
+                                        </span>
+                                       
+                                        <div class="form-line">
+                                            <input type="text" class="form-control date" placeholder="Ingresar Modelo" value="{{equipos.tipo}}" readonly>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="email_address">Marca:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="material-icons">copyright</i>
+                                        </span>
+                                        
+                                        <div class="form-line">
+                                            <input type="text" class="form-control date" placeholder="Ingresar Modelo" value="{{equipos.marca}}" readonly>
+                                        </div>
+                                    
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="email_address">Modelo:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="material-icons">branding_watermark</i>
+                                        </span>
+                                        <div class="form-line">
+                                            <input type="text" class="form-control date" placeholder="Ingresar Modelo" value="{{equipos.modelo}}" readonly>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="email_address">Color:</label>
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="material-icons">palette</i>
-                                </span>
-                              
-                                    <select class="form-control show-tick">
-                                        <option>Negro</option>
-                                        <option>Gris</option>
-                                        <option>Azul</option>
-                                    </select>
-                                
+                            <div class="row clearfix">
+                                <div class="col-md-4">
+                                    <label for="email_address">Color:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="material-icons">palette</i>
+                                        </span>
+                                      
+                                        <div class="form-line">
+                                            <input type="text" class="form-control date" placeholder="Ingresar Modelo" value="{{equipos.color}}" readonly>
+                                        </div>
+                                        
+                                    </div>
+                                </div> 
+                                <div class="col-md-4">
+                                    <label for="email_address">Memoria RAM:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="material-icons">trending_up</i>
+                                        </span>
+                                       
+                                            <select class="form-control show-tick" name="ram">
+                                                <option value="{{equipos.memoriaram}}">{{equipos.memoriaram}}</option>
+                                                {% for ramNuevas in ram %}
+                                                <option value="{{ramNuevas}}">{{ramNuevas}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="email_address">Procesador:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="material-icons">memory</i>
+                                        </span>
+                                        <div class="form-line">
+                                            <input type="text" value="{{equipos.procesador}}" class="form-control date" placeholder="Ingresar procesador" readonly>
+                                        </div>
+                                    </div>
+                                </div> 
                             </div>
-                        </div>  
-                        
-                        
+                            
+                        </div> 
                     </div>
 
                     
                     
 
                     <div class="row clearfix">
-                        <div class="col-md-3">
-                            <label for="email_address">Memoria RAM:</label>
+                         
+                        <div class="col-md-6">
+                            <label for="email_address">Nombre Propietario:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
-                                    <i class="material-icons">trending_up</i>
+                                    <i class="material-icons">badge</i>
                                 </span>
-                               
-                                    <select class="form-control show-tick">
-                                        <option>1 GB</option>
-                                        <option>2 GB</option>
-                                        <option>4 GB</option>
-                                        <option>8 GB</option>
-                                        <option>12 GB</option>
-                                        <option>16 GB</option>
-                                        <option>32 GB</option>
-                                    </select>
                                 
+                                    <select class="form-control show-tick" name="propietario">
+                                        <option value="{{empleado.id_empleado}}">{{empleado.nombre}} {{empleado.apellidos}}</option>
+                                        {% for em in empleadosSinEquipo %}
+                                        <option value="{{em.0}}">{{em.1}}</option>
+                                        {% endfor %}
+                                        <option value="sinPropietario">Sin propietario</option>
+                                    </select>
+                               
                             </div>
-                        </div> 
-                        <div class="col-md-3">
-                            <label for="email_address">Procesador:</label>
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="material-icons">memory</i>
-                                </span>
-                                <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar procesador">
-                                </div>
-                            </div>
-                        </div> 
+                        </div>
                         <div class="col-md-3">
                             <label for="email_address">Sistema Operativo:</label>
                             <div class="input-group">
@@ -158,13 +179,12 @@ Editar Equipos
                                     <i class="material-icons">verified_user</i>
                                 </span>
                                 
-                                    <select class="form-control show-tick">
-                                        <option>Windows XP</option>
-                                        <option>Windows Vista</option>
-                                        <option>Windows 7</option>
-                                        <option>Windows 8</option>
-                                        <option>Windows 10</option>
+                                    <select class="form-control show-tick" name="sistema">
+                                        <option value="{{equipos.sistemaoperativo}}">{{equipos.sistemaoperativo}}</option>
+                                        {% for sistemasDisponibles in sistemasOperativos %}
+                                        <option value="{{sistemasDisponibles}}">{{sistemasDisponibles}}</option>
                                         
+                                        {% endfor %}
                                     </select>
                               
                             </div>
@@ -176,10 +196,21 @@ Editar Equipos
                                     <i class="material-icons">build</i>
                                 </span>
                              
-                                    <select class="form-control show-tick">
-                                        <option>Funcional</option>
-                                        <option>Reparación</option>
-                                        <option>Basura</option>
+                                    <select class="form-control show-tick" name="estado">
+                                        {% if equipos.estado == "Funcional" %}
+                                        <option value="Funcional" selected>Funcional</option>
+                                        <option value="Reparación">Reparación</option>
+                                        <option value="Basura">Basura</option>
+                                        {% elif equipos.estado == "Reparación" %}
+                                        <option value="Funcional" >Funcional</option>
+                                        <option value="Reparación" selected>Reparación</option>
+                                        <option value="Basura">Basura</option>
+                                        {% elif equipos.estado == "Basura" %}
+                                        <option value="Funcional" >Funcional</option>
+                                        <option value="Reparación" >Reparación</option>
+                                        <option value="Basura" selected>Basura</option>
+                                        {% endif %}
+
                                     </select>
                                
                             </div>
@@ -187,64 +218,54 @@ Editar Equipos
                        
                     </div>
 
-                    
-
                     <div class="row clearfix">
-                        <div class="col-md-5">
-                            <label for="email_address">Nombre Propietario:</label>
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="material-icons">badge</i>
-                                </span>
-                                
-                                    <select class="form-control show-tick">
-                                        <option>Monica Arriaga</option>
-                                        <option>Ana Gutierrez</option>
-                                    </select>
-                               
-                            </div>
-                        </div> 
+                        
                         <div class="col-md-3">
-                            <label for="email_address">Imagen de equipo:</label>
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="material-icons">add_photo_alternate</i>
-                                </span>
-                                <div class="form-line">
-                                    <input type="file" name="imgequipo" id="txtimagen">
-                                </div>
-                            </div>
-                        </div>  
-                        <div class="col-md-3">
-                            <label for="email_address">Ficha Técnica:</label>
-                            <div class="input-group">
+                            <input type="checkbox" id="actFi" class="filled-in" name="checkpdf"  onchange="comprobar(this)">
+                            <label for="actFi">Actualizar Ficha Técnica</label>
+                            <div class="input-group" id="divActPdf">
                                 <span class="input-group-addon">
                                     <i class="material-icons">picture_as_pdf</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="file" name="pdf" id="txtimagen">
+                                    <input type="file" name="pdf" id="txtimagen" >
                                 </div>
                             </div>
                         </div> 
-                       
-                       
-                        
-                        
-                        
+
                     </div>
 
                     
-                    
+                    {% if equipos.activo == "A" %}
 
-                    <input type="checkbox" id="remember_me" class="filled-in">
+                    <input type="checkbox" id="remember_me" class="filled-in" checked name="activo">
                     <label for="remember_me">Activo</label>
+                    {% elif equipos.activo == "I" %}
+                    
+                    <input type="checkbox" id="remember_me" class="filled-in" name="activo">
+                    <label for="remember_me">Activo</label>
+                    {% endif %}
                     <br>
+                    <input type="hidden" name="idEquipo" value="{{equipos.id_equipo}}">
                     <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i class="material-icons">loop</i> Actualizar equipo</button>
                 </form>
+                {% endfor %}
             </div>
         </div>
     </div>
 </div>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    {% if editado %}
+    <script type="text/javascript">
+        swal({
+            icon: 'success',
+            title: 'Wujuu..!',
+            text: ' {{textoEdicion}}',
+            footer: '<span style="color: green!important"> Puedes ver los datos actualizados! </span>',
+            width: '40%'
+        });
+    </script>
+    {% endif %}
 {% endblock %}
 
 {% block estilosJs %}
@@ -273,6 +294,19 @@ Editar Equipos
             return true;
         }
         return false;
+    }
+
+    function comprobar(obj){
+        if (obj.checked){
+            document.getElementById('divActPdf').style.display = "";
+        }
+        else{
+            document.getElementById('divActPdf').style.display = "none";
+        }
+    }
+
+    window.onload=function() {
+        document.getElementById('divActPdf').style.display = "none";
     }
 </script>
 <!-- Jquery Core Js -->

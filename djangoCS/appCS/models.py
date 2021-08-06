@@ -21,7 +21,7 @@ class Empleados(models.Model):
 
 
     def __str__(self):
-        return self.id_empleado
+        return str(self.id_empleado())
 
 class Equipos (models.Model):
     id_equipo=models.AutoField(primary_key=True)

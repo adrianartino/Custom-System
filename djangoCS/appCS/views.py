@@ -732,7 +732,7 @@ def descargarPDF(request):
 
      if request.method == "POST":
         
-        idEquipo = request.POST['idEquipo']
+        idEquipo = request.POST['idEquipopdf']
 
         BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         nombreArchivo = idEquipo+".pdf"
@@ -746,6 +746,23 @@ def descargarPDF(request):
         return response
 
         #return render(request, "Equipos/equipo.html", {"idEquipo":BASE_DIR})
+
+def descargarPDF2(request):
+    
+     if request.method == "POST":
+        
+        idEquipo = request.POST['idEquipopdf']
+
+        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        nombreArchivo = idEquipo+".pdf"
+        ubicacionArchivo = BASE_DIR + '/media/pdfequipos/'+ nombreArchivo
+
+        path = open(ubicacionArchivo, 'rb')
+
+        mime_type, _= mimetypes.guess_type(ubicacionArchivo)
+        response = HttpResponse(path, content_type=mime_type)
+        response['Content-Disposition'] = "attachment; filename=%s" %nombreArchivo
+        return response
 
 def guardarImagen(request):
     estaEnAgregarCarta = True
@@ -768,7 +785,52 @@ def editarEquipo(request):
     
     if request.method == "POST":
         equipoRecibido = request.POST['idEquipo']
-        datosEquipo = []
+        equipoDatos = Equipos.objects.filter(id_equipo__icontains=equipoRecibido)
+
+        
+        for dato in equipoDatos:
+            empleadoId= dato.id_empleado_id
+            ramequipo = dato.memoriaram
+            sistema = dato.sistemaoperativo
+            
+        empleado = Empleados.objects.filter(id_empleado__icontains=empleadoId)
+        
+        ram = ["1 GB", "2 GB", "4 GB", "8 GB", "12 GB", "16 GB", "32 GB"]
+        for memoria in ram:
+            if memoria == ramequipo:
+                ram.remove(memoria)
+                
+        sistemasOperativos = ["Windows XP", "Windows Vista", "Windows 7", "Windows 8", "Windows 10"]
+        for sistemaOp in sistemasOperativos:
+            if sistemaOp == sistema:
+                sistemasOperativos.remove(sistemaOp)
+        
+        empleadosTotales = Empleados.objects.all()
+        idsEmpleadosTotales = Empleados.objects.only('id_empleado')
+        
+        idsEmplpeadosConEquipo = Equipos.objects.only('id_empleado_id')
+        
+        for empleadoy in empleadosTotales:
+            for id in idsEmplpeadosConEquipo:
+                if empleadoy.id_empleado == id:
+                    idsEmpleadosTotales.remove(empleadoy.id_empleado)
+                
+        empleadosSinEquipo = []
+        
+        for empleadox in idsEmpleadosTotales:
+            datos = Empleados.objects.filter(id_empleado__icontains=empleadox)
+            
+            
+            
+            
+                    
+           
+        lista = zip(equipoDatos,empleado)
+        
+     
+        return render(request, "Editar/editarEquipo.html", {"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista, "ram": ram,"sistemasOperativos":sistemasOperativos, "equipoRecibido":equipoRecibido})
+            
+        
 
 
 
@@ -878,6 +940,115 @@ def editarEmpleadoBd(request):
                 
         return render(request,"Editar/editarEmpleado.html", { "nombreCompleto":nombreCompleto, "correo":correo, "datosEmpleadoEditar": datosEmpleadoEditar, "nombreArea": nombreArea, "areasNuevas":areasNuevas, "editado":editado, "textoEdicion":textoEdicion, "areaEditar":areaEditar})
     
+def editarEquipoBd(request):
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    nombreCompleto = nombre + " " + apellidos
+    
+    if request.method == "POST":
+        equipoId = request.POST['idEquipo']
+        ram_actualizar = request.POST['ram']
+        propietario_actualizar = request.POST['propietario']
+        sistema_actualizar = request.POST['sistema']
+        estado_actualizar = request.POST['estado']
+        
+        
+        if request.POST.get('activo', False):
+            activo_actualizado = "I"
+        elif request.POST.get('activo', True):
+            activo_actualizado = "A"
+            
+        if request.POST.get('checkpdf', False):
+            vaAActualizarPDF = False
+        elif request.POST.get('checkpdf', True):
+            vaAActualizarPDF = True
+            pdf_actualizar = request.FILES.get('pdf')
+            
+        
+         
+        if propietario_actualizar == "sinPropietario" and vaAActualizarPDF == False:
+            actualizar = Equipos.objects.filter(id_equipo__icontains=equipoId).update(memoriaram=ram_actualizar, id_empleado_id=None,
+                                               sistemaoperativo= sistema_actualizar, estado= estado_actualizar)
+            
+        elif propietario_actualizar == "sinPropietario" and vaAActualizarPDF == True:
+            actualizar = Equipos.objects.filter(id_equipo__icontains=equipoId).update(memoriaram=ram_actualizar, id_empleado_id=None,
+                                               sistemaoperativo= sistema_actualizar, estado= estado_actualizar, pdf=pdf_actualizar)
+          
+        elif propietario_actualizar !=  "sinPropietario" and vaAActualizarPDF == False: 
+            int_empleado = int(propietario_actualizar)
+            actualizar = Equipos.objects.filter(id_equipo__icontains=equipoId).update(memoriaram=ram_actualizar, id_empleado_id=int_empleado,
+                                               sistemaoperativo= sistema_actualizar, estado= estado_actualizar)
+            
+            
+        elif propietario_actualizar != "sinPropietario" and vaAActualizarPDF == True:
+            int_empleado = int(propietario_actualizar)
+            actualizar = Equipos.objects.filter(id_equipo__icontains=equipoId).update(memoriaram=ram_actualizar, id_empleado_id=int_empleado,
+                                               sistemaoperativo= sistema_actualizar, estado= estado_actualizar, pdf=pdf_actualizar)
+            
+        datos = Equipos.objects.filter(id_equipo__icontains = equipoId)
+        
+        for dato in datos:
+            tipo = dato.tipo
+            marca = dato.marca
+            modelo = dato.modelo
+            
+        todoCompu = tipo + " " + marca + " " + modelo
+        
+        editado = True
+        textoEdicion = "Se ha editado al equipo " + todoCompu + " con éxito!"
+            
+        equipoDatos = Equipos.objects.filter(id_equipo__icontains=equipoId)
+
+        
+        for dato in equipoDatos:
+            empleadoId= dato.id_empleado_id
+            ramequipo = dato.memoriaram
+            sistema = dato.sistemaoperativo
+            
+        empleado = Empleados.objects.filter(id_empleado__icontains=empleadoId)
+        
+        ram = ["1 GB", "2 GB", "4 GB", "8 GB", "12 GB", "16 GB", "32 GB"]
+        for memoria in ram:
+            if memoria == ramequipo:
+                ram.remove(memoria)
+                
+        sistemasOperativos = ["Windows XP", "Windows Vista", "Windows 7", "Windows 8", "Windows 10"]
+        for sistemaOp in sistemasOperativos:
+            if sistemaOp == sistema:
+                sistemasOperativos.remove(sistemaOp)
+        
+        empleadosTotales = Empleados.objects.all()
+        idsEmpleadosTotales = Empleados.objects.only('id_empleado')
+        
+        idsEmplpeadosConEquipo = Equipos.objects.only('id_empleado_id')
+        
+        for empleadoy in empleadosTotales:
+            for id in idsEmplpeadosConEquipo:
+                if empleadoy.id_empleado == id:
+                    idsEmpleadosTotales.remove(empleadoy.id_empleado)
+                
+        empleadosSinEquipo = []
+        
+        for empleadox in idsEmpleadosTotales:
+            datos = Empleados.objects.filter(id_empleado__icontains=empleadox)
+            
+            
+            
+            
+                    
+           
+        lista = zip(equipoDatos,empleado)
+        
+     
+        return render(request, "Editar/editarEquipo.html", {"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista, "ram": ram,"sistemasOperativos":sistemasOperativos, "equipoRecibido":equipoId, "editado":editado, "textoEdicion":textoEdicion})
+            
+        
+        
+        
+    
+    return render(request,"Editar/editarEmpleado.html", { "nombreCompleto":nombreCompleto, "correo":correo})
+
 def altaEmpleado(request):
     
     if request.method == "POST":
