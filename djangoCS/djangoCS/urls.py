@@ -34,6 +34,7 @@ urlpatterns = [
     path('agregarImpresoras/', views.agregarImpresoras),
     path('verInsumos/', views.verInsumos),
     path('agregarInsumos/', views.agregarInsumos),
+    path('actualizarInsumos/', views.actualizarInsumos),
     path('verProgramas/', views.verProgramas),
     path('agregarProgramas/', views.agregarProgramas),
     path('asignarProgramas/', views.asignarProgramas),
@@ -57,12 +58,16 @@ urlpatterns = [
     path("editarEmpleado/", views.editarEmpleado),
     path("editarEmpleadoBd/", views.editarEmpleadoBd),
     path("editarImpresora/", views.editarImpresora),
+    path("editarImpresoraBd/", views.editarImpresoraBd),
     path("firmarCarta/", views.firmarCarta),
     path("salir/", views.salir, name="salir"),
     path("altaEmpleado/", views.altaEmpleado),
     path("bajaEmpleado/", views.bajaEmpleado),
     path("altaEquipo/", views.altaEquipo),
-    path("bajaEquipo/", views.bajaEquipo)
+    path("bajaEquipo/", views.bajaEquipo),
+    path("altaImpresora/", views.altaImpresora),
+    path("bajaImpresora/", views.bajaImpresora)
+    
     
 ]
 

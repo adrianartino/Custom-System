@@ -22,6 +22,8 @@ Ver Insumos
 <!-- Animation Css -->
 <link href={% static 'panel/plugins/animate-css/animate.css' %} rel="stylesheet" />
 
+<!-- Bootstrap Spinner Css -->
+<link href={% static 'panel/plugins/jquery-spinner/css/bootstrap-spinner.css' %}" rel="stylesheet">
 <!-- JQuery DataTable Css -->
 <link href={% static 'panel/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css' %} rel="stylesheet">
 
@@ -54,7 +56,6 @@ Ver Insumos
                     </li>
                 </ul>
                 <br>
-                <button type="submit" class="btn btn-primary m-t-15 waves-effect">Actualizar cantidad de insumo</button>
             </div>
              
             <div class="body">
@@ -85,35 +86,38 @@ Ver Insumos
                             </tr>
                         </tfoot>
                         <tbody>
+                            {% for cartuchos in datosCartuchos %}
                             <tr>
-                                <th>1</th>
-                                <th>Hp</th>
-                                <th>995XL</th>
-                                <th>1</th>
-                                <th>123AC</th>
-                                <th>Negro</th>
+                                <th>{{cartuchos.id_cartucho}}</th>
+                                <th>{{cartuchos.marca}}</th>
+                                <th>{{cartuchos.modelo}}</th>
+                                <th>{{cartuchos.cantidad}} 
+                                    <button type="button" class="btn bg-red btn-circle waves-effect waves-circle waves-float" data-toggle="modal" data-target="#{{cartuchos.id_cartucho}}">
+                                        <i class="material-icons">opacity</i>
+                                </th>
+                                <th>{{cartuchos.nuserie}}</th>
+                                {% if cartuchos.color == "Negro" %}
+                                <th> <span class="label bg-black">{{cartuchos.color}}</span> </th>
+                                {% elif cartuchos.color == "Tricolor" %}
+                                <th><span class="label bg-orange">{{cartuchos.color}}</span></th>
+                                {% elif cartuchos.color == "Amarillo" %}
+                                <th><span class="label bg-yellow">{{cartuchos.color}}</span></th>
+                                {% elif cartuchos.color == "Cyan" %}
+                                <th><span class="label bg-cyan">{{cartuchos.color}}</span></th>
+                                {% elif cartuchos.color == "Magenta" %}
+                                <th>  <span class="label bg-pink">{{cartuchos.color}}</span></th>
+                                {% endif %}
                                 <th>
                                     <center>
-                                        <img src="{% static 'images/epson.jpg' %}" width="150" height="200" alt="lap">
+                                        <img src="{{cartuchos.imagenCartucho.url}}" width="150" height="200" alt="lap">
                                     </center>
                                 </th>
-                                <th>HP OfficeJet Pro 7740 Series</th>
+                                {% for impresora in impresoras %}
+                                <th>{{impresora.0}} {{impresora.1}} </th>
+                                {% endfor %}
                             </tr>
-                            <tr>
-                                <th>2</th>
-                                <th>Xerox</th>
-                                <th>BH8-7</th>
-                                <th>2</th>
-                                <th>123AB</th>
-                                <th>Negro</th>
-                                <th>
-                                    <center>
-                                        <img src="{% static 'images/xerox.jpg' %}" width="150" height="200" alt="lap">
-                                    </center>
-                                </th>
-                                <th>XEROX WorkCentre 3335</th>
-                            </tr>
-                         
+                            {% endfor %}
+                            
                             
                             
                         </tbody>
@@ -124,6 +128,87 @@ Ver Insumos
         </div>
     </div>
 </div>
+
+{% for cartucho in datosCartuchos%}
+<!-- Default Size -->
+<div class="modal fade" id="{{cartucho.id_cartucho}}" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <center>
+                    <h1><span class="label label-danger">Actualizar Cantidad de Cartucho</span></h1>
+
+                </center>
+            </div>
+            <div class="modal-body">
+                <form action="/actualizarInsumos/" method="POST">{% csrf_token %}
+                    <div class="body table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Imagen</th>
+                                    <th>Marca</th>
+                                    <th>Modelo</th>
+                                    <th>Color</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th> <img src="{{cartucho.imagenCartucho.url}}" width="150" height="200" alt="lap"></th>
+                                    <td>{{cartucho.marca}}</td>
+                                    <td>{{cartucho.modelo}}</td>
+                                    {% if cartucho.color == "Negro" %}
+                                    <th> <span class="label bg-black">{{cartucho.color}}</span> </th>
+                                    {% elif cartucho.color == "Tricolor" %}
+                                    <th><span class="label bg-orange">{{cartucho.color}}</span></th>
+                                    {% elif cartucho.color == "Amarillo" %}
+                                    <th><span class="label bg-yellow">{{cartucho.color}}</span></th>
+                                    {% elif cartucho.color == "Cyan" %}
+                                    <th><span class="label bg-cyan">{{cartucho.color}}</span></th>
+                                    {% elif cartucho.color == "Magenta" %}
+                                    <th>  <span class="label bg-pink">{{cartucho.color}}</span></th>
+                                    {% endif %}
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td><h3><span class="label bg-blue-grey">Stock Disponible:</span></h3></td>
+                                    <td><br><input type="number" value="{{cartucho.cantidad}}" min="0" max="20" step="1" name="cantidadCartucho"/></td>
+                                    <td><br>Unidades</td>
+                                </tr>
+                               
+                            </tbody>
+                        </table>
+                        
+                    
+                        
+                    </div>
+                    <center>
+                        <input type="hidden" value="{{cartucho.id_cartucho}}" name="idCartucho">
+                        <button type="submit" class="btn btn-info waves-effect">
+                            <i class="material-icons">save</i>
+                            <span>Guardar Cambios</span>
+                        </button>
+                    </center>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    
+    {% if insumoActualizado %}
+    <script type="text/javascript">
+        swal({
+            icon: 'success',
+            title: 'Wuu..!',
+            text: ' {{textoActualizado}}',
+            footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
+            width: '40%'
+        });
+    </script>
+    {% endif %}
+{% endfor %}
+
 {% endblock %}
 
 {% block estilosJs %}
@@ -138,6 +223,13 @@ Ver Insumos
 
 <!-- Slimscroll Plugin Js -->
 <script src={% static 'panel/plugins/jquery-slimscroll/jquery.slimscroll.js' %}></script>
+
+<!-- Jquery Spinner Plugin Js -->
+<script src={% static 'panel/plugins/jquery-spinner/js/jquery.spinner.js' %}></script>
+
+
+ <!-- Bootstrap Notify Plugin Js -->
+ <script src={% static 'panel/plugins/bootstrap-notify/bootstrap-notify.js' %}></script>
 
 <!-- Waves Effect Plugin Js -->
 <script src={% static 'panel/plugins/node-waves/waves.js' %}></script>
@@ -156,6 +248,7 @@ Ver Insumos
 <!-- Custom Js -->
 <script src={% static 'panel/js/admin.js' %}></script>
 <script src={% static 'panel/js/pages/tables/jquery-datatable.js' %}></script>
+    <script src={% static 'panel/js/pages/ui/modals.js' %}></script>
 
 <!-- Demo Js -->
 <script src={% static 'panel/js/demo.js' %}></script>

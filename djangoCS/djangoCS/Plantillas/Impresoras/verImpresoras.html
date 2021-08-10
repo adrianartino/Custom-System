@@ -103,24 +103,26 @@ Ver Impresoras
                             </tr>
                         </tfoot>
                         <tbody>
+                            {% for impresoras, areas in lista %}
                             <tr>
-                                <th>1</th>
-                                <th>HP</th>
-                                <th>OfficeJet Pro 7740 Series</th>
-                                <th>G5J3880123</th>
+                                
+                                <th>{{impresoras.id_impresora}}</th>
+                                <th>{{impresoras.marca}}</th>
+                                <th>{{impresoras.modelo}}</th>
+                                <th>{{impresoras.numserie}}</th>
                                 <th>
                                     <center>
-                                        <img src="{% static 'images/I1.jpg' %}" width="60%" alt="lap">
+                                        <img src="{{impresoras.imagen.url}}" width="60%" alt="lap">
                                     </center>
                                 </th>
-                                <th>Inyección de tinta multifuncion Color/Blanco-Negro</th>
-                                <th>SI</th>
-                                <th>192.168.10.13</th>
-                                <th>Funcinal</th>
-                                <th><label class="label bg-red">Administración</label> </th>
+                                <th>{{impresoras.tipo}}</th>
+                                <th>{{impresoras.enred}}</th>
+                                <th>{{impresoras.ip}}</th>
+                                <th>{{impresoras.estado}}</th>
+                                <th><label class="{{areas.1}}">{{areas.0}}</label> </th>
                                 <form action="/editarImpresora/" method="POST">{% csrf_token %}
                                     <th>
-                                        <input type="hidden" name="idImpresoraEditar" value="1">
+                                        <input type="hidden" name="idImpresoraEditar" value="{{impresoras.id_impresora}}">
                                     
                                         <center>
                                             <button type="submit" class="btn btn-warning waves-effect">
@@ -131,9 +133,9 @@ Ver Impresoras
                                         
                                     </th>
                                 </form>
-                                <form action="/editarImpresora/" method="POST">{% csrf_token %}
+                                <form action="/bajaImpresora/" method="POST">{% csrf_token %}
                                     <th>
-                                        <input type="hidden" name="idEmpleadoEditar" value="1">
+                                        <input type="hidden" name="idImpresoraBaja" value="{{impresoras.id_impresora}}">
                                         <center>
                                             <button type="submit" class="btn bg-red waves-effect">
                                                 <i class="material-icons">cancel</i>
@@ -144,47 +146,7 @@ Ver Impresoras
                                 </form>
                                 
                             </tr>
-                            <tr>
-                                <th>2</th>
-                                <th>XEROX</th>
-                                <th>WorkCentre 3335</th>
-                                <th>5BT735692</th>
-                                <th>
-                                    <center>
-                                        <img src="{% static 'images/I2.jpg' %}" width="60%" alt="lap">
-                                    </center>
-                                </th>
-                                <th>Láser Blanco-Negro</th>
-                                <th>SI</th>
-                                <th>192.168.10.14</th>
-                                <th>Funcinal</th>
-                                <th><label class="label bg-red">Administración</label> </th>
-                                <form action="/editarImpresora/" method="POST">{% csrf_token %}
-                                    <th>
-                                        <input type="hidden" name="idImpresoraEditar" value="2">
-                                    
-                                        <center>
-                                            <button type="submit" class="btn btn-warning waves-effect">
-                                                <i class="material-icons">edit</i>
-                                            </button>
-                                        </center>
-                                        
-                                        
-                                    </th>
-                                </form>
-                                <form action="/editarImpresora/" method="POST">{% csrf_token %}
-                                    <th>
-                                        <input type="hidden" name="idEmpleadoEditar" value="1">
-                                        <center>
-                                            <button type="submit" class="btn bg-red waves-effect">
-                                                <i class="material-icons">cancel</i>
-                                            </button>
-                                        </center>
-                                        
-                                    </th>
-                                </form>
-                                
-                            </tr>
+                            {% endfor %}
                          
                             
                             
@@ -228,24 +190,25 @@ Ver Impresoras
                             </tr>
                         </tfoot>
                         <tbody>
+                            {% for impresorasI, areasI in lista2 %}
                             <tr>
-                                <th>1</th>
-                                <th>HP</th>
-                                <th>OfficeJet Pro 7740 Series</th>
-                                <th>G5J3880123</th>
+                                <th>{{impresorasI.id_impresora}}</th>
+                                <th>{{impresorasI.marca}}</th>
+                                <th>{{impresorasI.modelo}}</th>
+                                <th>{{impresorasI.numserie}}</th>
                                 <th>
                                     <center>
-                                        <img src="{% static 'images/I1.jpg' %}" width="60%" alt="lap">
+                                        <img src="{{impresorasI.imagen.url}}" width="60%" alt="lap">
                                     </center>
                                 </th>
-                                <th>Inyección de tinta multifuncion Color/Blanco-Negro</th>
-                                <th>SI</th>
-                                <th>192.168.10.13</th>
-                                <th>Funcinal</th>
-                                <th><label class="label bg-red">Administración</label> </th>
-                                <form action="/editarEquipo/" method="POST">{% csrf_token %}
+                                <th>{{impresorasI.tipo}}</th>
+                                <th>{{impresorasI.enred}}</th>
+                                <th>{{impresorasI.ip}}</th>
+                                <th>{{impresorasI.estado}}</th>
+                                <th><label class="{{areasI.1}}">{{areasI.0}}</label> </th>
+                                <form action="/altaImpresora/" method="POST">{% csrf_token %}
                                     <th>
-                                        <input type="hidden" name="idEquipoEditar" value="1">
+                                        <input type="hidden" name="idImpresoraAlta" value="{{impresorasI.id_impresora}}">
                                         
                                         <center>
                                             <button type="submit" class="btn bg-green waves-effect">
@@ -256,35 +219,8 @@ Ver Impresoras
                                     </th>
                                 </form>
                             </tr>
-                            <tr>
-                                <th>2</th>
-                                <th>XEROX</th>
-                                <th>WorkCentre 3335</th>
-                                <th>5BT735692</th>
-                                <th>
-                                    <center>
-                                        <img src="{% static 'images/I2.jpg' %}" width="60%" alt="lap">
-                                    </center>
-                                </th>
-                                <th>Láser Blanco-Negro</th>
-                                <th>SI</th>
-                                <th>192.168.10.14</th>
-                                <th>Funcinal</th>
-                                <th><label class="label bg-red">Administración</label> </th>
-                                <form action="/editarEquipo/" method="POST">{% csrf_token %}
-                                    <th>
-                                        <input type="hidden" name="idEquipoEditar" value="1">
-                                        
-                                        <center>
-                                            <button type="submit" class="btn bg-green waves-effect">
-                                                <i class="material-icons">upgrade</i>
-                                            </button>
-                                        </center>
-                                    
-                                    </th>
-                                </form>
-                                
-                            </tr>
+                            {% endfor %}
+                            
                          
                             
                             
@@ -295,6 +231,30 @@ Ver Impresoras
         </div>
     </div>
 </div>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    {% if baja %}
+    <script type="text/javascript">
+        swal({
+            icon: 'error',
+            title: 'Wuu..!',
+            text: ' {{mensaje}}',
+            footer: '<span style="color: red!important"> Vuelve a navegar por Custom System! </span>',
+            width: '40%'
+           
+        });
+    </script>
+    {% endif %}
+    {% if alta %}
+    <script type="text/javascript">
+        swal({
+            icon: 'success',
+            title: 'Wuu..!',
+            text: ' {{mensaje}}',
+            footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
+            width: '40%'
+        });
+    </script>
+    {% endif %}
 <script type="text/javascript">
     function inicio(){
         var div1 = document.getElementById("divInactivos");

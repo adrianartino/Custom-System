@@ -55,7 +55,7 @@ Agregar Impresoras
                 </ul>
             </div>
             <div class="body">
-                <form action="/agregarImpresoras/" id="form_validation" method="POST">{% csrf_token %}
+                <form action="/agregarImpresoras/" id="form_validation" enctype="multipart/form-data" method="POST">{% csrf_token %}
                     <div class="row clearfix">
                         <div class="col-md-4">
                             <label for="email_address">Marca:</label>

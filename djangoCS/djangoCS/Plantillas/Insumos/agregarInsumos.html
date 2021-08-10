@@ -55,7 +55,7 @@ Agregar Insumos
                 </ul>
             </div>
             <div class="body">
-                <form id="form_validation" method="POST">{% csrf_token %}
+                <form id="form_validation" action="/agregarInsumos/" enctype="multipart/form-data"  method="POST" >{% csrf_token %}
                     <div class="row clearfix">
                         <div class="col-md-2">
                             <label for="email_address">Marca:</label>
@@ -63,11 +63,12 @@ Agregar Insumos
                                 <span class="input-group-addon">
                                     <i class="material-icons">copyright</i>
                                 </span>
-                                    <select class="form-control show-tick">
-                                        <option>HP</option>
-                                        <option>XEROX</option>
-                                        <option>SAMSUNG</option>
-                                        <option>EPSON</option>
+                                    <select class="form-control show-tick" name="marcas">
+                                        <option value="HP">HP</option>
+                                        <option value="XEROX">XEROX</option>
+                                        <option value="SAMSUNG">SAMSUNG</option>
+                                        <option value="EPSON">EPSON</option>
+                                        <option value="LEÓN">LEÓN</option>
                                     </select>
                             </div>
                         </div>
@@ -80,7 +81,7 @@ Agregar Insumos
                                     <i class="material-icons">branding_watermark</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar Modelo">
+                                    <input type="text" class="form-control date" placeholder="Ingresar Modelo" name="modelo">
                                 </div>
                             </div>
                         </div>
@@ -90,11 +91,11 @@ Agregar Insumos
                                 <span class="input-group-addon">
                                     <i class="material-icons">format_list_numbered</i>
                                 </span>
-                                    <select class="form-control show-tick">
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
+                                    <select class="form-control show-tick" name="cantidad">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
                                     </select>
                             </div>
                         </div>
@@ -105,7 +106,7 @@ Agregar Insumos
                                     <i class="material-icons">pin</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar número de serie">
+                                    <input type="text" class="form-control date" placeholder="Ingresar número de serie" name="serie">
                                 </div>
                             </div>
                         </div>
@@ -119,12 +120,12 @@ Agregar Insumos
                             <span class="input-group-addon">
                                 <i class="material-icons">palette</i>
                             </span>
-                                <select class="form-control show-tick">
-                                    <option>Negro</option>
-                                    <option>Tricolor</option>
-                                    <option>Amarillo</option>
-                                    <option>Cyan</option>
-                                    <option>Magenta</option>
+                                <select class="form-control show-tick" name="colores">
+                                    <option value="Negro">Negro</option>
+                                    <option value="Tricolor">Tricolor</option>
+                                    <option value="Amarillo">Amarillo</option>
+                                    <option value="Cyan">Cyan</option>
+                                    <option value="Magenta">Magenta</option>
                                 </select>
                         </div>
                     </div>
@@ -142,15 +143,16 @@ Agregar Insumos
                             </div>
                         </div>
                     </div>  
-                        <div class="col-md-2">
+                        <div class="col-md-4">
                             <label for="email_address">Impresora:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">printer</i>
                                 </span>
-                                    <select class="form-control show-tick">
-                                        <option>Hp Laserjet blabla</option>
-                                        <option>Xerox Workcentre</option>
+                                    <select class="form-control show-tick" name="impresora">
+                                        {% for impresoras in datosImpresoras %}
+                                        <option value="{{impresoras.id_impresora}}">{{impresoras.marca}} {{impresoras.modelo}}</option>
+                                        {% endfor %}
                                     </select>
                             </div>
                         </div>
@@ -167,6 +169,18 @@ Agregar Insumos
         </div>
     </div>
 </div>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    {% if insumoAgregado %}
+    <script type="text/javascript">
+        swal({
+            icon: 'success',
+            title: 'Wuu...!',
+            text: ' {{insumoExito}}',
+            footer: '<span style="color: green!important"> Sigue navegando por Custom System! </span>',
+            width: '40%'
+        });
+    </script>
+    {% endif %}
 {% endblock %}
 
 {% block estilosJs %}

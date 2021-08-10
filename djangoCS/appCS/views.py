@@ -475,8 +475,66 @@ def verImpresoras(request):
     apellidos = request.session['apellidos']
     correo = request.session['correoSesion']
     nombreCompleto = nombre + " " + apellidos
+    
+    
+    impresorasActivas = Impresoras.objects.filter(activo__icontains= "A")
+    impresorasInactivas = Impresoras.objects.filter(activo__icontains= "I")
+    
+    #impresoras Actvos
+    areasEnActivos = []
+    datosAreasEnActivos = []
+    
+    for impresoras in impresorasActivas:
+        areasEnActivos.append(impresoras.id_area_id)
+        #areasEnActivos = ["1"]
+        
+    for id in areasEnActivos:
+        datosArea = Areas.objects.filter(id_area__icontains = id) #["1", "Sistemas", "rojo"]
+        
+        if datosArea:
+            for dato in datosArea:
+                nombreArea = dato.nombre
+                colorArea = dato.color
+        
+        datosAreasEnActivos.append([nombreArea, colorArea])
+        
+    lista = zip(impresorasActivas, datosAreasEnActivos)
+    
+    #impresoras inactivos
+    areasEnInactivos = []
+    datosAreasEnInactivos = []
+    
+    for impresoras in impresorasInactivas:
+        areasEnInactivos.append(impresoras.id_area_id)
+        #areasEnActivos = ["1"]
+        
+    for id in areasEnInactivos:
+        datosArea = Areas.objects.filter(id_area__icontains = id) #["1", "Sistemas", "rojo"]
+        
+        if datosArea:
+            for dato in datosArea:
+                nombreArea = dato.nombre
+                colorArea = dato.color
+        
+        datosAreasEnInactivos.append([nombreArea, colorArea])
+        
+    lista2 = zip(impresorasInactivas, datosAreasEnInactivos)
+    
+    if "idImpresoraAlta" in request.session:
+        alta = True
+        mensaje = "Se dio de alta la impresora " + request.session['idImpresoraAlta']
+        del request.session["idImpresoraAlta"]
+        return render(request,"Impresoras/verImpresoras.html",{"estaEnVerImpresoras": estaEnVerImpresoras, "nombreCompleto":nombreCompleto, "correo":correo, "lista": lista,
+                                                           "lista2":lista2, "alta": alta, "mensaje": mensaje})
+    if "idImpresoraBaja" in request.session:
+        baja = True
+        mensaje = "Se dio de baja la impresora " + request.session['idImpresoraBaja']
+        del request.session["idImpresoraBaja"]
+        return render(request,"Impresoras/verImpresoras.html",{"estaEnVerImpresoras": estaEnVerImpresoras, "nombreCompleto":nombreCompleto, "correo":correo, "lista": lista,
+                                                           "lista2":lista2, "baja": baja, "mensaje": mensaje})
 
-    return render(request,"Impresoras/verImpresoras.html",{"estaEnVerImpresoras": estaEnVerImpresoras, "nombreCompleto":nombreCompleto, "correo":correo})
+    return render(request,"Impresoras/verImpresoras.html",{"estaEnVerImpresoras": estaEnVerImpresoras, "nombreCompleto":nombreCompleto, "correo":correo, "lista": lista,
+                                                           "lista2":lista2})
 
 def agregarImpresoras(request):
 
@@ -498,14 +556,14 @@ def agregarImpresoras(request):
         estados_recibida = request.POST['estados']
         
         if request.POST.get('red', False):
-            red_recibido = "N"
-        elif request.POST.get('red', True):
             red_recibido = "S"
+        elif request.POST.get('red', True):
+            red_recibido = "N"
             
         if request.POST.get('acin', False):
-            activo_recibido = "I"
-        elif request.POST.get('acin', True):
             activo_recibido = "A"
+        elif request.POST.get('acin', True):
+            activo_recibido = "I"
         
         ip_recibida = request.POST['ip']
         
@@ -541,7 +599,30 @@ def verInsumos(request):
     apellidos = request.session['apellidos']
     correo = request.session['correoSesion']
     nombreCompleto = nombre + " " + apellidos
-    return render(request, "Insumos/verInsumos.html",{"Insumos": Insumos, "estaEnVerInsumos":estaEnVerInsumos, "nombreCompleto":nombreCompleto, "correo":correo})
+    
+    datosCartuchos = Cartuchos.objects.all()
+    
+    impresoras = []
+    for cartuchos in datosCartuchos:
+        idImpresora = cartuchos.id_impresora
+        
+        
+        if datosCartuchos:
+            marcaImpresora = cartuchos.marca
+            modeloImpresora = cartuchos.modelo
+            
+    impresoras.append([marcaImpresora, modeloImpresora])
+    
+    if "idInsumoActualizado" in request.session:
+        insumoActualizado=True
+        textoActualizado= request.session['idInsumoActualizado']
+        del request.session["idInsumoActualizado"]
+        
+        return render(request, "Insumos/verInsumos.html",{"Insumos": Insumos, "estaEnVerInsumos":estaEnVerInsumos, "nombreCompleto":nombreCompleto, "correo":correo, "impresoras": impresoras, 
+                                                      "datosCartuchos":datosCartuchos, "insumoActualizado":insumoActualizado, "textoActualizado":textoActualizado})    
+    
+    return render(request, "Insumos/verInsumos.html",{"Insumos": Insumos, "estaEnVerInsumos":estaEnVerInsumos, "nombreCompleto":nombreCompleto, "correo":correo, "impresoras": impresoras, 
+                                                      "datosCartuchos":datosCartuchos})
 
 def agregarInsumos(request):
 
@@ -551,7 +632,68 @@ def agregarInsumos(request):
     correo = request.session['correoSesion']
     nombreCompleto = nombre + " " + apellidos
     Insumos = True
-    return render(request,"Insumos/agregarInsumos.html",{"estaEnAgregarInsumos": estaEnAgregarInsumos, "Insumos": Insumos, "nombreCompleto":nombreCompleto, "correo":correo})
+    datosImpresoras = Impresoras.objects.all()
+    if request.method == "POST":
+        
+        marca_recibido = request.POST['marcas']
+        modelo_recibido = request.POST['modelo']
+        cantidad_recibida = request.POST['cantidad']
+        numserie_recibida = request.POST['serie']
+        color_recibida = request.POST['colores']
+        imagen_recibida = request.FILES.get('imagenCartucho')
+        impresora_recibida = request.POST['impresora']
+       
+        
+  
+    
+        registroInsumos=Cartuchos(marca=marca_recibido, modelo= modelo_recibido,nuserie=numserie_recibida, cantidad= cantidad_recibida, color= color_recibida,
+                                     imagenCartucho=imagen_recibida,id_impresora = Impresoras.objects.get(id_impresora= impresora_recibida))
+        registroInsumos.save()
+        insumoAgregado = True
+        
+        insumoExito= "El insumo " + marca_recibido + " " + modelo_recibido + " se guardó con éxito" 
+        return render(request,"Insumos/agregarInsumos.html",{"estaEnAgregarInsumos": estaEnAgregarInsumos, "Insumos": Insumos, "nombreCompleto":nombreCompleto, "correo":correo, 
+                                                         "datosImpresoras":datosImpresoras, "insumoAgregado": insumoAgregado, "insumoExito": insumoExito})
+    
+    return render(request,"Insumos/agregarInsumos.html",{"estaEnAgregarInsumos": estaEnAgregarInsumos, "Insumos": Insumos, "nombreCompleto":nombreCompleto, "correo":correo, 
+                                                         "datosImpresoras":datosImpresoras})
+
+def actualizarInsumos(request):
+    
+    Insumos = True
+    estaEnVerInsumos = True
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    nombreCompleto = nombre + " " + apellidos
+    
+    if request.method == "POST":
+        
+        id_cartucho_recibido = request.POST['idCartucho']
+        cantida_recibida = request.POST['cantidadCartucho']
+        
+        datosCartucho = Cartuchos.objects.filter(id_cartucho__icontains=id_cartucho_recibido)
+        
+        for dato in datosCartucho:
+            marca = dato.marca
+            modelo = dato.modelo
+            idimpresora = dato.id_impresora_id
+            
+        datosImpresora = Impresoras.objects.filter(id_impresora__icontains = idimpresora)
+        
+        for dato in datosImpresora:
+            marcaImpresora = dato.marca
+            modeloImpresora = dato.modelo
+        
+        actualizar = Cartuchos.objects.filter(id_cartucho__icontains=id_cartucho_recibido).update(cantidad=cantida_recibida)
+        
+        textoCartucho = "Se ha actualizado el stock del cartucho "+marca+" "+modelo+" de la impresora "+marcaImpresora + " "+modeloImpresora +"!"
+            
+        request.session['idInsumoActualizado'] = textoCartucho
+        
+        return redirect('/verInsumos/')
+    
+    
 
 def verProgramas(request):
 
@@ -1049,6 +1191,80 @@ def editarEquipoBd(request):
     
     return render(request,"Editar/editarEmpleado.html", { "nombreCompleto":nombreCompleto, "correo":correo})
 
+def editarImpresoraBd(request):
+    
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    nombreCompleto = nombre + " " + apellidos
+    
+    if request.method == "POST":
+        impresora_id = request.POST['idImpresora']
+        area_actualizar = request.POST['areaEditar']
+        estado_actualizar = request.POST['estadoEditar']
+        
+        datosImpresora = Impresoras.objects.filter(id_impresora__icontains=impresora_id)
+        
+        for dato in datosImpresora:
+            marcaMostrar = dato.marca
+            modeloMostrar = dato.modelo
+        
+        
+        if request.POST.get('activoEditar', False): #Chequeado
+            activo_actualizar = "A"
+        elif request.POST.get('activoEditar', True): #No checkeado
+            activo_actualizar = "I"
+            
+        if request.POST["ipEditar"]=="":
+            laVaAPonerEnRed = False
+        elif request.POST["ipEditar"] != "":
+            ip_actualizar = request.POST["ipEditar"]
+            laVaAPonerEnRed = True
+            
+        
+         
+        if laVaAPonerEnRed == False:
+            actualizar = Impresoras.objects.filter(id_impresora__icontains=impresora_id).update(id_area_id=area_actualizar, estado=estado_actualizar,
+                                               enred="N", ip="", activo = activo_actualizar)
+            
+        elif laVaAPonerEnRed == True:
+            actualizar = Impresoras.objects.filter(id_impresora__icontains=impresora_id).update(id_area_id=area_actualizar, estado=estado_actualizar,
+                                               enred="S", ip=ip_actualizar, activo = activo_actualizar)
+            
+        datos_impresora = Impresoras.objects.filter(id_impresora__icontains = impresora_id)
+        
+        if datos_impresora:
+            for datoEditar in datos_impresora:
+            
+                idAreaImpresora = datoEditar.id_area_id
+                
+        datosArea = Areas.objects.filter(id_area__icontains = idAreaImpresora)
+        if datosArea:
+            for nombreEditar in datosArea:
+                
+                nombreArea =  nombreEditar.nombre
+        
+        areas = Areas.objects.all()
+        
+        areasNuevas = []
+        
+        for dato in areas:
+            if idAreaImpresora == dato.id_area:
+                yaEsta = True
+            else:
+                areasNuevas.append([dato.id_area, dato.nombre])
+        
+        editado = True
+        textoEditado = "Se ha editado la impresora " + marcaMostrar + " " + modeloMostrar + " con éxito!"
+        
+        return render(request,"Editar/editarImpresora.html", {"impresoraAEditar":datos_impresora, "nombreCompleto":nombreCompleto, "correo":correo, "nombreArea":nombreArea, "areasNuevas":areasNuevas, "editado":editado, "textoEditado":textoEditado})
+            
+        
+        
+        
+    
+    return render(request,"Editar/editarImpresora.html", { "nombreCompleto":nombreCompleto, "correo":correo})
+
 def altaEmpleado(request):
     
     if request.method == "POST":
@@ -1089,6 +1305,47 @@ def bajaEmpleado(request):
         request.session['idEmpleadoBaja'] = nombreCompletoEmp
         
         return redirect('/verEmpleados/')
+    
+def altaImpresora(request):
+    
+    if request.method == "POST":
+    
+        idAlta= request.POST['idImpresoraAlta']
+        
+        datosImpresora = Impresoras.objects.filter(id_impresora__icontains = idAlta)
+        
+        for dato in datosImpresora:
+            marca = dato.marca
+            modelo = dato.modelo
+            
+        nombreCompletoImp = marca + " " + modelo
+        
+        actualizacion = Impresoras.objects.filter(id_impresora__icontains = idAlta).update(activo = "A")
+        
+        
+        request.session['idImpresoraAlta'] = nombreCompletoImp
+        
+        return redirect('/verImpresoras/')
+    
+def bajaImpresora(request):
+    
+    if request.method == "POST":
+    
+        idBaja= request.POST['idImpresoraBaja']
+        
+        datosImpresora = Impresoras.objects.filter(id_impresora__icontains = idBaja)
+        
+        for dato in datosImpresora:
+            marca = dato.marca
+            modelo = dato.modelo
+        
+        nombreCompletoImp = marca + " " + modelo
+        
+        actualizacion = Impresoras.objects.filter(id_impresora__icontains = idBaja).update(activo = "I")
+        
+        request.session['idImpresoraBaja'] = nombreCompletoImp
+        
+        return redirect('/verImpresoras/')
     
     
 def altaEquipo(request):
@@ -1145,9 +1402,30 @@ def editarImpresora(request):
     if request.method == "POST":
 
         idImpresora= request.POST['idImpresoraEditar']
-        datosImpresora = [idImpresora, "HP", "SAD34", "345SFSEA", "Inyección de tinta Color/Blanco-Negro", "si", "192.164.2.10", "Funcional", "A", "Administración"]
+        datos_impresora = Impresoras.objects.filter(id_impresora__icontains = idImpresora)
+        
+        if datos_impresora:
+            for datoEditar in datos_impresora:
+            
+                idAreaImpresora = datoEditar.id_area_id
+                
+        datosArea = Areas.objects.filter(id_area__icontains = idAreaImpresora)
+        if datosArea:
+            for nombreEditar in datosArea:
+                
+                nombreArea =  nombreEditar.nombre
+        
+        areas = Areas.objects.all()
+        
+        areasNuevas = []
+        
+        for dato in areas:
+            if idAreaImpresora == dato.id_area:
+                yaEsta = True
+            else:
+                areasNuevas.append([dato.id_area, dato.nombre])
 
-        return render(request,"Editar/editarImpresora.html", {"impresoraAEditar":datosImpresora, "nombreCompleto":nombreCompleto, "correo":correo})
+        return render(request,"Editar/editarImpresora.html", {"impresoraAEditar":datos_impresora, "nombreCompleto":nombreCompleto, "correo":correo, "nombreArea":nombreArea, "areasNuevas":areasNuevas})
 
 def firmarCarta(request):
 

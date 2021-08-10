@@ -55,148 +55,138 @@ Editar Impresoras
                 </ul>
             </div>
             <div class="body">
-                <form id="form_validation" method="POST">{% csrf_token %}
+                <form id="form_validation" action="/editarImpresoraBd/" method="POST">{% csrf_token %}
+                    {% for impresora in impresoraAEditar %}
                     <div class="row clearfix">
-                        <div class="col-md-4">
-                            <label for="email_address">Marca:</label>
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="material-icons">copyright</i>
-                                </span>
-                                    <select class="form-control show-tick">
-                                        {% if impresoraAEditar.1 == "HP" %}
-                                        <option selected>HP</option>
-                                        <option>XEROX</option>
-                                        <option>SAMSUNG</option>
-                                        <option>EPSON</option>
-                                        {% else %}
-                                        <option>HP</option>
-                                        <option>XEROX</option>
-                                        <option>SAMSUNG</option>
-                                        <option>EPSON</option>
-                                        {% endif %}
-                                    </select>
-                            </div>
-                        </div>
-                     
-                        
-                        <div class="col-md-4">
-                            <label for="email_address">Modelo:</label>
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="material-icons">branding_watermark</i>
-                                </span>
-                                <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar Modelo" value="{{impresoraAEditar.2}}">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="email_address">No. Serie:</label>
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="material-icons">pin</i>
-                                </span>
-                                <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar número de serie" value="{{impresoraAEditar.3}}">
-                                </div>
-                            </div>
-                        </div>
-                 
-                    </div>
-                <div class="row clearfix">
-
-                    <div class="col-md-3">
-                        <label for="email_address">Imagen de impresora:</label>
-                        <div class="input-group">
-                            <span class="input-group-addon">
-                                <i class="material-icons">add_photo_alternate</i>
-                            </span>
-                            <div class="form-line">
-                                <input type="file" name="imgeimpresora" id="txtimagen">
-                            </div>
-                        </div>
-                    </div>  
-                    
-
-                    
                         <div class="col-md-3">
-                            <label for="email_address">Tipo:</label>
+                            <label for="email_address">Imagen:</label>
                             <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="material-icons">print</i>
-                                </span>
-                                    <select class="form-control show-tick">
-                                        {% if impresoraAEditar.4 == "Inyección de tinta Color/Blanco-Negro" %}
-                                        <option>Laser Blanco-Negro</option>
-                                        <option selected>Inyección de tinta Color/Blanco-Negro</option>
-                                        {% else %}
-                                        <option>Laser Blanco-Negro</option>
-                                        <option>Inyección de tinta Color/Blanco-Negro</option>
-                                        {% endif %}
-                                    </select>
+                                <img src="{{impresora.imagen.url}}" width="150" height="200" alt="lap">
                             </div>
-                        </div> 
-                        <div class="col-md-2">
+                        </div>
+                        <div class="col-md-9">
+                            <div class="row clearfix">
+                                <div class="col-md-6">
+                                    <label for="email_address">Marca:</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control date"  value="{{impresora.marca}}" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="email_address">Modelo:</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control date"  value="{{impresora.modelo}}" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row clearfix">
+                                <div class="col-md-6">
+                                    <label for="email_address">Tipo:</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control date"  value="{{impresora.tipo}}" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="email_address">Número de serie:</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control date"  value="{{impresora.numserie}}" readonly>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row clearfix">
+                        
+                        <div class="col-md-3">
                             <label for="email_address">Área:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">work</i>
                                 </span>
-                                    <select class="form-control show-tick">
-                                        {% if impresoraAEditar.9 == "Administración" %}
-                                        <option selected>Administración</option>
-                                        <option>Sistemas</option>
-                                        <option>Almacen</option>
-                                        {% else %}
-                                        <option>Administración</option>
-                                        <option>Sistemas</option>
-                                        <option>Almacen</option>
-                                        {% endif %}
+                                    <select class="form-control show-tick" name="areaEditar">
+                                        <option selected value="{{impresora.id_area_id}}">{{nombreArea}}</option>
+                                        {% for areaNo in areasNuevas %}
+                                        <option value="{{areaNo.0}}">{{areaNo.1}}</option>
+                                        {% endfor %}
                                     </select>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <label for="email_address">Estado:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">build</i>
                                 </span>
                                     
-                                    <select class="form-control show-tick">
-                                        {% if impresoraAEditar.7 == "Funcional" %}
-                                        <option selected>Funcional</option>
-                                        <option>Reparación</option>
-                                        <option>Basura</option>
-                                        {% else %}
-                                        <option>Funcional</option>
-                                        <option>Reparación</option>
-                                        <option>Basura</option>
+                                    <select class="form-control show-tick" name="estadoEditar">
+                                        {% if impresora.estado == "Funcional" %}
+                                        <option selected value="Funcional">Funcional</option>
+                                        <option value="Reparación">Reparación</option>
+                                        <option value="Basura">Basura</option>
+                                        {% elif impresora.estado == "Reparación" %}
+                                        <option value="Funcional">Funcional</option>
+                                        <option value="Reparación" selected >Reparación</option>
+                                        <option value="Basura">Basura</option>
+                                        {% elif impresora.estado == "Basura" %}
+                                        <option value="Funcional">Funcional</option>
+                                        <option value="Reparación">Reparación</option>
+                                        <option selected value="Basura">Basura</option>
                                         {% endif %}
                                     </select>
                             </div>
                         </div>
-                        <div class="col-md-2">
-                            <input type="checkbox" id="md_checkbox_28" class="filled-in chk-col-cyan" checked />
-                            <label for="md_checkbox_28">Por conexión en red</label>
+                        <div class="col-md-3">
+                            {% if impresora.enred == "S" %}
+                            <label for="email_address">Conexión por red (IP):</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control date"  value="{{impresora.ip}}" name="ipEditar" >
+                                    </div>
+                            {% elif impresora.enred == "N" %}
+                            <label for="email_address">Conexión por red (IP):</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control date" name="ipEditar" >
+                                    </div>
+                            {% endif%}
+                            
+                            
+                            
+                        </div>
+                        <div class="col-md-3">
                             <div>
-                                <input type="checkbox" id="md_checkbox_30" class="filled-in chk-col-green" checked />
+                                {% if impresora.activo == "A" %}
+                                <input type="checkbox" id="md_checkbox_30" class="filled-in chk-col-green" checked name="activoEditar"/>
+                                {% elif impresora.activo == "I" %}
+                                <input type="checkbox" id="md_checkbox_30" class="filled-in chk-col-green" name="activoEditar" />
+                                {% endif %}
                                 <label for="md_checkbox_30">Esta activo</label>
                             </div>
-                            
                         </div>
                         
 
                        
                     </div>
                     
-                    
+                    <input type="hidden" name="idImpresora" value="{{impresora.id_impresora}}">
                     <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i class="material-icons">print</i> Actualizar Impresora</button>
+                    {% endfor %}
                 </form>
             </div>
         </div>
     </div>
 </div>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    {% if editado %}
+    <script type="text/javascript">
+        swal({
+            icon: 'success',
+            title: 'Wujuu..!',
+            text: ' {{textoEditado}}',
+            footer: '<span style="color: green!important"> Puedes ver los datos actualizados! </span>',
+            width: '40%'
+        });
+    </script>
+    {% endif %}
 {% endblock %}
 
 {% block estilosJs %}
@@ -226,6 +216,16 @@ Editar Impresoras
         }
         return false;
     }
+
+    function comprobar(obj){
+        if (obj.checked){
+            document.getElementById('divActPdf').style.display = "";
+        }
+        else{
+            document.getElementById('divActPdf').style.display = "none";
+        }
+    }
+    
 </script>
 <!-- Jquery Core Js -->
 <script src={% static 'panel/plugins/jquery/jquery.min.js' %}></script>
