@@ -38,7 +38,7 @@ Ver Areas
         <div class="card">
             <div class="header">
                 <h2>
-                    PROGRAMAS del área {{nombreArea}}
+                    PROGRAMAS del área {{nombreArea}} - ID: {{idArea}}
                 </h2>
                 <ul class="header-dropdown m-r--5">
                     <li class="dropdown">
@@ -85,39 +85,25 @@ Ver Areas
                             </tr>
                         </tfoot>
                         <tbody>
+                            {% for programa in arregloDatosProgramas %}
                             <tr>
-                                <td>1</td>
-                                <td>Autodesk AutoCAD 2018</td>
+                                <td>{{programa.0}}</td>
+                                <td>{{programa.1}}</td>
                                 <th>
                                     <center>
-                                        <img src="{% static 'images/lo1.png' %}" width="75" height="75" alt="lap">
+                                        <img src="{{programa.8.url}}" width="75" height="75" alt="lap">
                                     </center>
                                 </th>
-                                <td>Diseño asistido por computadora</td>
-                                <td>Privada</td>
-                                <td>Multilenguaje</td>
-                                <td>Windows 7 64 bits</td>
-                                <td>4 GB</td>
-                                <td>1 GHz ó más </td>
+                                <td>{{programa.2}}</td>
+                                <td>{{programa.3}}vada</td>
+                                <td>{{programa.4}}</td>
+                                <td>{{programa.5}}</td>
+                                <td>{{programa.6}}</td>
+                                <td>{{programa.7}}</td>
                                 
                             </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Office 2019</td>
-                                <th>
-                                    <center>
-                                        <img src="{% static 'images/lo2.png' %}" width="75" height="75" alt="lap">
-                                    </center>
-                                </th>
-                                <td>Paquete de oficina</td>
-                                <td>Privada</td>
-                                <td>Multilenguaje</td>
-                                <td>Windows 10 64 bit</td>
-                                <td>4 GB</td>
-                                <td>1,6 GHz ó más </td>
-                             
-                                
-                            </tr>
+                            {% endfor %}
+                            
                        
                             
                             

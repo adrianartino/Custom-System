@@ -34,77 +34,33 @@ Ver Programas por area
     <h2>Selección de Áreas</h2>
 </div>
 <div class="row">
+    {% for area, programas in lista %}
     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
         <div class="info-box-4 hover-zoom-effect">
             <form action="/verProgramasPorArea/" method="POST">{% csrf_token %}
                 <div class="icon">
                     <button style="border: 0; background-color: Transparent;">
-                        <i class="material-icons col-red">work</i>
+                        {% if area.nombre == "Sistemas" %}
+                        <i class="material-icons col-red">desktop_windows</i>
+                        {% elif area.nombre == "Administracion" %}
+                        <i class="material-icons col-lime">work</i>
+                        {% elif area.nombre == "Almacen" %}
+                        <i class="material-icons col-teal">beenhere</i>
+                        {% endif %}
                     </button>
                 </div>
                 <div class="content">
                     <div class="text">
-                        <input type="text" style="border: 0;" value="Administración" name="nombreArea">
+                        <input type="text" style="border: 0;" value="{{area.nombre}}" name="nombreArea">
                     </div>
-                    <div class="number">8 Programas</div>
+                    <div class="number">{{programas}} Programas</div>
                 </div>
             </form>
         </div>
 
     </div>
-    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-        <div class="info-box-4 hover-zoom-effect">
-            <form action="/verProgramasPorArea/" method="POST">{% csrf_token %}
-                <div class="icon">
-                    <button style="border: 0; background-color: Transparent;">
-                        <i class="material-icons col-green">build </i>
-                    </button>
-                </div>
-                <div class="content">
-                    <div class="text">
-                        <input type="text" style="border: 0;" value="Almacen" name="nombreArea">
-                    </div>
-                    <div class="number">7 Programas</div>
-                </div>
-            </form>
-        </div>
-    </div>
-    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-        <div class="info-box-4 hover-zoom-effect">
-            <form action="/verProgramasPorArea/" method="POST">{% csrf_token %}
-                <div class="icon">
-                    <button style="border: 0; background-color: Transparent;">
-                        <i class="material-icons col-cyan">api</i>
-                    </button>
-                </div>
-                <div class="content">
-                    <div class="text">
-                        <input type="text" style="border: 0;" value="Especialistas" name="nombreArea">
-                    </div>
-                    <div class="number">18 Programas</div>
-                </div>
-            </form>
-            
-        </div>
-    </div>
-    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-        <div class="info-box-4 hover-zoom-effect">
-            <form action="/verProgramasPorArea/" method="POST">{% csrf_token %}
-                <div class="icon">
-                    <button style="border: 0; background-color: Transparent;">
-                        <i class="material-icons col-pink">paid</i>
-                    </button>
-                </div>
-                <div class="content">
-                    <div class="text">
-                        <input type="text" style="border: 0;" value="Ventas" name="nombreArea">
-                    </div>
-                    <div class="number">12 Programas</div>
-                </div>
-            </form>
-            
-        </div>
-    </div>
+    {% endfor %}
+    
 </div>
 {% endblock %}
 

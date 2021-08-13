@@ -55,7 +55,7 @@ Agregar Programsa
                 </ul>
             </div>
             <div class="body">
-                <form id="form_validation" method="POST">{% csrf_token %}
+                <form id="form_validation"  action="/agregarProgramas/" enctype="multipart/form-data" method="POST">{% csrf_token %}
                     <div class="row clearfix">
                         
                         <div class="col-md-3">
@@ -65,7 +65,7 @@ Agregar Programsa
                                     <i class="material-icons">app_registration</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar nombre y versión">
+                                    <input type="text" class="form-control date" placeholder="Ingresar nombre y versión" name="nombre">
                                 </div>
                             </div>
                         </div>
@@ -76,7 +76,7 @@ Agregar Programsa
                                     <i class="material-icons">format_list_bulleted</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar tipo de programa">
+                                    <input type="text" class="form-control date" placeholder="Ingresar tipo de programa" name="tipo">
                                 </div>
                             </div>
                         </div>
@@ -86,7 +86,7 @@ Agregar Programsa
                                 <span class="input-group-addon">
                                     <i class="material-icons">copyright</i>
                                 </span>
-                                    <select class="form-control show-tick">
+                                    <select class="form-control show-tick" name="licencia">
                                         <option>Privada</option>
                                         <option>Libre</option>
                                       
@@ -101,7 +101,7 @@ Agregar Programsa
                                 <span class="input-group-addon">
                                     <i class="material-icons">translate</i>
                                 </span>
-                                    <select class="form-control show-tick">
+                                    <select class="form-control show-tick" name="idioma">
                                         <option>Multilenguaje</option>
                                         <option>Español</option>
                                         <option>Inglés</option>
@@ -122,7 +122,7 @@ Agregar Programsa
                                 <span class="input-group-addon">
                                     <i class="material-icons">desktop_windows</i>
                                 </span>
-                                    <select class="form-control show-tick">
+                                    <select class="form-control show-tick" name="sistemaOp">
                                         <option>Windows 7 64 bit</option>
                                         <option>Windows 7 32 bit</option>
                                         <option>Windows 8 64 bit</option>
@@ -139,7 +139,7 @@ Agregar Programsa
                                 <span class="input-group-addon">
                                     <i class="material-icons">trending_up</i>
                                 </span>
-                                    <select class="form-control show-tick">
+                                    <select class="form-control show-tick" name="ram">
                                         <option>1 GB</option>
                                         <option>2 GB</option>
                                         <option>4 GB</option>
@@ -157,18 +157,18 @@ Agregar Programsa
                                     <i class="material-icons">memory</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar velocidad de procesador">
+                                    <input type="text" class="form-control date" placeholder="Ingresar velocidad de procesador" name="procesador">
                                 </div>
                             </div>
                         </div> 
                         <div class="col-md-3">
-                            <label for="email_address">Imagen de equipo:</label>
+                            <label for="email_address">Logo programa:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">add_photo_alternate</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="file" name="imgequipo" id="txtimagen">
+                                    <input type="file"  id="txtimagen" name="logo">
                                 </div>
                             </div>
                         </div>  
@@ -176,14 +176,27 @@ Agregar Programsa
                         
                        
                     </div>
+                    <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i class="material-icons">save</i> Guardar Programa</button>
 
                 
-                    <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i class="material-icons">apps</i> Guardar Programa</button>
+                     
                 </form>
             </div>
         </div>
     </div>
 </div>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    {% if registroExito %}
+    <script type="text/javascript">
+        swal({
+            icon: 'success',
+            title: 'Wujuu..',
+            text: ' {{mensajeExito}}',
+            footer: '<span style="color: green!important"> Sigue navegando por Custom System! </span>',
+            width: '40%'
+        });
+    </script>
+    {% endif %}
 {% endblock %}
 
 {% block estilosJs %}

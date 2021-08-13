@@ -86,39 +86,25 @@ Ver Programas
                             </tr>
                         </tfoot>
                         <tbody>
+                            {% for programa in registrosProgramas %}
                             <tr>
-                                <td>1</td>
-                                <td>Autodesk AutoCAD 2018</td>
+                                <td>{{programa.id_programa}}</td>
+                                <td>{{programa.nombre_version}}</td>
                                 <th>
                                     <center>
-                                        <img src="{% static 'images/lo1.png' %}" width="75" height="75" alt="lap">
+                                        <img src="{{programa.imagenPrograma.url}}" width="75" height="60" alt="prog">
                                     </center>
                                 </th>
-                                <td>Diseño asistido por computadora</td>
-                                <td>Privada</td>
-                                <td>Multilenguaje</td>
-                                <td>Windows 7 64 bits</td>
-                                <td>4 GB</td>
-                                <td>1 GHz ó más </td>
+                                <td>{{programa.tipo}}</td>
+                                <td>{{programa.licencia}}</td>
+                                <td>{{programa.idioma}}</td>
+                                <td>{{programa.sistemaoperativo_arq}} o superior </td>
+                                <td>{{programa.memoria_ram}} o más</td>
+                                <td>{{programa.procesador}} o más</td>
                                 
                             </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Office 2019</td>
-                                <th>
-                                    <center>
-                                        <img src="{% static 'images/lo2.png' %}" width="75" height="75" alt="lap">
-                                    </center>
-                                </th>
-                                <td>Paquete de oficina</td>
-                                <td>Privada</td>
-                                <td>Multilenguaje</td>
-                                <td>Windows 10 64 bit</td>
-                                <td>4 GB</td>
-                                <td>1,6 GHz ó más </td>
-                             
-                                
-                            </tr>
+                            {% endfor %}
+                            
                        
                             
                             

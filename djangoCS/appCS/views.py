@@ -702,8 +702,12 @@ def verProgramas(request):
     apellidos = request.session['apellidos']
     correo = request.session['correoSesion']
     nombreCompleto = nombre + " " + apellidos
+    
+    registrosProgramas = Programas.objects.all()
+    
+    
 
-    return render(request,"Programas/verProgramas.html",{"estaEnVerProgramas": estaEnVerProgramas, "nombreCompleto":nombreCompleto, "correo":correo})
+    return render(request,"Programas/verProgramas.html",{"estaEnVerProgramas": estaEnVerProgramas, "nombreCompleto":nombreCompleto, "correo":correo, "registrosProgramas": registrosProgramas})
 
 def agregarProgramas(request):
 
@@ -712,6 +716,31 @@ def agregarProgramas(request):
     apellidos = request.session['apellidos']
     correo = request.session['correoSesion']
     nombreCompleto = nombre + " " + apellidos
+    
+    if request.method == "POST":
+        
+        nombreVersion_recibido = request.POST['nombre']
+        tipo_recibido = request.POST['tipo']
+        licencia_recibido = request.POST['licencia']
+        idioma_recibido = request.POST['idioma']
+        so_recibido = request.POST['sistemaOp']
+        ram_recibido = request.POST['ram']
+        procesador_recibido = request.POST['procesador']
+        logo_recibido = request.FILES.get('logo')
+        
+        registroPrograma = Programas(nombre_version=nombreVersion_recibido, tipo= tipo_recibido, licencia=licencia_recibido, idioma=idioma_recibido, sistemaoperativo_arq= so_recibido,
+                                     memoria_ram=ram_recibido, procesador=procesador_recibido, imagenPrograma=logo_recibido)
+        
+        registroPrograma.save()
+        
+        registroExito =True
+        mensajeExito = "Se a guardado el " + nombreVersion_recibido + " con éxito"
+        return render(request,"Programas/agregarProgramas.html",{"estaEnAgregarProgramas": estaEnAgregarProgramas, "nombreCompleto":nombreCompleto, "correo":correo, "registroExito": registroExito,
+                                                                 "mensajeExito":mensajeExito})
+        
+        
+    
+    
 
     return render(request,"Programas/agregarProgramas.html",{"estaEnAgregarProgramas": estaEnAgregarProgramas, "nombreCompleto":nombreCompleto, "correo":correo})
 
@@ -722,8 +751,71 @@ def asignarProgramas(request):
     apellidos = request.session['apellidos']
     correo = request.session['correoSesion']
     nombreCompleto = nombre + " " + apellidos
+    
+    registrosAreas = Areas.objects.all()
+    registrosProgramas = Programas.objects.all()
+    
+    registrosProgramasEnAreas = ProgramasArea.objects.all()
+    arregloAreas =[]
+    aregloProgramas = []
+    
+    for registro in registrosProgramasEnAreas:
+        aread = registro.id_area_id
+        programa = registro.id_programa_id
+        arregloAreas.append(aread)
+        aregloProgramas.append(programa)
+    
+    
+    
+    if request.method == "POST":
+        
+        idprograma_recibido = request.POST['idPrograma']
+        
+        datosPrograma = Programas.objects.filter(id_programa = idprograma_recibido)
+        
+        for dato in datosPrograma:
+            nombre = dato.nombre_version
+            
+        areas = Areas.objects.all() #Arreglo de 3 posiciones.
+        
+        for area in areas: #Se repite 3 veces
+            idArea = area.id_area #1,2
+            nombreInput = "area"+str(idArea) #area1, area2
+            
+            if request.POST.get(nombreInput, False): #Si está activo el check, si esta el programa en esa area
+               seNecesita = True
+            elif request.POST.get(nombreInput, True): #Si está inactivo el check, no esta el programa en esa area
+               seNecesita = False
+               
+            if seNecesita == True:
+                #Verificar si esa area ya tiene ese programa
+                areasProgramas = ProgramasArea.objects.all()
 
-    return render(request,"Programas/asignarProgramas.html",{"estaEnAsignarProgramas": estaEnAsignarProgramas, "nombreCompleto":nombreCompleto, "correo":correo})
+                yaEsta = False
+                for area in areasProgramas:
+                    if area.id_area_id == idArea and area.id_programa_id == idprograma_recibido:
+                        yaEsta = True
+                        
+                if yaEsta == True:
+                    #no haga nada
+                    nada = True
+                elif yaEsta == False:
+                    registro = ProgramasArea(id_area = Areas.objects.get(id_area = idArea), id_programa = Programas.objects.get(id_programa = idprograma_recibido)) #1 1 
+                    registro.save()
+                
+            elif seNecesita == False:
+                nada = True
+        
+        programaAreasGuardado = True
+        texto = "Se han actualizado las áreas donde se necesita el programa " + nombre + " con éxito!"
+                
+        return render(request,"Programas/asignarProgramas.html",{"estaEnAsignarProgramas": estaEnAsignarProgramas, "nombreCompleto":nombreCompleto, "correo":correo, "registrosAreas":registrosAreas,
+                                                             "registrosProgramas": registrosProgramas, "programaAreasGuardado":programaAreasGuardado, "texto":texto})   
+        
+        
+
+    return render(request,"Programas/asignarProgramas.html",{"estaEnAsignarProgramas": estaEnAsignarProgramas, "nombreCompleto":nombreCompleto, "correo":correo, "registrosAreas":registrosAreas,
+                                                             "registrosProgramas": registrosProgramas, "registrosProgramasEnAreas":registrosProgramasEnAreas, "arregloAreas":arregloAreas, "arregloProgramas":aregloProgramas})
 
 def ProgramasporArea(request):
 
@@ -732,8 +824,25 @@ def ProgramasporArea(request):
     apellidos = request.session['apellidos']
     correo = request.session['correoSesion']
     nombreCompleto = nombre + " " + apellidos
+    
+    areas = Areas.objects.all()
+    
+    cantidadProgramas=[]
+    
+    for area in areas:
+        numeroDeProgramas = ProgramasArea.objects.filter(id_area_id = area.id_area).count #1
+        if numeroDeProgramas:
+            cantidadProgramas.append(numeroDeProgramas)
+        else:
+            cantidadProgramas.append("0")
+            
+    lista = zip(areas,cantidadProgramas)
+        
+    
+                
+        
 
-    return render(request,"Programas/verProgramasArea.html",{"estaEnverProgramasPorArea": estaEnverProgramasPorArea, "nombreCompleto":nombreCompleto, "correo":correo})
+    return render(request,"Programas/verProgramasArea.html",{"estaEnverProgramasPorArea": estaEnverProgramasPorArea, "nombreCompleto":nombreCompleto, "correo":correo, "lista":lista})
 
 def verProgramasPorArea(request):
     nombre = request.session['nombres']
@@ -744,10 +853,40 @@ def verProgramasPorArea(request):
     if request.method == "POST":
         
         nombreArea = request.POST['nombreArea']
+        datosArea = Areas.objects.filter(nombre__icontains = nombreArea)
+        
+        for dato in datosArea:
+            idArea = dato.id_area
+            
+        datosAreasProgramas = ProgramasArea.objects.filter(id_area_id = idArea)
+        
+        arregloProgramas =[]
+        
+        for datos in datosAreasProgramas:
+            arregloProgramas.append(datos.id_programa_id)
+            
+        arregloDatosProgramas = []
+        
+        for dato in arregloProgramas:
+            datosPrograma = Programas.objects.filter(id_programa = dato)
+            
+            for programa in datosPrograma:
+                id = programa.id_programa
+                nombre = programa.nombre_version
+                tipo = programa.tipo
+                licencia = programa.licencia
+                idioma = programa.idioma
+                sistemaoperativo = programa.sistemaoperativo_arq
+                memoria = programa.memoria_ram
+                procesador = programa.procesador
+                imagen = programa.imagenPrograma
+                
+            arregloDatosProgramas.append([id,nombre,tipo,licencia,idioma,sistemaoperativo,memoria,procesador,imagen])
+        
         #nombreArea = Administracion
 
         estaEnverProgramasPorArea = True
-        return render(request, "Programas/tablaProgArea.html",{"estaEnverProgramasPorArea": estaEnverProgramasPorArea, "nombreArea":nombreArea, "nombreCompleto":nombreCompleto, "correo":correo})
+        return render(request, "Programas/tablaProgArea.html",{"estaEnverProgramasPorArea": estaEnverProgramasPorArea, "nombreArea":nombreArea, "nombreCompleto":nombreCompleto, "correo":correo, "idArea":idArea, "arregloDatosProgramas":arregloDatosProgramas})
 
     
 

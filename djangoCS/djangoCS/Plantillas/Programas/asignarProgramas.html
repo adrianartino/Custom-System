@@ -61,9 +61,10 @@ asignar programas por area
                             <tr>
                                 <th>ID Programa</th>
                                 <th>Nombre</th>
-                                <th>Administración</th>
-                                <th>Sistemas</th>
-                                <th>Almacen</th>
+                                {% for areas in registrosAreas %}
+                                <th> <label for="area" class="{{areas.color}}">{{areas.nombre}} </label></th>
+                                {% endfor %}
+                               
                            
                                 
                     
@@ -72,10 +73,11 @@ asignar programas por area
                         </thead>
                        
                         <tbody>
+                            {% for programas in registrosProgramas%}
                             <tr>
-                                <form action="/DescargarPDF/" method="POST">{% csrf_token %}
+                                <form action="/asignarProgramas/" method="POST">{% csrf_token %}
                                     <th>
-                                        <input type="text" name="idPrograma" style="border: none; background: none;" value="1" readonly size="1">
+                                        <input type="text" name="idPrograma" style="border: none; background: none;" value="{{programas.id_programa}}" readonly size="1">
                                         <div>
                                             <center>
                                                 <button type="submit" class="btn btn-success waves-effect"><i class="material-icons ">save</i></button>
@@ -83,55 +85,41 @@ asignar programas por area
                                         </div>
                                         
                                     </th>
-                                </form>
-                                <th>Office 2019</th>
-                                    <th>
-                                        <input type="checkbox" id="md_checkbox_1" class="filled-in chk-col-cyan" checked />
-                                        <label for="md_checkbox_1"></label>
-                                    </th>
-                                    <th>
-                                        <input type="checkbox" id="md_checkbox_2" class="filled-in chk-col-cyan" checked />
-                                        <label for="md_checkbox_2"></label>
-                                    </th>
-                                    <th>
-                                        <input type="checkbox" id="md_checkbox_3" class="filled-in chk-col-cyan" checked />
-                                        <label for="md_checkbox_3"></label>
-                                    </th>
-                                  
-                                    
-                                
-                                
-                            </tr>
-                            <tr>
-                                <form action="/DescargarPDF/" method="POST">{% csrf_token %}
-                                    <th>
-                                        <input type="text" name="idPrograma" style="border: none; background: none;" value="2" readonly size="1">
-                                        <div>
-                                            <center>
-                                                <button type="submit" class="btn btn-success waves-effect"><i class="material-icons ">save</i></button>
-                                            </center>
-                                        </div>
+                               
+                                <th>{{programas.nombre_version}}</th>
+                                {% for areas in registrosAreas %}
+                                    {% if registrosProgramasEnAreas %}
                                         
-                                    </th>
+                                        
+
+                                        {% if areas.id_area in arregloAreas %}
+                                        <th>
+                                            <input type="checkbox" id="md_checkbox_{{programas.id_programa}}{{areas.id_area}}" class="filled-in chk-col-cyan"  checked name="area{{areas.id_area}}" />
+                                            <label for="md_checkbox_{{programas.id_programa}}{{areas.id_area}}">{{areas.nombre}}Coincide con {{registroPrograma.id_area_id}}</label>
+                                        </th>
+                                        {% endif %}
+
+                                        {% if areas.id_area not in arregloAreas %}
+                                        <th>
+                                            <input type="checkbox" id="md_checkbox_{{programas.id_programa}}{{areas.id_area}}" class="filled-in chk-col-cyan"   name="area{{areas.id_area}}" />
+                                            <label for="md_checkbox_{{programas.id_programa}}{{areas.id_area}}">{{areas.nombre}}Coincide con {{registroPrograma.id_area_id}}</label>
+                                        </th>
+                                        {% endif %}
+
+                                    {% else %}
+                                        <th>
+                                            <input type="checkbox" id="md_checkbox_{{programas.id_programa}}{{areas.id_area}}" class="filled-in chk-col-cyan"   name="area{{areas.id_area}}" />
+                                            <label for="md_checkbox_{{programas.id_programa}}{{areas.id_area}}"></label>
+                                        </th>
+                                    {% endif %}   
+                                {% endfor %}
+                                
                                 </form>
-                                <th>AutoCAD 2018</th>
-                                    <th>
-                                        <input type="checkbox" id="md_checkbox_4" class="filled-in chk-col-cyan" checked />
-                                        <label for="md_checkbox_4"></label>
-                                    </th>
-                                    <th>
-                                        <input type="checkbox" id="md_checkbox_5" class="filled-in chk-col-cyan" checked />
-                                        <label for="md_checkbox_5"></label>
-                                    </th>
-                                    <th>
-                                        <input type="checkbox" id="md_checkbox_6" class="filled-in chk-col-cyan" checked />
-                                        <label for="md_checkbox_6"></label>
-                                    </th>
-                                  
                                     
                                 
                                 
                             </tr>
+                            {% endfor %}
                             
                             
                      
@@ -145,6 +133,18 @@ asignar programas por area
         </div>
     </div>
 </div>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    {% if programaAreasGuardado %}
+    <script type="text/javascript">
+        swal({
+            icon: 'success',
+            title: 'Wujuuu..',
+            text: ' {{texto}}',
+            footer: '<span style="color: green!important"> Sigue navegando en Custom System! </span>',
+            width: '40%'
+        });
+    </script>
+    {% endif %}
 {% endblock %}
 
 {% block estilosJs %}
