@@ -39,7 +39,12 @@ Ver Programas
         <div class="card">
             <div class="header">
                 <h2>
-                    PROGRAMAS 
+                    {% if nombreArea %}
+                    Asignar programas al area de <span class="{{colorArea}}"> {{nombreArea}}</span>
+                    {% else %}
+                    PROGRAMAS
+                    {% endif %}
+
                 </h2>
                 <ul class="header-dropdown m-r--5">
                     <li class="dropdown">
@@ -56,6 +61,81 @@ Ver Programas
             </div>
             <div class="body">
                 <div class="table-responsive">
+                    {% if nombreArea %}
+                        <form action="/actualizarProgramasArea/"  method="POST" >{% csrf_token %}
+                        <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                            <thead>
+                                <tr>
+                                    <th>ID Programa</th>
+                                    <th>Nombre_Versión</th>
+                                    <th>Imagen</th>
+                                    <th>Tipo</th>
+                                    <th>Licencia</th>
+                                    <th>Idioma</th>
+                                    <th>SistemaOpeativo_Arquitectura</th>
+                                    <th>Memoria RAM</th>
+                                    <th>Procesador</th>
+                                    <th>
+                                    Asignar
+                                    </th>
+                                    
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>ID Programa</th>
+                                    <th>Nombre_Versión</th>
+                                    <th>Imagen</th>
+                                    <th>Tipo</th>
+                                    <th>Licencia</th>
+                                    <th>Idioma</th>
+                                    <th>SistemaOpeativo_Arquitectura</th>
+                                    <th>Memoria RAM</th>
+                                    <th>Procesador</th>
+                                    <th>
+                                    Asignar
+                                    </th>
+                                    
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                    {% for programa, check in lista %}
+                                    <tr>
+                                        <td>{{programa.id_programa}}</td>
+                                        <td>{{programa.nombre_version}}</td>
+                                        <th>
+                                            <center>
+                                                <img src="{{programa.imagenPrograma.url}}" width="75" height="60" alt="prog">
+                                            </center>
+                                        </th>
+                                        <td>{{programa.tipo}}</td>
+                                        <td>{{programa.licencia}}</td>
+                                        <td>{{programa.idioma}}</td>
+                                        <td>{{programa.sistemaoperativo_arq}} o superior </td>
+                                        <td>{{programa.memoria_ram}} o más</td>
+                                        <td>{{programa.procesador}} o más</td>
+                                        <td>
+                                            {% if check.1 == "1" %}
+                                            <input type="checkbox" id="md_checkbox_{{programa.id_programa}}{{id_area_recibido}}" class="filled-in chk-col-cyan"  checked name="area{{id_area_recibido}}programa{{programa.id_programa}}" />
+                                            <label for="md_checkbox_{{programa.id_programa}}{{id_area_recibido}}">{{check.0}} {{check.1}}</label>
+                                            {% elif check.1 == "0" %}
+                                            <input type="checkbox" id="md_checkbox_{{programa.id_programa}}{{id_area_recibido}}" class="filled-in chk-col-cyan"   name="area{{id_area_recibido}}programa{{programa.id_programa}}" />
+                                            <label for="md_checkbox_{{programa.id_programa}}{{id_area_recibido}}">{{check.0}} {{check.1}}</label>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    
+                                    {% endfor %}
+                            </tbody>
+                        </table>
+                        <input type="hidden" name="idArea" value="{{id_area_recibido}}">
+                        <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i class="material-icons">update</i> Actualizar lista</button>
+                    </form>
+                    {% else %}
+
+
+                    
+
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                         <thead>
                             <tr>
@@ -82,34 +162,38 @@ Ver Programas
                                 <th>SistemaOpeativo_Arquitectura</th>
                                 <th>Memoria RAM</th>
                                 <th>Procesador</th>
-                                
                             </tr>
                         </tfoot>
                         <tbody>
-                            {% for programa in registrosProgramas %}
-                            <tr>
-                                <td>{{programa.id_programa}}</td>
-                                <td>{{programa.nombre_version}}</td>
-                                <th>
-                                    <center>
-                                        <img src="{{programa.imagenPrograma.url}}" width="75" height="60" alt="prog">
-                                    </center>
-                                </th>
-                                <td>{{programa.tipo}}</td>
-                                <td>{{programa.licencia}}</td>
-                                <td>{{programa.idioma}}</td>
-                                <td>{{programa.sistemaoperativo_arq}} o superior </td>
-                                <td>{{programa.memoria_ram}} o más</td>
-                                <td>{{programa.procesador}} o más</td>
+                            
+                                {% for programa in registrosProgramas %}
+                                <tr>
+                                    <td>{{programa.id_programa}}</td>
+                                    <td>{{programa.nombre_version}}</td>
+                                    <th>
+                                        <center>
+                                            <img src="{{programa.imagenPrograma.url}}" width="75" height="60" alt="prog">
+                                        </center>
+                                    </th>
+                                    <td>{{programa.tipo}}</td>
+                                    <td>{{programa.licencia}}</td>
+                                    <td>{{programa.idioma}}</td>
+                                    <td>{{programa.sistemaoperativo_arq}} o superior </td>
+                                    <td>{{programa.memoria_ram}} o más</td>
+                                    <td>{{programa.procesador}} o más</td>
                                 
-                            </tr>
-                            {% endfor %}
+                                </tr>
+                                {% endfor %}
+
+                            
+                            
                             
                        
                             
                             
                         </tbody>
                     </table>
+                    {% endif %}
                 </div>
             </div>
         </div>

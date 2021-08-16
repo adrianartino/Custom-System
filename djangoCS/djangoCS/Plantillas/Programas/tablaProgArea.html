@@ -53,8 +53,10 @@ Ver Areas
                     </li>
                 </ul>
             </div>
-            <div class="body">
+            <div class="body" >
+                <form action="/verProgramas/" method="POST">{% csrf_token %}
                 <div class="table-responsive">
+                    <input type="hidden" name="idArea" value="{{idArea}}">
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                         <thead>
                             <tr>
@@ -110,6 +112,8 @@ Ver Areas
                         </tbody>
                     </table>
                 </div>
+                <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i class="material-icons">upgrade</i> Asignar Programa</button>
+            </form>
             </div>
         </div>
     </div>

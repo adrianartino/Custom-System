@@ -37,7 +37,7 @@ urlpatterns = [
     path('actualizarInsumos/', views.actualizarInsumos),
     path('verProgramas/', views.verProgramas),
     path('agregarProgramas/', views.agregarProgramas),
-    path('asignarProgramas/', views.asignarProgramas),
+    path('actualizarProgramasArea/', views.actualizarProgramasArea),
     path('calendarioMant/',views.calendarioMant),
     path('formularioMant/', views.formularioMant),
     path('verCarta/', views.verCarta),

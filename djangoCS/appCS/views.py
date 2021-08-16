@@ -7,6 +7,7 @@ from django.shortcuts import redirect
 from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora
 import base64
 from django.core.files.base import ContentFile
+from datetime import datetime
 
 # Create your views here.
 def login(request):
@@ -705,9 +706,56 @@ def verProgramas(request):
     
     registrosProgramas = Programas.objects.all()
     
+    if request.method == "POST":
+        
+        id_area_recibido = request.POST['idArea']
+        
+        datosArea = Areas.objects.filter(id_area__icontains=id_area_recibido)
+        
+        for dato in datosArea:
+            nombreArea = dato.nombre
+            colorArea = dato.color
+            
+        programas= Programas.objects.all()
+        programasArea = ProgramasArea.objects.all()
+        
+        programasCasillas = []
+        
+        for programa in registrosProgramas:
+            idPrograma = int(programa.id_programa)
+            programaEncontrado = ProgramasArea.objects.filter(id_programa_id__id_programa__icontains=idPrograma) #(1,1), (1,6), (1,7)
+            areasPrograma=[]
+            n=0
+            
+            if programaEncontrado:
+                n=1111
+            else: #El arreglo no arroja nada
+                n=12414123423423423
+            for programassi in programaEncontrado:
+                areasPrograma.append(programassi.id_area_id)
+                
+                
+            if int(id_area_recibido) in areasPrograma:
+                programasCasillas.append([programa.id_programa, "1"])
+            else:
+                programasCasillas.append([programa.id_programa, "0"])
+                
+            
+                
+        lista = zip(registrosProgramas,programasCasillas)
+                
+                    
+                    
+                
+        
+        return render(request,"Programas/verProgramas.html",{"estaEnVerProgramas": estaEnVerProgramas, "nombreCompleto":nombreCompleto, "correo":correo,
+                                                              "registrosProgramas": registrosProgramas, "nombreArea": nombreArea, "colorArea":colorArea, "id_area_recibido":id_area_recibido, "lista": lista,
+                                                              "n":n, "programaEncontrado":programaEncontrado, "areasPrograma":areasPrograma})
     
 
     return render(request,"Programas/verProgramas.html",{"estaEnVerProgramas": estaEnVerProgramas, "nombreCompleto":nombreCompleto, "correo":correo, "registrosProgramas": registrosProgramas})
+
+
 
 def agregarProgramas(request):
 
@@ -744,78 +792,75 @@ def agregarProgramas(request):
 
     return render(request,"Programas/agregarProgramas.html",{"estaEnAgregarProgramas": estaEnAgregarProgramas, "nombreCompleto":nombreCompleto, "correo":correo})
 
-def asignarProgramas(request):
-
-    estaEnAsignarProgramas = True
+def actualizarProgramasArea(request):
+    estaEnverProgramasPorArea = True
     nombre = request.session['nombres']
     apellidos = request.session['apellidos']
     correo = request.session['correoSesion']
     nombreCompleto = nombre + " " + apellidos
     
-    registrosAreas = Areas.objects.all()
-    registrosProgramas = Programas.objects.all()
-    
-    registrosProgramasEnAreas = ProgramasArea.objects.all()
-    arregloAreas =[]
-    aregloProgramas = []
-    
-    for registro in registrosProgramasEnAreas:
-        aread = registro.id_area_id
-        programa = registro.id_programa_id
-        arregloAreas.append(aread)
-        aregloProgramas.append(programa)
-    
-    
-    
     if request.method == "POST":
         
-        idprograma_recibido = request.POST['idPrograma']
+        id_area_actualizar = request.POST['idArea']
         
-        datosPrograma = Programas.objects.filter(id_programa = idprograma_recibido)
+        lista_programas = Programas.objects.all() #3
         
-        for dato in datosPrograma:
-            nombre = dato.nombre_version
+        for programa in lista_programas:
+            id_programa = programa.id_programa #1, 2, 3
             
-        areas = Areas.objects.all() #Arreglo de 3 posiciones.
-        
-        for area in areas: #Se repite 3 veces
-            idArea = area.id_area #1,2
-            nombreInput = "area"+str(idArea) #area1, area2
+            nameInput = "area"+str(id_area_actualizar)+"programa"+str(programa.id_programa)
             
-            if request.POST.get(nombreInput, False): #Si está activo el check, si esta el programa en esa area
-               seNecesita = True
-            elif request.POST.get(nombreInput, True): #Si está inactivo el check, no esta el programa en esa area
-               seNecesita = False
-               
-            if seNecesita == True:
-                #Verificar si esa area ya tiene ese programa
-                areasProgramas = ProgramasArea.objects.all()
-
-                yaEsta = False
-                for area in areasProgramas:
-                    if area.id_area_id == idArea and area.id_programa_id == idprograma_recibido:
-                        yaEsta = True
-                        
-                if yaEsta == True:
-                    #no haga nada
+            if request.POST.get(nameInput, False): #Checkeado
+                areaTienePrograma = True
+            elif request.POST.get(nameInput, True): #No checkeado
+                areaTienePrograma = False
+                
+            if areaTienePrograma:
+                idPrograma = int(programa.id_programa)
+                programaGuardado = ProgramasArea.objects.filter(id_programa_id__id_programa__icontains=idPrograma) #(1,1), (1,6), (1,7)
+                
+                areasPrograma=[]
+                
+                for area in programaGuardado:
+                    areasPrograma.append(area.id_area_id)
+                    
+                    
+                if int(id_area_actualizar) in areasPrograma:
+                    #No guardar nada..
                     nada = True
-                elif yaEsta == False:
-                    registro = ProgramasArea(id_area = Areas.objects.get(id_area = idArea), id_programa = Programas.objects.get(id_programa = idprograma_recibido)) #1 1 
+                else: #No esta esa área en la tabla, agregarlo
+                    registro = ProgramasArea(id_area = Areas.objects.get(id_area= id_area_actualizar), id_programa = Programas.objects.get(id_programa = idPrograma))
                     registro.save()
+            
+            elif areaTienePrograma == False: #No checkeado, verificar si está chequeado
+                idPrograma = int(programa.id_programa)
+                programaGuardado = ProgramasArea.objects.filter(id_programa_id__id_programa__icontains=idPrograma) #(1,1), (1,6), (1,7)
                 
-            elif seNecesita == False:
-                nada = True
-        
-        programaAreasGuardado = True
-        texto = "Se han actualizado las áreas donde se necesita el programa " + nombre + " con éxito!"
+                areasPrograma=[]
                 
-        return render(request,"Programas/asignarProgramas.html",{"estaEnAsignarProgramas": estaEnAsignarProgramas, "nombreCompleto":nombreCompleto, "correo":correo, "registrosAreas":registrosAreas,
-                                                             "registrosProgramas": registrosProgramas, "programaAreasGuardado":programaAreasGuardado, "texto":texto})   
-        
-        
+                for area in programaGuardado:
+                    areasPrograma.append(area.id_area_id)
+                    
+                    
+                if int(id_area_actualizar) in areasPrograma:
+                    area = int(id_area_actualizar)
+                    borrado = ProgramasArea.objects.get(id_area_id__id_area__icontains = area, id_programa_id__id_programa__icontains = idPrograma)
+                    borrado.delete()
+                    
+                else: #No esta esa área en la tabla, agregarlo
+                    #no va aguardar nada
+                    nada = True
+         
+        return redirect("/ProgramaPorArea/")   
+            
+    
+    
+    return redirect("/ProgramaPorArea/")
+    
+    
+    
 
-    return render(request,"Programas/asignarProgramas.html",{"estaEnAsignarProgramas": estaEnAsignarProgramas, "nombreCompleto":nombreCompleto, "correo":correo, "registrosAreas":registrosAreas,
-                                                             "registrosProgramas": registrosProgramas, "registrosProgramasEnAreas":registrosProgramasEnAreas, "arregloAreas":arregloAreas, "arregloProgramas":aregloProgramas})
+
 
 def ProgramasporArea(request):
 
@@ -897,6 +942,22 @@ def calendarioMant(request):
     apellidos = request.session['apellidos']
     correo = request.session['correoSesion']
     nombreCompleto = nombre + " " + apellidos
+    
+    infoEquipos = Equipos.objects.all()
+    
+    
+
+   
+    registroEmpleados = Empleados.objects.all()
+    
+  
+    if request.method == "POST":
+        
+        equipo_recibido = request.POST['equipoProp']
+        operacion_recibido = request.POST['operacion']
+        descripcion_recibida = request.POST['descripccion']
+       
+    
     return render(request,"Mantenimiento/calendarioMant.html", {"estaEnCalendario": estaEnCalendario, "nombreCompleto":nombreCompleto, "correo":correo})
 
 def formularioMant(request):
@@ -905,8 +966,36 @@ def formularioMant(request):
     apellidos = request.session['apellidos']
     correo = request.session['correoSesion']
     nombreCompleto = nombre + " " + apellidos
+    
+    infoEquipos = Equipos.objects.all()
+    empleadosEquipo= []
+    for empleado in infoEquipos:
+        idEmpleado = empleado.id_empleado_id
+        
+    
+        empleados = Empleados.objects.filter(id_empleado__icontains = idEmpleado)
 
-    return render(request,"Mantenimiento/formularioMant.html",{"estaEnFormulario": estaEnFormulario, "nombreCompleto":nombreCompleto, "correo":correo})
+        for empleadoEquipo in empleados:
+          nombre = empleadoEquipo.nombre
+          apellidos = empleadoEquipo.apellidos
+          empleadosEquipo.append([nombre,apellidos])
+          
+    lista = zip(infoEquipos, empleadosEquipo)
+  
+    if request.method == "POST":
+        
+        equipo_recibido = request.POST['equipoProp']
+        operacion_recibido = request.POST['operacion']
+        descripcion_recibida = request.POST['descripcion']
+        fecha=datetime.now()
+        registro = CalendarioMantenimiento(id_equipo=Equipos.objects.get(id_equipo=equipo_recibido), operacion=operacion_recibido, fecha=fecha, observaciones=descripcion_recibida)
+        registro.save()
+        
+        return render(request,"Mantenimiento/formularioMant.html",{"estaEnFormulario": estaEnFormulario, "nombreCompleto":nombreCompleto, "correo":correo, 
+                                                                "lista": lista})
+
+    return render(request,"Mantenimiento/formularioMant.html",{"estaEnFormulario": estaEnFormulario, "nombreCompleto":nombreCompleto, "correo":correo, 
+                                                                "lista": lista})
 
 def verCarta(request):
     estaEnVerCarta = True

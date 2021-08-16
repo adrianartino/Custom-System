@@ -471,10 +471,7 @@
                             <i class="material-icons" style="color: #00917C;!important">apps</i>
                             <span style="color: #00917C;!important">Programas</span>
                             {% else %}
-                            {% if estaEnAsignarProgramas %}
-                            <i class="material-icons" style="color: #00917C;!important">apps</i>
-                            <span style="color: #00917C;!important">Programas</span>
-                            {% else %}
+                            
                             {% if estaEnverProgramasPorArea %}
                             <i class="material-icons" style="color: #00917C;!important">apps</i>
                             <span style="color: #00917C;!important">Programas</span>
@@ -484,7 +481,7 @@
                             {% endif %}
                             {% endif %}
                             {% endif %}
-                            {% endif %}
+                            
                         </a>
                         <ul class="ml-menu">
                             {% if estaEnVerProgramas %}
@@ -509,17 +506,7 @@
                                 <a href="/agregarProgramas/" >Agregar programas</a>
                                 {% endif %}
                             </li>
-                            {% if estaEnAsignarProgramas %}
-                            <li class="active">
-                            {% else %}
-                            <li>
-                            {% endif %}
-                                {% if estaEnAsignarProgramas %}
-                                <a href="/asignarProgramas/" style="color: #E40017;!important">Asignar programas por área</a>
-                                {% else %}
-                                <a href="/asignarProgramas/" >Asignar programas por área</a>
-                                {% endif %}
-                            </li>
+                            
                             {% if estaEnverProgramasPorArea %}
                             <li class="active">
                             {% else %}

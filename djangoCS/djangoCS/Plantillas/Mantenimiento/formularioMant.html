@@ -55,7 +55,7 @@ Mantenimiento a pc
                 </ul>
             </div>
             <div class="body">
-                <form id="form_validation" method="POST">{% csrf_token %}
+                <form id="form_validation" action="/formularioMant/" method="POST">{% csrf_token %}
                     <div class="row clearfix">
                         <div class="col-md-8">
                             <label for="email_address">Equipo:</label>
@@ -63,9 +63,11 @@ Mantenimiento a pc
                                 <span class="input-group-addon">
                                     <i class="material-icons">computer</i>
                                 </span>
-                                    <select class="form-control show-tick">
-                                        <option>Laptop HP Pavillion z35 - Monica Arriaga</option>
-                                        <option>Laptop Lenovo ThinkPad - Lupita Lopez</option>
+                                    <select class="form-control show-tick" name="equipoProp">
+                                        {% for equipoP, empleado in lista %}
+                                        <option value="{{equipoP.id_equipo}}">{{equipoP.marca}} {{equipoP.modelo}}- {{empleado.0}} {{empleado.1}}</option>
+                                        {% endfor %}
+                        
                                     </select>
                             </div>
                         </div>
@@ -75,12 +77,12 @@ Mantenimiento a pc
                                 <span class="input-group-addon">
                                     <i class="material-icons">copyright</i>
                                 </span>
-                                    <select class="form-control show-tick">
-                                        <option>Mantenimiento</option>
-                                        <option>Formatear</option>
-                                        <option>Instalación de software</option>
-                                        <option>Activación de software</option>
-                                        <option>Respaldo de información</option>
+                                    <select class="form-control show-tick" name="operacion">
+                                        <option value="Mantenimiento">Mantenimiento</option>
+                                        <option value="Formatear">Formatear</option>
+                                        <option value="Instalación de software">Instalación de software</option>
+                                        <option value="Activación de software">Activación de software</option>
+                                        <option value="Respaldo de información">Respaldo de información</option>
                                     </select>
                             </div>
                         </div>
@@ -103,7 +105,7 @@ Mantenimiento a pc
                                
                                 <div class="form-group form-float">
                                     <div class="form-line">
-                                        <textarea style="border: 1px;" name="description" cols="30" rows="5" class="form-control no-resize" required></textarea>
+                                        <textarea style="border: 1px;" name="descripcion" cols="30" rows="5" class="form-control no-resize" required></textarea>
                                      
                                     </div>
                                 </div>
