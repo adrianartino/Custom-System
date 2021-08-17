@@ -8,6 +8,8 @@ from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos
 import base64
 from django.core.files.base import ContentFile
 from datetime import datetime
+from datetime import timedelta
+from dateutil.relativedelta import relativedelta
 
 # Create your views here.
 def login(request):
@@ -943,22 +945,45 @@ def calendarioMant(request):
     correo = request.session['correoSesion']
     nombreCompleto = nombre + " " + apellidos
     
-    infoEquipos = Equipos.objects.all()
+    registroEquipos = CalendarioMantenimiento.objects.all()
+    propietarioCompu = Empleados.objects.all()
+    equipos= Equipos.objects.all()
+    
+    equipoPropietario = []
+    fechasNuevas=[]
+    for equipos in registroEquipos:
+        idEquipo =int (equipos.id_equipo_id)
+        fecha= equipos.fecha
+        nueva_fecha = fecha + relativedelta(months=1)
+        fechasNuevas.append(nueva_fecha)
+        equi = Equipos.objects.filter(id_equipo=idEquipo)
+            
+        for datosEquipo in equi:
+            marca = datosEquipo.marca
+            modelo = datosEquipo.modelo
+            idPropietario = datosEquipo.id_empleado
+                
+            for propietario in propietarioCompu:
+                idPropietario= int(propietario.id_empleado)
+                prop = Empleados.objects.filter(id_empleado= idPropietario)
+                    
+                for datosProp in prop:
+                    nombre= datosProp.nombre
+                    apellidos = datosProp.apellidos
+                    
+            equipoPropietario.append([nombre,apellidos, marca,modelo])
+            
+    lista = zip (registroEquipos, equipoPropietario, fechasNuevas)
     
     
+            
+            
+    
+ 
 
-   
-    registroEmpleados = Empleados.objects.all()
-    
-  
-    if request.method == "POST":
-        
-        equipo_recibido = request.POST['equipoProp']
-        operacion_recibido = request.POST['operacion']
-        descripcion_recibida = request.POST['descripccion']
        
     
-    return render(request,"Mantenimiento/calendarioMant.html", {"estaEnCalendario": estaEnCalendario, "nombreCompleto":nombreCompleto, "correo":correo})
+    return render(request,"Mantenimiento/calendarioMant.html", {"estaEnCalendario": estaEnCalendario, "nombreCompleto":nombreCompleto, "correo":correo, "lista": lista})
 
 def formularioMant(request):
     estaEnFormulario = True
@@ -968,6 +993,8 @@ def formularioMant(request):
     nombreCompleto = nombre + " " + apellidos
     
     infoEquipos = Equipos.objects.all()
+    
+    
     empleadosEquipo= []
     for empleado in infoEquipos:
         idEmpleado = empleado.id_empleado_id
@@ -985,14 +1012,27 @@ def formularioMant(request):
     if request.method == "POST":
         
         equipo_recibido = request.POST['equipoProp']
-        operacion_recibido = request.POST['operacion']
+        operacion_recibido = request.POST.getlist('operacion')
         descripcion_recibida = request.POST['descripcion']
         fecha=datetime.now()
-        registro = CalendarioMantenimiento(id_equipo=Equipos.objects.get(id_equipo=equipo_recibido), operacion=operacion_recibido, fecha=fecha, observaciones=descripcion_recibida)
+        operacionCompleta= ""
+        for operacion in operacion_recibido:
+            operacionCompleta+= operacion+" " 
+            
+        registro = CalendarioMantenimiento(id_equipo=Equipos.objects.get(id_equipo=equipo_recibido), operacion=operacionCompleta, fecha=fecha, observaciones=descripcion_recibida)
         registro.save()
         
+        equipos = Equipos.objects.filter(id_equipo__icontains = equipo_recibido)
+        
+        for equipo in equipos:
+            marca = equipo.marca
+            modelo = equipo.modelo
+        
+        mantExito = True
+        mensajeMant = "Se ha agregado el mantenimineto realizado a " + marca + " " + modelo + "con propietario " + nombre + " " + apellidos
+        
         return render(request,"Mantenimiento/formularioMant.html",{"estaEnFormulario": estaEnFormulario, "nombreCompleto":nombreCompleto, "correo":correo, 
-                                                                "lista": lista})
+                                                                "lista": lista, "mantExito":mantExito, "mensajeMant":mensajeMant  })
 
     return render(request,"Mantenimiento/formularioMant.html",{"estaEnFormulario": estaEnFormulario, "nombreCompleto":nombreCompleto, "correo":correo, 
                                                                 "lista": lista})
@@ -1011,42 +1051,48 @@ def agregarCarta(request):
     apellidos = request.session['apellidos']
     correo = request.session['correoSesion']
     nombreCompleto = nombre + " " + apellidos
+    
+    equipos= Equipos.objects.all()
+    empledos=Empleados.objects.all()
+    cartas= Carta.objects.all()
+    fecha= datetime.now()
+    areas=[]
+    
+    
+    compusInactivas = Equipos.objects.filter(activo__icontains= "I")
+    
+    for empleado in empledos:
+        idarea= int(empleado.id_area_id)
+        nombreArea= Areas.objects.filter(id_area__icontains=idarea)
+        
+        for area in nombreArea:
+            nombreAreas= area.nombre
+            areas.append([nombreAreas])
+            
+    lista=zip(empledos,areas)
 
     if request.method == "POST":
         
-        compuSeleccionada = request.POST['compuSeleccionada']
+        compuS = request.POST['compuSeleccionada']
         empleSeleccionado = request.POST['empleadoSeleccionado']
+        computadora = int(compuS)
+        
+        datosEquipo = Equipos.objects.filter(id_equipo__icontains = compuS)
+        
+        compuSeleccionada = True
+    
 
-       
-
-        arregloEmpleado = empleSeleccionado.split(' ')
-        #[0] - Monica
-        #[1] - Arriaga
-        #[2] - Administracion
-
-        datosEmpleado = ["2",	"Mónica",	"Arriaga",	"Administración	", "Recursos humanos", 	"rhumanos@customco.com.mx", 	"recursosh098","A"	]
-
-        #compuSeleccionada = Laptop Lenovo ThinkPad
-
-        arreglitoCompu = compuSeleccionada.split(' ')
-        #[0] - Laptop
-        #[1] - Lenovo
-        #[2] - Pavilion 087
-
-        #hACER Consulta en tabla de equipos.
-
-        arregloDatosCompu = ["1", "Laptop", "HP", "Pavillion 087", "Negro",	"8 GB", "Intel Core i7", "Windows 10 Home 64 bits", "Blanca Gaeta",	"Sistemas",	"Funcional"	, "A"]
-
-        request.session['datosCompu'] = arregloDatosCompu
-        request.session['datosEmpleado'] = datosEmpleado
+        
 
         #Guardar datos en la tabla Carta de la base de datos
 
         estaEnAgregarCarta = True
-        return render(request, "cartaCompromiso/agregarCarta.html",{"estaEnAgregarCarta": estaEnAgregarCarta, "compuSeleccionada":compuSeleccionada, "arreglo":arregloDatosCompu, "arregloEmpl": datosEmpleado, "nombreCompleto":nombreCompleto, "correo":correo})
+        return render(request, "cartaCompromiso/agregarCarta.html",{"estaEnAgregarCarta": estaEnAgregarCarta, "compuSeleccionada":compuSeleccionada,  "nombreCompleto":nombreCompleto, "correo":correo, "arreglo":datosEquipo, 
+                                                                    "equipos":equipos, "empleados": empledos})
 
     estaEnAgregarCarta = True
-    return render(request, "cartaCompromiso/agregarCarta.html",{"estaEnAgregarCarta": estaEnAgregarCarta, "nombreCompleto":nombreCompleto, "correo":correo})
+    return render(request, "cartaCompromiso/agregarCarta.html",{"estaEnAgregarCarta": estaEnAgregarCarta, "nombreCompleto":nombreCompleto, "correo":correo, "equipos":equipos, "empleados": empledos, "lista":lista, "fecha":fecha,
+                                                                "compusInactivas": compusInactivas})
 
 def BitacorasEquipos(request):
     estaEnEquiposBitacora = True

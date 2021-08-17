@@ -166,10 +166,12 @@ Realizar carta
                                     <span class="input-group-addon">
                                         <i class="material-icons">computer</i>
                                     </span>
+                                        {% for equipo in compusInactivas %}
                                         <select class="form-control show-tick" name="compuSeleccionada">
-                                            <option value="Laptop HP Pavillion z35">Laptop HP Pavillion z35</option>
-                                            <option value="Laptop Lenovo ThinkPad">Laptop Lenovo ThinkPad</option>
+                                            <option value="{{equipo.id_equipo}}">ID: {{equipo.id_equipo}} - {{equipo.marca}} {{equipo.modelo}}</option>
+                                           
                                         </select>
+                                        {% endfor %}
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -186,10 +188,12 @@ Realizar carta
                                     <span class="input-group-addon">
                                         <i class="material-icons">person</i>
                                     </span>
+                                        {% for empleado, area in lista %}
                                         <select class="form-control show-tick" name="empleadoSeleccionado">
-                                            <option value="Mónica Arriaga Administración">Mónica Arriaga - Administración</option>
-                                            <option value="Blanca Talamantes Sistemas">Blanca Talamantes Sistemas</option>
+                                            <option value="{{empleado.id_empleado}}">{{empleado.nombre}} {{empleado.apellidos}} {{area.0}}</option>
+                                            
                                         </select>
+                                        {% endfor %}
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -203,7 +207,9 @@ Realizar carta
                     </form>
                 </div>
                 <center>
-                    <h2>Fecha: 16 de Julio del 2021</h2>
+                    
+                    <h2>{{fecha}}</h2>
+                   
                 </center>
                 {% endif %}
                 
@@ -285,7 +291,7 @@ Realizar carta
                                                     </th>
                                                 </form>
                                                     
-                                                    <th>{{arreglo.1}}</th>
+                                                    <th>{{arreglo.id_euipo}}</th>
                                                     <th>{{arreglo.2}}</th>
                                                     <th>{{arreglo.3}}</th>
                                                     <th>

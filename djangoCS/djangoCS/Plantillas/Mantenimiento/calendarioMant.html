@@ -62,6 +62,8 @@ Calendario de Mantenimineto a equipos
                                 <th>Nombre del propietario:</th>
                                 <th>Equipo:</th>
                                 <th>Limpieza</th>
+                                <th>Última limpieza:</th>
+                                <th>Realizada:</th>
                                 <th>Fecha próxima:</th>
                               
                                 
@@ -70,16 +72,19 @@ Calendario de Mantenimineto a equipos
                         
                         <tbody>
                             <tr>
-                                <td>Ana Gutierrez</td>
-                                <td>HP Pavillon 234</td>
+                                {% for fecha, equipoProp, fechaproxima in lista %}
+                                <td>{{equipoProp.0}} {{equipoProp.1}}</td>
+                                <td>{{equipoProp.2}} {{equipoProp.3}}</td>
+                                <td>{{fecha.operacion}}</td>
+                                <td>{{fecha.fecha}}</td>
                                 <td>
                                     <center>
                                     <input type="checkbox" id="md_checkbox_1" class="filled-in chk-col-cyan" checked />
                                     <label for="md_checkbox_1"></label>
                                     </center>
                                 </td>
-                                <td> <label class="label bg-green"></label> </td>
-                                
+                                <td>{{fechaproxima}}</td>
+                                {% endfor %}
                                 
                             </tr>
                      
@@ -93,6 +98,7 @@ Calendario de Mantenimineto a equipos
         </div>
     </div>
 </div>
+
 {% endblock %}
 
 {% block estilosJs %}
