@@ -196,8 +196,6 @@
                                                 <th>Memoria RAM</th>
                                                 <th>Procesador</th>
                                                 <th>Sistema Operativo</th>
-                                                <th>Propietario</th>
-                                                <th>Área</th>
                                                 <th>Estado</th>
                                                 <th>Activo</th>
                                                 
@@ -216,42 +214,29 @@
                                                 <th>Memoria RAM</th>
                                                 <th>Procesador</th>
                                                 <th>Sistema Operativo</th>
-                                                <th>Propietario</th>
-                                                <th>Área</th>
                                                 <th>Estado</th>
                                                 <th>Activo</th>
-                                                
                                             </tr>
                                         </tfoot>
                                         <tbody>
                                             <tr>
-                                                <form action="/DescargarPDF/" method="POST">{% csrf_token %}
-                                                    <th>
-                                                        <input type="text" style="border: none; background: none;"name="idEquipo" value="{{arreglo.0}}" readonly size="1">
-                                                        
-                                                        
-                                                    </th>
-                                                </form>
-                                                    
-                                                    <th>{{arreglo.1}}</th>
-                                                    <th>{{arreglo.2}}</th>
-                                                    <th>{{arreglo.3}}</th>
+                                                {% for dato in datosEquipo %}
+                                                    <th>{{dato.id_equipo}}</th>
+                                                    <th>{{dato.tipo}}</th>
+                                                    <th>{{dato.marca}}</th>
+                                                    <th>{{dato.modelo}}</th>
+                                                    <th>{{dato.color}}</th>
                                                     <th>
                                                         <center>
-                                                            <img src="{% static 'images/laptophpP.jpg' %}" width="60%" alt="lap">
+                                                            <img src="{{dato.imagen.url}}" width="60%" alt="lap">
                                                         </center>
                                                     </th>
-                                                    <th>{{arreglo.4}}</th>
-                                                    <th>{{arreglo.5}}</th>
-                                                    <th>{{arreglo.6}}</th>
-                                                    <th>{{arreglo.7}}</th>
-                                                    <th>{{arreglo.8}}</th>
-                                                    <th>{{arreglo.9}}</th>
-                                                    <th>{{arreglo.10}}</th>
-                                                    <th>{{arreglo.11}}</th>
-                                                
-                                                
-                                                
+                                                    <th>{{dato.memoriaram}}</th>
+                                                    <th>{{dato.procesador}}</th>
+                                                    <th>{{dato.sistemaoperativo}}</th>
+                                                    <th>{{dato.estado}}</th>
+                                                    <th>{{dato.activo}}</th>
+                                                {% endfor %}
                                             </tr>
                                             
                                             
@@ -324,14 +309,15 @@
                                         </tfoot>
                                         <tbody>
                                             <tr>
-                                                <td>{{arregloEmpl.0}}</td>
-                                                <td>{{arregloEmpl.1}}</td>
-                                                <td>{{arregloEmpl.2}}</td>
-                                                <td>{{arregloEmpl.3}}</td>
-                                                <td>{{arregloEmpl.4}}</td>
-                                                <td>{{arregloEmpl.5}}</td>
-                                                <td>{{arregloEmpl.7}}</td>
-                                                
+                                                {% for dato in datosEmpleado %}
+                                                <td>{{dato.id_empleado}}</td>
+                                                <td>{{dato.nombre}}</td>
+                                                <td>{{dato.apellidos}}</td>
+                                                <td><span class="{{color}}">{{nombre}}</span></td>
+                                                <td>{{dato.puesto}}</td>
+                                                <td>{{dato.correo}}</td>
+                                                <td>{{dato.activo}}</td>
+                                                {% endfor %}
                                                 
                                             </tr>
                                       
@@ -345,8 +331,14 @@
                     </div>
                 </div>
                 <center>
-                    <h2>Fecha: 16 de Julio del 2021</h2>
-                    <img src="{% static 'images/qr2.jpeg' %}" width="10%" alt="qr">
+                    <h2>Fecha: {{fecha}}</h2>
+                    <img src="{% static 'images/qr3.png' %}" width="10%" alt="qr">
+                    {% if imagen2 %}
+                    <img src="{{imagen.url}}" alt="firma">
+
+                    
+                    {% else %}
+
                     <h2>Ingresar Firma Electrónica</h2>
                     
                         <label for=""></label>
@@ -397,11 +389,19 @@
                         <br><br>
                         <form action="/guardarImagen/" method="POST" id="form1">{% csrf_token %}
                             <input type="hidden" name="canvasData" id="my_hidden">
+                            {% for equipo in datosEquipo %}
+                            <input type="hidden" name="idEquipo"  value="{{equipo.id_equipo}}">
+                            {% endfor %}
+                            {% for empleados in datosEmpleado %}
+                            <input type="hidden" name="idEmpleado" value="{{empleados.id_empleado}}">
+                            {% endfor %}
                             <button type="submit" class="btn btn-success m-t-15 waves-effect" onclick="save()"><i class="material-icons">save</i> Guardar</button>
         
         
                         </form>
                     </div>
+                    {% endif %}
+                    
                     
                 </center>
                 
@@ -411,6 +411,20 @@
         </div>
     </div>
 </div>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    {% if imagen2 %}
+    <script type="text/javascript">
+        swal({
+            icon: 'success',
+            title: 'Wuu..!',
+            text: ' Firma Guardada con éxito!',
+            footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
+            width: '40%'
+        });
+    </script>
+    {% endif %}
+    
 <script>
    function save(){
         var canvas=document.getElementById('draw-canvas');

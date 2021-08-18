@@ -48,6 +48,7 @@ class Carta (models.Model):
     id_equipo=models.ForeignKey(Equipos, on_delete=models.CASCADE)
     fecha=models.DateField()
     firma=models.ImageField(upload_to="firmas", null = True)
+    
 
 
 class Impresoras (models.Model):

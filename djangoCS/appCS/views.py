@@ -7,7 +7,7 @@ from django.shortcuts import redirect
 from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora
 import base64
 from django.core.files.base import ContentFile
-from datetime import datetime
+from datetime import date, datetime
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 
@@ -1043,7 +1043,35 @@ def verCarta(request):
     apellidos = request.session['apellidos']
     correo = request.session['correoSesion']
     nombreCompleto = nombre + " " + apellidos
-    return render(request,"cartaCompromiso/verCarta.html", {"estaEnVerCarta": estaEnVerCarta, "nombreCompleto":nombreCompleto, "correo":correo})
+    
+    datosRegistro = Carta.objects.all()
+    
+    empleados=[]
+    equipos=[]
+    
+    for registros in datosRegistro:
+        empleado= registros.id_empleado_id
+        equipo = registros.id_equipo_id
+        
+        datosEmpleado = Empleados.objects.filter(id_empleado=empleado)
+        for datos in datosEmpleado:
+            nombres= datos.nombre
+            apellido= datos.apellidos
+            
+        datosEquipos =Equipos.objects.filter(id_equipo=equipo)
+        for datos in datosEquipos:
+            marca=datos.marca
+            modelo=datos.modelo
+            
+        empleados.append([nombres,apellido])
+        equipos.append([marca, modelo])
+    
+    lista=zip(datosRegistro,empleados,equipos)
+    
+    
+    
+    
+    return render(request,"cartaCompromiso/verCarta.html", {"estaEnVerCarta": estaEnVerCarta, "nombreCompleto":nombreCompleto, "correo":correo, "lista":lista})
 
 def agregarCarta(request):
     
@@ -1075,20 +1103,46 @@ def agregarCarta(request):
         
         compuS = request.POST['compuSeleccionada']
         empleSeleccionado = request.POST['empleadoSeleccionado']
+        fechita = datetime.now()
+        
+        
         computadora = int(compuS)
+        empleado = int(empleSeleccionado)
+        preregistro = Carta(id_empleado = Empleados.objects.get(id_empleado = empleado), id_equipo = Equipos.objects.get(id_equipo = computadora), fecha = fechita)
+        preregistro.save()
         
+        actualizar_equipo = Equipos.objects.filter(id_equipo = compuS).update(id_empleado = Empleados.objects.get(id_empleado = empleSeleccionado),activo = "A")
+        
+        #crear variables de sesión.
+        
+        fecha= datetime.now()
         datosEquipo = Equipos.objects.filter(id_equipo__icontains = compuS)
+      
+        compuSeleccionada = True 
+        empleadoDatos = Empleados.objects.filter(id_empleado__icontains=empleSeleccionado)
         
-        compuSeleccionada = True
+        for empleados in empleadoDatos:
+            idArea= empleados.id_area_id
+            
+        datosArea = Areas.objects.filter(id_area=idArea)
+        
+        for area in datosArea:
+            areaNombre= area.nombre
+            color= area.color
+            
+      
+        
     
 
         
 
         #Guardar datos en la tabla Carta de la base de datos
 
+       
         estaEnAgregarCarta = True
-        return render(request, "cartaCompromiso/agregarCarta.html",{"estaEnAgregarCarta": estaEnAgregarCarta, "compuSeleccionada":compuSeleccionada,  "nombreCompleto":nombreCompleto, "correo":correo, "arreglo":datosEquipo, 
-                                                                    "equipos":equipos, "empleados": empledos})
+        return render(request, "cartaCompromiso/agregarCarta.html",{"estaEnAgregarCarta": estaEnAgregarCarta, "nombreCompleto":nombreCompleto, "correo":correo, "equipos":equipos, "empleados": empledos, "lista":lista, "fecha":fecha,
+                                                                "compusInactivas": compusInactivas, "compuSeleccionada":compuSeleccionada, "datosEquipo":datosEquipo, "empleadoDatos": empleadoDatos, "areaNombre": areaNombre, "color":color,
+                                                                "fecha": fecha})
 
     estaEnAgregarCarta = True
     return render(request, "cartaCompromiso/agregarCarta.html",{"estaEnAgregarCarta": estaEnAgregarCarta, "nombreCompleto":nombreCompleto, "correo":correo, "equipos":equipos, "empleados": empledos, "lista":lista, "fecha":fecha,
@@ -1185,10 +1239,30 @@ def guardarImagen(request):
 
     if request.method == "POST":
         
+        idEquipo= request.POST['idEquipo']
+        idEmpleado= request.POST['idEmpleado']
+        fecha=datetime.now()
+        
         canvasLargo = request.POST['canvasData']
         format, imgstr = canvasLargo.split(';base64,')
         ext = format.split('/')[-1]
-        archivo = ContentFile(base64.b64decode(imgstr), name= 'canvas.' + ext)
+        archivo = ContentFile(base64.b64decode(imgstr), name= idEmpleado+ '.' + ext)
+        
+        numeroFirmas = Carta.objects.count() #1
+        
+        registroFirma = Carta.objects.get(id_carta=numeroFirmas)
+        registroFirma.firma = archivo
+        registroFirma.save()
+        
+        #preregistro = Carta(id_empleado = Empleados.objects.get(id_empleado = idEmpleado), id_equipo = Equipos.objects.get(id_equipo = idEquipo), fecha = fecha, firma = archivo)
+        #preregistro.save()
+        
+        imagenGuardada = True
+        request.session['imagenGuardada'] = imagenGuardada
+        #acutalizacion = Equipos.objects.filter(id_equipo = idEquipo).update(id_empleado = Empleados.objects.get(id_empleado = idEmpleado), activo = "A")
+        
+        
+        return redirect('/firmarCarta/')
 
     return render(request, "cartaCompromiso/agregarCarta.html",{"estaEnAgregarCarta": estaEnAgregarCarta})
 
@@ -1702,17 +1776,70 @@ def editarImpresora(request):
         return render(request,"Editar/editarImpresora.html", {"impresoraAEditar":datos_impresora, "nombreCompleto":nombreCompleto, "correo":correo, "nombreArea":nombreArea, "areasNuevas":areasNuevas})
 
 def firmarCarta(request):
+    
+    if "imagenGuardada" in request.session:
+        
+        numeroFirmas = Carta.objects.count() #1
+        
+        registroFirma = Carta.objects.get(id_carta=numeroFirmas)
+        
+        
+        idEquipo = registroFirma.id_equipo_id
+        idEmpleado = registroFirma.id_empleado_id
+        imagen = registroFirma.firma
+        imagen2 = True
+        
+        fecha=datetime.now()
+            
+            
+        datosEquipo = Equipos.objects.filter(id_equipo = idEquipo)
+        datosEmpleado = Empleados.objects.filter(id_empleado = idEmpleado)
+            
+        for dato in datosEmpleado:
+            idArea = dato.id_area_id
+                
+        datos_area = Areas.objects.filter(id_area = idArea)
+            
+        for datoArea in datos_area:
+            nombre = datoArea.nombre
+            color = datoArea.color
+        
+        
 
-    #Hacer consulta al ultimo registro de la tabla de cartas, para ver la ultima carta preguardada.
-    datosCarta = ["1", "2", "1", "23/07/2021"]
-    idEmpleado = datosCarta[1] # id 2 que corresponde a monica
-    idEquipo = datosCarta[2] # id 1 que corresponde a laptop hp
+            #Hacer consulta al ultimo registro de la tabla de cartas, para ver la ultima carta preguardada.
+        
+        del request.session["imagenGuardada"]
+        return render(request, "cartaCompromiso/firmarCarta.html", {"datosEquipo":datosEquipo, "datosEmpleado":datosEmpleado, "nombre":nombre, "color":color, "fecha":fecha, "imagen":imagen, "imagen2":imagen2}) 
+    
+    else: 
+        
+        numeroFirmas = Carta.objects.count() #1
+            
+        registroFirma = Carta.objects.get(id_carta=numeroFirmas)
+        
+        
+        idEquipo = registroFirma.id_equipo_id
+        idEmpleado = registroFirma.id_empleado_id
+        
+        fecha=datetime.now()
+            
+            
+        datosEquipo = Equipos.objects.filter(id_equipo = idEquipo)
+        datosEmpleado = Empleados.objects.filter(id_empleado = idEmpleado)
+            
+        for dato in datosEmpleado:
+            idArea = dato.id_area_id
+                
+        datos_area = Areas.objects.filter(id_area = idArea)
+            
+        for datoArea in datos_area:
+            nombre = datoArea.nombre
+            color = datoArea.color
+        
 
-    #Consulta a la tabla de empleado.
-    datosEmpleado = ["2",	"Mónica",	"Arriaga",	"Administración	", "Recursos humanos", 	"rhumanos@customco.com.mx", 	"recursosh098","A"	]
-    #Consulta a la tabla equipo
-    arregloDatosCompu = ["1", "Laptop", "HP", "Pavillion 087", "Negro",	"8 GB", "Intel Core i7", "Windows 10 Home 64 bits", "Blanca Gaeta",	"Sistemas",	"Funcional"	, "A"]
+            #Hacer consulta al ultimo registro de la tabla de cartas, para ver la ultima carta preguardada.
+        
 
-    return render(request, "cartaCompromiso/firmarCarta.html", { "arreglo":arregloDatosCompu, "arregloEmpl": datosEmpleado}) 
+        return render(request, "cartaCompromiso/firmarCarta.html", {"datosEquipo":datosEquipo, "datosEmpleado":datosEmpleado, "nombre":nombre, "color":color, "fecha":fecha}) 
 
     

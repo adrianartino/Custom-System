@@ -227,6 +227,7 @@ Realizar carta
                                 <h2>
                                     CARACTERÍSTICAS DE EQUIPO
                                 </h2>
+                                <h1>{{n}}</h1>
                                 <ul class="header-dropdown m-r--5">
                                     <li class="dropdown">
                                         <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -254,8 +255,6 @@ Realizar carta
                                                 <th>Memoria RAM</th>
                                                 <th>Procesador</th>
                                                 <th>Sistema Operativo</th>
-                                                <th>Propietario</th>
-                                                <th>Área</th>
                                                 <th>Estado</th>
                                                 <th>Activo</th>
                                                 
@@ -274,8 +273,6 @@ Realizar carta
                                                 <th>Memoria RAM</th>
                                                 <th>Procesador</th>
                                                 <th>Sistema Operativo</th>
-                                                <th>Propietario</th>
-                                                <th>Área</th>
                                                 <th>Estado</th>
                                                 <th>Activo</th>
                                                 
@@ -283,31 +280,24 @@ Realizar carta
                                         </tfoot>
                                         <tbody>
                                             <tr>
-                                                <form action="/DescargarPDF/" method="POST">{% csrf_token %}
-                                                    <th>
-                                                        <input type="text" style="border: none; background: none;"name="idEquipo" value="{{arreglo.0}}" readonly size="1">
-                                                        
-                                                        
-                                                    </th>
-                                                </form>
-                                                    
-                                                    <th>{{arreglo.id_euipo}}</th>
-                                                    <th>{{arreglo.2}}</th>
-                                                    <th>{{arreglo.3}}</th>
+                                               
+                                                    {% for equipo in datosEquipo %}
+                                                    <th>{{equipo.id_equipo}}</th>
+                                                    <th>{{equipo.tipo}}</th>
+                                                    <th>{{equipo.marca}}</th>
+                                                    <th>{{equipo.modelo}}</th>
+                                                    <th>{{equipo.color}}</th>
                                                     <th>
                                                         <center>
-                                                            <img src="{% static 'images/laptophpP.jpg' %}" width="60%" alt="lap">
+                                                            <img src="{{equipo.imagen.url}}" width="60%" alt="lap">
                                                         </center>
                                                     </th>
-                                                    <th>{{arreglo.4}}</th>
-                                                    <th>{{arreglo.5}}</th>
-                                                    <th>{{arreglo.6}}</th>
-                                                    <th>{{arreglo.7}}</th>
-                                                    <th>{{arreglo.8}}</th>
-                                                    <th>{{arreglo.9}}</th>
-                                                    <th>{{arreglo.10}}</th>
-                                                    <th>{{arreglo.11}}</th>
-                                                
+                                                    <th>{{equipo.memoriaram}}</th>
+                                                    <th>{{equipo.procesador}}</th>
+                                                    <th>{{equipo.sistemaoperativo}}</th>
+                                                    <th>{{equipo.estado}}</th>
+                                                    <th>{{equipo.activo}}</th>
+                                                    {% endfor %}
                                                 
                                                 
                                             </tr>
@@ -382,13 +372,15 @@ Realizar carta
                                         </tfoot>
                                         <tbody>
                                             <tr>
-                                                <td>{{arregloEmpl.0}}</td>
-                                                <td>{{arregloEmpl.1}}</td>
-                                                <td>{{arregloEmpl.2}}</td>
-                                                <td>{{arregloEmpl.3}}</td>
-                                                <td>{{arregloEmpl.4}}</td>
-                                                <td>{{arregloEmpl.5}}</td>
-                                                <td>{{arregloEmpl.7}}</td>
+                                                {% for empleados in empleadoDatos%}
+                                                <td>{{empleados.id_empleado}}</td>
+                                                <td>{{empleados.nombre}}</td>
+                                                <td>{{empleados.apellidos}}</td>
+                                                <td><span class="{{color}}">{{areaNombre}}</span></td>
+                                                <td>{{empleados.puesto}}</td>
+                                                <td>{{empleados.correo}}</td>
+                                                <td>{{empleados.activo}}</td>
+                                                {% endfor %}
                                                 
                                                 
                                             </tr>
@@ -403,7 +395,7 @@ Realizar carta
                     </div>
                 </div>
                 <center>
-                    <h2>Fecha: 16 de Julio del 2021</h2>
+                    <h2>{{fecha}}</h2>
                     <h2>Ingresar Firma Electrónica</h2>
                     <div style="width: 550px;
                     height: 350px;
@@ -419,6 +411,12 @@ Realizar carta
                         <button type="submit" class="btn btn-warning m-t-15 waves-effect" onclick="limpiar()"><i class="material-icons">delete_sweep</i> Limpiar</button>
                         <br><br>
                         <form action="/guardarImagen/" method="POST" id="form1">{% csrf_token %}
+                            {% for equipo in datosEquipo %}
+                            <input type="hidden" name="idEquipo"  value="{{equipo.id_equipo}}">
+                            {% endfor %}
+                            {% for empleados in empleadoDatos%}
+                            <input type="hidden" name="idEmpleado" value="{{empleados.id_empleado}}">
+                            {% endfor %}
                             <input type="hidden" name="canvasData" id="my_hidden">
                             <button type="submit" class="btn btn-success m-t-15 waves-effect" onclick="save()"><i class="material-icons">save</i> Guardar</button>
         
@@ -427,8 +425,12 @@ Realizar carta
                     </div>
                     <br>
                     <form action="/firmarCarta/" method="POST">{% csrf_token %}
-                        <input type="hidden" name="idEquipo" value="{{arreglo.1}}">
-                        <input type="hidden" name="idEmpleado" value="{{arregloEmpl.0}}">
+                        {% for equipo in datosEquipo %}
+                        <input type="hidden" name="idEquipo"  value="{{equipo.id_equipo}}">
+                        {% endfor %}
+                        {% for empleados in empleadoDatos%}
+                        <input type="hidden" name="idEmpleado" value="{{empleados.id_empleado}}">
+                        {% endfor %}
                         <button type="submit" class="btn bg-red waves-effect"><i class="material-icons">blur_on</i> QR</button>
                     </form> 
 

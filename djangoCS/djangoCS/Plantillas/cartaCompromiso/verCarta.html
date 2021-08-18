@@ -78,19 +78,20 @@ Ver carta
                             </tr>
                         </tfoot>
                         <tbody>
+                            {% for registros, empleados, equipos in lista %}
                             <tr>
                  
-                                <td>Blanca Yesenia</td>
-                                <td> Lenovo ThinkPad</td>
-                                <td>16-07-2021.</td>
+                                <td>{{empleados.0}} {{empleados.1}}</td>
+                                <td>{{equipos.0}} {{equipos.1}}</td>
+                                <td>{{registros.fecha}}</td>
                                 <td>
                                     <center>
-                                        <img src="{% static 'images/laptophpP.jpg' %}" width="60%" alt="lap">
+                                        <img src="{{registros.firma.url}}" width="75%" alt="lap">
                                     </center>
                                 </td>
                                 <form action="/verCartaCompleta/" method="POST">{% csrf_token %}
                                     <th>
-                                        <input type="hidden" name="idEmpleadoEditar" value="1">
+                                        <input type="hidden" name="idEmpleadoEditar" value="{{registros.id_carta}}">
                                         <center>
                                             <button type="submit" class="btn bg-deep-purple waves-effect"> <i class="material-icons">visibility</i></button>
                                         </center>
@@ -99,6 +100,7 @@ Ver carta
                                 </form>
                                 
                             </tr>
+                            {% endfor %}
                         
                      
                             
