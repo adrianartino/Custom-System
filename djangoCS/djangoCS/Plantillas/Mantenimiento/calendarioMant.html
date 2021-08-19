@@ -61,9 +61,9 @@ Calendario de Mantenimineto a equipos
                             <tr>
                                 <th>Nombre del propietario:</th>
                                 <th>Equipo:</th>
-                                <th>Limpieza</th>
+                                <th>Operación</th>
+                                <th>Observaciones</th>
                                 <th>Última limpieza:</th>
-                                <th>Realizada:</th>
                                 <th>Fecha próxima:</th>
                               
                                 
@@ -71,22 +71,19 @@ Calendario de Mantenimineto a equipos
                         </thead>
                         
                         <tbody>
+                            {% for fecha, equipoProp, fechaproxima in lista %}
                             <tr>
-                                {% for fecha, equipoProp, fechaproxima in lista %}
+                                
                                 <td>{{equipoProp.0}} {{equipoProp.1}}</td>
                                 <td>{{equipoProp.2}} {{equipoProp.3}}</td>
                                 <td>{{fecha.operacion}}</td>
+                                <td>{{fecha.observaciones}}</td>
                                 <td>{{fecha.fecha}}</td>
-                                <td>
-                                    <center>
-                                    <input type="checkbox" id="md_checkbox_1" class="filled-in chk-col-cyan" checked />
-                                    <label for="md_checkbox_1"></label>
-                                    </center>
-                                </td>
-                                <td>{{fechaproxima}}</td>
-                                {% endfor %}
-                                
+                                {% if "Limpieza externa" in fecha.operacion or "Limpieza interna" in fecha.operacion %}
+                                    <td>{{fechaproxima}}</td>
+                                {% endif %}
                             </tr>
+                            {% endfor %}
                      
                      
                             

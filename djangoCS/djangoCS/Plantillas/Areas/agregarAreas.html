@@ -41,7 +41,7 @@ Agregar Areas
         <div class="card">
             <div class="header">
                 <h2>
-                    AGREGAR NUEVA ÁREA
+                    AGREGAR NUEVO DEPARTAMENTO
                     <small>Custom-System</small>
                 </h2>
                 <ul class="header-dropdown m-r--5">
@@ -61,14 +61,14 @@ Agregar Areas
                 <form id="form_validation" action= "/agregarAreas/" method="POST">{% csrf_token %}
 
                     <div class="form-group form-float">
-                        <label for="email_address">Nombre de área</label>
+                        <label for="email_address">Nombre del departamento</label>
                         <div class="input-group">
                             <span class="input-group-addon">
                                 <i class="material-icons">work</i>
                             </span>
                             <div class="form-line">
                                 <input onkeypress='return soloLetras(event)' type="text" name="area" class="form-control date" placeholder="Ingresar nombre de área" 
-                                pattern="[A-Za-z ]{3,80}" title="No se permiten caracteres especiales." required>
+                                title="No se permiten caracteres especiales." required>
                             </div>
                         </div>
                     </div>

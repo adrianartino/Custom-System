@@ -108,7 +108,65 @@ def inicio(request):
 
         #So no es la primera vez que inicia sesión
         nombreCompleto = nombre + " " + apellidos #Blanca Yesenia Gaeta Talamantes
-        return render(request, "Inicio/inicio.html", {"estaEnInicio":estaEnInicio, "nombreCompleto":nombreCompleto, "correo":correo})
+        limpiezas = CalendarioMantenimiento.objects.count()
+        equipos = Equipos.objects.count()
+        impresoras = Impresoras.objects.count()
+        empleados = Empleados.objects.count()
+        
+        cantidades = []
+        cantidades.append([limpiezas, equipos, impresoras, empleados])
+        
+        limpiezas = CalendarioMantenimiento.objects.all()
+        
+        datosLimpiezas = []
+        for limpieza in limpiezas:
+            if limpieza.operacion == "Limpieza externa - Limpieza interna - ":
+                id_equipo = limpieza.id_equipo_id
+                
+                intEquipo = int(id_equipo)
+                datosEquipo = Equipos.objects.filter(id_equipo = intEquipo)
+                
+                for datoEquipo in datosEquipo:
+                    id_empleado = datoEquipo.id_empleado_id
+                    id_equipo = datoEquipo.id_equipo
+                    tipo = datoEquipo.tipo
+                    marca = datoEquipo.marca
+                    modelo = datoEquipo.modelo
+                    
+                    intEmpleado = int(id_empleado)
+                    datosEmpleado = Empleados.objects.filter(id_empleado = intEmpleado)
+                    
+                    for datoEmpleado in datosEmpleado:
+                        nombree = datoEmpleado.nombre
+                        apellidose = datoEmpleado.apellidos
+                fecha = limpieza.fecha   
+                datosLimpiezas.append([nombree,apellidose,tipo,marca,modelo, fecha])
+                
+        cartuchos = Cartuchos.objects.all()
+        
+        impresoras = []
+        
+        for cartucho in cartuchos:
+            id_impresora = cartucho.id_impresora_id
+            
+            info_impresora = Impresoras.objects.filter(id_impresora = id_impresora)
+            
+            for dato in info_impresora:
+                marca = dato.marca
+                modelo = dato.modelo
+                nombreCompleto = marca + " " + modelo
+                
+            impresoras.append(nombreCompleto)
+            
+        lista = zip(cartuchos, impresoras)
+                        
+                
+                
+                
+        
+        
+        return render(request, "Inicio/inicio.html", {"estaEnInicio":estaEnInicio, "nombreCompleto":nombreCompleto, "correo":correo, "cantidades":cantidades, "datosLimpiezas":datosLimpiezas, 
+                                                      "lista":lista})
     
     #Si le da al inicio y no hay una sesión iniciada..
     else:
@@ -124,8 +182,24 @@ def verAreas(request):
     nombreCompleto = nombre + " " + apellidos
     
     infoAreas = Areas.objects.all()
+    
+    cantidad_empleados = []
+    
+    for area in infoAreas:
+        id_area_una = area.id_area
+        areaInt = int(id_area_una)
+        
+        empleadosEnArea = Empleados.objects.filter(id_area_id__id_area__icontains = areaInt)
+        
+        numero_empleados = 0
+        for empleado in empleadosEnArea:
+            numero_empleados+=1
+        
+        cantidad_empleados.append(numero_empleados)
+        
+    listaAreas = zip(infoAreas, cantidad_empleados)
 
-    return render(request, "Areas/verAreas.html", {"estaEnVerAreas":estaEnVerAreas, "nombreCompleto":nombreCompleto, "correo":correo, "listaAreas": infoAreas})
+    return render(request, "Areas/verAreas.html", {"estaEnVerAreas":estaEnVerAreas, "nombreCompleto":nombreCompleto, "correo":correo, "listaAreas":listaAreas})
 
 def agregarAreas(request):
 
@@ -186,7 +260,7 @@ def agregarAreas(request):
         areaExiste = Areas.objects.filter(nombre__icontains= area)
         if areaExiste:
             errorExiste= True
-            mensajeError = "El área " + area + " ya existe en la base de datos"
+            mensajeError = "El departamento " + area + " ya existe en la base de datos"
             return render(request,"Areas/agregarAreas.html", {"estaEnAgregarAreas": estaEnAgregarAreas, "arregloColores":colores, "nombresColores":nombresColores,
             "infoAreas":infoAreas, "colorExiste": coloresSi, "colorInexistente": coloresNo, "nombreCompleto":nombreCompleto, "correo":correo, "error": errorExiste,
             "mensaje": mensajeError})
@@ -195,7 +269,7 @@ def agregarAreas(request):
             registro = Areas(nombre=area, color=color)
             registro.save()
             guardadoExito = True
-            mensajeExito = "El área " + area + " fue agregado exitosamente"
+            mensajeExito = "El departamento " + area + " fue agregado exitosamente"
             return render(request,"Areas/agregarAreas.html", {"estaEnAgregarAreas": estaEnAgregarAreas, "arregloColores":colores, "nombresColores":nombresColores,
             "infoAreas":infoAreas, "colorExiste": coloresSi, "colorInexistente": coloresNo, "nombreCompleto":nombreCompleto, "correo":correo, "guardado": guardadoExito,
             "mensaje": mensajeExito})
@@ -1017,7 +1091,33 @@ def formularioMant(request):
         fecha=datetime.now()
         operacionCompleta= ""
         for operacion in operacion_recibido:
-            operacionCompleta+= operacion+" " 
+            operacionCompleta+= operacion+" - "
+            if operacion == "Limpieza externa" or operacion == "Limpieza interna":
+                
+                limpiezaEquipoExiste = CalendarioMantenimiento.objects.filter(id_equipo = equipo_recibido)
+                
+                if limpiezaEquipoExiste:
+                    operacionEquipoExistente = CalendarioMantenimiento.objects.filter(id_equipo = equipo_recibido)
+                    
+                    for dato in operacionEquipoExistente:
+                        operacion = dato.operacion
+                    
+                    operaciones = operacion.split(" - ")
+                    
+                    for operacion in operaciones:
+                        if operacion == "Limpieza externa" or operacion == "Limpieza interna":
+                            actualizacion = CalendarioMantenimiento.objects.filter(id_equipo =  equipo_recibido, operacion = "Limpieza externa - Limpieza Interna - ").update(fecha=fecha, observaciones=descripcion_recibida)
+                            equipos = Equipos.objects.filter(id_equipo__icontains = equipo_recibido)
+        
+                        for equipo in equipos:
+                            marca = equipo.marca
+                            modelo = equipo.modelo
+                        
+                        mantExito = True
+                        mensajeMant = "Se ha agregado el mantenimineto realizado a " + marca + " " + modelo + "con propietario " + nombre + " " + apellidos
+                        
+                        return render(request,"Mantenimiento/formularioMant.html",{"estaEnFormulario": estaEnFormulario, "nombreCompleto":nombreCompleto, "correo":correo, 
+                                                                                "lista": lista, "mantExito":mantExito, "mensajeMant":mensajeMant  })
             
         registro = CalendarioMantenimiento(id_equipo=Equipos.objects.get(id_equipo=equipo_recibido), operacion=operacionCompleta, fecha=fecha, observaciones=descripcion_recibida)
         registro.save()

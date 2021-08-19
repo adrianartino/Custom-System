@@ -39,7 +39,7 @@ Ver Areas
         <div class="card">
             <div class="header">
                 <h2>
-                    AREAS DE TRABAJO EM CUSTOM & CO
+                    DEPARTAMENTOS CUSTOM & CO
                 </h2>
                 <ul class="header-dropdown m-r--5">
                     <li class="dropdown">
@@ -59,24 +59,27 @@ Ver Areas
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                         <thead>
                             <tr>
-                                <th>ID Área</th>
+                                <th>ID Departamento</th>
                                 <th>Nombre</th>
                                 <th>Color</th>
+                                <th>Número de Empleados</th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
-                                <th>ID Área</th>
+                                <th>ID Departamento</th>
                                 <th>Nombre</th>
                                 <th>Color</th>
+                                <th>Número de Empleados</th>
                             </tr>
                         </tfoot>
                         <tbody>
-                            {% for area in listaAreas %}
+                            {% for area, empleado in listaAreas %}
                             <tr>
                                 <td>{{area.id_area}}</td>
                                 <td>{{area.nombre}}</td>
                                 <td><span class="{{area.color}}">{{area.color}}</span></td>
+                                <td>{{empleado}} Empleados</td>
                             </tr>
                             {% endfor %}
                             

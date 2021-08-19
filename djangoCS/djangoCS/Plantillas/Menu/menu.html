@@ -61,9 +61,11 @@
             <div class="navbar-header">
                 <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
                 <a href="javascript:void(0);" class="bars"></a>
+                <img class="navbar-brand" src={% static 'images/rayocustom.png' %}  alt="User" />
                 <a class="navbar-brand" href="index.html"><span class="login100-form-title-1" style="font-family: 'Tourney', cursive; font-size: 30px;">
                     Custom System
                 </span></a>
+                
             </div>
             <div class="collapse navbar-collapse" id="navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
@@ -186,11 +188,11 @@
                         <a href="javascript:void(0);" class="menu-toggle">
                             {% if estaEnVerAreas %}
                             <i class="material-icons" style="color: #00917C;!important">work</i>
-                            <span style="color: #00917C;!important">Áreas</span>
+                            <span style="color: #00917C;!important">Departamentos</span>
                             {% else %}
                             {% if estaEnAgregarAreas %}
                             <i class="material-icons" style="color: #00917C;!important">work</i>
-                            <span style="color: #00917C;!important">Áreas</span>
+                            <span style="color: #00917C;!important">Departamentos</span>
                             {% else %}
                             <i class="material-icons" >work</i>
                             <span >Áreas</span>
@@ -204,9 +206,9 @@
                             <li>
                             {% endif %}
                                 {% if estaEnVerAreas %}
-                                <a  href="/verAreas/" style="color: #E40017;!important">Ver áreas</a>
+                                <a  href="/verAreas/" style="color: #E40017;!important">Ver departamentos</a>
                                 {% else %}
-                                <a  href="/verAreas/">Ver áreas</a>
+                                <a  href="/verAreas/">Ver departamentos</a>
                                 {% endif %}
                                 
                             </li>
@@ -216,9 +218,9 @@
                             <li>
                             {% endif %}
                                 {% if estaEnAgregarAreas %}
-                                <a href="/agregarAreas/" style="color: #E40017;!important">Ágregar áreas</a>
+                                <a href="/agregarAreas/" style="color: #E40017;!important">Agregar departamento</a>
                                 {% else %}
-                                <a href="/agregarAreas/">Ágregar áreas</a>
+                                <a href="/agregarAreas/">Agregar departamento</a>
                                 {% endif %}
                             </li>
                             
