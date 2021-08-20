@@ -401,73 +401,52 @@ def verEquipos(request):
   
     
     for equipos in equiposActivos:
+            
         empleadosEnActivos.append(equipos.id_empleado_id)
+        
      
         #areasEnActivos = ["1"]
         
     for id in empleadosEnActivos:
-        datosEmpleado = Empleados.objects.filter(id_empleado__icontains = id) #["1", "Sistemas", "rojo"]
+        if id == None:
+            datosAreasEnActivos.append(["", "", "", ""])
+            
+        elif id != None:
+            datosEmpleado = Empleados.objects.filter(id_empleado__icontains = id) #["1", "Sistemas", "rojo"]
+            
+            if datosEmpleado:
+                for dato in datosEmpleado:
+                    nombreEmpleado = dato.nombre
+                    apellidosEmpleado = dato.apellidos
+                    areaEmpleado = dato.id_area_id
+                    datosArea = Areas.objects.filter(id_area__icontains=areaEmpleado)
+                    
+                    if datosArea:
+                        for dato in datosArea:
+                            nombreArea = dato.nombre
+                            color = dato.color
         
-        if datosEmpleado:
-            for dato in datosEmpleado:
-                nombreEmpleado = dato.nombre
-                apellidosEmpleado = dato.apellidos
-                areaEmpleado = dato.id_area_id
-                datosArea = Areas.objects.filter(id_area__icontains=areaEmpleado)
-                
-                if datosArea:
-                    for dato in datosArea:
-                        nombreArea = dato.nombre
-                        color = dato.color
-        
-        datosAreasEnActivos.append([nombreEmpleado, apellidosEmpleado, nombreArea, color])
+            datosAreasEnActivos.append([nombreEmpleado, apellidosEmpleado, nombreArea, color])
         
     lista = zip(equiposActivos, datosAreasEnActivos)
     
-         #empleados InActvos
-    empleadosEnInactivos = []
-    datosAreasEnInactivos = []
     
-    
-    for equipos in equiposInactivos:
-        empleadosEnInactivos.append(equipos.id_empleado_id)
-       
-        #areasEnActivos = ["1"]
-        
-    for id in empleadosEnInactivos:
-        datosEmpleado = Empleados.objects.filter(id_empleado__icontains = id) #["1", "Sistemas", "rojo"]
-        
-        if datosEmpleado:
-            for dato in datosEmpleado:
-                nombreEmpleado = dato.nombre
-                apellidosEmpleado = dato.apellidos
-                areaEmpleado = dato.id_area_id
-                datosArea = Areas.objects.filter(id_area__icontains=areaEmpleado)
-                
-                if datosArea:
-                    for dato in datosArea:
-                        nombreArea = dato.nombre
-                        color = dato.color
-        
-        datosAreasEnInactivos.append([nombreEmpleado, apellidosEmpleado, nombreArea, color])
-        
-    lista2 = zip(equiposInactivos, datosAreasEnInactivos)
     
     if "idEquipoBaja" in request.session:
         bajaEquipo=True
         bajaExito= "Se dió de baja el " + request.session["idEquipoBaja"] + " con éxito!"
         del request.session["idEquipoBaja"]
-        return render(request, "Equipos/verEquipos.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "lista2":lista2, "bajaEquipo":
+        return render(request, "Equipos/verEquipos.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "bajaEquipo":
             bajaEquipo, "bajaExito": bajaExito})
         
     if "idEquipoAlta" in request.session:
         altaEquipo= True
         altaExito= "Se dió de alta el " + request.session["idEquipoAlta"] + " con éxito"
         del request.session["idEquipoAlta"]
-        return render(request, "Equipos/verEquipos.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "lista2":lista2,
+        return render(request, "Equipos/verEquipos.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,
                                                            "altaEquipo": altaEquipo, "altaExito":altaExito})
 
-    return render(request, "Equipos/verEquipos.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "lista2":lista2})
+    return render(request, "Equipos/verEquipos.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "equiposInactivos":equiposInactivos})
 
 def agregarEquipos(request):
 
@@ -482,16 +461,7 @@ def agregarEquipos(request):
     empleadosiEq= []
     empleadosnoEq= []
     
-    if empleadosEquipo:
     
-        for empleados in info_empleados:
-            for emplEq in empleadosEquipo:
-                if empleados.id_empleado == emplEq.id_empleado_id:
-                    empleadosiEq.append(empleados.id_empleado)
-                else:
-                    empleadosnoEq.append([empleados.id_empleado,empleados.nombre,empleados.apellidos])
-                    
-        return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos": estaEnAgregarEquipos, "nombreCompleto":nombreCompleto, "correo":correo,"info_empleados":empleadosnoEq })
                 
 
     
@@ -508,10 +478,11 @@ def agregarEquipos(request):
         sistemaop_recibida = request.POST['sisteop']
         estado_recibida = request.POST['estado']
         propietario_recibida = request.POST['propietario']
+        cargador_recibido = request.POST['cargador']
 
-        if request.POST.get('activoEm', False):
+        if request.POST.get('activoEm', True):
             activo_recibido = "I"
-        elif request.POST.get('activoEm', True):
+        elif request.POST.get('activoEm', False):
             activo_recibido = "A"
             
         
@@ -521,7 +492,7 @@ def agregarEquipos(request):
             registroCompu=Equipos(tipo=tipo_recibido,marca=marca_recibido,modelo= modelo_recibida,
                               color=color_recibido,imagen= imagen_recibido, pdf=pdf_recibido,
                               memoriaram=memoriaram_recibida,procesador=procesador_recibida,sistemaoperativo= sistemaop_recibida,
-                              estado=estado_recibida, activo=activo_recibido)
+                              estado=estado_recibida, activo=activo_recibido, modelocargador = cargador_recibido)
             registroCompu.save()
             compuSin = True
             textoCompu = "Se ha guardado "+tipo_recibido +" "+ marca_recibido + " " + modelo_recibida + " sin propietario!"
@@ -539,9 +510,20 @@ def agregarEquipos(request):
             registroCompu=Equipos(tipo=tipo_recibido,marca=marca_recibido,modelo= modelo_recibida,
                               color=color_recibido,imagen= imagen_recibido, pdf=pdf_recibido,
                               memoriaram=memoriaram_recibida,procesador=procesador_recibida,sistemaoperativo= sistemaop_recibida,
-                              id_empleado =Empleados.objects.get(id_empleado = propietario_recibida),estado=estado_recibida, activo=activo_recibido)
+                              id_empleado =Empleados.objects.get(id_empleado = propietario_recibida),estado=estado_recibida, activo=activo_recibido, modelocargador = cargador_recibido)
             registroCompu.save()
             return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos": estaEnAgregarEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "compuCon": compuCon, "textoCompu":textoCompu})
+    
+    if empleadosEquipo:
+        
+        for empleados in info_empleados:
+            for emplEq in empleadosEquipo:
+                if empleados.id_empleado == emplEq.id_empleado_id:
+                    empleadosiEq.append(empleados.id_empleado)
+                else:
+                    empleadosnoEq.append([empleados.id_empleado,empleados.nombre,empleados.apellidos])
+                    
+        return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos": estaEnAgregarEquipos, "nombreCompleto":nombreCompleto, "correo":correo,"info_empleados":empleadosnoEq })
     
     return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos": estaEnAgregarEquipos, "nombreCompleto":nombreCompleto, "correo":correo,"info_empleados": info_empleados})
 
@@ -683,12 +665,15 @@ def verInsumos(request):
     for cartuchos in datosCartuchos:
         idImpresora = cartuchos.id_impresora
         
-        
-        if datosCartuchos:
-            marcaImpresora = cartuchos.marca
-            modeloImpresora = cartuchos.modelo
+        datosimpresoras = Impresoras.objects.filter(id_impresora__icontains=idImpresora)
+         
+      
+        if datosimpresoras:
+         for  datos in datosimpresoras:
+             marcaImpresora = datos.marca
+             modeloImpresora = datos.modelo
             
-    impresoras.append([marcaImpresora, modeloImpresora])
+        impresoras.append([marcaImpresora, modeloImpresora])
     
     if "idInsumoActualizado" in request.session:
         insumoActualizado=True
@@ -1109,14 +1094,14 @@ def formularioMant(request):
                             actualizacion = CalendarioMantenimiento.objects.filter(id_equipo =  equipo_recibido, operacion = "Limpieza externa - Limpieza Interna - ").update(fecha=fecha, observaciones=descripcion_recibida)
                             equipos = Equipos.objects.filter(id_equipo__icontains = equipo_recibido)
         
-                        for equipo in equipos:
-                            marca = equipo.marca
-                            modelo = equipo.modelo
+                            for equipo in equipos:
+                                marca = equipo.marca
+                                modelo = equipo.modelo
                         
-                        mantExito = True
-                        mensajeMant = "Se ha agregado el mantenimineto realizado a " + marca + " " + modelo + "con propietario " + nombre + " " + apellidos
+                            mantExito = True
+                            mensajeMant = "Se ha agregado el mantenimineto realizado a " + marca + " " + modelo + "con propietario " + nombre + " " + apellidos
                         
-                        return render(request,"Mantenimiento/formularioMant.html",{"estaEnFormulario": estaEnFormulario, "nombreCompleto":nombreCompleto, "correo":correo, 
+                            return render(request,"Mantenimiento/formularioMant.html",{"estaEnFormulario": estaEnFormulario, "nombreCompleto":nombreCompleto, "correo":correo, 
                                                                                 "lista": lista, "mantExito":mantExito, "mensajeMant":mensajeMant  })
             
         registro = CalendarioMantenimiento(id_equipo=Equipos.objects.get(id_equipo=equipo_recibido), operacion=operacionCompleta, fecha=fecha, observaciones=descripcion_recibida)
@@ -1383,38 +1368,49 @@ def editarEquipo(request):
             ramequipo = dato.memoriaram
             sistema = dato.sistemaoperativo
             
+        if empleadoId == None:
+            ram = ["1 GB", "2 GB", "4 GB", "8 GB", "12 GB", "16 GB", "32 GB"]
+            for memoria in ram:
+                if memoria == ramequipo:
+                    ram.remove(memoria)
+                    
+            sistemasOperativos = ["Windows XP", "Windows Vista", "Windows 7", "Windows 8", "Windows 10"]
+            for sistemaOp in sistemasOperativos:
+                if sistemaOp == sistema:
+                    sistemasOperativos.remove(sistemaOp)
+            
+            empleadosTotales = Empleados.objects.all()
+            
+                
+            sinPropietario = True
+            lista = zip(equipoDatos,empleadosTotales)
+            return render(request, "Editar/editarEquipo.html", {"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"ram": ram,"sistemasOperativos":sistemasOperativos, "equipoRecibido":equipoRecibido, "empleadosTotales":empleadosTotales, "sinPropietario":sinPropietario})
+            
         empleado = Empleados.objects.filter(id_empleado__icontains=empleadoId)
-        
         ram = ["1 GB", "2 GB", "4 GB", "8 GB", "12 GB", "16 GB", "32 GB"]
         for memoria in ram:
-            if memoria == ramequipo:
-                ram.remove(memoria)
-                
+                if memoria == ramequipo:
+                    ram.remove(memoria)
+                    
         sistemasOperativos = ["Windows XP", "Windows Vista", "Windows 7", "Windows 8", "Windows 10"]
         for sistemaOp in sistemasOperativos:
             if sistemaOp == sistema:
                 sistemasOperativos.remove(sistemaOp)
-        
+            
         empleadosTotales = Empleados.objects.all()
         idsEmpleadosTotales = Empleados.objects.only('id_empleado')
-        
+            
         idsEmplpeadosConEquipo = Equipos.objects.only('id_empleado_id')
-        
+            
         for empleadoy in empleadosTotales:
             for id in idsEmplpeadosConEquipo:
                 if empleadoy.id_empleado == id:
                     idsEmpleadosTotales.remove(empleadoy.id_empleado)
-                
-        empleadosSinEquipo = []
-        
-        for empleadox in idsEmpleadosTotales:
-            datos = Empleados.objects.filter(id_empleado__icontains=empleadox)
-            
-            
-            
-            
                     
-           
+        empleadosSinEquipo = []
+            
+        for empleadox in idsEmpleadosTotales:
+            datos = Empleados.objects.filter(id_empleado__icontains=empleadox)   
         lista = zip(equipoDatos,empleado)
         
      
@@ -1542,6 +1538,7 @@ def editarEquipoBd(request):
         propietario_actualizar = request.POST['propietario']
         sistema_actualizar = request.POST['sistema']
         estado_actualizar = request.POST['estado']
+        cargador_actualizar = request.POST['cargador']
         
         
         if request.POST.get('activo', False):
@@ -1559,22 +1556,22 @@ def editarEquipoBd(request):
          
         if propietario_actualizar == "sinPropietario" and vaAActualizarPDF == False:
             actualizar = Equipos.objects.filter(id_equipo__icontains=equipoId).update(memoriaram=ram_actualizar, id_empleado_id=None,
-                                               sistemaoperativo= sistema_actualizar, estado= estado_actualizar)
+                                               sistemaoperativo= sistema_actualizar, estado= estado_actualizar, modelocargador = cargador_actualizar)
             
         elif propietario_actualizar == "sinPropietario" and vaAActualizarPDF == True:
             actualizar = Equipos.objects.filter(id_equipo__icontains=equipoId).update(memoriaram=ram_actualizar, id_empleado_id=None,
-                                               sistemaoperativo= sistema_actualizar, estado= estado_actualizar, pdf=pdf_actualizar)
+                                               sistemaoperativo= sistema_actualizar, estado= estado_actualizar, pdf=pdf_actualizar, modelocargador = cargador_actualizar)
           
         elif propietario_actualizar !=  "sinPropietario" and vaAActualizarPDF == False: 
             int_empleado = int(propietario_actualizar)
             actualizar = Equipos.objects.filter(id_equipo__icontains=equipoId).update(memoriaram=ram_actualizar, id_empleado_id=int_empleado,
-                                               sistemaoperativo= sistema_actualizar, estado= estado_actualizar)
+                                               sistemaoperativo= sistema_actualizar, estado= estado_actualizar, modelocargador = cargador_actualizar)
             
             
         elif propietario_actualizar != "sinPropietario" and vaAActualizarPDF == True:
             int_empleado = int(propietario_actualizar)
             actualizar = Equipos.objects.filter(id_equipo__icontains=equipoId).update(memoriaram=ram_actualizar, id_empleado_id=int_empleado,
-                                               sistemaoperativo= sistema_actualizar, estado= estado_actualizar, pdf=pdf_actualizar)
+                                               sistemaoperativo= sistema_actualizar, estado= estado_actualizar, pdf=pdf_actualizar, modelocargador = cargador_actualizar)
             
         datos = Equipos.objects.filter(id_equipo__icontains = equipoId)
         
@@ -1587,8 +1584,18 @@ def editarEquipoBd(request):
         
         editado = True
         textoEdicion = "Se ha editado al equipo " + todoCompu + " con éxito!"
-            
-        equipoDatos = Equipos.objects.filter(id_equipo__icontains=equipoId)
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        equipoRecibido = equipoId
+        equipoDatos = Equipos.objects.filter(id_equipo__icontains=equipoRecibido)
 
         
         for dato in equipoDatos:
@@ -1596,43 +1603,55 @@ def editarEquipoBd(request):
             ramequipo = dato.memoriaram
             sistema = dato.sistemaoperativo
             
+        if empleadoId == None:
+            ram = ["1 GB", "2 GB", "4 GB", "8 GB", "12 GB", "16 GB", "32 GB"]
+            for memoria in ram:
+                if memoria == ramequipo:
+                    ram.remove(memoria)
+                    
+            sistemasOperativos = ["Windows XP", "Windows Vista", "Windows 7", "Windows 8", "Windows 10"]
+            for sistemaOp in sistemasOperativos:
+                if sistemaOp == sistema:
+                    sistemasOperativos.remove(sistemaOp)
+            
+            empleadosTotales = Empleados.objects.all()
+            
+                
+            sinPropietario = True
+            lista = zip(equipoDatos,empleadosTotales)
+            return render(request, "Editar/editarEquipo.html", {"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"ram": ram,"sistemasOperativos":sistemasOperativos, "equipoRecibido":equipoRecibido, "empleadosTotales":empleadosTotales, "sinPropietario":sinPropietario})
+            
         empleado = Empleados.objects.filter(id_empleado__icontains=empleadoId)
-        
         ram = ["1 GB", "2 GB", "4 GB", "8 GB", "12 GB", "16 GB", "32 GB"]
         for memoria in ram:
-            if memoria == ramequipo:
-                ram.remove(memoria)
-                
+                if memoria == ramequipo:
+                    ram.remove(memoria)
+                    
         sistemasOperativos = ["Windows XP", "Windows Vista", "Windows 7", "Windows 8", "Windows 10"]
         for sistemaOp in sistemasOperativos:
             if sistemaOp == sistema:
                 sistemasOperativos.remove(sistemaOp)
-        
+            
         empleadosTotales = Empleados.objects.all()
         idsEmpleadosTotales = Empleados.objects.only('id_empleado')
-        
+            
         idsEmplpeadosConEquipo = Equipos.objects.only('id_empleado_id')
-        
+            
         for empleadoy in empleadosTotales:
             for id in idsEmplpeadosConEquipo:
                 if empleadoy.id_empleado == id:
                     idsEmpleadosTotales.remove(empleadoy.id_empleado)
-                
-        empleadosSinEquipo = []
-        
-        for empleadox in idsEmpleadosTotales:
-            datos = Empleados.objects.filter(id_empleado__icontains=empleadox)
-            
-            
-            
-            
                     
-           
+        empleadosSinEquipo = []
+            
+        for empleadox in idsEmpleadosTotales:
+            datos = Empleados.objects.filter(id_empleado__icontains=empleadox)   
         lista = zip(equipoDatos,empleado)
         
      
-        return render(request, "Editar/editarEquipo.html", {"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista, "ram": ram,"sistemasOperativos":sistemasOperativos, "equipoRecibido":equipoId, "editado":editado, "textoEdicion":textoEdicion})
-            
+        return render(request, "Editar/editarEquipo.html", {"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista, "ram": ram,"sistemasOperativos":sistemasOperativos, "equipoRecibido":equipoRecibido})
+        
+        
         
         
         

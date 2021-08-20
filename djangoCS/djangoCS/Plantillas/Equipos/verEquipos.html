@@ -82,6 +82,7 @@ Ver Equipos
                                 <th>Memoria RAM</th>
                                 <th>Procesador</th>
                                 <th>Sistema Operativo</th>
+                                <th>Cargador</th>
                                 <th>Propietario</th>
                                 <th>Departamento</th>
                                 <th>Estado</th>
@@ -103,6 +104,7 @@ Ver Equipos
                                 <th>Memoria RAM</th>
                                 <th>Procesador</th>
                                 <th>Sistema Operativo</th>
+                                <th>Cargador</th>
                                 <th>Propietario</th>
                                 <th>Departamento</th>
                                 <th>Estado</th>
@@ -131,6 +133,7 @@ Ver Equipos
                                 <th>{{equipo.memoriaram}}</th>
                                 <th>{{equipo.procesador}}</th>
                                 <th>{{equipo.sistemaoperativo}}</th>
+                                <th>{{equipo.modelocargador}}</th>
                                 <th>{{empleado.0}} {{empleado.1}}</th>
                                 <th><label class="{{empleado.3}}">{{empleado.2}}</label></th>
                                 <th>Funcional</th>
@@ -191,8 +194,7 @@ Ver Equipos
                                 <th>Memoria RAM</th>
                                 <th>Procesador</th>
                                 <th>Sistema Operativo</th>
-                                <th>Propietario</th>
-                                <th>Departamento</th>
+                                <th>Cargador</th>
                                 <th>Estado</th>
                                 <th>Alta</th>
                                 
@@ -211,8 +213,7 @@ Ver Equipos
                                 <th>Memoria RAM</th>
                                 <th>Procesador</th>
                                 <th>Sistema Operativo</th>
-                                <th>Propietario</th>
-                                <th>Departamento</th>
+                                <th>Cargador</th>
                                 <th>Estado</th>
 
                                 <th>Alta</th>
@@ -221,7 +222,7 @@ Ver Equipos
                             </tr>
                         </tfoot>
                         <tbody>
-                            {% for equipoIna, empleadoIna in lista2 %}
+                            {% for equipoIna in equiposInactivos %}
                             <tr>
                                 <form action="/DescargarPDF/" method="POST">{% csrf_token %}
                                     <th>
@@ -247,9 +248,9 @@ Ver Equipos
                                     <th>{{equipoIna.memoriaram}}</th>
                                     <th>{{equipoIna.procesador}}  </th>
                                     <th>{{equipoIna.sistemaoperativo}}</th>
-                                    <th>{{empleadoIna.0}} {{empleadoIna.1}}</th>
-                                    <th><label class="{{empleadoIna.3}}">{{empleadoIna.2}}</label></th>
-                                    <th>Funcional</th>
+                                    <th>{{equipoIna.modelocargador}}</th>
+                                    
+                                    <th>{{equipoIna.estado}}</th>
                                     <form action="/altaEquipo/" method="POST">{% csrf_token %}
                                         <th>
                                             <input type="hidden" name="idEquipoAlta" value="{{equipo.id_equipo}}">

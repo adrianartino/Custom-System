@@ -66,7 +66,7 @@ class Impresoras (models.Model):
     id_area=models.ForeignKey(Areas, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.id_impresora
+        return str(self.id_impresora)
 
 class Cartuchos (models.Model):
     id_cartucho=models.AutoField(primary_key=True)

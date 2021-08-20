@@ -58,7 +58,7 @@ Agregar Equipos
                 </ul>
             </div>
             <div class="body">
-                <form id="form_validation" method="POST" enctype="multipart/form-data">{% csrf_token %}
+                <form  action="/agregarEquipos/"  enctype="multipart/form-data" method="POST">{% csrf_token %}
                     <div class="row clearfix">
                         <div class="col-md-3">
                             <label for="email_address">Tipo:</label>

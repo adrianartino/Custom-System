@@ -155,7 +155,7 @@ Editar Equipos
 
                     <div class="row clearfix">
                          
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <label for="email_address">Nombre Propietario:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
@@ -163,15 +163,30 @@ Editar Equipos
                                 </span>
                                 
                                     <select class="form-control show-tick" name="propietario">
-                                        <option value="{{empleado.id_empleado}}">{{empleado.nombre}} {{empleado.apellidos}}</option>
-                                        {% for em in empleadosSinEquipo %}
-                                        <option value="{{em.0}}">{{em.1}}</option>
-                                        {% endfor %}
+                                        {% if sinPropietario %}
+                                            <option value="sinPropietario">Sin propietario</option>
+                                            {% for em in empleadosTotales %}
+                                            <option value="{{em.id_empleado}}">{{em.nombre}} {{em.apellidos}}</option>
+                                            {% endfor %}
+                                        {% else %}
                                         <option value="sinPropietario">Sin propietario</option>
+
+                                        {% endif %}
                                     </select>
                                
                             </div>
                         </div>
+                        <div class="col-md-3">
+                            <label for="email_address">Cargador:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">battery_charging_full</i>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" value="{{equipos.modelocargador}}" class="form-control date" placeholder="Ingresar cargador" name="cargador">
+                                </div>
+                            </div>
+                        </div> 
                         <div class="col-md-3">
                             <label for="email_address">Sistema Operativo:</label>
                             <div class="input-group">
