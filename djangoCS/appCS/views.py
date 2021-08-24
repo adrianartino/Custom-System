@@ -1151,12 +1151,12 @@ def verCarta(request):
         empleados.append([nombres,apellido])
         equipos.append([marca, modelo])
     
-    lista=zip(datosRegistro,empleados,equipos)
+    lista1=zip(datosRegistro,empleados,equipos)
     
     
     
     
-    return render(request,"cartaCompromiso/verCarta.html", {"estaEnVerCarta": estaEnVerCarta, "nombreCompleto":nombreCompleto, "correo":correo, "lista":lista})
+    return render(request,"cartaCompromiso/verCarta.html", {"estaEnVerCarta": estaEnVerCarta, "nombreCompleto":nombreCompleto, "correo":correo, "lista1":lista1})
 
 def agregarCarta(request):
     
@@ -1239,7 +1239,44 @@ def BitacorasEquipos(request):
     apellidos = request.session['apellidos']
     correo = request.session['correoSesion']
     nombreCompleto = nombre + " " + apellidos
-    return render(request, "Bitacora/Bitacoras.html",{"estaEnEquiposBitacora": estaEnEquiposBitacora, "nombreCompleto":nombreCompleto, "correo":correo})
+    
+    datosBitacora = Bitacora.objects.filter(tabla = "Equipos")
+    
+    datosEntidad=[]
+    
+    for fila in datosBitacora:
+        id_admin = fila.id_empleado
+        tabla = fila.tabla
+        id_entidad = fila.id_objeto
+        operacion = fila.operacion
+        fecha = fila.fecha_hora
+        
+        datosEmpleado = Empleados.objects.filter(id_empleado = id_admin)
+        for dato in datosEmpleado:
+            nombre = dato.nombre
+            apellidos = dato.apellidos
+            
+        datosEquipo = Equipos.objects.filter(id_equipo = id_entidad)
+        for datoE in datosEquipo:
+            tipo = datoE.tipo
+            marca = datoE.marca
+            modelo = datoE.modelo
+        
+        nombreAdmin = nombre + " " + apellidos
+        compu = tipo + " " + marca + " " + modelo
+        
+        datosEntidad.append([nombreAdmin, id_entidad, compu, operacion, fecha])
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    return render(request, "Bitacora/Bitacoras.html",{"estaEnEquiposBitacora": estaEnEquiposBitacora, "nombreCompleto":nombreCompleto, "correo":correo, "datosEntidad": datosEntidad, "fecha":fecha})
 
 def BitacorasImpresoras(request):
     estaEnImpresorasBitacora = True
@@ -1838,7 +1875,7 @@ def altaEquipo(request):
         
   
 def bajaEquipo(request):
-    
+    correo = request.session['correoSesion']
     if request.method == "POST":
         
         idBaja= request.POST['idEquipoBaja']
@@ -1852,6 +1889,22 @@ def bajaEquipo(request):
         equipo = marca + " " + modelo
         
         actualizacion = Equipos.objects.filter(id_equipo__icontains = idBaja).update(activo = "I")
+        
+        datosEmpleado= Empleados.objects.filter(correo=correo)
+        
+        for datos in datosEmpleado:
+            nombre = datos.nombre
+            apellidos = datos.apellidos
+            idEmpleado = datos.id_empleado
+        
+        texto = " Se dio de baja el equipo: "  + equipo  
+        fecha = datetime()
+        registroBitacora= Bitacora(id_empleado=Empleados.objects.get(id_empleado=idEmpleado), tabla = "Equipos", id_objeto=idBaja, operacion=texto, fecha_hora= fecha)
+        registroBitacora.save()
+            
+        
+        
+        
         
         request.session['idEquipoBaja'] = equipo
         
