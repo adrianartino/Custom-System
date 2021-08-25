@@ -226,7 +226,7 @@ Ver Equipos
                             <tr>
                                 <form action="/DescargarPDF/" method="POST">{% csrf_token %}
                                     <th>
-                                        <input type="text" style="border: none; background: none;"  name="idEquipo" value="1" readonly size="1">
+                                        <input type="text" style="border: none; background: none;"  name="idEquipopdf" value="{{equipoIna.id_equipo}}" readonly size="1">
                                         
                                         <center>
                                             <button type="submit" class="btn bg-red waves-effect">
@@ -253,7 +253,7 @@ Ver Equipos
                                     <th>{{equipoIna.estado}}</th>
                                     <form action="/altaEquipo/" method="POST">{% csrf_token %}
                                         <th>
-                                            <input type="hidden" name="idEquipoAlta" value="{{equipo.id_equipo}}">
+                                            <input type="hidden" name="idEquipoAlta" value="{{equipoIna.id_equipo}}">
                                             
                                             <center>
                                                 <button type="submit" class="btn bg-green waves-effect">

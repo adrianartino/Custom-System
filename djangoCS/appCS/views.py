@@ -437,7 +437,7 @@ def verEquipos(request):
         bajaExito= "Se dió de baja el " + request.session["idEquipoBaja"] + " con éxito!"
         del request.session["idEquipoBaja"]
         return render(request, "Equipos/verEquipos.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "bajaEquipo":
-            bajaEquipo, "bajaExito": bajaExito})
+            bajaEquipo, "bajaExito": bajaExito, "equiposInactivos":equiposInactivos})
         
     if "idEquipoAlta" in request.session:
         altaEquipo= True
@@ -456,8 +456,8 @@ def agregarEquipos(request):
     correo = request.session['correoSesion']
     nombreCompleto = nombre + " " + apellidos
     
-    info_empleados = Empleados.objects.only('id_empleado', 'nombre', 'apellidos')
-    empleadosEquipo = Equipos.objects.only('id_empleado_id')
+    info_empleados = Empleados.objects.only('id_empleado', 'nombre', 'apellidos') #todos los empleados
+    empleadosEquipo = Equipos.objects.only('id_empleado_id') #Los ids de los empleados que estan con equipos
     empleadosiEq= []
     empleadosnoEq= []
     
@@ -481,19 +481,27 @@ def agregarEquipos(request):
         cargador_recibido = request.POST['cargador']
 
         if request.POST.get('activoEm', True):
-            activo_recibido = "I"
-        elif request.POST.get('activoEm', False):
             activo_recibido = "A"
+        elif request.POST.get('activoEm', False):
+            activo_recibido = "I"
             
         
         
             
         if propietario_recibida == "nopropietario":
-            registroCompu=Equipos(tipo=tipo_recibido,marca=marca_recibido,modelo= modelo_recibida,
-                              color=color_recibido,imagen= imagen_recibido, pdf=pdf_recibido,
-                              memoriaram=memoriaram_recibida,procesador=procesador_recibida,sistemaoperativo= sistemaop_recibida,
-                              estado=estado_recibida, activo=activo_recibido, modelocargador = cargador_recibido)
-            registroCompu.save()
+            if cargador_recibido == "":
+                
+                registroCompu=Equipos(tipo=tipo_recibido,marca=marca_recibido,modelo= modelo_recibida,
+                                color=color_recibido,imagen= imagen_recibido, pdf=pdf_recibido,
+                                memoriaram=memoriaram_recibida,procesador=procesador_recibida,sistemaoperativo= sistemaop_recibida,
+                                estado=estado_recibida, activo=activo_recibido)
+                registroCompu.save()
+            else:
+                registroCompu=Equipos(tipo=tipo_recibido,marca=marca_recibido,modelo= modelo_recibida,
+                                color=color_recibido,imagen= imagen_recibido, pdf=pdf_recibido,
+                                memoriaram=memoriaram_recibida,procesador=procesador_recibida,sistemaoperativo= sistemaop_recibida,
+                                estado=estado_recibida, activo=activo_recibido, modelocargador = cargador_recibido)
+                registroCompu.save()
             compuSin = True
             textoCompu = "Se ha guardado "+tipo_recibido +" "+ marca_recibido + " " + modelo_recibida + " sin propietario!"
             return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos": estaEnAgregarEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "compuSin": compuSin, "textoCompu":textoCompu})
@@ -507,11 +515,20 @@ def agregarEquipos(request):
                 
             compuCon= True
             textoCompu = "Se ha guardado "+tipo_recibido +" "+ marca_recibido + " " + modelo_recibida + " asignada al empleado " + nombre +"!"
-            registroCompu=Equipos(tipo=tipo_recibido,marca=marca_recibido,modelo= modelo_recibida,
-                              color=color_recibido,imagen= imagen_recibido, pdf=pdf_recibido,
-                              memoriaram=memoriaram_recibida,procesador=procesador_recibida,sistemaoperativo= sistemaop_recibida,
-                              id_empleado =Empleados.objects.get(id_empleado = propietario_recibida),estado=estado_recibida, activo=activo_recibido, modelocargador = cargador_recibido)
-            registroCompu.save()
+            
+            if cargador_recibido == "":
+                
+                registroCompu=Equipos(tipo=tipo_recibido,marca=marca_recibido,modelo= modelo_recibida,
+                                color=color_recibido,imagen= imagen_recibido, pdf=pdf_recibido,
+                                memoriaram=memoriaram_recibida,procesador=procesador_recibida,sistemaoperativo= sistemaop_recibida,
+                                id_empleado =Empleados.objects.get(id_empleado = propietario_recibida),estado=estado_recibida, activo=activo_recibido)
+                registroCompu.save()
+            else: 
+                registroCompu=Equipos(tipo=tipo_recibido,marca=marca_recibido,modelo= modelo_recibida,
+                                color=color_recibido,imagen= imagen_recibido, pdf=pdf_recibido,
+                                memoriaram=memoriaram_recibida,procesador=procesador_recibida,sistemaoperativo= sistemaop_recibida,
+                                id_empleado =Empleados.objects.get(id_empleado = propietario_recibida),estado=estado_recibida, activo=activo_recibido, modelocargador = cargador_recibido)
+                registroCompu.save()
             return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos": estaEnAgregarEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "compuCon": compuCon, "textoCompu":textoCompu})
     
     if empleadosEquipo:
@@ -523,7 +540,7 @@ def agregarEquipos(request):
                 else:
                     empleadosnoEq.append([empleados.id_empleado,empleados.nombre,empleados.apellidos])
                     
-        return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos": estaEnAgregarEquipos, "nombreCompleto":nombreCompleto, "correo":correo,"info_empleados":empleadosnoEq })
+        return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos": estaEnAgregarEquipos, "nombreCompleto":nombreCompleto, "correo":correo,"info_empleados":info_empleados })
     
     return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos": estaEnAgregarEquipos, "nombreCompleto":nombreCompleto, "correo":correo,"info_empleados": info_empleados})
 
@@ -1245,11 +1262,13 @@ def BitacorasEquipos(request):
     datosEntidad=[]
     
     for fila in datosBitacora:
-        id_admin = fila.id_empleado
+        id_admin = fila.id_empleado_id
         tabla = fila.tabla
         id_entidad = fila.id_objeto
         operacion = fila.operacion
         fecha = fila.fecha_hora
+        
+        string = str(id_admin)
         
         datosEmpleado = Empleados.objects.filter(id_empleado = id_admin)
         for dato in datosEmpleado:
@@ -1276,7 +1295,7 @@ def BitacorasEquipos(request):
     
     
     
-    return render(request, "Bitacora/Bitacoras.html",{"estaEnEquiposBitacora": estaEnEquiposBitacora, "nombreCompleto":nombreCompleto, "correo":correo, "datosEntidad": datosEntidad, "fecha":fecha})
+    return render(request, "Bitacora/Bitacoras.html",{"estaEnEquiposBitacora": estaEnEquiposBitacora, "nombreCompleto":nombreCompleto, "correo":correo, "datosEntidad": datosEntidad})
 
 def BitacorasImpresoras(request):
     estaEnImpresorasBitacora = True
@@ -1898,7 +1917,7 @@ def bajaEquipo(request):
             idEmpleado = datos.id_empleado
         
         texto = " Se dio de baja el equipo: "  + equipo  
-        fecha = datetime()
+        fecha = datetime.now()
         registroBitacora= Bitacora(id_empleado=Empleados.objects.get(id_empleado=idEmpleado), tabla = "Equipos", id_objeto=idBaja, operacion=texto, fecha_hora= fecha)
         registroBitacora.save()
             
