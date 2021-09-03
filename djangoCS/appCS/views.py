@@ -55,12 +55,6 @@ def login(request):
 
                     return redirect('/inicio/') #redirecciona a url de inicio
 
-                #Si el correo está mal..
-                elif correousuario != correo :
-                    hayError = True
-                    error = "No se ha encontrado al usuario"
-                    return render(request, "Login/login.html", {"hayError": hayError, "textoError":error})
-
                 #Si la contraseña está mal..
                 elif pwd != contraReal:
                     hayError = True
@@ -294,10 +288,9 @@ def verEmpleados(request):
     
     for empleado in empleadosActivos:
         areasEnActivos.append(empleado.id_area_id)
-        #areasEnActivos = ["1"]
         
     for id in areasEnActivos:
-        datosArea = Areas.objects.filter(id_area__icontains = id) #["1", "Sistemas", "rojo"]
+        datosArea = Areas.objects.filter(id_area__icontains = id) 
         
         if datosArea:
             for dato in datosArea:
@@ -328,7 +321,7 @@ def verEmpleados(request):
             
     lista1 = zip (empleadosInactivos, datosAreasEnInactivos)
     
-    
+    #Notificaciones altas y bajas
     if "idEmpleadoAlta" in request.session:
         alta = True
         mensaje = "Se dio de alta al empleado " + request.session['idEmpleadoAlta']
@@ -346,11 +339,13 @@ def verEmpleados(request):
 def agregarEmpleados(request):
 
     estaEnAgregarEmpleados = True
+    id_empleado_admin = request.session['idSesion']
     nombre = request.session['nombres']
     apellidos = request.session['apellidos']
     correo = request.session['correoSesion']
     nombreCompleto = nombre + " " + apellidos
 
+    #información de areas para select
     info_areas = Areas.objects.only('id_area', 'nombre', 'color')
 
     if request.method == "POST":
@@ -361,6 +356,7 @@ def agregarEmpleados(request):
         puesto_recibido = request.POST['puestoEm']
         correo_recibido = request.POST['correoEm']
         contra_recibida = request.POST['contraEm']
+        imagen_recibida = request.FILES.get('imgempleado')
 
         if request.POST.get('activoEm', False):
             activo_recibido = "A"
@@ -376,11 +372,42 @@ def agregarEmpleados(request):
                 return render(request,"Empleados/agregarEmpleados.html", {"estaEnAgregarEmpleados": estaEnAgregarEmpleados, "nombreCompleto":nombreCompleto, "correo":correo, "infoAreas":info_areas, "yaExiste":yaExiste, "textoError":texto_error})
             else:
                 noExiste = True
-                texto_existe = "El empleado "+ nombre_recibido + " fue agregado exitosamente!"
-                registro = Empleados(nombre=nombre_recibido, apellidos=apellido_recibido, 
-                id_area = Areas.objects.get(id_area = area_recibida), puesto=puesto_recibido, correo = correo_recibido, contraseña=contra_recibida, activo = activo_recibido )
-                registro.save()
-                return render(request,"Empleados/agregarEmpleados.html", {"estaEnAgregarEmpleados": estaEnAgregarEmpleados, "nombreCompleto":nombreCompleto, "correo":correo, "infoAreas":info_areas, "noExiste":noExiste, "textoExiste":texto_existe})
+                if imagen_recibida == "":
+                    registro = Empleados(nombre=nombre_recibido, apellidos=apellido_recibido, 
+                    id_area = Areas.objects.get(id_area = area_recibida), puesto=puesto_recibido, correo = correo_recibido, contraseña=contra_recibida, activo = activo_recibido )
+                    registro.save()
+                    
+                    datosEmpleado = Empleados.objects.filter(apellidos = apellido_recibido)
+                    
+                    for dato in datosEmpleado:
+                        id_empleado_agregado = dato.id_emplado
+                    
+                    nombreCompletoEmp = nombre_recibido + " " + apellido_recibido
+                    texto = "Se agregó al empleado "+ nombreCompletoEmp
+                    fecha = datetime.now()
+                    registro_bitacora = Bitacora(id_empleado = Empleados.objects.get(id_empleado = id_empleado_admin), tabla = "Empleados", id_objeto = id_empleado_agregado, operacion = texto, fecha_hora = fecha)
+                    registro_bitacora.save()
+                    
+                    texto_existe = "El empleado "+ nombre_recibido + " fue agregado exitosamente!"
+                    return render(request,"Empleados/agregarEmpleados.html", {"estaEnAgregarEmpleados": estaEnAgregarEmpleados, "nombreCompleto":nombreCompleto, "correo":correo, "infoAreas":info_areas, "noExiste":noExiste, "textoExiste":texto_existe})
+                else:
+                    registro = Empleados(nombre=nombre_recibido, apellidos=apellido_recibido, 
+                    id_area = Areas.objects.get(id_area = area_recibida), puesto=puesto_recibido, correo = correo_recibido, contraseña=contra_recibida,imagen_empleado = imagen_recibida, activo = activo_recibido )
+                    registro.save()
+                    
+                    datosEmpleado = Empleados.objects.filter(apellidos = apellido_recibido)
+                    
+                    for dato in datosEmpleado:
+                        id_empleado_agregado = dato.id_emplado
+                    
+                    nombreCompletoEmp = nombre_recibido + " " + apellido_recibido
+                    texto = "Se agregó al empleado "+ nombreCompletoEmp
+                    fecha = datetime.now()
+                    registro_bitacora = Bitacora(id_empleado = Empleados.objects.get(id_empleado = id_empleado_admin), tabla = "Empleados", id_objeto = id_empleado_agregado, operacion = texto, fecha_hora = fecha)
+                    registro_bitacora.save()
+                    
+                    texto_existe = "El empleado "+ nombre_recibido + " fue agregado exitosamente!"
+                    return render(request,"Empleados/agregarEmpleados.html", {"estaEnAgregarEmpleados": estaEnAgregarEmpleados, "nombreCompleto":nombreCompleto, "correo":correo, "infoAreas":info_areas, "noExiste":noExiste, "textoExiste":texto_existe})
 
     return render(request,"Empleados/agregarEmpleados.html", {"estaEnAgregarEmpleados": estaEnAgregarEmpleados, "nombreCompleto":nombreCompleto, "correo":correo, "infoAreas":info_areas})
 
@@ -1311,7 +1338,33 @@ def BitacorasEmpleados(request):
     apellidos = request.session['apellidos']
     correo = request.session['correoSesion']
     nombreCompleto = nombre + " " + apellidos
-    return render(request, "Bitacora/Bitacoras.html",{"estaEnEmpleadosBitacora": estaEnEmpleadosBitacora, "nombreCompleto":nombreCompleto, "correo":correo})
+    
+    datosBitacora = Bitacora.objects.filter(tabla = "Empleados")
+    
+    datosEntidad=[]
+    
+    for fila in datosBitacora:
+        id_admin = fila.id_empleado_id
+        id_entidad = fila.id_objeto
+        operacion = fila.operacion
+        fecha = fila.fecha_hora
+        
+        datosEmpleado = Empleados.objects.filter(id_empleado = id_admin)
+        for dato in datosEmpleado:
+            nombre = dato.nombre
+            apellidos = dato.apellidos
+            
+        datosEmpleado = Empleados.objects.filter(id_empleado = id_entidad)
+        for datoE in datosEmpleado:
+            nombreEm = datoE.nombre
+            apellidosEm = datoE.apellidos
+        
+        nombreAdmin = nombre + " " + apellidos
+        nombreEmpleado = nombreEm + " " + apellidosEm
+        
+        datosEntidad.append([nombreAdmin, id_entidad, nombreEmpleado, operacion, fecha])
+        
+    return render(request, "Bitacora/Bitacoras.html",{"estaEnEmpleadosBitacora": estaEnEmpleadosBitacora, "nombreCompleto":nombreCompleto, "correo":correo, "datosEntidad":datosEntidad})
 
 def BitacorasMantenimiento(request):
     estaEnMantenimientoBitacora = True
@@ -1533,13 +1586,6 @@ def editarEmpleadoBd(request):
         correoEditar = request.POST['correoEditar']
         contraseñaEditar = request.POST['contraseñaEditar']
         
-        if request.POST.get('activoEditar', False):
-            activoEditar = "A"
-        elif request.POST.get('activoEditar', True):
-            activoEditar = "I"
-        
-        
-        
         areaInt = int(areaEditar)
         
         datosEmpleado = Empleados.objects.filter(correo__icontains = correoEditar)
@@ -1551,7 +1597,7 @@ def editarEmpleadoBd(request):
         actualizacion = Empleados.objects.filter(correo__icontains = correoEditar).update(nombre=nombreEditar, apellidos=apellidoEditar,
                                                                                           id_area=areaInt, puesto=puestoEditar, 
                                                                                           correo=correoEditar, contraseña=contraseñaEditar, 
-                                                                                          activo=activoEditar)
+                                                                                          )
         
         
         editado = True
@@ -1790,6 +1836,7 @@ def editarImpresoraBd(request):
 
 def altaEmpleado(request):
     
+    id_empleado_admin = request.session['idSesion']
     if request.method == "POST":
     
         idAlta= request.POST['idEmpleadoAlta']
@@ -1803,7 +1850,11 @@ def altaEmpleado(request):
         nombreCompletoEmp = nombre + " " + apellido
         
         actualizacion = Empleados.objects.filter(id_empleado__icontains = idAlta).update(activo = "A")
-        
+        if actualizacion:
+            texto = "Se dió se alta al empleado "+nombreCompletoEmp
+            fecha = datetime.now()
+            registro_bitacora = Bitacora(id_empleado = Empleados.objects.get(id_empleado = id_empleado_admin), tabla = "Empleados", id_objeto = idAlta, operacion = texto, fecha_hora = fecha)
+            registro_bitacora.save()
         
         request.session['idEmpleadoAlta'] = nombreCompletoEmp
         
@@ -1811,6 +1862,7 @@ def altaEmpleado(request):
     
 def bajaEmpleado(request):
     
+    id_empleado_admin = request.session['idSesion']
     if request.method == "POST":
     
         idBaja= request.POST['idEmpleadoBaja']
@@ -1824,7 +1876,12 @@ def bajaEmpleado(request):
         nombreCompletoEmp = nombre + " " + apellido
         
         actualizacion = Empleados.objects.filter(id_empleado__icontains = idBaja).update(activo = "I")
-        
+        if actualizacion:
+            texto = "Se dió se baja al empleado "+nombreCompletoEmp
+            fecha = datetime.now()
+            registro_bitacora = Bitacora(id_empleado = Empleados.objects.get(id_empleado = id_empleado_admin), tabla = "Empleados", id_objeto = idBaja, operacion = texto, fecha_hora = fecha)
+            registro_bitacora.save()
+            
         request.session['idEmpleadoBaja'] = nombreCompletoEmp
         
         return redirect('/verEmpleados/')

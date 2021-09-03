@@ -76,8 +76,9 @@ Bitacora
                             </tr>
                         </tfoot>
                         <tbody>
+                            {% for entidad in datosEntidad %}
                             <tr>
-                                {% for entidad in datosEntidad %}
+                                
                                 <th>{{entidad.0}}</th>
                                 <form action="/editarEquipo/" method="POST">{% csrf_token %}
                                     <th>
@@ -93,9 +94,9 @@ Bitacora
                                     <th>{{entidad.3}}</th>
                                     <th>{{entidad.4}}</th>
                                 
-                                {% endfor %}
+                                
                             </tr>
-                            
+                            {% endfor %}
                            
                             
                             

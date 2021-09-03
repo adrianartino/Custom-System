@@ -188,12 +188,13 @@ Realizar carta
                                     <span class="input-group-addon">
                                         <i class="material-icons">person</i>
                                     </span>
-                                        {% for empleado, area in lista %}
+                                        
                                         <select class="form-control show-tick" name="empleadoSeleccionado">
+                                            {% for empleado, area in lista %}
                                             <option value="{{empleado.id_empleado}}">{{empleado.nombre}} {{empleado.apellidos}} {{area.0}}</option>
-                                            
+                                            {% endfor %}
                                         </select>
-                                        {% endfor %}
+                                       
                                 </div>
                             </div>
                             <div class="col-md-3">

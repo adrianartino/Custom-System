@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.deletion import CASCADE
 
 # Create your models here.
 class Areas (models.Model):
@@ -17,6 +18,7 @@ class Empleados(models.Model):
     puesto=models.CharField(max_length=80)
     correo=models.EmailField(max_length=80)
     contraseña=models.CharField(max_length=40, null=True)
+    imagen_empleado=models.ImageField(upload_to="empleados", null = True)
     activo=models.CharField(max_length=2)
 
 
@@ -43,6 +45,15 @@ class Equipos (models.Model):
     def __str__(self):
         return self.id_equipo
 
+class Renovacion_Equipos (models.Model):
+    id_renov_equipo=models.AutoField(primary_key=True)
+    id_equipo=models.ForeignKey(Equipos, on_delete=models.CASCADE)
+    fecha_compra=models.DateField()
+    fecha_renov=models.DateField()
+    
+
+     
+
 class Carta (models.Model):
     id_carta=models.AutoField(primary_key=True)
     id_empleado=models.ForeignKey(Empleados, on_delete=models.CASCADE)
@@ -67,6 +78,12 @@ class Impresoras (models.Model):
 
     def __str__(self):
         return str(self.id_impresora)
+    
+class Renovacion_Impresoras (models.Model):
+    id_renov_imp=models.AutoField(primary_key=True)
+    id_impresora=models.ForeignKey(Impresoras,on_delete=CASCADE)
+    fecha_compra=models.DateField()
+    fecha_renov=models.DateField()
 
 class Cartuchos (models.Model):
     id_cartucho=models.AutoField(primary_key=True)

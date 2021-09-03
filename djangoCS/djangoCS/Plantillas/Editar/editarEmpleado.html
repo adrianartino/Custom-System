@@ -41,18 +41,6 @@ Agregar Empleados
                 <h2>
                     EDITAR EMPLEADO
                 </h2>
-                <ul class="header-dropdown m-r--5">
-                    <li class="dropdown">
-                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                            <i class="material-icons">more_vert</i>
-                        </a>
-                        <ul class="dropdown-menu pull-right">
-                            <li><a href="javascript:void(0);">Action</a></li>
-                            <li><a href="javascript:void(0);">Another action</a></li>
-                            <li><a href="javascript:void(0);">Something else here</a></li>
-                        </ul>
-                    </li>
-                </ul>
             </div>
             <div class="body">
                 <form id="form_validation" action="/editarEmpleadoBd/" method="POST">{% csrf_token %}
@@ -133,18 +121,6 @@ Agregar Empleados
                             </div>
                         </div>    
                     </div>
-
-                    
-                    
-                    {% if empleado.activo == "A" %}
-                    <input type="checkbox" id="remember_me" class="filled-in chk-col-cyan" checked name="activoEditar" value="A"> 
-                    <label for="remember_me">Activo</label>
-                    {% elif empleado.activo == "I" %}
-                    <input type="checkbox" id="remember_me" class="filled-in"  name="activoEditar" value="I">
-                    <label for="remember_me">Activo</label>
-                    {% endif %}
-                    
-                    <br>
                     <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i class="material-icons">loop</i> Actualizar Empleado</button>
                     {% endfor %}
                 </form>

@@ -43,18 +43,7 @@ Ver Empleados
                 <h2>
                     EMPLEADOS DE CUSTOM & CO
                 </h2>
-                <ul class="header-dropdown m-r--5">
-                    <li class="dropdown">
-                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                            <i class="material-icons">more_vert</i>
-                        </a>
-                        <ul class="dropdown-menu pull-right">
-                            <li><a href="javascript:void(0);">Action</a></li>
-                            <li><a href="javascript:void(0);">Another action</a></li>
-                            <li><a href="javascript:void(0);">Something else here</a></li>
-                        </ul>
-                    </li>
-                </ul>
+                
                 <br>
                     <label for="email_address">Estado empleado:</label>
                     <div class="input-group">
@@ -76,10 +65,11 @@ Ver Empleados
 
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                         <thead>
-                            <tr>
-                                <th>ID Empleado</th>
+                            <tr style="background-color: #E05D5D; color: whitesmoke;">
+                                <th>ID</th>
                                 <th>Nombre</th>
                                 <th>Apellidos</th>
+                                <th>Imagen</th>
                                 <th>Departamento</th>
                                 <th>Puesto</th>
                                 <th>Correo</th>
@@ -90,9 +80,10 @@ Ver Empleados
                         </thead>
                         <tfoot>
                             <tr>
-                                <th>ID Empleado</th>
+                                <th>ID</th>
                                 <th>Nombre</th>
                                 <th>Apellidos</th>
+                                <th>Imagen</th>
                                 <th>Departamento</th>
                                 <th>Puesto</th>
                                 <th>Correo</th>
@@ -107,6 +98,11 @@ Ver Empleados
                                 <td>{{empleado.id_empleado}}</td>
                                 <td>{{empleado.nombre}}</td>
                                 <td>{{empleado.apellidos}}</td>
+                                <td>
+                                    <center>
+                                        <img src="{{empleado.imagen_empleado.url}}" width="60%" alt="empleado">
+                                    </center>
+                                </td>
                                 <td> <label class="{{area.1}}">{{area.0}}</label> </td>
                                 <td>{{empleado.puesto}}</td>
                                 <td>s{{empleado.correo}}</td>
@@ -149,10 +145,11 @@ Ver Empleados
 
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                         <thead>
-                            <tr>
-                                <th>ID Empleado</th>
+                            <tr style="background-color: #E05D5D; color: whitesmoke;">
+                                <th>ID</th>
                                 <th>Nombre</th>
                                 <th>Apellidos</th>
+                                <th>Imagen</th>
                                 <th>Departamento</th>
                                 <th>Puesto</th>
                                 <th>Correo</th>
@@ -162,9 +159,10 @@ Ver Empleados
                         </thead>
                         <tfoot>
                             <tr>
-                                <th>ID Empleado</th>
+                                <th>ID</th>
                                 <th>Nombre</th>
                                 <th>Apellidos</th>
+                                <th>Imagen</th>
                                 <th>Departamento</th>
                                 <th>Puesto</th>
                                 <th>Correo</th>
@@ -178,6 +176,11 @@ Ver Empleados
                                 <td>{{empleado.id_empleado}}</td>
                                 <td>{{empleado.nombre}}</td>
                                 <td>{{empleado.apellidos}}</td>
+                                <td>
+                                    <center>
+                                        <img src="{{empleado.imagen_empleado.url}}" width="60%" alt="empleado">
+                                    </center>
+                                </td>
                                 <td> <label class="{{area.1}}">{{area.0}}</label> </td>
                                 <td>{{empleado.puesto}}</td>
                                 <td>{{empleado.correo}}</td>
