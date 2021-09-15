@@ -57,7 +57,7 @@ ROOT_URLCONF = 'djangoCS.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['C:/Users/Sistemas/Desktop/Custom System/Custom-System/djangoCS/djangoCS/Plantillas'],
+        'DIRS': ['C:/Users/AuxSistemas/Desktop/CS Escritorio/Custom-System/djangoCS/djangoCS/Plantillas'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
