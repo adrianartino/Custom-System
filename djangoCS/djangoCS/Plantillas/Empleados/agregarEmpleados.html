@@ -54,7 +54,7 @@ Agregar Empleados
                                 </span>
                                 <div class="form-line">
                                     <input onkeypress='return soloLetras(event)' type="text" class="form-control date" placeholder="Ingresar nombre" 
-                                    pattern="[A-Za-z ]{3,80}" title="No se permiten caracteres especiales." name="nombreEm" required>
+                                    maxlength="50" title="No se permiten caracteres especiales." name="nombreEm" required>
                                 </div>
                             </div>
                         </div>
@@ -63,7 +63,7 @@ Agregar Empleados
                             <div class="form-group">
                                 <div class="form-line">
                                     <input onkeypress='return soloLetras(event)'type="text" class="form-control date" placeholder="Ingresar apellidos"
-                                    pattern="[A-Za-z ]{3,80}" title="No se permiten caracteres especiales." name="apellidoEm" required>
+                                    maxlength="60" title="No se permiten caracteres especiales." name="apellidoEm" required>
                                 </div>
                             </div>
                         </div>    
@@ -88,7 +88,7 @@ Agregar Empleados
                             <div class="form-group">
                                 <div class="form-line">
                                     <input onkeypress='return soloLetras(event)'type="text" class="form-control date" placeholder="Ingresar puesto"
-                                    pattern="[A-Za-z ]{3,80}" title="No se permiten caracteres especiales." name="puestoEm" required>
+                                    maxlength="40" title="No se permiten caracteres especiales." name="puestoEm" required>
                                 </div>
                             </div>
                         </div>    
@@ -102,18 +102,22 @@ Agregar Empleados
                                     <i class="material-icons">email</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="email" class="form-control date" placeholder="Ingresar Correo"
-                                    title="Ingrese un correo electrónico válido." name="correoEm" required>
+                                    <input type="email" id="correo" class="form-control date" placeholder="Ingresar Correo"
+                                    maxlength="50" title="Ingrese un correo electrónico válido." name="correoEm" required >
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <label for="password">Contraseña:</label>
-                            <div class="form-group">
+                            <div class="input-group">
+                                
                                 <div class="form-line">
-                                    <input type="password" class="form-control date" placeholder="Ingresar Contraseña"
-                                    pattern="{3,40}"title="Ingrese la contraseña." name="contraEm" required>
+                                    <input type="password" class="form-control date" id="password" placeholder="Ingresar Contraseña"
+                                    maxlength="50" title="Ingrese la contraseña." name="contraEm" required>
                                 </div>
+                                <span class="input-group-addon" onclick="mostrar_contraseña();">
+                                    <i class="material-icons" id="ojo">visibility</i>
+                                </span>
                             </div>
                         </div>    
                     </div>
@@ -132,17 +136,32 @@ Agregar Empleados
                     </div>
 
                     
-                    
-
-                    <input type="checkbox" id="remember_me" class="filled-in" name="activoEm">
-                    <label for="remember_me">Activo</label>
-                    <br>
+     
                     <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i class="material-icons">person_add</i> Guardar Empleado</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+<script>
+    function mostrar_contraseña(){
+        var x=document.getElementById("password");
+        var y=document.getElementById("ojo");
+        if (x.type==="password"){
+            x.type="text";
+            y.style.color ="red";
+        }else {
+            x.type="password";
+            y.style.color ="gray";
+        }
+    }
+    document.getElementById("correo").addEventListener('keyup', borrarEspacios)
+    document.getElementById("pwd").addEventListener('keyup', borrarEspacios)
+    function borrarEspacios(e){
+        let contenido=e.target.value;
+        e.target.value=contenido.replace(" ", "");
+    }
+</script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     {% if yaExiste %}
     <script type="text/javascript">

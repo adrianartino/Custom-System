@@ -358,11 +358,7 @@ def agregarEmpleados(request):
         contra_recibida = request.POST['contraEm']
         imagen_recibida = request.FILES.get('imgempleado')
 
-        if request.POST.get('activoEm', False):
-            activo_recibido = "A"
-        elif request.POST.get('activoEm', True):
-            activo_recibido = "I"
-
+ 
         lista_empleados = Empleados.objects.all()
 
         for empleado in lista_empleados:
@@ -374,7 +370,7 @@ def agregarEmpleados(request):
                 noExiste = True
                 if imagen_recibida == "":
                     registro = Empleados(nombre=nombre_recibido, apellidos=apellido_recibido, 
-                    id_area = Areas.objects.get(id_area = area_recibida), puesto=puesto_recibido, correo = correo_recibido, contraseña=contra_recibida, activo = activo_recibido )
+                    id_area = Areas.objects.get(id_area = area_recibida), puesto=puesto_recibido, correo = correo_recibido, contraseña=contra_recibida, activo = "A" )
                     registro.save()
                     
                     datosEmpleado = Empleados.objects.filter(apellidos = apellido_recibido)
@@ -392,13 +388,13 @@ def agregarEmpleados(request):
                     return render(request,"Empleados/agregarEmpleados.html", {"estaEnAgregarEmpleados": estaEnAgregarEmpleados, "nombreCompleto":nombreCompleto, "correo":correo, "infoAreas":info_areas, "noExiste":noExiste, "textoExiste":texto_existe})
                 else:
                     registro = Empleados(nombre=nombre_recibido, apellidos=apellido_recibido, 
-                    id_area = Areas.objects.get(id_area = area_recibida), puesto=puesto_recibido, correo = correo_recibido, contraseña=contra_recibida,imagen_empleado = imagen_recibida, activo = activo_recibido )
+                    id_area = Areas.objects.get(id_area = area_recibida), puesto=puesto_recibido, correo = correo_recibido, contraseña=contra_recibida,imagen_empleado = imagen_recibida, activo = "A" )
                     registro.save()
                     
                     datosEmpleado = Empleados.objects.filter(apellidos = apellido_recibido)
                     
                     for dato in datosEmpleado:
-                        id_empleado_agregado = dato.id_emplado
+                        id_empleado_agregado = dato.id_empleado
                     
                     nombreCompletoEmp = nombre_recibido + " " + apellido_recibido
                     texto = "Se agregó al empleado "+ nombreCompletoEmp
