@@ -55,7 +55,7 @@ Editar Equipos
                 </ul>
             </div>
             <div class="body">
-                {% for equipos, empleado in lista %}
+                {% for equipos, empleados in lista %}
                 <form id="form_validation" action="/editarEquipoBd/" method="POST">{% csrf_token %}
                     <div class="row clearfix">
                         <div class="col-md-3">
@@ -169,9 +169,16 @@ Editar Equipos
                                             <option value="{{em.id_empleado}}">{{em.nombre}} {{em.apellidos}}</option>
                                             {% endfor %}
                                         {% else %}
-                                        <option value="sinPropietario">Sin propietario</option>
-
+                                            {% for dato in empleado %}
+                                                <option value="{{dato.id_empleado}}">{{dato.nombre}} {{dato.apellidos}}</option>
+                                            {% endfor %}
+                                            <option value="sinPropietario">Sin propietario</option>
+                                            {% for empleado in datos_empleados %}
+                                                <option value="{{empleado.0}}">{{empleado.1}} {{empleado.2}}</option>
+                                            {% endfor %}
                                         {% endif %}
+
+                                       
                                     </select>
                                
                             </div>
@@ -232,34 +239,6 @@ Editar Equipos
                         </div>
                        
                     </div>
-
-                    <div class="row clearfix">
-                        
-                        <div class="col-md-3">
-                            <input type="checkbox" id="actFi" class="filled-in" name="checkpdf"  onchange="comprobar(this)">
-                            <label for="actFi">Actualizar Ficha Técnica</label>
-                            <div class="input-group" id="divActPdf">
-                                <span class="input-group-addon">
-                                    <i class="material-icons">picture_as_pdf</i>
-                                </span>
-                                <div class="form-line">
-                                    <input type="file" name="pdf" id="txtimagen" >
-                                </div>
-                            </div>
-                        </div> 
-
-                    </div>
-
-                    
-                    {% if equipos.activo == "A" %}
-
-                    <input type="checkbox" id="remember_me" class="filled-in" checked name="activo">
-                    <label for="remember_me">Activo</label>
-                    {% elif equipos.activo == "I" %}
-                    
-                    <input type="checkbox" id="remember_me" class="filled-in" name="activo">
-                    <label for="remember_me">Activo</label>
-                    {% endif %}
                     <br>
                     <input type="hidden" name="idEquipo" value="{{equipos.id_equipo}}">
                     <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i class="material-icons">loop</i> Actualizar equipo</button>

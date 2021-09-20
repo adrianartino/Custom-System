@@ -4,7 +4,7 @@ from django.http import response
 from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.shortcuts import redirect
-from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora
+from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras
 import base64
 from django.core.files.base import ContentFile
 from datetime import date, datetime
@@ -90,16 +90,7 @@ def inicio(request):
         apellidos = request.session['apellidos']
         correo = request.session['correoSesion']
 
-        #Si es la primera vez que inicia sesión.. Bienvenida 
-        if "recienIniciado" in request.session:
-            nombreCompleto = nombre + " " + apellidos #Blanca Yesenia Gaeta Talamantes
-
-            del request.session['recienIniciado']
-
-            recienIniciado = True
-            
-            return render(request, "Inicio/inicio.html", {"estaEnInicio":estaEnInicio, "nombreCompleto":nombreCompleto, "correo":correo, "recienIniciado":recienIniciado, "nombre": nombre})
-
+       
         #So no es la primera vez que inicia sesión
         nombreCompleto = nombre + " " + apellidos #Blanca Yesenia Gaeta Talamantes
         limpiezas = CalendarioMantenimiento.objects.count()
@@ -153,14 +144,66 @@ def inicio(request):
             impresoras.append(nombreCompleto)
             
         lista = zip(cartuchos, impresoras)
+        
+        #Renovación de equipos
+        equipos_renovacion = Renovacion_Equipos.objects.all()
+        
+        fecha = datetime.now()
+        date = fecha.date()
+        año = date.strftime("%Y") #2021
+        mes = date.strftime("%m") #09
+        
+        equipos_año = []
+        
+        for equipo in equipos_renovacion:
+            fecha_renovacion = equipo.fecha_renov #20 Octubre 2021    -     2021-10-22
+            año_renovacion = fecha_renovacion.strftime("%Y")
+            if año_renovacion == año:
+                mes_renovacion = fecha_renovacion.strftime("%m") #10
+                
+                if mes_renovacion >= mes:
+                    
+                    resta = int(mes_renovacion) - int(mes)  #1
+                
+                    if resta >= 0 and resta <= 2:
+                        id_equipo = equipo.id_equipo_id
+                        fecha_compra = equipo.fecha_compra
+                        fecha_renovacion2 = equipo.fecha_renov
+                        
+                        datos_equipo = Equipos.objects.filter(id_equipo = int(id_equipo))
+                        
+                        for dato in datos_equipo:
+                            id = dato.id_equipo
+                            tipo = dato.tipo
+                            marca = dato.marca
+                            modelo = dato.modelo
+                            datos_equipo2 = str(id) + " - " + tipo + " " + marca + " " + modelo
+                            id_empleado = dato.id_empleado_id
+                            
+                            datos_empleado = Empleados.objects.filter(id_empleado = id_empleado)
+                            for em in datos_empleado:
+                                nombre = em.nombre
+                                apellidos = em.apellidos
+                            nombre_empleado = nombre + " " + apellidos
+                        
+                        equipos_año.append([datos_equipo2, nombre_empleado, fecha_compra, fecha_renovacion2])
+                    
                         
                 
                 
-                
-        
-        
-        return render(request, "Inicio/inicio.html", {"estaEnInicio":estaEnInicio, "nombreCompleto":nombreCompleto, "correo":correo, "cantidades":cantidades, "datosLimpiezas":datosLimpiezas, 
-                                                      "lista":lista})
+          #Si es la primera vez que inicia sesión.. Bienvenida 
+        if "recienIniciado" in request.session:
+            nombreCompleto = nombre + " " + apellidos #Blanca Yesenia Gaeta Talamantes
+
+            del request.session['recienIniciado']
+
+            recienIniciado = True
+            
+            return render(request, "Inicio/inicio.html", {"estaEnInicio":estaEnInicio, "nombreCompleto":nombreCompleto, "correo":correo, "recienIniciado":recienIniciado, "nombre": nombre, "cantidades":cantidades, "datosLimpiezas":datosLimpiezas, 
+                                                      "lista":lista, "equipos_año":equipos_año})
+        else:
+            return render(request, "Inicio/inicio.html", {"estaEnInicio":estaEnInicio, "nombreCompleto":nombreCompleto, "correo":correo, "cantidades":cantidades, "datosLimpiezas":datosLimpiezas, 
+                                                      "lista":lista, "equipos_año":equipos_año})
     
     #Si le da al inicio y no hay una sesión iniciada..
     else:
@@ -502,12 +545,23 @@ def agregarEquipos(request):
         estado_recibida = request.POST['estado']
         propietario_recibida = request.POST['propietario']
         cargador_recibido = request.POST['cargador']
+        fecha_compra_recibido = request.POST['fecha_compra'] #dia/mes/año 29/06/2018
 
         if request.POST.get('activoEm', True):
             activo_recibido = "A"
         elif request.POST.get('activoEm', False):
             activo_recibido = "I"
             
+        fecha_separada = fecha_compra_recibido.split("/") #29   06    2018            2018     29   06
+        fecha_normal = fecha_separada[2] + "-" + fecha_separada[0] + "-" + fecha_separada[1]
+        
+        año_compra = int(fecha_separada[2])
+        año_renov = año_compra + 3
+        
+        
+        
+        
+        fecha_renovacion =  str(año_renov) + "-" + fecha_separada[0] + "-" + fecha_separada[1]
         
         
             
@@ -517,14 +571,29 @@ def agregarEquipos(request):
                 registroCompu=Equipos(tipo=tipo_recibido,marca=marca_recibido,modelo= modelo_recibida,
                                 color=color_recibido,imagen= imagen_recibido, pdf=pdf_recibido,
                                 memoriaram=memoriaram_recibida,procesador=procesador_recibida,sistemaoperativo= sistemaop_recibida,
-                                estado=estado_recibida, activo=activo_recibido)
-                registroCompu.save()
+                                estado=estado_recibida, activo="I")
+                if registroCompu:
+                    registroCompu.save()
+                    
+                    registros = Equipos.objects.count()
+                    
+                    registroAntiguiedad = Renovacion_Equipos(id_equipo = Equipos.objects.get(id_equipo = registros), fecha_compra = fecha_normal, fecha_renov = fecha_renovacion)
+                    registroAntiguiedad.save()
             else:
                 registroCompu=Equipos(tipo=tipo_recibido,marca=marca_recibido,modelo= modelo_recibida,
                                 color=color_recibido,imagen= imagen_recibido, pdf=pdf_recibido,
                                 memoriaram=memoriaram_recibida,procesador=procesador_recibida,sistemaoperativo= sistemaop_recibida,
-                                estado=estado_recibida, activo=activo_recibido, modelocargador = cargador_recibido)
-                registroCompu.save()
+                                estado=estado_recibida, activo="I", modelocargador = cargador_recibido)
+                if registroCompu:
+                    registroCompu.save()
+                    
+                    ultimo_registro = Equipos.objects.all().last()
+                    
+                    for dato in ultimo_registro:
+                        id_equipo_agregado = dato.id_equipo
+                    
+                    registroAntiguiedad = Renovacion_Equipos(id_equipo = Equipos.objects.get(id_equipo = id_equipo_agregado), fecha_compra = fecha_normal, fecha_renov = fecha_renovacion)
+                    registroAntiguiedad.save()
             compuSin = True
             textoCompu = "Se ha guardado "+tipo_recibido +" "+ marca_recibido + " " + modelo_recibida + " sin propietario!"
             return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos": estaEnAgregarEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "compuSin": compuSin, "textoCompu":textoCompu})
@@ -544,14 +613,32 @@ def agregarEquipos(request):
                 registroCompu=Equipos(tipo=tipo_recibido,marca=marca_recibido,modelo= modelo_recibida,
                                 color=color_recibido,imagen= imagen_recibido, pdf=pdf_recibido,
                                 memoriaram=memoriaram_recibida,procesador=procesador_recibida,sistemaoperativo= sistemaop_recibida,
-                                id_empleado =Empleados.objects.get(id_empleado = propietario_recibida),estado=estado_recibida, activo=activo_recibido)
-                registroCompu.save()
+                                id_empleado =Empleados.objects.get(id_empleado = propietario_recibida),estado=estado_recibida, activo="A")
+                if registroCompu:
+                    registroCompu.save()
+                    
+                    ultimo_registro = Equipos.objects.all().last()
+                    
+                    for dato in ultimo_registro:
+                        id_equipo_agregado = dato.id_equipo
+                    
+                    registroAntiguiedad = Renovacion_Equipos(id_equipo = Equipos.objects.get(id_equipo = id_equipo_agregado), fecha_compra = fecha_normal, fecha_renov = fecha_renovacion)
+                    registroAntiguiedad.save()
             else: 
                 registroCompu=Equipos(tipo=tipo_recibido,marca=marca_recibido,modelo= modelo_recibida,
                                 color=color_recibido,imagen= imagen_recibido, pdf=pdf_recibido,
                                 memoriaram=memoriaram_recibida,procesador=procesador_recibida,sistemaoperativo= sistemaop_recibida,
-                                id_empleado =Empleados.objects.get(id_empleado = propietario_recibida),estado=estado_recibida, activo=activo_recibido, modelocargador = cargador_recibido)
-                registroCompu.save()
+                                id_empleado =Empleados.objects.get(id_empleado = propietario_recibida),estado=estado_recibida, activo="A", modelocargador = cargador_recibido)
+                if registroCompu:
+                    registroCompu.save()
+                    
+                    ultimo_registro = Equipos.objects.all().last()
+                    
+                    for dato in ultimo_registro:
+                        id_equipo_agregado = dato.id_equipo
+                    
+                    registroAntiguiedad = Renovacion_Equipos(id_equipo = Equipos.objects.get(id_equipo = id_equipo_agregado), fecha_compra = fecha_normal, fecha_renov = fecha_renovacion)
+                    registroAntiguiedad.save()
             return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos": estaEnAgregarEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "compuCon": compuCon, "textoCompu":textoCompu})
     
     if empleadosEquipo:
@@ -566,6 +653,52 @@ def agregarEquipos(request):
         return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos": estaEnAgregarEquipos, "nombreCompleto":nombreCompleto, "correo":correo,"info_empleados":info_empleados })
     
     return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos": estaEnAgregarEquipos, "nombreCompleto":nombreCompleto, "correo":correo,"info_empleados": info_empleados})
+
+def renovacionEquipos(request):
+    
+    estaEnRenovacionEquipos = True
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    nombreCompleto = nombre + " " + apellidos
+    
+    equiposRenov = Renovacion_Equipos.objects.all()
+    datosTabla = []
+    for dato in equiposRenov:
+        idEquipo= dato.id_equipo_id
+        fechaCompra= dato.fecha_compra
+        fechaRenov= dato.fecha_renov
+        datosEquipo=Equipos.objects.filter(id_equipo=idEquipo)
+        for datos in datosEquipo:
+            tipo= datos.tipo
+            marca= datos.marca
+            modelo= datos.modelo
+            color=datos.color
+            propietario= datos.id_empleado_id
+            
+            equipoDatos= tipo + " " + marca + " " + modelo + " " + color
+            if propietario == None:
+                empleadoDatos= "Sin propietario"
+                departamento= "Sin departamento"
+            else:
+                int_propietario = int(propietario)
+                datosEmpleado= Empleados.objects.filter(id_empleado__icontains=int_propietario)
+                for datosEmpl in datosEmpleado:
+                    nombre= datosEmpl.nombre
+                    apellidos=datosEmpl.apellidos
+                    area=datosEmpl.id_area_id
+                    int_area = int(area)
+                    datos_areas = Areas.objects.filter(id_area = int_area)
+                    for dato in datos_areas:
+                        departamento = dato.nombre
+                    empleadoDatos = nombre + " " + apellidos
+                
+        datosTabla.append([idEquipo, equipoDatos, empleadoDatos, departamento, fechaCompra, fechaRenov])
+                
+        
+       
+    
+    return render(request, "Equipos/renovacionEquipos.html", {"estaEnRenovacionEquipos": estaEnRenovacionEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "datosTabla":datosTabla})
 
 def verImpresoras(request):
 
@@ -1469,7 +1602,7 @@ def editarEquipo(request):
 
         
         for dato in equipoDatos:
-            empleadoId= dato.id_empleado_id
+            empleadoId= dato.id_empleado_id #2
             ramequipo = dato.memoriaram
             sistema = dato.sistemaoperativo
             
@@ -1490,36 +1623,49 @@ def editarEquipo(request):
             sinPropietario = True
             lista = zip(equipoDatos,empleadosTotales)
             return render(request, "Editar/editarEquipo.html", {"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"ram": ram,"sistemasOperativos":sistemasOperativos, "equipoRecibido":equipoRecibido, "empleadosTotales":empleadosTotales, "sinPropietario":sinPropietario})
+        else:
             
-        empleado = Empleados.objects.filter(id_empleado__icontains=empleadoId)
-        ram = ["1 GB", "2 GB", "4 GB", "8 GB", "12 GB", "16 GB", "32 GB"]
-        for memoria in ram:
-                if memoria == ramequipo:
-                    ram.remove(memoria)
+            empleado = Empleados.objects.filter(id_empleado__icontains=empleadoId)
+            ram = ["1 GB", "2 GB", "4 GB", "8 GB", "12 GB", "16 GB", "32 GB"]
+            for memoria in ram:
+                    if memoria == ramequipo:
+                        ram.remove(memoria)
+                        
+            sistemasOperativos = ["Windows XP", "Windows Vista", "Windows 7", "Windows 8", "Windows 10"]
+            for sistemaOp in sistemasOperativos:
+                if sistemaOp == sistema:
+                    sistemasOperativos.remove(sistemaOp)
+              
+            lista = zip(equipoDatos,empleado)
+            
+            empleados_totales = Empleados.objects.all()
+            arreglo_ids = []
+            
+            for emp in empleados_totales:
+                arreglo_ids.append(emp.id_empleado)
+            
+            #[1,2,3]
+            
+            for id in arreglo_ids:
+                if id == empleadoId: #si 2 == 2
+                    arreglo_ids.remove(id)
                     
-        sistemasOperativos = ["Windows XP", "Windows Vista", "Windows 7", "Windows 8", "Windows 10"]
-        for sistemaOp in sistemasOperativos:
-            if sistemaOp == sistema:
-                sistemasOperativos.remove(sistemaOp)
+            #[1,3]
             
-        empleadosTotales = Empleados.objects.all()
-        idsEmpleadosTotales = Empleados.objects.only('id_empleado')
+            datos_empleados = []
             
-        idsEmplpeadosConEquipo = Equipos.objects.only('id_empleado_id')
-            
-        for empleadoy in empleadosTotales:
-            for id in idsEmplpeadosConEquipo:
-                if empleadoy.id_empleado == id:
-                    idsEmpleadosTotales.remove(empleadoy.id_empleado)
+            for id in arreglo_ids:
+                datos = Empleados.objects.filter(id_empleado = id)
+                for dato in datos:
+                    id_empleado = dato.id_empleado
+                    nombre_empleado = dato.nombre
+                    apellidos_empleado = dato.apellidos
+                datos_empleados.append([id_empleado, nombre_empleado, apellidos_empleado])    
+                 
                     
-        empleadosSinEquipo = []
             
-        for empleadox in idsEmpleadosTotales:
-            datos = Empleados.objects.filter(id_empleado__icontains=empleadox)   
-        lista = zip(equipoDatos,empleado)
         
-     
-        return render(request, "Editar/editarEquipo.html", {"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista, "ram": ram,"sistemasOperativos":sistemasOperativos, "equipoRecibido":equipoRecibido})
+            return render(request, "Editar/editarEquipo.html", {"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista, "ram": ram, "sistemasOperativos":sistemasOperativos, "empleado":empleado, "equipoRecibido":equipoRecibido, "datos_empleados":datos_empleados})
             
         
 
@@ -1639,37 +1785,18 @@ def editarEquipoBd(request):
         cargador_actualizar = request.POST['cargador']
         
         
-        if request.POST.get('activo', False):
-            activo_actualizado = "I"
-        elif request.POST.get('activo', True):
-            activo_actualizado = "A"
             
-        if request.POST.get('checkpdf', False):
-            vaAActualizarPDF = False
-        elif request.POST.get('checkpdf', True):
-            vaAActualizarPDF = True
-            pdf_actualizar = request.FILES.get('pdf')
             
         
          
-        if propietario_actualizar == "sinPropietario" and vaAActualizarPDF == False:
+        if propietario_actualizar == "sinPropietario":
             actualizar = Equipos.objects.filter(id_equipo__icontains=equipoId).update(memoriaram=ram_actualizar, id_empleado_id=None,
-                                               sistemaoperativo= sistema_actualizar, estado= estado_actualizar, modelocargador = cargador_actualizar)
+                                               sistemaoperativo= sistema_actualizar, estado= estado_actualizar, modelocargador = cargador_actualizar, activo="I")
             
-        elif propietario_actualizar == "sinPropietario" and vaAActualizarPDF == True:
-            actualizar = Equipos.objects.filter(id_equipo__icontains=equipoId).update(memoriaram=ram_actualizar, id_empleado_id=None,
-                                               sistemaoperativo= sistema_actualizar, estado= estado_actualizar, pdf=pdf_actualizar, modelocargador = cargador_actualizar)
-          
-        elif propietario_actualizar !=  "sinPropietario" and vaAActualizarPDF == False: 
+        elif propietario_actualizar !=  "sinPropietario": 
             int_empleado = int(propietario_actualizar)
-            actualizar = Equipos.objects.filter(id_equipo__icontains=equipoId).update(memoriaram=ram_actualizar, id_empleado_id=int_empleado,
-                                               sistemaoperativo= sistema_actualizar, estado= estado_actualizar, modelocargador = cargador_actualizar)
-            
-            
-        elif propietario_actualizar != "sinPropietario" and vaAActualizarPDF == True:
-            int_empleado = int(propietario_actualizar)
-            actualizar = Equipos.objects.filter(id_equipo__icontains=equipoId).update(memoriaram=ram_actualizar, id_empleado_id=int_empleado,
-                                               sistemaoperativo= sistema_actualizar, estado= estado_actualizar, pdf=pdf_actualizar, modelocargador = cargador_actualizar)
+            actualizar = Equipos.objects.filter(id_equipo__icontains=equipoId).update(memoriaram=ram_actualizar, id_empleado_id=Empleados.objects.get(id_empleado = int_empleado),
+                                               sistemaoperativo= sistema_actualizar, estado= estado_actualizar, modelocargador = cargador_actualizar, activo="A")
             
         datos = Equipos.objects.filter(id_equipo__icontains = equipoId)
         
@@ -1697,7 +1824,7 @@ def editarEquipoBd(request):
 
         
         for dato in equipoDatos:
-            empleadoId= dato.id_empleado_id
+            empleadoId= dato.id_empleado_id #2
             ramequipo = dato.memoriaram
             sistema = dato.sistemaoperativo
             
@@ -1717,37 +1844,53 @@ def editarEquipoBd(request):
                 
             sinPropietario = True
             lista = zip(equipoDatos,empleadosTotales)
-            return render(request, "Editar/editarEquipo.html", {"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"ram": ram,"sistemasOperativos":sistemasOperativos, "equipoRecibido":equipoRecibido, "empleadosTotales":empleadosTotales, "sinPropietario":sinPropietario})
+            return render(request, "Editar/editarEquipo.html", {"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"ram": ram,"sistemasOperativos":sistemasOperativos, "equipoRecibido":equipoRecibido, "empleadosTotales":empleadosTotales, "sinPropietario":sinPropietario, 
+                                                                "editado":editado, "textoEdicion":textoEdicion})
+        else:
             
-        empleado = Empleados.objects.filter(id_empleado__icontains=empleadoId)
-        ram = ["1 GB", "2 GB", "4 GB", "8 GB", "12 GB", "16 GB", "32 GB"]
-        for memoria in ram:
-                if memoria == ramequipo:
-                    ram.remove(memoria)
+            empleado = Empleados.objects.filter(id_empleado__icontains=empleadoId)
+            ram = ["1 GB", "2 GB", "4 GB", "8 GB", "12 GB", "16 GB", "32 GB"]
+            for memoria in ram:
+                    if memoria == ramequipo:
+                        ram.remove(memoria)
+                        
+            sistemasOperativos = ["Windows XP", "Windows Vista", "Windows 7", "Windows 8", "Windows 10"]
+            for sistemaOp in sistemasOperativos:
+                if sistemaOp == sistema:
+                    sistemasOperativos.remove(sistemaOp)
+              
+            lista = zip(equipoDatos,empleado)
+            
+            empleados_totales = Empleados.objects.all()
+            arreglo_ids = []
+            
+            for emp in empleados_totales:
+                arreglo_ids.append(emp.id_empleado)
+            
+            #[1,2,3]
+            
+            for id in arreglo_ids:
+                if id == empleadoId: #si 2 == 2
+                    arreglo_ids.remove(id)
                     
-        sistemasOperativos = ["Windows XP", "Windows Vista", "Windows 7", "Windows 8", "Windows 10"]
-        for sistemaOp in sistemasOperativos:
-            if sistemaOp == sistema:
-                sistemasOperativos.remove(sistemaOp)
+            #[1,3]
             
-        empleadosTotales = Empleados.objects.all()
-        idsEmpleadosTotales = Empleados.objects.only('id_empleado')
+            datos_empleados = []
             
-        idsEmplpeadosConEquipo = Equipos.objects.only('id_empleado_id')
-            
-        for empleadoy in empleadosTotales:
-            for id in idsEmplpeadosConEquipo:
-                if empleadoy.id_empleado == id:
-                    idsEmpleadosTotales.remove(empleadoy.id_empleado)
+            for id in arreglo_ids:
+                datos = Empleados.objects.filter(id_empleado = id)
+                for dato in datos:
+                    id_empleado = dato.id_empleado
+                    nombre_empleado = dato.nombre
+                    apellidos_empleado = dato.apellidos
+                datos_empleados.append([id_empleado, nombre_empleado, apellidos_empleado])    
+                 
                     
-        empleadosSinEquipo = []
             
-        for empleadox in idsEmpleadosTotales:
-            datos = Empleados.objects.filter(id_empleado__icontains=empleadox)   
-        lista = zip(equipoDatos,empleado)
         
-     
-        return render(request, "Editar/editarEquipo.html", {"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista, "ram": ram,"sistemasOperativos":sistemasOperativos, "equipoRecibido":equipoRecibido})
+            return render(request, "Editar/editarEquipo.html", {"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista, "ram": ram, "sistemasOperativos":sistemasOperativos, "empleado":empleado, "equipoRecibido":equipoRecibido, "datos_empleados":datos_empleados, 
+                                                                "editado":editado, "textoEdicion":textoEdicion})
+            
         
         
         

@@ -214,6 +214,42 @@ Inicio
             </div>
         </div>
     </div>
+
+    <!-- Browser Usage -->
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="card">
+            <div class="header">
+                <h2>Próximas Renovaciones de Equipos de cómputo</h2>
+            </div>
+            <div class="body">
+                <div class="table-responsive">
+                    <table class="table table-hover dashboard-task-infos">
+                        <thead>
+                            <tr>
+                                <th>Equipo</th>
+                                <th>Propietario</th>
+                                <th>Fecha de Compra</th>
+                                <th>Fecha de Renovación</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                            <tr>
+                                {% for equipo in equipos_año %}
+                                    <th>{{equipo.0}}</th>
+                                    <th>{{equipo.1}}</th>
+                                    <th>{{equipo.2}}</th>
+                                    <th>{{equipo.3}}</th>
+                                {% endfor %}
+
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 {% if recienIniciado %}

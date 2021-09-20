@@ -22,6 +22,15 @@ Agregar Equipos
 <!-- Animation Css -->
 <link href={% static 'panel/plugins/animate-css/animate.css' %} rel="stylesheet" />
 
+<!-- Bootstrap Material Datetime Picker Css -->
+<link href={% static 'panel/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css' %}  rel="stylesheet" />
+
+<!-- Bootstrap DatePicker Css -->
+<link href={% static 'panel/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css' %} rel="stylesheet" />
+
+<!-- Wait Me Css -->
+<link href={% static 'panel/plugins/waitme/waitMe.css' %} rel="stylesheet" />
+
 <!-- Bootstrap Select Css -->
 <link href={% static 'panel/plugins/bootstrap-select/css/bootstrap-select.css' %} rel="stylesheet" />
 
@@ -198,8 +207,17 @@ Agregar Equipos
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-5">
-                            <label for="email_address">Nombre Propietario:</label>
+                        <div class="col-md-4">
+                            <h2 class="card-inside-title">Fecha de Compra:</h2>
+                            <div class="form-group">
+                                <div class="form-line" id="bs_datepicker_container">
+                                    <input type="text" class="form-control" name="fecha_compra" placeholder="Seleccionar fecha" required>
+                                </div>
+                            </div>
+                        </div>
+                      
+                        <div class="col-md-4">
+                            <label for="email_address">Propietario:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">badge</i>
@@ -244,8 +262,7 @@ Agregar Equipos
                     
                     
 
-                    <input type="checkbox" id="remember_me" class="filled-in">
-                    <label for="remember_me">Activo</label>
+                    
                     <br>
                     <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i class="material-icons">laptop_mac</i> Guardar Equipo</button>
                 </form>
@@ -353,6 +370,18 @@ Agregar Equipos
 <!-- Waves Effect Plugin Js -->
 <script src={% static 'panel/plugins/node-waves/waves.js' %}></script>
 
+<!-- Autosize Plugin Js -->
+<script src={% static 'panel/plugins/autosize/autosize.js' %}></script>
+
+<!-- Moment Plugin Js -->
+<script src={% static 'panel/plugins/momentjs/moment.js' %}></script>
+
+<!-- Bootstrap Material Datetime Picker Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js' %}></script>
+
+<!-- Bootstrap Datepicker Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js' %}></script>
+
 <!-- Jquery DataTable Plugin Js -->
 <script src={% static 'panel/plugins/jquery-datatable/jquery.dataTables.js' %}></script>
 <script src={% static 'panel/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js' %}></script>
@@ -366,8 +395,10 @@ Agregar Equipos
 
 <!-- Custom Js -->
 <script src={% static 'panel/js/admin.js' %}></script>
+<script src={% static 'panel/js/pages/forms/basic-form-elements.js' %}></script>
 <script src={% static 'panel/js/pages/tables/jquery-datatable.js' %}></script>
 <script src={% static 'panel/js/pages/forms/advanced-form-elements.js' %}></script>
+
 
 <!-- Demo Js -->
 <script src={% static 'panel/js/demo.js' %}></script>
