@@ -40,7 +40,7 @@ Ver Equipos
         <div class="card">
             <div class="header">
                 <h2>
-                    EQUIPOS DE CUSTOM & CO
+                    INFORMACIÓN DE EQUIPO
                 </h2>
                 <ul class="header-dropdown m-r--5">
                     <li class="dropdown">
@@ -54,21 +54,41 @@ Ver Equipos
                         </ul>
                     </li>
                 </ul>
-                <br>
-                <label for="email_address">Estado equipo:</label>
-                    <div class="input-group">
-                        <span class="input-group-addon">
-                            <i class="material-icons">build</i>
-                        </span>
-                            <select class="form-control show-tick" id="filtroEquipo" onchange="cambioFiltro();">
-                                <option>Activo</option>
-                                <option>Baja</option>
-                                
-                            </select>
-                    </div>
                     
             </div>
             <div class="body" id="divActivos">
+                <h1>Equipo #1</h1>
+                <div class="row clearfix">
+                    <div class="col-sm-8">
+                        <div class="form-group">
+                            <h1>Laptop DELL Inspiron 15 5000</h1>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+
+
+                            <div class="row clearfix">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <h2>Color </h2>
+                                    </div>
+                                </div>
+                                <div class="col-sm-8">
+                                    <div class="form-group">
+                                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-12">
+                                            <div class="demo-color-box" style="background-color: gray;">
+                                                <h4 style="color: white;">Gris</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            
+                        </div>
+                    </div>
+                </div>
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                         <thead>
@@ -188,102 +208,6 @@ Ver Equipos
                             {% endfor %}
                         </tbody>
                     </table>
-                </div>
-            </div>
-            <div class="body" id="divInactivos">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped table-hover dataTable js-exportable">
-                        <thead>
-                            <tr  style="background-color: #fad60e; color:black">
-                                <th>ID Equipo</th>
-                                <th>Tipo</th>
-                                <th>Marca</th>
-                                <th>Modelo</th>
-                                <th>Color</th>
-                                <th>Imagen</th>
-                                <th>Memoria RAM</th>
-                                <th>Procesador</th>
-                                <th>Sistema Operativo</th>
-                                <th>Cargador</th>
-                                <th>Estado</th>
-                                <th>Alta</th>
-                                
-                    
-                                
-                            </tr>
-                        </thead>
-                        <tfoot>
-                            <tr>
-                                <th>ID Equipo</th>
-                                <th>Tipo</th>
-                                <th>Marca</th>
-                                <th>Modelo</th>
-                                <th>Color</th>
-                                <th>Imagen</th>
-                                <th>Memoria RAM</th>
-                                <th>Procesador</th>
-                                <th>Sistema Operativo</th>
-                                <th>Cargador</th>
-                                <th>Estado</th>
-
-                                <th>Alta</th>
-
-                                
-                            </tr>
-                        </tfoot>
-                        <tbody>
-                            {% for equipoIna in equiposInactivos %}
-                            <tr>
-                                <form action="/DescargarPDF/" method="POST">{% csrf_token %}
-                                    <th>
-                                        <input type="text" style="border: none; background: none;"  name="idEquipopdf" value="{{equipoIna.id_equipo}}" readonly size="1">
-                                        
-                                        <center>
-                                            <button type="submit" class="btn bg-red waves-effect">
-                                                <i class="material-icons">picture_as_pdf</i>
-                                            </button>
-                                        </center>
-                                     
-                                    </th>
-                                </form>
-                                    <th>{{equipoIna.tipo}}</th>
-                                    <th>{{equipoIna.marca}}</th>
-                                    <th>{{equipoIna.modelo}}</th>
-                                    <th>{{equipoIna.color}}</th>
-                                    <th>
-                                        <center>
-                                            <img src="{{equipoIna.imagen.url}}" width="60%" alt="lap">
-                                        </center>
-                                    </th>
-                                    <th>{{equipoIna.memoriaram}}</th>
-                                    <th>{{equipoIna.procesador}}  </th>
-                                    <th>{{equipoIna.sistemaoperativo}}</th>
-                                    <th>{{equipoIna.modelocargador}}</th>
-                                    
-                                    <th>{{equipoIna.estado}}</th>
-                                    <form action="/altaEquipo/" method="POST">{% csrf_token %}
-                                        <th>
-                                            <input type="hidden" name="idEquipoAlta" value="{{equipoIna.id_equipo}}">
-                                            
-                                            <center>
-                                                <button type="submit" class="btn bg-green waves-effect">
-                                                    <i class="material-icons">upgrade</i>
-                                                </button>
-                                            </center>
-                                        
-                                        </th>
-                                    </form>
-                                
-                                
-                                
-                            </tr>
-                           {% endfor %}
-                            
-                            
-                            
-                        </tbody>
-                    </table>
-                    
                 </div>
             </div>
            

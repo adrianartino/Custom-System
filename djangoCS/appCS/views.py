@@ -514,6 +514,71 @@ def verEquipos(request):
 
     return render(request, "Equipos/verEquipos.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "equiposInactivos":equiposInactivos})
 
+def infoEquipo(request):
+    estaEnVerEquipos = True
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    nombreCompleto = nombre + " " + apellidos
+    
+    equiposActivos = Equipos.objects.filter(activo__icontains= "A")
+    equiposInactivos = Equipos.objects.filter(activo__icontains= "I")
+    
+     #empleados Actvos
+    empleadosEnActivos = []
+    datosAreasEnActivos = []
+  
+    
+    for equipos in equiposActivos:
+            
+        empleadosEnActivos.append(equipos.id_empleado_id)
+        
+     
+        #areasEnActivos = ["1"]
+        
+    for id in empleadosEnActivos:
+        if id == None:
+            datosAreasEnActivos.append(["", "", "", ""])
+            
+        elif id != None:
+            datosEmpleado = Empleados.objects.filter(id_empleado__icontains = id) #["1", "Sistemas", "rojo"]
+            
+            if datosEmpleado:
+                for dato in datosEmpleado:
+                    nombreEmpleado = dato.nombre
+                    apellidosEmpleado = dato.apellidos
+                    areaEmpleado = dato.id_area_id
+                    datosArea = Areas.objects.filter(id_area__icontains=areaEmpleado)
+                    
+                    if datosArea:
+                        for dato in datosArea:
+                            nombreArea = dato.nombre
+                            color = dato.color
+        
+            datosAreasEnActivos.append([nombreEmpleado, apellidosEmpleado, nombreArea, color])
+        
+    lista = zip(equiposActivos, datosAreasEnActivos)
+    
+    
+    
+    if "idEquipoBaja" in request.session:
+        bajaEquipo=True
+        bajaExito= "Se dió de baja el " + request.session["idEquipoBaja"] + " con éxito!"
+        del request.session["idEquipoBaja"]
+        return render(request, "Equipos/verEquipos.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "bajaEquipo":
+            bajaEquipo, "bajaExito": bajaExito, "equiposInactivos":equiposInactivos})
+        
+    if "idEquipoAlta" in request.session:
+        altaEquipo= True
+        altaExito= "Se dió de alta el " + request.session["idEquipoAlta"] + " con éxito"
+        del request.session["idEquipoAlta"]
+        return render(request, "Equipos/verEquipos.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,
+                                                           "altaEquipo": altaEquipo, "altaExito":altaExito})
+
+    return render(request, "Equipos/infoEquipo.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "equiposInactivos":equiposInactivos})
+
+    
+
 def agregarEquipos(request):
 
     estaEnAgregarEquipos = True
