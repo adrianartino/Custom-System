@@ -57,38 +57,45 @@ Ver Equipos
                     
             </div>
             <div class="body" id="divActivos">
-                <h1>Equipo #1</h1>
+                {% for datoEquipo in datosEquipo %}
+                <center>
+                    <h1 style="color: black;"> <span style="font-size: 120%;">
+                    
+                        <i class="material-icons" style="color: rgb(158, 154, 154); font-size: 120%;" ">computer</i>
+
+                   </span> #1</h1>
+                    <h1 style="color: black;">{{datoEquipo.tipo}} {{datoEquipo.marca}} {{datoEquipo.modelo}}</h1>
+                    
+                    {% if sinPropietario %}
+                    <h1 style="color: black;">Propietario: Sin Propietario</h1>
+                    {% else %}
+                    <h1 style="color: black;">Propietario: {{nombreEmpleado}}</h1>
+                    {% endif %}
+                </center>
                 <div class="row clearfix">
-                    <div class="col-sm-8">
-                        <div class="form-group">
-                            <h1>Laptop DELL Inspiron 15 5000</h1>
-                        </div>
+                    <div class="col-md-6">
+                        <center>
+                            <h2 style="color: black;" >Fecha de compra</h2>
+                            <span style="font-size: 200%;">
+                                <i class="material-icons" style="color: rgb(42, 141, 17); font-size: 200%;"  >shopping_cart</i>
+
+                            </span>
+                            <h3 style="color: black;">{{compra}}</h3>
+                        </center>
                     </div>
-                    <div class="col-sm-4">
-                        <div class="form-group">
-
-
-                            <div class="row clearfix">
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <h2>Color </h2>
-                                    </div>
-                                </div>
-                                <div class="col-sm-8">
-                                    <div class="form-group">
-                                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-12">
-                                            <div class="demo-color-box" style="background-color: gray;">
-                                                <h4 style="color: white;">Gris</h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            
-                        </div>
+                    <div class="col-md-6">
+                        <center>
+                            <h2 style="color: black;">Fecha de renovación</h2>
+                            <span style="font-size: 200%;">
+                                <i class="material-icons" style="color: rgb(41, 57, 201);  font-size: 200%;" >add_shopping_cart</i>
+                            </span>
+                            <h3 style="color: black;">{{renovar}}</h3>
+                        </center>
                     </div>
                 </div>
+                
+                <h1 style="color: black;">Características</h1>
+                
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                         <thead>
@@ -98,16 +105,12 @@ Ver Equipos
                                 <th>Marca</th>
                                 <th>Modelo</th>
                                 <th>Color</th>
-                                <th>Imagen</th>
                                 <th>Memoria RAM</th>
                                 <th>Procesador</th>
                                 <th>Sistema Operativo</th>
                                 <th>Cargador</th>
-                                <th>Propietario</th>
                                 <th>Departamento</th>
                                 <th>Estado</th>
-                                <th>Editar</th>
-                                <th>Baja</th>
                                 
                     
                                 
@@ -120,30 +123,23 @@ Ver Equipos
                                 <th>Marca</th>
                                 <th>Modelo</th>
                                 <th>Color</th>
-                                <th>Imagen</th>
                                 <th>Memoria RAM</th>
                                 <th>Procesador</th>
                                 <th>Sistema Operativo</th>
                                 <th>Cargador</th>
-                                <th>Propietario</th>
                                 <th>Departamento</th>
                                 <th>Estado</th>
-
-                                <th>Editar</th>
-                                <th>Baja</th>
-
-                                
                             </tr>
                         </tfoot>
                         <tbody>
-                            {% for equipo, empleado in lista %}
+                           
                             <tr>
                                 <th>
                                     <form action="/infoEquipo/" method="POST">{% csrf_token %}
                                         
                                         
                                         <center>
-                                            <input type="text" style="border: none; background: none;"  name="idEquipo" value="{{equipo.id_equipo}}" readonly size="1">
+                                            <input type="text" style="border: none; background: none;"  name="idEquipo" value="{{datoEquipo.id_equipo}}" readonly size="1">
                                             <button type="submit" class="btn  waves-effect" style="background-color: #0A77F9;">
                                                 <i class="material-icons" style="color: white;">visibility</i>
                                             </button>
@@ -151,64 +147,59 @@ Ver Equipos
                                         <br>
                                     </form>
                                 </th>
-                                <th>{{equipo.tipo}}</th>
-                                <th>{{equipo.marca}}</th>
-                                <th>{{equipo.modelo}}</th>
-                                <th>{{equipo.color}}</th>
-                                <th>
-                                    <center>
-                                        <img src="{{equipo.imagen.url}}" width="40%" alt="lap">
-                                    </center>
-                                </th>
-                                <th>{{equipo.memoriaram}}</th>
-                                <th>{{equipo.procesador}}</th>
-                                <th>{{equipo.sistemaoperativo}}</th>
-                                <th>{{equipo.modelocargador}}</th>
-                                <th>{{empleado.0}} {{empleado.1}}</th>
-                                <th><label class="{{empleado.3}}">{{empleado.2}}</label></th>
-                                <th>Funcional</th>
+                                <th>{{datoEquipo.tipo}}</th>
+                                <th>{{datoEquipo.marca}}</th>
+                                <th>{{datoEquipo.modelo}}</th>
+                                <th>{{datoEquipo.color}}</th>
+                            
+                                <th>{{datoEquipo.memoriaram}}</th>
+                                <th>{{datoEquipo.procesador}}</th>
+                                <th>{{datoEquipo.sistemaoperativo}}</th>
+                                <th>{{datoEquipo.modelocargador}}</th>
+                                <th><label class="{{colorArea}}">{{nombreArea}}</label></th>
+                                <th>{{datoEquipo.estado}}</th>
                                 
-                                    <th>
-                                        <form action="/editarEquipo/" method="POST">{% csrf_token %}
-                                            <input type="hidden" name="idEquipo" value="{{equipo.id_equipo}}">
-                                            
-                                            <center>
-                                                <button type="submit" class="btn btn-warning waves-effect">
-                                                    <i class="material-icons">edit</i>
-                                                </button>
-                                            </center>
-                                            <br>
-                                        </form>
-                                        <form action="/DescargarPDF/" method="POST">{% csrf_token %}
-                                            
-                                                <input type="hidden" name="idEquipopdf" value="{{equipo.id_equipo}}">
-                                                
-                                                <center>
-                                                    <button type="submit" class="btn bg-red waves-effect">
-                                                        <i class="material-icons">picture_as_pdf</i>
-                                                    </button>
-                                                </center>
-                                             
-                                        </form>
                                     
-                                    </th>
-                               
-                                <form action="/bajaEquipo/" method="POST">{% csrf_token %}
-                                    <th>
-                                        <input type="hidden" name="idEquipoBaja" value="{{equipo.id_equipo}}">
-                                        <center>
-                                            <button type="submit" class="btn bg-red waves-effect">
-                                                <i class="material-icons">cancel</i>
-                                            </button>
-                                        </center>
-                                        
-                                    </th>
-                                </form>
+                            </tr>
+                          
+                        </tbody>
+                    </table>
+                </div>
+                <h1 style="color: black;">Mantenimientos</h1>
+                
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                        <thead>
+                            <tr  style="background-color: #fad60e; color:black">
+                                <th>ID Operación</th>
+                                <th>Operación</th>
+                                <th>Fecha</th>
+                                <th>Observaciones</th>
+                     
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>ID Operación</th>
+                                <th>Operación</th>
+                                <th>Fecha</th>
+                                <th>Observaciones</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            {% for dato in mantenimientos %}
+                            <tr>
+                             
+                                <th>{{dato.id_calmantenimiento}}</th>
+                                <th>{{dato.operacion}}</th>
+                                <th>{{dato.fecha}}</th>
+                                <th>{{dato.observaciones}}</th>   
                             </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
+                {% endfor %}
             </div>
            
             </div>
@@ -301,14 +292,6 @@ Ver Equipos
 
 <!-- Jquery DataTable Plugin Js -->
 <script src={% static 'panel/plugins/jquery-datatable/jquery.dataTables.js' %}></script>
-<script src={% static 'panel/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js' %}></script>
-<script src={% static 'panel/plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js' %}></script>
-<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.flash.min.js' %}></script>
-<script src={% static 'panel/plugins/jquery-datatable/extensions/export/jszip.min.js' %}></script>
-<script src={% static 'panel/plugins/jquery-datatable/extensions/export/pdfmake.min.js' %}></script>
-<script src={% static 'panel/plugins/jquery-datatable/extensions/export/vfs_fonts.js' %}></script>
-<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.html5.min.js' %}></script>
-<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.print.min.js' %}></script>
 
 <!-- Custom Js -->
 <script src={% static 'panel/js/admin.js' %}></script>

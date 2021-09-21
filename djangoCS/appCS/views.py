@@ -521,61 +521,63 @@ def infoEquipo(request):
     correo = request.session['correoSesion']
     nombreCompleto = nombre + " " + apellidos
     
-    equiposActivos = Equipos.objects.filter(activo__icontains= "A")
-    equiposInactivos = Equipos.objects.filter(activo__icontains= "I")
-    
-     #empleados Actvos
-    empleadosEnActivos = []
-    datosAreasEnActivos = []
-  
-    
-    for equipos in equiposActivos:
-            
-        empleadosEnActivos.append(equipos.id_empleado_id)
+    if request.method == "POST":
         
-     
-        #areasEnActivos = ["1"]
+        idEquipo_recibido = request.POST['idEquipo']
         
-    for id in empleadosEnActivos:
-        if id == None:
-            datosAreasEnActivos.append(["", "", "", ""])
+        datosEquipo = Equipos.objects.filter(id_equipo=idEquipo_recibido)
+        for datos in datosEquipo:
+            id_equipo= datos.id_equipo
+            propietario= datos.id_empleado
             
-        elif id != None:
-            datosEmpleado = Empleados.objects.filter(id_empleado__icontains = id) #["1", "Sistemas", "rojo"]
+            sinPropietario = False
+            if propietario == None:
+                sinPropietario = True
+                
+                datosRenovacion= Renovacion_Equipos.objects.filter(id_equipo=id_equipo)
+                for datos in datosRenovacion:
+                    compra= datos.fecha_compra
+                    renovar=  datos.fecha_renov
+                
+                #sinPropietario es true
+                
+                mantenimientos= CalendarioMantenimiento.objects.filter(id_equipo_id__id_equipo__icontains=id_equipo)
+                if mantenimientos:
+                    return render(request, "Equipos/infoEquipo.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "datosEquipo":datosEquipo,
+                                                       "compra":compra, "renovar": renovar, "sinPropietario":sinPropietario, "mantenimientos":mantenimientos})
+                else:
+                      return render(request, "Equipos/infoEquipo.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "datosEquipo":datosEquipo,
+                                                       "compra":compra, "renovar": renovar, "sinPropietario":sinPropietario})  
             
-            if datosEmpleado:
-                for dato in datosEmpleado:
-                    nombreEmpleado = dato.nombre
-                    apellidosEmpleado = dato.apellidos
-                    areaEmpleado = dato.id_area_id
-                    datosArea = Areas.objects.filter(id_area__icontains=areaEmpleado)
+            else:
+                datosPropietario= Empleados.objects.filter(id_empleado=propietario)
+                for datos in datosPropietario:
+                    nombre= datos.nombre
+                    apellidos=datos.apellidos
+                    nombreEmpleado= nombre + " " + apellidos
+                    departamento=datos.id_area
+                    datosDepa= Areas.objects.filter(id_area=departamento)
+                    for datos in datosDepa:
+                        nombreArea= datos.nombre
+                        colorArea=datos.color
+                        
+                        
+                datosRenovacion= Renovacion_Equipos.objects.filter(id_equipo=id_equipo)
+                for datos in datosRenovacion:
+                    compra= datos.fecha_compra
+                    renovar=  datos.fecha_renov
                     
-                    if datosArea:
-                        for dato in datosArea:
-                            nombreArea = dato.nombre
-                            color = dato.color
         
-            datosAreasEnActivos.append([nombreEmpleado, apellidosEmpleado, nombreArea, color])
-        
-    lista = zip(equiposActivos, datosAreasEnActivos)
-    
-    
-    
-    if "idEquipoBaja" in request.session:
-        bajaEquipo=True
-        bajaExito= "Se dió de baja el " + request.session["idEquipoBaja"] + " con éxito!"
-        del request.session["idEquipoBaja"]
-        return render(request, "Equipos/verEquipos.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "bajaEquipo":
-            bajaEquipo, "bajaExito": bajaExito, "equiposInactivos":equiposInactivos})
-        
-    if "idEquipoAlta" in request.session:
-        altaEquipo= True
-        altaExito= "Se dió de alta el " + request.session["idEquipoAlta"] + " con éxito"
-        del request.session["idEquipoAlta"]
-        return render(request, "Equipos/verEquipos.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,
-                                                           "altaEquipo": altaEquipo, "altaExito":altaExito})
-
-    return render(request, "Equipos/infoEquipo.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "equiposInactivos":equiposInactivos})
+                #sinPropietario es falso
+                mantenimientos= CalendarioMantenimiento.objects.filter(id_equipo_id__id_equipo__icontains=id_equipo)
+                
+                if mantenimientos:
+                    return render(request, "Equipos/infoEquipo.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "datosEquipo":datosEquipo,
+                                                       "nombreEmpleado": nombreEmpleado, "nombreArea": nombreArea, "colorArea": colorArea, "compra":compra, "renovar": renovar, "sinPropietario":sinPropietario,
+                                                       "mantenimientos":mantenimientos})
+                else:
+                    return render(request, "Equipos/infoEquipo.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "datosEquipo":datosEquipo,
+                                                       "nombreEmpleado": nombreEmpleado, "nombreArea": nombreArea, "colorArea": colorArea, "compra":compra, "renovar": renovar, "sinPropietario":sinPropietario})
 
     
 

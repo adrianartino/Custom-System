@@ -146,7 +146,7 @@ Ver Equipos
                                 <th>{{equipo.modelocargador}}</th>
                                 <th>{{empleado.0}} {{empleado.1}}</th>
                                 <th><label class="{{empleado.3}}">{{empleado.2}}</label></th>
-                                <th>Funcional</th>
+                                <th>{{equipo.estado}}</th>
                                 
                                     <th>
                                         <form action="/editarEquipo/" method="POST">{% csrf_token %}
