@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block titulo %}
-Calendario de Mantenimineto a equipos
+Calendario Mantenimiento
 {% endblock %}
 
 {% block estilos %}
@@ -39,7 +39,8 @@ Calendario de Mantenimineto a equipos
         <div class="card">
             <div class="header">
                 <h2>
-                    CALENDARIO DE MANTENIMINETO A EQUIPOS
+                    Calendario Mantenimiento
+
                 </h2>
                 <ul class="header-dropdown m-r--5">
                     <li class="dropdown">
@@ -56,6 +57,11 @@ Calendario de Mantenimineto a equipos
             </div>
             <div class="body">
                 <div class="table-responsive">
+                    
+
+
+                    
+
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                         <thead>
                             <tr  style="background-color: #fad60e; color:black">
@@ -65,27 +71,35 @@ Calendario de Mantenimineto a equipos
                                 <th>Observaciones</th>
                                 <th>Última limpieza:</th>
                                 <th>Fecha próxima:</th>
-                              
-                                
                             </tr>
                         </thead>
-                        
+                        <tfoot>
+                            <tr>
+                                <th>Nombre del propietario:</th>
+                                <th>Equipo:</th>
+                                <th>Operación</th>
+                                <th>Observaciones</th>
+                                <th>Última limpieza:</th>
+                                <th>Fecha próxima:</th>
+                            </tr>
+                        </tfoot>
                         <tbody>
                             {% for fecha, equipoProp, fechaproxima in lista %}
                             <tr>
-                                
-                                <td>{{equipoProp.0}} {{equipoProp.1}}</td>
-                                <td>{{equipoProp.2}} {{equipoProp.3}}</td>
-                                <td>{{fecha.operacion}}</td>
-                                <td>{{fecha.observaciones}}</td>
-                                <td>{{fecha.fecha}}</td>
-                                {% if "Limpieza externa" in fecha.operacion or "Limpieza interna" in fecha.operacion %}
-                                    <td>{{fechaproxima}}</td>
-                                {% endif %}
+                                <th>{{equipoProp.0}} {{equipoProp.1}}</th>
+                                <th>{{equipoProp.2}} {{equipoProp.3}}</th>
+                                <th>{{fecha.operacion}}</th>
+                                <th>{{fecha.observaciones}}</th>
+                                <th>{{fecha.fecha}}</th>
+                                <th>{{fechaproxima}}</th>
                             </tr>
                             {% endfor %}
-                     
-                     
+                            
+
+                            
+                            
+                            
+                       
                             
                             
                         </tbody>
@@ -95,7 +109,6 @@ Calendario de Mantenimineto a equipos
         </div>
     </div>
 </div>
-
 {% endblock %}
 
 {% block estilosJs %}

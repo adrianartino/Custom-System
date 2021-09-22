@@ -139,29 +139,33 @@ Editar Impresoras
                         <div class="col-md-3">
                             {% if impresora.enred == "S" %}
                             <label for="email_address">Conexión por red (IP):</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control date"  value="{{impresora.ip}}" name="ipEditar" >
-                                    </div>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">rss_feed</i>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" class="form-control date"  value="{{impresora.ip}}" maxlength="15" name="ipEditar" >
+                                </div>
+
+                            </div>
+                                    
                             {% elif impresora.enred == "N" %}
                             <label for="email_address">Conexión por red (IP):</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control date" name="ipEditar" >
-                                    </div>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">rss_feed</i>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" class="form-control date" maxlength="15" name="ipEditar" >
+                                </div>
+
+                            </div>
                             {% endif%}
                             
                             
                             
                         </div>
-                        <div class="col-md-3">
-                            <div>
-                                {% if impresora.activo == "A" %}
-                                <input type="checkbox" id="md_checkbox_30" class="filled-in chk-col-green" checked name="activoEditar"/>
-                                {% elif impresora.activo == "I" %}
-                                <input type="checkbox" id="md_checkbox_30" class="filled-in chk-col-green" name="activoEditar" />
-                                {% endif %}
-                                <label for="md_checkbox_30">Esta activo</label>
-                            </div>
-                        </div>
+                       
                         
 
                        

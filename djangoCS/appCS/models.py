@@ -98,7 +98,7 @@ class Cartuchos (models.Model):
 class CalendarioMantenimiento (models.Model):
     id_calmantenimiento=models.AutoField(primary_key=True)
     id_equipo=models.ForeignKey(Equipos, on_delete=models.CASCADE)
-    operacion=models.CharField(max_length=80)
+    operacion=models.CharField(max_length=200)
     fecha=models.DateField()
     observaciones=models.CharField(max_length=100)
 

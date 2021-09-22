@@ -46,81 +46,110 @@ Agregar Empleados
                 <form id="form_validation" action="/editarEmpleadoBd/" method="POST">{% csrf_token %}
                     {% for empleado in datosEmpleadoEditar %}
                     <div class="row clearfix">
-                        <div class="col-md-4">
+                        <div class="col-md-2">
+                            <label for="password">Imagen Empleado:</label>
+                            <div class="form-group">
+                                <center>
+                                    <img src="{{empleado.imagen_empleado.url}}" width="80%" alt="empleado">
+                                </center>
+                            </div>
+                        </div> 
+                        <div class="col-md-5">
+                            <div class="row clearfix">
+                                <div class="col-md-12">
+                                    <label for="email_address">Nombre(s):</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="material-icons">person</i>
+                                        </span>
+                                        <div class="form-line">
+                                            <input onkeypress='return soloLetras(event)' type="text" class="form-control date" placeholder="Ingresar nombre" 
+                                            pattern="[A-Za-z ]{3,80}" title="No se permiten caracteres especiales." value="{{empleado.nombre}}" name="nombreEditar" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row clearfix">
+                                <div class="col-md-12">
+                                    <label for="email_address">Área:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="material-icons">work</i>
+                                        </span>
+                                    
+                                            <select class="form-control show-tick" name="areaEditar">
+                                                <option value="{{empleado.id_area_id}}">{{nombreArea}}</option>
+                                                {% for areaNueva in areasNuevas %}
+                                                <option value="{{areaNueva.0}}">{{areaNueva.1}}</option>
+                                                {% endfor %}
+                                            </select>
+                                    
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row clearfix">
+                                <div class="col-md-12">
+                                    <label for="email_address">Correo:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="material-icons">email</i>
+                                        </span>
+                                        <div class="form-line">
+                                            <input type="email" class="form-control date" placeholder="Ingresar Correo"
+                                            title="Ingrese un correo electrónico válido." value="{{empleado.correo}}" name="correoEditar" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-5">
+                            <div class="row clearfix">
+                                <div class="col-md-12">
+                                    <label for="password">Apellidos:</label>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <input onkeypress='return soloLetras(event)'type="text" class="form-control date" placeholder="Ingresar apellidos"
+                                            pattern="[A-Za-z ]{3,80}" title="No se permiten caracteres especiales." value="{{empleado.apellidos}}" name="apellidoEditar" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row clearfix">
+                                <div class="col-md-12">
+                                    <label for="password">Puesto:</label>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <input onkeypress='return soloLetras(event)'type="text" class="form-control date" placeholder="Ingresar puesto"
+                                            pattern="[A-Za-z ]{3,80}" title="No se permiten caracteres especiales." value="{{empleado.puesto}}" name="puestoEditar" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row clearfix">
+                                <div class="col-md-12">
+                                    <label for="password">Contraseña:</label>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <input type="password" class="form-control date" placeholder="Ingresar Contraseña"
+                                            pattern="{3,40}"title="Ingrese la contraseña." value="{{empleado.contraseña}}" name="contraseñaEditar" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             
-                            <label for="email_address">Nombre(s):</label>
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="material-icons">person</i>
-                                </span>
-                                <div class="form-line">
-                                    <input onkeypress='return soloLetras(event)' type="text" class="form-control date" placeholder="Ingresar nombre" 
-                                    pattern="[A-Za-z ]{3,80}" title="No se permiten caracteres especiales." value="{{empleado.nombre}}" name="nombreEditar" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="password">Apellidos:</label>
-                            <div class="form-group">
-                                <div class="form-line">
-                                    <input onkeypress='return soloLetras(event)'type="text" class="form-control date" placeholder="Ingresar apellidos"
-                                    pattern="[A-Za-z ]{3,80}" title="No se permiten caracteres especiales." value="{{empleado.apellidos}}" name="apellidoEditar" required>
-                                </div>
-                            </div>
-                        </div>    
+                        </div>  
+                         
                     </div>
 
-                    <div class="row clearfix">
-                        <div class="col-md-4">
-                            <label for="email_address">Área:</label>
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="material-icons">work</i>
-                                </span>
-                               
-                                    <select class="form-control show-tick" name="areaEditar">
-                                        <option value="{{empleado.id_area_id}}">{{nombreArea}}</option>
-                                        {% for areaNueva in areasNuevas %}
-                                        <option value="{{areaNueva.0}}">{{areaNueva.1}}</option>
-                                        {% endfor %}
-                                    </select>
-                              
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="password">Puesto:</label>
-                            <div class="form-group">
-                                <div class="form-line">
-                                    <input onkeypress='return soloLetras(event)'type="text" class="form-control date" placeholder="Ingresar puesto"
-                                    pattern="[A-Za-z ]{3,80}" title="No se permiten caracteres especiales." value="{{empleado.puesto}}" name="puestoEditar" required>
-                                </div>
-                            </div>
-                        </div>    
-                    </div>
-
-                    <div class="row clearfix">
-                        <div class="col-md-4">
-                            <label for="email_address">Correo:</label>
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="material-icons">email</i>
-                                </span>
-                                <div class="form-line">
-                                    <input type="email" class="form-control date" placeholder="Ingresar Correo"
-                                    title="Ingrese un correo electrónico válido." value="{{empleado.correo}}" name="correoEditar" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="password">Contraseña:</label>
-                            <div class="form-group">
-                                <div class="form-line">
-                                    <input type="password" class="form-control date" placeholder="Ingresar Contraseña"
-                                    pattern="{3,40}"title="Ingrese la contraseña." value="{{empleado.contraseña}}" name="contraseñaEditar" required>
-                                </div>
-                            </div>
-                        </div>    
-                    </div>
+                    
                     <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i class="material-icons">loop</i> Actualizar Empleado</button>
                     {% endfor %}
                 </form>

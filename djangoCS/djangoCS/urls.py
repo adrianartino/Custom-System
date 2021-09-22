@@ -44,6 +44,7 @@ urlpatterns = [
     path('formularioMant/', views.formularioMant),
     path('verCarta/', views.verCarta),
     path('agregarCarta/', views.agregarCarta),
+    path('imprimirCarta/', views.imprimirCarta),
     path("BitacorasEquipos/", views.BitacorasEquipos),
     path("BitacorasImpresoras/", views.BitacorasImpresoras),
     path("BitacorasEmpleados/", views.BitacorasEmpleados),

@@ -67,9 +67,6 @@ Agregar Empleados
                                 </div>
                             </div>
                         </div>    
-                    </div>
-
-                    <div class="row clearfix">
                         <div class="col-md-4">
                             <label for="email_address">Área:</label>
                             <div class="input-group">
@@ -83,6 +80,10 @@ Agregar Empleados
                                 </select>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="row clearfix">
+                        
                         <div class="col-md-4">
                             <label for="password">Puesto:</label>
                             <div class="form-group">
@@ -91,10 +92,7 @@ Agregar Empleados
                                     maxlength="40" title="No se permiten caracteres especiales." name="puestoEm" required>
                                 </div>
                             </div>
-                        </div>    
-                    </div>
-
-                    <div class="row clearfix">
+                        </div> 
                         <div class="col-md-4">
                             <label for="email_address">Correo:</label>
                             <div class="input-group">
@@ -106,7 +104,7 @@ Agregar Empleados
                                     maxlength="50" title="Ingrese un correo electrónico válido." name="correoEm" required >
                                 </div>
                             </div>
-                        </div>
+                        </div>   
                         <div class="col-md-4">
                             <label for="password">Contraseña:</label>
                             <div class="input-group">
@@ -115,8 +113,11 @@ Agregar Empleados
                                     <input type="password" class="form-control date" id="password" placeholder="Ingresar Contraseña"
                                     maxlength="50" title="Ingrese la contraseña." name="contraEm" required>
                                 </div>
-                                <span class="input-group-addon" onclick="mostrar_contraseña();">
-                                    <i class="material-icons" id="ojo">visibility</i>
+                                <span style="cursor: pointer;" class="input-group-addon" onclick="mostrar_contraseña();">
+                                    <i class="material-icons" id="ojo">visibility_off</i>
+                                </span>
+                                <span style="cursor: pointer;" class="input-group-addon" onclick="mostrar_contraseña();">
+                                    <i class="material-icons" id="ojoAbierto">visibility</i>
                                 </span>
                             </div>
                         </div>    
@@ -144,15 +145,22 @@ Agregar Empleados
     </div>
 </div>
 <script>
+    var ojito = document.getElementById("ojoAbierto");
+    ojito.style.display="none"
     function mostrar_contraseña(){
         var x=document.getElementById("password");
         var y=document.getElementById("ojo");
+        var z=document.getElementById("ojoAbierto");
         if (x.type==="password"){
             x.type="text";
-            y.style.color ="red";
+            y.style.display="none";
+            z.style.display="";
+            z.style.color ="red";
         }else {
             x.type="password";
-            y.style.color ="gray";
+            z.style.display="none"
+            z.style.color ="gray"
+            y.style.display="";
         }
     }
     document.getElementById("correo").addEventListener('keyup', borrarEspacios)

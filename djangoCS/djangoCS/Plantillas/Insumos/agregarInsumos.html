@@ -81,7 +81,7 @@ Agregar Insumos
                                     <i class="material-icons">branding_watermark</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar Modelo" name="modelo">
+                                    <input type="text" class="form-control date" placeholder="Ingresar Modelo" name="modelo" maxlength="50" required>
                                 </div>
                             </div>
                         </div>
@@ -121,11 +121,11 @@ Agregar Insumos
                                 <i class="material-icons">palette</i>
                             </span>
                                 <select class="form-control show-tick" name="colores">
-                                    <option value="Negro">Negro</option>
-                                    <option value="Tricolor">Tricolor</option>
-                                    <option value="Amarillo">Amarillo</option>
-                                    <option value="Cyan">Cyan</option>
-                                    <option value="Magenta">Magenta</option>
+                                    <option value="Negro" style="background-color: black; color: white;">Negro</option>
+                                    <option value="Tricolor" style="background-color: rgb(247, 162, 6); color: black;">Tricolor</option>
+                                    <option value="Amarillo" style="background-color: rgb(251, 255, 9); color: black;">Amarillo</option>
+                                    <option value="Cyan" style="background-color: rgb(6, 179, 247); color: black;">Cyan</option>
+                                    <option value="Magenta" style="background-color: rgb(247, 6, 187); color: black;">Magenta</option>
                                 </select>
                         </div>
                     </div>

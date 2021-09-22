@@ -1,4 +1,3 @@
-
 {% load static %}
 
 {% block titulo %}
@@ -48,24 +47,7 @@
 <div class="row clearfix">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <div class="card">
-            <div class="header">
-                <h2>
-                    Nueva Carta
-                </h2>
-                
-                <ul class="header-dropdown m-r--5">
-                    <li class="dropdown">
-                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                            <i class="material-icons">more_vert</i>
-                        </a>
-                        <ul class="dropdown-menu pull-right">
-                            <li><a href="javascript:void(0);">Action</a></li>
-                            <li><a href="javascript:void(0);">Another action</a></li>
-                            <li><a href="javascript:void(0);">Something else here</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
+            
             <div class="body">
                 <center>
                     <h1>CARTA COMPROMISO REFERENTE AL USO DEL EQUIPO DE COMPUTO.</h1>
@@ -221,7 +203,7 @@
                                         </tfoot>
                                         <tbody>
                                             <tr>
-                                                {% for dato in datosEquipo %}
+                                                {% for dato in info_equipo %}
                                                     <th>{{dato.id_equipo}}</th>
                                                     <th>{{dato.tipo}}</th>
                                                     <th>{{dato.marca}}</th>
@@ -310,11 +292,11 @@
                                         </tfoot>
                                         <tbody>
                                             <tr>
-                                                {% for dato in datosEmpleado %}
+                                                {% for dato in info_empleado %}
                                                 <td>{{dato.id_empleado}}</td>
                                                 <td>{{dato.nombre}}</td>
                                                 <td>{{dato.apellidos}}</td>
-                                                <td><span class="{{color}}">{{nombre}}</span></td>
+                                                <td><span class="{{color_area}}">{{nombre_area}}</span></td>
                                                 <td>{{dato.puesto}}</td>
                                                 <td>{{dato.correo}}</td>
                                                 <td>{{dato.activo}}</td>
@@ -334,74 +316,10 @@
                 <center>
                     <h2>Fecha: {{fecha}}</h2>
                     <img src="{% static 'images/qr3.png' %}" width="10%" alt="qr">
-                    {% if imagen2 %}
-                    <img src="{{imagen.url}}" alt="firma">
+                    <img src="{{imagen_firma.url}}" alt="firma">
 
                     
-                    {% else %}
-
-                    <h2>Ingresar Firma Electrónica</h2>
                     
-                        <label for=""></label>
-                        <div class="contenedor">
-
-                            <div class="row">
-                                <div class="col-md-12">
-                                     <canvas id="draw-canvas" width="620" height="360">
-                                         No tienes un buen navegador.
-                                     </canvas>
-                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <input type="button" class="button" id="draw-submitBtn" value="Crear Imagen"></input>
-                                    <input type="button" class="button" id="draw-clearBtn" value="Borrar Canvas"></input>
-                    
-                                            <label>Color</label>
-                                            <input type="color" id="color">
-                                            <div>
-                                                <br>
-                                                <label>Tamaño Puntero</label>
-                                            <input type="range" id="puntero" min="1" default="1" max="5" width="10%">
-                                            </div>
-                                            
-                    
-                    
-                                </div>
-                    
-                            </div>
-                    
-                            <br/>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <textarea id="draw-dataUrl" class="form-control" rows="5">Para los que saben que es esto:</textarea>
-                                </div>
-                            </div>
-                            <br/>
-                            <div class="contenedor">
-                                <div class="col-md-12">
-                                    <img id="draw-image" src="" alt="Tu Imagen aparecera Aqui!"/>
-                                </div>
-                            </div>
-                        </div>
-                    
-                    <div>
-                       
-                        <br><br>
-                        <form action="/guardarImagen/" method="POST" id="form1">{% csrf_token %}
-                            <input type="hidden" name="canvasData" id="my_hidden">
-                            {% for equipo in datosEquipo %}
-                            <input type="hidden" name="idEquipo"  value="{{equipo.id_equipo}}">
-                            {% endfor %}
-                            {% for empleados in datosEmpleado %}
-                            <input type="hidden" name="idEmpleado" value="{{empleados.id_empleado}}">
-                            {% endfor %}
-                            <button type="submit" class="btn btn-success m-t-15 waves-effect" onclick="save()"><i class="material-icons">save</i> Guardar</button>
-        
-        
-                        </form>
-                    </div>
-                    {% endif %}
                     
                     
                 </center>

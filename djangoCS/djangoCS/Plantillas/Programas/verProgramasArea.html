@@ -42,16 +42,32 @@ Ver Programas por area
                     <button style="border: 0; background-color: Transparent;">
                         {% if area.nombre == "Sistemas" %}
                         <i class="material-icons col-red">desktop_windows</i>
-                        {% elif area.nombre == "Administración" %}
-                        <i class="material-icons col-lime">work</i>
-                        {% elif area.nombre == "Almacen" %}
-                        <i class="material-icons col-teal">beenhere</i>
+                        {% elif area.nombre == "Recursos Humanos" %}
+                        <i class="material-icons col-pink">people</i>
+                        {% elif area.nombre == "Gestión de calidad" %}
+                        <i class="material-icons col-green">trending_up</i>
+                        {% elif area.nombre == "Dirección" %}
+                        <i class="material-icons col-deep-orange">work</i>
+                        {% elif area.nombre == "Ingeniería" %}
+                        <i class="material-icons col-grey">settings</i>
+                        {% elif area.nombre == "Diseño y Manufactura" %}
+                        <i class="material-icons col-yellow">border_color</i>
+                        {% elif area.nombre == "Administrativo" %}
+                        <i class="material-icons col-cyan">local_atm</i>
+                        {% elif area.nombre == "Abastecimineto" %}
+                        <i class="material-icons col-teal">add_shopping_cart</i>
+                        {% elif area.nombre == "Soporte Técnico" %}
+                        <i class="material-icons col-black">build</i>
+                        {% elif area.nombre == "Proyectos" %}
+                        <i class="material-icons col-brown">date_range</i>
+                        {% elif area.nombre == "Labor Comercial" %}
+                        <i class="material-icons col-orange">attach_money</i>
                         {% endif %}
                     </button>
                 </div>
                 <div class="content">
                     <div class="text">
-                        <input type="text" style="border: 0;" value="{{area.nombre}}" name="nombreArea">
+                        <input type="text" style="border: 0; color: black;"  value="{{area.nombre}}" name="nombreArea">
                     </div>
                     <div class="number">{{programas}} Programas</div>
                 </div>

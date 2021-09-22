@@ -65,7 +65,8 @@ Ver Equipos
 
                    </span> #1</h1>
                     <h1 style="color: black;">{{datoEquipo.tipo}} {{datoEquipo.marca}} {{datoEquipo.modelo}}</h1>
-                    
+                    <img src="{{datoEquipo.imagen.url}}" width="30%" alt="lap">
+
                     {% if sinPropietario %}
                     <h1 style="color: black;">Propietario: Sin Propietario</h1>
                     {% else %}
@@ -291,7 +292,6 @@ Ver Equipos
 <script src={% static 'panel/plugins/node-waves/waves.js' %}></script>
 
 <!-- Jquery DataTable Plugin Js -->
-<script src={% static 'panel/plugins/jquery-datatable/jquery.dataTables.js' %}></script>
 
 <!-- Custom Js -->
 <script src={% static 'panel/js/admin.js' %}></script>

@@ -116,7 +116,11 @@ Ver Impresoras
                                     </center>
                                 </th>
                                 <th>{{impresoras.tipo}}</th>
-                                <th>{{impresoras.enred}}</th>
+                                {% if impresoras.enred == "S" %}
+                                <th>Si</th>
+                                {% elif impresoras.enred == "N" %}
+                                <th>No</th>
+                                {% endif %}
                                 <th>{{impresoras.ip}}</th>
                                 <th>{{impresoras.estado}}</th>
                                 <th><label class="{{areas.1}}">{{areas.0}}</label> </th>
@@ -158,7 +162,7 @@ Ver Impresoras
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                         <thead>
-                            <tr  style="background-color: #fad60e; color:black">
+                            <tr  style="background-color: #E05D5D; color:black">
                                 <th>ID Impresora</th>
                                 <th>Marca</th>
                                 <th>Modelo</th>
@@ -202,7 +206,11 @@ Ver Impresoras
                                     </center>
                                 </th>
                                 <th>{{impresorasI.tipo}}</th>
-                                <th>{{impresorasI.enred}}</th>
+                                {% if impresorasI.enred == "S" %}
+                                <th>Si</th>
+                                {% elif impresorasI.enred == "N" %}
+                                <th>No</th>
+                                {% endif %}
                                 <th>{{impresorasI.ip}}</th>
                                 <th>{{impresorasI.estado}}</th>
                                 <th><label class="{{areasI.1}}">{{areasI.0}}</label> </th>

@@ -853,26 +853,33 @@ def agregarImpresoras(request):
         tipo_recibida = request.POST['tipos']
         areas_recibida = request.POST['areas']
         estados_recibida = request.POST['estados']
-        
-        if request.POST.get('red', False):
-            red_recibido = "S"
-        elif request.POST.get('red', True):
-            red_recibido = "N"
-            
-        if request.POST.get('acin', False):
-            activo_recibido = "A"
-        elif request.POST.get('acin', True):
-            activo_recibido = "I"
-        
         ip_recibida = request.POST['ip']
+        fecha_compra_recibido = request.POST['fecha_compra'] #dia/mes/año 29/06/2018
+        red_recibido = "S"
         
         if ip_recibida == "":
-            ip_recibida = "No ip"    
+            ip_recibida = "No ip"
+            red_recibido = "N"    
+        
+        fecha_separada = fecha_compra_recibido.split("/") #29   06    2018            2018     29   06
+        fecha_normal = fecha_separada[2] + "-" + fecha_separada[0] + "-" + fecha_separada[1]
+        
+        año_compra = int(fecha_separada[2])
+        año_renov = año_compra + 3
+        
+        fecha_renovacion =  str(año_renov) + "-" + fecha_separada[0] + "-" + fecha_separada[1]
     
         registroImpresora=Impresoras(marca=marca_recibido, modelo= modelo_recibido,numserie=numserie_recibida,
                                      imagen=imagen_recibida, tipo=tipo_recibida,enred=red_recibido, 
-                                     ip=ip_recibida, estado=estados_recibida, activo= activo_recibido,id_area = Areas.objects.get(id_area = areas_recibida))
-        registroImpresora.save()
+                                     ip=ip_recibida, estado=estados_recibida, activo= "A",id_area = Areas.objects.get(id_area = areas_recibida))
+        if registroImpresora:
+                    registroImpresora.save()
+                    
+                    registros = Impresoras.objects.count()
+                    
+                    registroAntiguiedad = Renovacion_Impresoras(id_impresora = Impresoras.objects.get(id_impresora = registros), fecha_compra = fecha_normal, fecha_renov = fecha_renovacion)
+                    registroAntiguiedad.save()
+        
         impresoraAgregada = True
         
         impresoraExito= "La impresora " + marca_recibido + " " + modelo_recibido + " se guardó con éxito" 
@@ -1245,34 +1252,51 @@ def calendarioMant(request):
     nombreCompleto = nombre + " " + apellidos
     
     registroEquipos = CalendarioMantenimiento.objects.all()
-    propietarioCompu = Empleados.objects.all()
-    equipos= Equipos.objects.all()
+    #propietarioCompu = Empleados.objects.all()
+    #equipos= Equipos.objects.all()
     
     equipoPropietario = []
     fechasNuevas=[]
     for equipos in registroEquipos:
         idEquipo =int (equipos.id_equipo_id)
         fecha= equipos.fecha
-        nueva_fecha = fecha + relativedelta(months=1)
-        fechasNuevas.append(nueva_fecha)
+        operacion = equipos.operacion
+        operaciones_sueltas = operacion.split(" - ") #
+        
+        
+        if "Limpieza externa" in operaciones_sueltas or "Limpieza interna" in operaciones_sueltas:
+            nueva_fecha = fecha + relativedelta(months=1)
+            fechasNuevas.append(nueva_fecha)
+        else:
+            fechasNuevas.append("")
+                
+        
+        
         equi = Equipos.objects.filter(id_equipo=idEquipo)
             
         for datosEquipo in equi:
             marca = datosEquipo.marca
             modelo = datosEquipo.modelo
-            idPropietario = datosEquipo.id_empleado
+            idPropietario = datosEquipo.id_empleado_id
                 
-            for propietario in propietarioCompu:
-                idPropietario= int(propietario.id_empleado)
-                prop = Empleados.objects.filter(id_empleado= idPropietario)
-                    
-                for datosProp in prop:
-                    nombre= datosProp.nombre
-                    apellidos = datosProp.apellidos
-                    
-            equipoPropietario.append([nombre,apellidos, marca,modelo])
+            if idPropietario == None:
+                equipoPropietario.append(["Sin"," Propietario", marca,modelo])
+            else:
+                
+                datosEmpleado = Empleados.objects.filter(id_empleado = idPropietario)
+                
+                for propietario in datosEmpleado:
+                    idPropietario= int(propietario.id_empleado)
+                    prop = Empleados.objects.filter(id_empleado= idPropietario)
+                        
+                    for datosProp in prop:
+                        nombre= datosProp.nombre
+                        apellidos = datosProp.apellidos
+                        
+                equipoPropietario.append([nombre,apellidos, marca,modelo])
             
     lista = zip (registroEquipos, equipoPropietario, fechasNuevas)
+    
     
     
             
@@ -1282,7 +1306,7 @@ def calendarioMant(request):
 
        
     
-    return render(request,"Mantenimiento/calendarioMant.html", {"estaEnCalendario": estaEnCalendario, "nombreCompleto":nombreCompleto, "correo":correo, "lista": lista})
+    return render(request,"Mantenimiento/calendarioMant.html", {"estaEnCalendario": estaEnCalendario, "nombreCompleto":nombreCompleto, "correo":correo, "lista": lista, "registroEquipos":registroEquipos})
 
 def formularioMant(request):
     estaEnFormulario = True
@@ -1298,13 +1322,17 @@ def formularioMant(request):
     for empleado in infoEquipos:
         idEmpleado = empleado.id_empleado_id
         
-    
-        empleados = Empleados.objects.filter(id_empleado__icontains = idEmpleado)
+        if idEmpleado == None:
+            texto = "Sin propietario"
+            empleadosEquipo.append([texto])
 
-        for empleadoEquipo in empleados:
-          nombre = empleadoEquipo.nombre
-          apellidos = empleadoEquipo.apellidos
-          empleadosEquipo.append([nombre,apellidos])
+        else:
+            empleados = Empleados.objects.filter(id_empleado__icontains = idEmpleado)
+
+            for empleadoEquipo in empleados:
+                nombre = empleadoEquipo.nombre
+                apellidos = empleadoEquipo.apellidos
+                empleadosEquipo.append([nombre,apellidos])
           
     lista = zip(infoEquipos, empleadosEquipo)
   
@@ -1412,7 +1440,7 @@ def agregarCarta(request):
     areas=[]
     
     
-    compusInactivas = Equipos.objects.filter(activo__icontains= "I")
+    compusInactivas = Equipos.objects.filter(id_empleado__isnull=True, estado="Funcional")
     
     for empleado in empledos:
         idarea= int(empleado.id_area_id)
@@ -1472,6 +1500,33 @@ def agregarCarta(request):
     estaEnAgregarCarta = True
     return render(request, "cartaCompromiso/agregarCarta.html",{"estaEnAgregarCarta": estaEnAgregarCarta, "nombreCompleto":nombreCompleto, "correo":correo, "equipos":equipos, "empleados": empledos, "lista":lista, "fecha":fecha,
                                                                 "compusInactivas": compusInactivas})
+def imprimirCarta(request):
+    
+    if request.method == "POST":
+        id_carta_recibida = request.POST['idCarta']
+        
+        datos_carta = Carta.objects.filter(id_carta = id_carta_recibida)
+        
+        for dato in datos_carta:
+            empleado = int(dato.id_empleado_id)
+            equipo = int(dato.id_equipo_id)
+            fecha = dato.fecha
+            imagen_firma = dato.firma
+            
+        info_empleado = Empleados.objects.filter(id_empleado = empleado)
+        for dato_empleado in info_empleado:
+            area = int(dato_empleado.id_area_id)
+            
+        info_area = Areas.objects.filter(id_area = area)
+            
+        for dato_area in info_area:
+            nombre_area = dato_area.nombre
+            color_area = dato_area.color
+        
+        info_equipo = Equipos.objects.filter(id_equipo = equipo)
+            
+        
+        return render(request, "cartaCompromiso/imprimirCarta.html",{"info_equipo":info_equipo, "info_empleado":info_empleado, "nombre_area":nombre_area, "color_area":color_area, "fecha":fecha, "imagen_firma":imagen_firma})
 
 def BitacorasEquipos(request):
     estaEnEquiposBitacora = True
@@ -1983,12 +2038,6 @@ def editarImpresoraBd(request):
         for dato in datosImpresora:
             marcaMostrar = dato.marca
             modeloMostrar = dato.modelo
-        
-        
-        if request.POST.get('activoEditar', False): #Chequeado
-            activo_actualizar = "A"
-        elif request.POST.get('activoEditar', True): #No checkeado
-            activo_actualizar = "I"
             
         if request.POST["ipEditar"]=="":
             laVaAPonerEnRed = False
@@ -1999,12 +2048,19 @@ def editarImpresoraBd(request):
         
          
         if laVaAPonerEnRed == False:
-            actualizar = Impresoras.objects.filter(id_impresora__icontains=impresora_id).update(id_area_id=area_actualizar, estado=estado_actualizar,
-                                               enred="N", ip="", activo = activo_actualizar)
-            
+            if estado_actualizar == "Funcional":
+                actualizar = Impresoras.objects.filter(id_impresora__icontains=impresora_id).update(id_area_id=area_actualizar, estado=estado_actualizar,
+                                               enred="N", ip="", activo = "A")
+            else:
+                actualizar = Impresoras.objects.filter(id_impresora__icontains=impresora_id).update(id_area_id=area_actualizar, estado=estado_actualizar,
+                                               enred="N", ip="", activo = "I")
         elif laVaAPonerEnRed == True:
-            actualizar = Impresoras.objects.filter(id_impresora__icontains=impresora_id).update(id_area_id=area_actualizar, estado=estado_actualizar,
-                                               enred="S", ip=ip_actualizar, activo = activo_actualizar)
+            if estado_actualizar == "Funcional":
+                actualizar = Impresoras.objects.filter(id_impresora__icontains=impresora_id).update(id_area_id=area_actualizar, estado=estado_actualizar,
+                                               enred="S", ip=ip_actualizar, activo = "A")
+            else:
+                actualizar = Impresoras.objects.filter(id_impresora__icontains=impresora_id).update(id_area_id=area_actualizar, estado=estado_actualizar,
+                                               enred="S", ip=ip_actualizar, activo = "I")
             
         datos_impresora = Impresoras.objects.filter(id_impresora__icontains = impresora_id)
         

@@ -89,9 +89,9 @@ Ver carta
                                         <img src="{{registros.firma.url}}" width="75%" alt="lap">
                                     </center>
                                 </td>
-                                <form action="/verCartaCompleta/" method="POST">{% csrf_token %}
+                                <form action="/imprimirCarta/" method="POST">{% csrf_token %}
                                     <th>
-                                        <input type="hidden" name="idEmpleadoEditar" value="{{registros.id_carta}}">
+                                        <input type="hidden" name="idCarta" value="{{registros.id_carta}}">
                                         <center>
                                             <button type="submit" class="btn bg-deep-purple waves-effect"> <i class="material-icons">visibility</i></button>
                                         </center>

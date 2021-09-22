@@ -22,6 +22,15 @@ Agregar Impresoras
 <!-- Animation Css -->
 <link href={% static 'panel/plugins/animate-css/animate.css' %} rel="stylesheet" />
 
+<!-- Bootstrap Material Datetime Picker Css -->
+<link href={% static 'panel/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css' %}  rel="stylesheet" />
+
+<!-- Bootstrap DatePicker Css -->
+<link href={% static 'panel/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css' %} rel="stylesheet" />
+
+<!-- Wait Me Css -->
+<link href={% static 'panel/plugins/waitme/waitMe.css' %} rel="stylesheet" />
+
 <!-- Bootstrap Select Css -->
 <link href={% static 'panel/plugins/bootstrap-select/css/bootstrap-select.css' %} rel="stylesheet" />
 
@@ -80,7 +89,7 @@ Agregar Impresoras
                                     <i class="material-icons">branding_watermark</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar Modelo" name="modelos">
+                                    <input type="text" class="form-control date" placeholder="Ingresar Modelo"  maxlength="50"  name="modelos" required>
                                 </div>
                             </div>
                         </div>
@@ -91,7 +100,7 @@ Agregar Impresoras
                                     <i class="material-icons">pin</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar número de serie" name="nserie">
+                                    <input type="text" class="form-control date" placeholder="Ingresar número de serie"  maxlength="50" name="nserie" required>
                                 </div>
                             </div>
                         </div>
@@ -160,18 +169,25 @@ Agregar Impresoras
                                     <i class="material-icons">rss_feed</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar IP" name="ip">
+                                    <input type="text" class="form-control date" placeholder="Ingresar IP"  maxlength="15" name="ip">
                                 </div>
                             </div>
-                            <div>
-                                <input type="checkbox" id="md_checkbox_30" class="filled-in chk-col-green" checked name="acin"/>
-                                <label for="md_checkbox_30">Esta activo</label>
-                            </div>
+                          
                             
                         </div>
                         
 
                        
+                    </div>
+                    <div class="row clearfix">
+                        <div class="col-md-4">
+                            <h2 class="card-inside-title">Fecha de Compra:</h2>
+                            <div class="form-group">
+                                <div class="form-line" id="bs_datepicker_container">
+                                    <input type="text" class="form-control" name="fecha_compra" placeholder="Seleccionar fecha" required>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     
                     
@@ -268,6 +284,20 @@ Agregar Impresoras
 <!-- Waves Effect Plugin Js -->
 <script src={% static 'panel/plugins/node-waves/waves.js' %}></script>
 
+
+<!-- Autosize Plugin Js -->
+<script src={% static 'panel/plugins/autosize/autosize.js' %}></script>
+
+<!-- Moment Plugin Js -->
+<script src={% static 'panel/plugins/momentjs/moment.js' %}></script>
+
+<!-- Bootstrap Material Datetime Picker Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js' %}></script>
+
+<!-- Bootstrap Datepicker Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js' %}></script>
+
+
 <!-- Jquery DataTable Plugin Js -->
 <script src={% static 'panel/plugins/jquery-datatable/jquery.dataTables.js' %}></script>
 <script src={% static 'panel/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js' %}></script>
@@ -281,6 +311,7 @@ Agregar Impresoras
 
 <!-- Custom Js -->
 <script src={% static 'panel/js/admin.js' %}></script>
+<script src={% static 'panel/js/pages/forms/basic-form-elements.js' %}></script>
 <script src={% static 'panel/js/pages/tables/jquery-datatable.js' %}></script>
 <script src={% static 'panel/js/pages/forms/advanced-form-elements.js' %}></script>
 
