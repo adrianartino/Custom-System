@@ -198,9 +198,9 @@ def inicio(request):
             for dato in info_impresora:
                 marca = dato.marca
                 modelo = dato.modelo
-                nombreCompleto = marca + " " + modelo
+                nombreCompletoi = marca + " " + modelo
                 
-            impresoras.append(nombreCompleto)
+            impresoras.append(nombreCompletoi)
             
         lista = zip(cartuchos, impresoras)
         
