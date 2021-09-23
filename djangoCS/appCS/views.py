@@ -4,6 +4,8 @@ from django.http import response
 from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.shortcuts import redirect
+from reportlab.lib import colors
+from reportlab.lib.enums import TA_CENTER
 from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras
 import base64
 from django.core.files.base import ContentFile
@@ -13,8 +15,14 @@ from calendar import calendar
 from dateutil.relativedelta import relativedelta
 
 #Librerias reportes pdf
-from io  import BytesIo
+from io  import BytesIO
 from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.units import cm
+from reportlab.platypus import Image, Paragraph, Table, TableStyle
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.colors import red
+
 
 # Create your views here.
 def login(request):
@@ -2484,4 +2492,195 @@ def firmarCarta(request):
 
 
 def reporteDepartamentos(request):
+    
+    #crear el http response con pdf
+    respuesta = HttpResponse(content_type='application/pdf')
+    respuesta['Content-Disposition'] = 'attachment; filename=Reporte Deparatmentos.pdf'
+    #Crear objeto PDF 
+    buffer =BytesIO()
+    c = canvas.Canvas(buffer, pagesize=letter)
+    #nombre de empresa
+    c.setFont('Helvetica-Oblique', 22)
+    c.drawString(40,750, 'Custom & Co S.A. de C.V.')
+    #fecha
+    hoy=datetime.now()
+    fecha = str(hoy.date())
+    
+    c.setFont('Helvetica', 12)
+    c.drawString(480,750, fecha)
+    #linea guinda
+    color_guinda="#B03A2E"
+    c.setFillColor(color_guinda)
+    c.setStrokeColor(color_guinda)
+    c.line(40,747,560,745)
+    #nombre departamento
+    color_negro="#030305"
+    c.setFillColor(color_negro)
+    c.setFont('Helvetica', 16)
+    c.drawString(60,730, 'Departamento de Sistemas')
+    #titulo
+    c.setFont('Helvetica-Bold', 22)
+    c.drawString(180,700, 'Reporte de Departamentos')
+    
+    #obtener datos de area
+    
+    datosAreas= Areas.objects.all()
+    cantidad_empleados = []
+    
+    for area in datosAreas:
+        id_area_una = area.id_area
+        areaInt = int(id_area_una)
+        
+        empleadosEnArea = Empleados.objects.filter(id_area_id__id_area__icontains = areaInt)
+        
+        numero_empleados = 0
+        for empleado in empleadosEnArea:
+            numero_empleados+=1
+        
+        cantidad_empleados.append(numero_empleados)
+        
+    listaAreas = zip(datosAreas, cantidad_empleados)
+    #header de tabla
+    styles = getSampleStyleSheet()
+    styleBH =styles["Normal"]
+    styleBH.alignment = TA_CENTER
+    styleBH.fontSize = 10
+    
+    
+    id_Departamento = Paragraph('''Id Departamento''', styleBH)
+    nombre = Paragraph('''Nombre''', styleBH)
+    color = Paragraph('''Color''', styleBH)
+    numero_empleado = Paragraph('''Numero de empleados''', styleBH)
+    filasTabla=[]
+    filasTabla.append([id_Departamento, nombre, color, numero_empleado])
+    #Tabla
+    styleN = styles["BodyText"]
+    styleN.alignment = TA_CENTER
+    styleN.fontSize = 7
+    
+    high = 650
+    for area, empleados in listaAreas:
+        fila = [area.id_area, area.nombre, area.color, empleados]
+        filasTabla.append(fila)
+        high= high - 18 
+        
+    #escribir tabla
+    width, height = letter
+    tabla = Table(filasTabla, colWidths=[4 * cm, 4 * cm, 4 * cm, 4 * cm])
+    tabla.setStyle(TableStyle([
+        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+        ('BACKGROUND', (0, 0), (-1, 0), '#F5CD04'),
+        ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+    ]))
+    
+    contador = 0
+    for fila in filasTabla:
+        contador += 1
+        if contador > 1:
+            if fila[2] == "label bg-red":
+                color = colors.red
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+                
+            elif fila[2] == "label bg-pink":
+                color = colors.pink
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-purple":
+                color = colors.purple
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-indigo":
+                color = colors.indigo
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-blue":
+                color = colors.blue
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-cyan":
+                color = colors.cyan
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-teal":
+                color = colors.teal
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-green":
+                color = colors.green
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-light-green":
+                color = colors.lightgreen
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-lime":
+                color = colors.lime
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-yellow":
+                color = colors.yellow
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-amber":
+                color = colors.orangered
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-orange":
+                color = colors.orange
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-deep-orange":
+                color = colors.deeppink
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-brown":
+                color = colors.brown
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-grey":
+                color = colors.gray
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-blue-grey":
+                color = colors.blueviolet
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-black":
+                color = colors.black
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+                
+    
+    tabla.wrapOn(c, width, height)
+    tabla.drawOn(c, 80, high)
+    c.showPage()
+    
+    
+    
+    #guardar pdf
+    c.save()
+    #obtener valores de bytesIO y esribirlos en la respuesta
+    pdf = buffer.getvalue()
+    buffer.close()
+    respuesta.write(pdf)
+    return respuesta
     
