@@ -137,7 +137,7 @@ Inicio
     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
         <div class="card">
             <div class="header">
-                <h2>Próximas Limpiezas</h2>
+                <h2>Próximas Limpiezas - <span style="color: crimson;">Del {{dia}} al {{resta_dia}} de {{mes_texto}} del {{año}}</span></h2>
 
                 
             </div>
@@ -240,6 +240,41 @@ Inicio
                                     <th>{{equipo.1}}</th>
                                     <th>{{equipo.2}}</th>
                                     <th>{{equipo.3}}</th>
+                                {% endfor %}
+
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="card">
+            <div class="header">
+                <h2>Próximas Renovaciones de Impresoras</h2>
+            </div>
+            <div class="body">
+                <div class="table-responsive">
+                    <table class="table table-hover dashboard-task-infos">
+                        <thead>
+                            <tr>
+                                <th>Impresora</th>
+                                <th>Departamento</th>
+                                <th>Fecha de Compra</th>
+                                <th>Fecha de Renovación</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                            <tr>
+                                {% for imp in impresoras_año %}
+                                    <th>{{imp.0}}</th>
+                                    <th><label class="{{imp.2}}">{{imp.1}}</label></th>
+                                    <th>{{imp.3}}</th>
+                                    <th>{{imp.4}}</th>
                                 {% endfor %}
 
                             </tr>

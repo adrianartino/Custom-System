@@ -365,11 +365,16 @@
                     <li class="active">
                     {% else %}
                     <li >
+                    {% if estaEnRenovacionImpresoras %}
+                    <li class="active">
+                    {% else %}
+                    <li >
                     {% if Insumos %}
                     <li class="active">
                     {% else %}
                     <li >
-                   
+                    
+                    {% endif %}
                     {% endif %}
                     {% endif %}
                     {% endif %}
@@ -382,12 +387,17 @@
                             <i class="material-icons" style="color: #00917C;!important">local_printshop</i>
                             <span style="color: #00917C;!important"> Impresoras</span>
                             {% else %}
+                            {% if estaEnRenovacionImpresoras %}
+                            <i class="material-icons" style="color: #00917C;!important">local_printshop</i>
+                            <span style="color: #00917C;!important"> Impresoras</span>
+                            {% else %}
                             {% if Insumos %}
                             <i class="material-icons" style="color: #00917C;!important">local_printshop</i>
                             <span style="color: #00917C;!important"> Impresoras</span>
                             {% else %}
                             <i class="material-icons" >local_printshop</i>
                             <span> Impresoras</span>
+                            {% endif %}
                             {% endif %}
                             {% endif %}
                             {% endif %}
@@ -415,6 +425,17 @@
                                 <a href="/agregarImpresoras/" style="color: #E40017;!important">Agregar impresoras</a>
                                 {% else %}
                                 <a href="/agregarImpresoras/">Agregar impresoras</a>
+                                {% endif %}
+                            </li>
+                            {% if estaEnRenovacionImpresoras %}
+                            <li class="active">
+                            {% else %}
+                            <li>
+                            {% endif %}
+                                {% if estaEnRenovacionImpresoras %}
+                                <a href="/renovacionImpresoras/" style="color: #E40017;!important">Renovación impresoras</a>
+                                {% else %}
+                                <a href="/renovacionImpresoras/">Renovación impresoras</a>
                                 {% endif %}
                             </li>
                             {% if Insumos %}

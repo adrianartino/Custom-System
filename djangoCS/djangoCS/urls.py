@@ -34,6 +34,7 @@ urlpatterns = [
     path('infoEquipo/', views.infoEquipo),
     path('verImpresoras/', views.verImpresoras),
     path('agregarImpresoras/', views.agregarImpresoras),
+    path('renovacionImpresoras/', views.renovacionImpresoras),
     path('verInsumos/', views.verInsumos),
     path('agregarInsumos/', views.agregarInsumos),
     path('actualizarInsumos/', views.actualizarInsumos),
@@ -69,7 +70,9 @@ urlpatterns = [
     path("altaEquipo/", views.altaEquipo),
     path("bajaEquipo/", views.bajaEquipo),
     path("altaImpresora/", views.altaImpresora),
-    path("bajaImpresora/", views.bajaImpresora)
+    path("bajaImpresora/", views.bajaImpresora),
+    
+    path("reporteDepartamentos/",views.reporteDepartamentos)
     
     
 ]

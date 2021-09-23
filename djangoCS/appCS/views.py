@@ -9,7 +9,12 @@ import base64
 from django.core.files.base import ContentFile
 from datetime import date, datetime
 from datetime import timedelta
+from calendar import calendar
 from dateutil.relativedelta import relativedelta
+
+#Librerias reportes pdf
+from io  import BytesIo
+from reportlab.pdfgen import canvas
 
 # Create your views here.
 def login(request):
@@ -103,29 +108,75 @@ def inicio(request):
         
         limpiezas = CalendarioMantenimiento.objects.all()
         
+        fecha = datetime.now()
+        date = fecha.date()
+        año = date.strftime("%Y") #2021
+        mes = date.strftime("%m") #09
+        dia = date.strftime("%d") #23
+        int_dia = int(dia)
+        
+        mes_numero = int(fecha.month)
+        
+        
+        arreglo_meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
+        
+        posicion = 0
+        for mes2 in arreglo_meses:
+            posicion += 1
+            if posicion == mes_numero:
+                mes_texto = mes2
+        
+        
+        
         datosLimpiezas = []
         for limpieza in limpiezas:
-            if limpieza.operacion == "Limpieza externa - Limpieza interna - ":
-                id_equipo = limpieza.id_equipo_id
+            fecha = limpieza.fecha  #23 08 2021
+            año_limpieza = fecha.strftime("%Y") #2021
+            mes_limpieza = fecha.strftime("%m") #08
+            dia_limpieza = fecha.strftime("%d") #23
+            int_dia_limpieza = int(dia_limpieza)
+            
+            resta = int(mes) - int(mes_limpieza)
+            
+            resta_dias= int(dia)+4 #27
+            
+            if año_limpieza == año:
                 
-                intEquipo = int(id_equipo)
-                datosEquipo = Equipos.objects.filter(id_equipo = intEquipo)
+                if resta == 1:
+                    if int_dia_limpieza >= int_dia and int_dia_limpieza <= resta_dias:
+                        
+                        #si está dentro del mes y 4 días más
+                        
+                        if limpieza.operacion == "Limpieza externa - Limpieza interna - ":
+                            id_equipo = limpieza.id_equipo_id
+                            
+                            intEquipo = int(id_equipo)
+                            datosEquipo = Equipos.objects.filter(id_equipo = intEquipo)
+                            
+                            for datoEquipo in datosEquipo:
+                                id_empleado = datoEquipo.id_empleado_id
+                                id_equipo = datoEquipo.id_equipo
+                                tipo = datoEquipo.tipo
+                                marca = datoEquipo.marca
+                                modelo = datoEquipo.modelo
+                                
+                                if id_empleado == None:
+                                    fecha = limpieza.fecha   
+                                    datosLimpiezas.append(["Sin","Propietario",tipo,marca,modelo, fecha])
+                                
+                                else:
+                                    
+                                    datosEmpleado = Empleados.objects.filter(id_empleado = id_empleado)
+                                        
+                                    for datoEmpleado in datosEmpleado:
+                                        nombree = datoEmpleado.nombre
+                                        apellidose = datoEmpleado.apellidos
+                                        
+                                    fecha = limpieza.fecha   
+                                    datosLimpiezas.append([nombree,apellidose,tipo,marca,modelo, fecha])
                 
-                for datoEquipo in datosEquipo:
-                    id_empleado = datoEquipo.id_empleado_id
-                    id_equipo = datoEquipo.id_equipo
-                    tipo = datoEquipo.tipo
-                    marca = datoEquipo.marca
-                    modelo = datoEquipo.modelo
-                    
-                    intEmpleado = int(id_empleado)
-                    datosEmpleado = Empleados.objects.filter(id_empleado = intEmpleado)
-                    
-                    for datoEmpleado in datosEmpleado:
-                        nombree = datoEmpleado.nombre
-                        apellidose = datoEmpleado.apellidos
-                fecha = limpieza.fecha   
-                datosLimpiezas.append([nombree,apellidose,tipo,marca,modelo, fecha])
+            
+            
                 
         cartuchos = Cartuchos.objects.all()
         
@@ -187,6 +238,51 @@ def inicio(request):
                             nombre_empleado = nombre + " " + apellidos
                         
                         equipos_año.append([datos_equipo2, nombre_empleado, fecha_compra, fecha_renovacion2])
+                        
+        #Renovación de impresoras
+        impresoras_renovacion = Renovacion_Impresoras.objects.all()
+        
+        fecha = datetime.now()
+        date = fecha.date()
+        año = date.strftime("%Y") #2021
+        mes = date.strftime("%m") #09
+        
+
+        
+        impresoras_año = []
+        
+        for impresora in impresoras_renovacion:
+            fecha_renovacion = impresora.fecha_renov #20 Octubre 2021    -     2021-10-22
+            año_renovacion = fecha_renovacion.strftime("%Y")
+            if año_renovacion == año:
+                mes_renovacion = fecha_renovacion.strftime("%m") #10
+                
+                if mes_renovacion >= mes:
+                    
+                    resta = int(mes_renovacion) - int(mes)  #1
+                
+                    if resta >= 0 and resta <= 2:
+                        id_impresora = impresora.id_impresora_id
+                        fecha_compra = impresora.fecha_compra
+                        fecha_renovacion2 = impresora.fecha_renov
+                        
+                        datos_impresora = Impresoras.objects.filter(id_impresora = int(id_impresora))
+                        
+                        for dato in datos_impresora:
+                            id = dato.id_impresora
+                            marca = dato.marca
+                            modelo = dato.modelo
+                            datos_impresora2 = str(id) +  marca + " " + modelo
+                            id_departamento = dato.id_area_id
+                            
+                            datos_area= Areas.objects.filter(id_area = id_departamento)
+                            for imp in datos_area:
+                                nombre = imp.nombre
+                                color= imp.color
+                            
+                        
+                        impresoras_año.append([datos_impresora2, nombre, color, fecha_compra, fecha_renovacion2])
+                    
                     
                         
                 
@@ -200,10 +296,10 @@ def inicio(request):
             recienIniciado = True
             
             return render(request, "Inicio/inicio.html", {"estaEnInicio":estaEnInicio, "nombreCompleto":nombreCompleto, "correo":correo, "recienIniciado":recienIniciado, "nombre": nombre, "cantidades":cantidades, "datosLimpiezas":datosLimpiezas, 
-                                                      "lista":lista, "equipos_año":equipos_año})
+                                                      "lista":lista, "equipos_año":equipos_año, "impresoras_año":impresoras_año, "dia":dia, "mes_texto":mes_texto, "resta_dias":resta_dias, "año":año})
         else:
             return render(request, "Inicio/inicio.html", {"estaEnInicio":estaEnInicio, "nombreCompleto":nombreCompleto, "correo":correo, "cantidades":cantidades, "datosLimpiezas":datosLimpiezas, 
-                                                      "lista":lista, "equipos_año":equipos_año})
+                                                      "lista":lista, "equipos_año":equipos_año, "impresoras_año":impresoras_año,  "dia":dia, "mes_texto":mes_texto, "resta_dias":resta_dias, "año":año})
     
     #Si le da al inicio y no hay una sesión iniciada..
     else:
@@ -896,6 +992,40 @@ def agregarImpresoras(request):
     
     return render(request, "Impresoras/agregarImpresoras.html",{"estaEnAgregarImpresoras": estaEnAgregarImpresoras, "nombreCompleto":nombreCompleto, "correo":correo, "info_areas": info_areas})
 
+def renovacionImpresoras(request):
+    estaEnRenovacionImpresoras = True
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    nombreCompleto = nombre + " " + apellidos
+    
+    ImpresorasRenov = Renovacion_Impresoras.objects.all()
+    datosTabla = []
+    for dato in ImpresorasRenov:
+        idImpresora= dato.id_impresora_id
+        fechaCompra= dato.fecha_compra
+        fechaRenov= dato.fecha_renov
+        datosImpresora=Impresoras.objects.filter(id_impresora=idImpresora)
+        for datos in datosImpresora:
+            marca= datos.marca
+            modelo= datos.modelo
+            imagen=datos.imagen
+            departamento= datos.id_area_id
+            
+            impresoraDatos= marca + " " + modelo
+       
+            int_area = int(departamento)
+            datosArea= Areas.objects.filter(id_area__icontains=int_area)
+            for datos in datosArea:
+                nombre= datos.nombre
+                color= datos.color
+                
+        datosTabla.append([idImpresora, impresoraDatos, imagen, nombre, color, fechaCompra, fechaRenov])
+    
+    
+    
+    return render(request, "Impresoras/renovacionImpresoras.html", {"estaEnRenovacionImpresoras":estaEnRenovacionImpresoras, "nombreCompleto":nombreCompleto, "correo":correo, 
+                                                                    "datosTabla":datosTabla})
 
 def verInsumos(request):
 
@@ -2352,4 +2482,6 @@ def firmarCarta(request):
 
         return render(request, "cartaCompromiso/firmarCarta.html", {"datosEquipo":datosEquipo, "datosEmpleado":datosEmpleado, "nombre":nombre, "color":color, "fecha":fecha}) 
 
+
+def reporteDepartamentos(request):
     
