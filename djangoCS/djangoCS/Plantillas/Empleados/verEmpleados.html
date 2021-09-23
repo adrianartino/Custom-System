@@ -138,6 +138,13 @@ Ver Empleados
                         </tbody>
                     </table>
                 </div>
+                <br>
+                <form action="/reporteEmpleadosActivos/" method="POST">{% csrf_token %}
+                    <button type="submit" class="btn bg-red waves-effect">
+                        <i class="material-icons">get_app</i>
+                        <span>PDF</span>
+                    </button>
+                </form>
                 
             </div>
             <div class="body" id="divInactivos">
@@ -203,6 +210,13 @@ Ver Empleados
                         </tbody>
                     </table>
                 </div>
+                <br>
+                <form action="/reporteEmpleadosInactivos/" method="POST">{% csrf_token %}
+                    <button type="submit" class="btn bg-red waves-effect">
+                        <i class="material-icons">get_app</i>
+                        <span>PDF</span>
+                    </button>
+                </form>
             </div>
         </div>
     </div>

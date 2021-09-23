@@ -13,6 +13,7 @@ from datetime import date, datetime
 from datetime import timedelta
 from calendar import calendar
 from dateutil.relativedelta import relativedelta
+from django.conf import settings
 
 #Librerias reportes pdf
 from io  import BytesIO
@@ -22,6 +23,7 @@ from reportlab.lib.units import cm
 from reportlab.platypus import Image, Paragraph, Table, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.colors import red
+from reportlab.lib.utils import ImageReader
 
 
 # Create your views here.
@@ -97,6 +99,8 @@ def inicio(request):
     
     #Si ya hay una sesión iniciada..
     if "idSesion" in request.session:
+        
+        baseDir = str(settings.BASE_DIR)
         
         estaEnInicio = True
         nombre = request.session['nombres']
@@ -304,10 +308,10 @@ def inicio(request):
             recienIniciado = True
             
             return render(request, "Inicio/inicio.html", {"estaEnInicio":estaEnInicio, "nombreCompleto":nombreCompleto, "correo":correo, "recienIniciado":recienIniciado, "nombre": nombre, "cantidades":cantidades, "datosLimpiezas":datosLimpiezas, 
-                                                      "lista":lista, "equipos_año":equipos_año, "impresoras_año":impresoras_año, "dia":dia, "mes_texto":mes_texto, "resta_dias":resta_dias, "año":año})
+                                                      "lista":lista, "baseDir":baseDir, "equipos_año":equipos_año, "impresoras_año":impresoras_año, "dia":dia, "mes_texto":mes_texto, "resta_dias":resta_dias, "año":año})
         else:
             return render(request, "Inicio/inicio.html", {"estaEnInicio":estaEnInicio, "nombreCompleto":nombreCompleto, "correo":correo, "cantidades":cantidades, "datosLimpiezas":datosLimpiezas, 
-                                                      "lista":lista, "equipos_año":equipos_año, "impresoras_año":impresoras_año,  "dia":dia, "mes_texto":mes_texto, "resta_dias":resta_dias, "año":año})
+                                                      "lista":lista, "baseDir":baseDir,"equipos_año":equipos_año, "impresoras_año":impresoras_año,  "dia":dia, "mes_texto":mes_texto, "resta_dias":resta_dias, "año":año})
     
     #Si le da al inicio y no hay una sesión iniciada..
     else:
@@ -2520,7 +2524,12 @@ def reporteDepartamentos(request):
     c.drawString(60,730, 'Departamento de Sistemas')
     #titulo
     c.setFont('Helvetica-Bold', 22)
-    c.drawString(180,700, 'Reporte de Departamentos')
+    c.drawString(180,690, 'Reporte de Departamentos')
+    
+    base_dir = str(settings.BASE_DIR)
+    logo = base_dir+'/static/images/logopdf.png'   
+    c.drawImage(logo, 250,620,120,90, preserveAspectRatio=True)
+    
     
     #obtener datos de area
     
@@ -2558,7 +2567,7 @@ def reporteDepartamentos(request):
     styleN.alignment = TA_CENTER
     styleN.fontSize = 7
     
-    high = 650
+    high = 625
     for area, empleados in listaAreas:
         fila = [area.id_area, area.nombre, area.color, empleados]
         filasTabla.append(fila)
@@ -2672,6 +2681,240 @@ def reporteDepartamentos(request):
     
     tabla.wrapOn(c, width, height)
     tabla.drawOn(c, 80, high)
+    
+    #linea guinda
+    color_guinda="#B03A2E"
+    c.setFillColor(color_guinda)
+    c.setStrokeColor(color_guinda)
+    c.line(40,60,560,60)
+    
+    color_negro="#030305"
+    c.setFillColor(color_negro)
+    c.setFont('Helvetica-Bold', 11)
+    c.drawString(170,48, '2021 - Administrador de Custom System. - Versión: 1.0.0 ')
+    
+    
+    c.showPage()
+    
+    
+    
+    #guardar pdf
+    c.save()
+    #obtener valores de bytesIO y esribirlos en la respuesta
+    pdf = buffer.getvalue()
+    buffer.close()
+    respuesta.write(pdf)
+    return respuesta
+
+def reporteEmpleadosActivos(request):
+    
+    #crear el http response con pdf
+    respuesta = HttpResponse(content_type='application/pdf')
+    respuesta['Content-Disposition'] = 'attachment; filename=Reporte Deparatmentos.pdf'
+    #Crear objeto PDF 
+    buffer =BytesIO()
+    c = canvas.Canvas(buffer, pagesize=letter)
+    #nombre de empresa
+    c.setFont('Helvetica-Oblique', 22)
+    c.drawString(40,750, 'Custom & Co S.A. de C.V.')
+    #fecha
+    hoy=datetime.now()
+    fecha = str(hoy.date())
+    
+    c.setFont('Helvetica', 12)
+    c.drawString(480,750, fecha)
+    #linea guinda
+    color_guinda="#B03A2E"
+    c.setFillColor(color_guinda)
+    c.setStrokeColor(color_guinda)
+    c.line(40,747,560,745)
+    #nombre departamento
+    color_negro="#030305"
+    c.setFillColor(color_negro)
+    c.setFont('Helvetica', 16)
+    c.drawString(60,730, 'Departamento de Sistemas')
+    #titulo
+    c.setFont('Helvetica-Bold', 22)
+    c.drawString(180,690, 'Reporte Empleados Activos')
+    
+    base_dir = str(settings.BASE_DIR)
+    logo = base_dir+'/static/images/logopdf.png'   
+    c.drawImage(logo, 250,620,120,90, preserveAspectRatio=True)
+    
+    
+    #obtener datos de area
+    
+    datosEmpleados= Empleados.objects.filter(activo__icontains="A")
+    areas = []
+    urls_imagenes = []
+    base_dir = str(settings.BASE_DIR)
+    logo = base_dir+'/static/images/logopdf.png'   
+    c.drawImage(logo, 250,620,120,90, preserveAspectRatio=True)
+    
+    for empleado in datosEmpleados:
+        idarea = empleado.id_area_id
+        imagen = empleado.imagen_empleado
+        urlimagen = base_dir + str(imagen)
+        
+        urls_imagenes.append(urlimagen)
+        
+        info_area = Areas.objects.filter(id_area = idarea)
+        
+        for dato in info_area:
+            nombre = dato.nombre
+            areas.append(nombre)
+            
+            
+        
+        
+    listaEmpleados = zip(datosEmpleados, areas, urls_imagenes)
+    #header de tabla
+    styles = getSampleStyleSheet()
+    styleBH =styles["Normal"]
+    styleBH.alignment = TA_CENTER
+    styleBH.fontSize = 10
+    
+    
+    id_empleado = Paragraph('''ID''', styleBH)
+    nombre = Paragraph('''Nombre''', styleBH)
+    apellido = Paragraph('''Apellido''', styleBH)
+    imagen = Paragraph('''Imagen''', styleBH)
+    departamento = Paragraph('''Departamento''', styleBH)
+    puesto = Paragraph('''Puesto''', styleBH)
+    filasTabla=[]
+    filasTabla.append([id_empleado, nombre, apellido, imagen, departamento, puesto])
+    #Tabla
+    styleN = styles["BodyText"]
+    styleN.alignment = TA_CENTER
+    styleN.fontSize = 7
+    
+    high = 625
+    for empleado, areas, imagenes in listaEmpleados:
+        fila = [empleado.id_empleado, empleado.nombre, empleado.apellidos, imagenes, areas, empleado.puesto]
+        filasTabla.append(fila)
+        high= high - 18 
+        
+    #escribir tabla
+    width, height = letter
+    tabla = Table(filasTabla, colWidths=[1 * cm, 3 * cm, 4 * cm, 3 * cm, 4 * cm, 5 * cm])
+    tabla.setStyle(TableStyle([
+        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+        ('BACKGROUND', (0, 0), (-1, 0), '#F5CD04'),
+        ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+    ]))
+    
+    contador = 0
+    for fila in filasTabla:
+        contador += 1
+        if contador > 1:
+            if fila[2] == "label bg-red":
+                color = colors.red
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+                
+            elif fila[2] == "label bg-pink":
+                color = colors.pink
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-purple":
+                color = colors.purple
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-indigo":
+                color = colors.indigo
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-blue":
+                color = colors.blue
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-cyan":
+                color = colors.cyan
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-teal":
+                color = colors.teal
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-green":
+                color = colors.green
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-light-green":
+                color = colors.lightgreen
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-lime":
+                color = colors.lime
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-yellow":
+                color = colors.yellow
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-amber":
+                color = colors.orangered
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-orange":
+                color = colors.orange
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-deep-orange":
+                color = colors.deeppink
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-brown":
+                color = colors.brown
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-grey":
+                color = colors.gray
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-blue-grey":
+                color = colors.blueviolet
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-black":
+                color = colors.black
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+                
+    
+    tabla.wrapOn(c, width, height)
+    tabla.drawOn(c, 20, high)
+    
+    #linea guinda
+    color_guinda="#B03A2E"
+    c.setFillColor(color_guinda)
+    c.setStrokeColor(color_guinda)
+    c.line(40,60,560,60)
+    
+    color_negro="#030305"
+    c.setFillColor(color_negro)
+    c.setFont('Helvetica-Bold', 11)
+    c.drawString(170,48, '2021 - Administrador de Custom System. - Versión: 1.0.0 ')
+    
+    
     c.showPage()
     
     
