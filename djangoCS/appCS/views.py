@@ -2709,7 +2709,20 @@ def reporteDepartamentos(request):
 
 def reporteEmpleadosActivos(request):
     
-    numero_empleados = Empleados.objects.count() #11 empleados
+    if request.method == "POST":
+
+        activo= request.POST['activo']
+        
+        
+    
+    empleaditos = Empleados.objects.filter(activo__icontains = activo) #11 empleados
+    
+    numero_empleados = 0
+    for empleado in empleaditos:
+        numero_empleados +=1
+        
+    if numero_empleados == 0:
+        numero_empleados =1
     
     division = numero_empleados // 9 #Resultado 1, sin residuo
     residuo = numero_empleados%9 #residuo hay 2
@@ -2721,54 +2734,209 @@ def reporteEmpleadosActivos(request):
         hojasIguales = True
         
     if residuo != 0:
-        division = division + 1
+        division = division + 1   #Número de hojas total. 2
         
     #QUITAR ESTO PARA OTRA HOJA
     #crear el http response con pdf
     respuesta = HttpResponse(content_type='application/pdf')
-    respuesta['Content-Disposition'] = 'attachment; filename=Reporte Deparatmentos.pdf'
+    respuesta['Content-Disposition'] = 'attachment; filename=Reporte Empleados.pdf'
     #Crear objeto PDF 
     buffer =BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
     #HASTA AQUI
         
     hojaNueva = False
-    
+    contadorEmpleados = 0
+    segundaHoja = False
+    contadorHojas = 1
     for hoja in range(division):
         
         #HASTA AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
-        datosEmpleados= Empleados.objects.filter(activo__icontains="A")
+        datosEmpleados= Empleados.objects.filter(activo__icontains=activo) ##11 empleados
         
-        contadorEmpleados = 0
         
+        ids =[]
+        nombres = []
+        apellidos = []
         areas = []
+        puestos = []
+        correos = []
+        contras = []
         urls_imagenes = []
         base_dir = str(settings.BASE_DIR)
         
-        for empleado in datosEmpleados:
-            
-            contadorEmpleados += 1
-            
-            if contadorEmpleados <= 9:
-                #Obtener solo empleados que quepan en la hoja
-                idarea = empleado.id_area_id
-                imagen = empleado.imagen_empleado
-                urlimagen = base_dir + '/media/' + str(imagen)
-                img = Image(urlimagen,50,50)
+        if contadorHojas == 4:
+            contadorEmpelados4 = 0
+            contadorEmpleadosxHoja = 0
+            for empleado in datosEmpleados:
+                contadorEmpelados4 += 1
+                if contadorEmpelados4 > 27 and contadorEmpelados4 <=36:
+                    contadorEmpleadosxHoja +=1
+                    
+                    #Obtener solo empleados que quepan en la hoja
+                    idarea = empleado.id_area_id
+                    imagen = empleado.imagen_empleado
+                    urlimagen = base_dir + '/media/' + str(imagen)
+                    img = Image(urlimagen,50,50)
+                    
+                    urls_imagenes.append(img)
+                    
+                    info_area = Areas.objects.filter(id_area = idarea)
+                    
+                    for dato in info_area:
+                        nombre = dato.nombre
+                        areas.append(nombre)
+                    
+                    ids.append(str(empleado.id_empleado))
+                    nombres.append(empleado.nombre)
+                    apellidos.append(empleado.apellidos)
+                    puestos.append(empleado.puesto)
+                    correos.append(empleado.correo)
+                    contras.append(empleado.contraseña)
                 
-                urls_imagenes.append(img)
+                    
+                    contadorEmpleados += 1 #11
+                    
                 
-                info_area = Areas.objects.filter(id_area = idarea)
                 
-                for dato in info_area:
-                    nombre = dato.nombre
-                    areas.append(nombre)
+                
+            listaEmpleados = zip(ids, nombres, apellidos, areas, puestos, correos, contras, urls_imagenes)
+            contadorHojas = 4
+            if contadorEmpleadosxHoja == 9:
+                high = 600 - ((contadorEmpleadosxHoja+1) * 33)
+            else:
+                high = 600 - (contadorEmpleadosxHoja * 33)
+        
+        if contadorHojas == 3:
+            contadorEmpelados3 = 0
+            contadorEmpleadosxHoja = 0
+            for empleado in datosEmpleados:
+                contadorEmpelados3 += 1
+                if contadorEmpelados3 > 18 and contadorEmpelados3 <=27:
+                    contadorEmpleadosxHoja +=1
+                    
+                    #Obtener solo empleados que quepan en la hoja
+                    idarea = empleado.id_area_id
+                    imagen = empleado.imagen_empleado
+                    urlimagen = base_dir + '/media/' + str(imagen)
+                    img = Image(urlimagen,50,50)
+                    
+                    urls_imagenes.append(img)
+                    
+                    info_area = Areas.objects.filter(id_area = idarea)
+                    
+                    for dato in info_area:
+                        nombre = dato.nombre
+                        areas.append(nombre)
+                    
+                    ids.append(str(empleado.id_empleado))
+                    nombres.append(empleado.nombre)
+                    apellidos.append(empleado.apellidos)
+                    puestos.append(empleado.puesto)
+                    correos.append(empleado.correo)
+                    contras.append(empleado.contraseña)
+                
+                    
+                    contadorEmpleados += 1 #11
+                    
+                
+                
+                
+            listaEmpleados = zip(ids, nombres, apellidos, areas, puestos, correos, contras, urls_imagenes)
+            contadorHojas = 4
+            if contadorEmpleadosxHoja == 9:
+                high = 600 - ((contadorEmpleadosxHoja+1) * 33)
+            else:
+                high = 600 - (contadorEmpleadosxHoja * 33)
             
+            
+        
+        if contadorHojas == 2:
+            contadorEmpelados2 = 0
+            contadorEmpleadosxHoja = 0
+            for empleado in datosEmpleados:
+                contadorEmpelados2 += 1
+                if contadorEmpelados2 > 9 and contadorEmpelados2 <=18:
+                    contadorEmpleadosxHoja +=1
+                    
+                    #Obtener solo empleados que quepan en la hoja
+                    idarea = empleado.id_area_id
+                    imagen = empleado.imagen_empleado
+                    urlimagen = base_dir + '/media/' + str(imagen)
+                    img = Image(urlimagen,50,50)
+                    
+                    urls_imagenes.append(img)
+                    
+                    info_area = Areas.objects.filter(id_area = idarea)
+                    
+                    for dato in info_area:
+                        nombre = dato.nombre
+                        areas.append(nombre)
+                    
+                    ids.append(str(empleado.id_empleado))
+                    nombres.append(empleado.nombre)
+                    apellidos.append(empleado.apellidos)
+                    puestos.append(empleado.puesto)
+                    correos.append(empleado.correo)
+                    contras.append(empleado.contraseña)
+                
+                    
+                    contadorEmpleados += 1 #11
+                    
+                
+                
+                
+            listaEmpleados = zip(ids, nombres, apellidos, areas, puestos, correos, contras, urls_imagenes)
+            contadorHojas = 3
+            if contadorEmpleadosxHoja == 9:
+                high = 600 - ((contadorEmpleadosxHoja+1) * 33)
+            else:
+                high = 600 - (contadorEmpleadosxHoja * 33)
+                
+        
+            
+        if contadorHojas == 1:
+            contadorEmpleadosxHoja1 = 0
+            for empleado in datosEmpleados:
+                
+                contadorEmpleados += 1 #10
+                
+                
+                if contadorEmpleados <= 9:
+                    #Obtener solo empleados que quepan en la hoja
+                    idarea = empleado.id_area_id
+                    imagen = empleado.imagen_empleado
+                    urlimagen = base_dir + '/media/' + str(imagen)
+                    img = Image(urlimagen,50,50)
+                    
+                    urls_imagenes.append(img)
+                    
+                    info_area = Areas.objects.filter(id_area = idarea)
+                    
+                    for dato in info_area:
+                        nombre = dato.nombre
+                        areas.append(nombre)
+                        
+                    ids.append(str(empleado.id_empleado))
+                    nombres.append(empleado.nombre)
+                    apellidos.append(empleado.apellidos)
+                    puestos.append(empleado.puesto)
+                    correos.append(empleado.correo)
+                    contras.append(empleado.contraseña)
+                    contadorEmpleadosxHoja1 +=1
+                
+                        
+                    
+                
             #solo 9 empleados
-            hojaNueva = True
-            listaEmpleados = zip(datosEmpleados, areas, urls_imagenes)
-                
-                
+            listaEmpleados = zip(ids, nombres, apellidos, areas, puestos, correos, contras, urls_imagenes)
+            contadorHojas = 2
+            if contadorEmpleadosxHoja1 == 9:
+                high = 600 - ((contadorEmpleadosxHoja1+1) * 33)
+            else:
+                high = 600 - (contadorEmpleadosxHoja1 * 33)
+            
+            
 
         
         #nombre de empresa
@@ -2792,7 +2960,10 @@ def reporteEmpleadosActivos(request):
         c.drawString(60,730, 'Departamento de Sistemas')
         #titulo
         c.setFont('Helvetica-Bold', 22)
-        c.drawString(180,690, 'Reporte Empleados Activos')
+        if activo == "A":
+            c.drawString(180,690, 'Reporte Empleados Activos')
+        if activo == "I":
+            c.drawString(180,690, 'Reporte Empleados Inctivos')
         
         base_dir = str(settings.BASE_DIR)
         logo = base_dir+'/static/images/logopdf.png'   
@@ -2824,18 +2995,16 @@ def reporteEmpleadosActivos(request):
         styleN.alignment = TA_CENTER
         styleN.fontSize = 7
         
-        high=650
-        for empleado in datosEmpleados:
-            high = high - 36
+            
         
-        for empleado, areas, imagenes in listaEmpleados:
-            campo_empleado = Paragraph(str(empleado.id_empleado), styleN)
-            campo_nombre = Paragraph(empleado.nombre, styleN)
-            campo_apellidos = Paragraph(empleado.apellidos, styleN)
+        for id, nombre, apellido, areas, puesto, correo, contra, imagenes in listaEmpleados:
+            campo_empleado = Paragraph(id, styleN)
+            campo_nombre = Paragraph(nombre, styleN)
+            campo_apellidos = Paragraph(apellido, styleN)
             campo_area = Paragraph(areas, styleN)
-            campo_puesto = Paragraph(empleado.puesto, styleN)
-            campo_correo = Paragraph(empleado.correo, styleN)
-            campo_contraseña = Paragraph(empleado.contraseña, styleN)
+            campo_puesto = Paragraph(puesto, styleN)
+            campo_correo = Paragraph(correo, styleN)
+            campo_contraseña = Paragraph(contra, styleN)
             
             fila = [campo_empleado, campo_nombre, campo_apellidos, imagenes, campo_area, campo_puesto, campo_correo, 
                     campo_contraseña]
@@ -2948,6 +3117,463 @@ def reporteEmpleadosActivos(request):
                         ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
                     ]))
                     
+        
+        tabla.wrapOn(c, width, height)
+        tabla.drawOn(c, 20, high)
+        
+        #linea guinda
+        color_guinda="#B03A2E"
+        c.setFillColor(color_guinda)
+        c.setStrokeColor(color_guinda)
+        c.line(40,60,560,60)
+        
+        color_negro="#030305"
+        c.setFillColor(color_negro)
+        c.setFont('Helvetica-Bold', 11)
+        c.drawString(170,48, '2021 - Administrador de Custom System. - Versión: 1.0.0 ')
+        
+        #guardar la pagina, y se crea otra en caso de ser necesario
+        c.showPage()
+        
+        
+        
+        #HASTA AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+        
+        
+    #guardar pdf
+    c.save()
+    #obtener valores de bytesIO y esribirlos en la respuesta
+    pdf = buffer.getvalue()
+    buffer.close()
+    respuesta.write(pdf)
+    return respuesta
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+def reporteEquiposActivos(request):
+    
+    if request.method == "POST":
+
+        activo= request.POST['activo']
+        
+        
+    
+    equipitos = Equipos.objects.filter(activo__icontains = activo) #11 empleados
+    
+    numero_equipos = 0
+    for equipo in equipitos:
+        numero_equipos +=1
+        
+    if numero_equipos == 0:
+        numero_equipos =1
+    
+    division = numero_equipos // 9 #Resultado 1, sin residuo
+    residuo = numero_equipos%9 #residuo hay 2
+    
+    
+    
+    if residuo == 0:
+        #hojas iguales a division.
+        hojasIguales = True
+        
+    if residuo != 0:
+        division = division + 1   #Número de hojas total. 2
+        
+    #QUITAR ESTO PARA OTRA HOJA
+    #crear el http response con pdf
+    respuesta = HttpResponse(content_type='application/pdf')
+    respuesta['Content-Disposition'] = 'attachment; filename=Reporte Equipos.pdf'
+    #Crear objeto PDF 
+    buffer =BytesIO()
+    c = canvas.Canvas(buffer, pagesize=letter)
+    #HASTA AQUI
+        
+    contadorEquipos = 0
+    contadorHojas = 1
+    for hoja2 in range(1):
+        
+        #HASTA AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+        datosEquipos= Equipos.objects.filter(activo__icontains=activo) ##1 equipo
+        
+        
+        ids =[]
+        tipos = []
+        marcas = []
+        modelos = []
+        colores = []
+        memorias = []
+        procesadores = []
+        sistemas = []
+        procesadores = []
+        cargadores = []
+        propietarios = []
+        estados = []
+        urls_imagenes = []
+        base_dir = str(settings.BASE_DIR)
+        
+        if contadorHojas == 5:
+            contadorEquipos = 0
+            contadorEquiposXHoja = 0
+            for equipo in datosEquipos:
+                
+                contadorEquipos += 1 #10
+                if contadorEquipos > 36 and contadorEquipos <=45:
+                    imagen = equipo.imagen
+                    urlimagen = base_dir + '/media/' + str(imagen)
+                    img = Image(urlimagen,50,50)
+                    urls_imagenes.append(img)
+                    
+                    idempleado = equipo.id_empleado_id
+                    if idempleado == None:
+                        propietarios.append("Sin propietario")
+                    else:
+                        info_empleado = Empleados.objects.filter(id_empleado = idempleado)
+                        
+                        for dato in info_empleado:
+                            nombre = dato.nombre
+                            apellidos = dato.apellidos
+                            nombre_completo = nombre + " " + apellidos
+                            propietarios.append(nombre_completo)
+                        
+                    ids.append(str(equipo.id_equipo))
+                    tipos.append(equipo.tipo)
+                    marcas.append(equipo.marca)
+                    modelos.append(equipo.modelo)
+                    colores.append(equipo.color)
+                    memorias.append(equipo.memoriaram)
+                    procesadores.append(equipo.procesador)
+                    sistemas.append(equipo.sistemaoperativo)
+                    cargadores.append(equipo.modelocargador)
+                    estados.append(equipo.estado)
+                    
+                    
+                    contadorEquiposXHoja +=1
+                    
+                
+            #solo 9 empleados
+            listaEquipos = zip(ids, tipos, marcas, modelos, colores, memorias, procesadores, sistemas, cargadores, estados, propietarios, urls_imagenes)
+            
+            contadorHojas = 6
+            if contadorEquiposXHoja == 9:
+                high = 600 - ((contadorEquiposXHoja+1) * 33)
+            else:
+                high = 600 - (contadorEquiposXHoja * 33)
+        
+        if contadorHojas == 4:
+            contadorEquipos = 0
+            contadorEquiposXHoja = 0
+            for equipo in datosEquipos:
+                
+                contadorEquipos += 1 #10
+                if contadorEquipos > 27 and contadorEquipos <=36:
+                    imagen = equipo.imagen
+                    urlimagen = base_dir + '/media/' + str(imagen)
+                    img = Image(urlimagen,50,50)
+                    urls_imagenes.append(img)
+                    
+                    idempleado = equipo.id_empleado_id
+                    if idempleado == None:
+                        propietarios.append("Sin propietario")
+                    else:
+                        info_empleado = Empleados.objects.filter(id_empleado = idempleado)
+                        
+                        for dato in info_empleado:
+                            nombre = dato.nombre
+                            apellidos = dato.apellidos
+                            nombre_completo = nombre + " " + apellidos
+                            propietarios.append(nombre_completo)
+                        
+                    ids.append(str(equipo.id_equipo))
+                    tipos.append(equipo.tipo)
+                    marcas.append(equipo.marca)
+                    modelos.append(equipo.modelo)
+                    colores.append(equipo.color)
+                    memorias.append(equipo.memoriaram)
+                    procesadores.append(equipo.procesador)
+                    sistemas.append(equipo.sistemaoperativo)
+                    cargadores.append(equipo.modelocargador)
+                    estados.append(equipo.estado)
+                    
+                    
+                    contadorEquiposXHoja +=1
+                    
+                
+            #solo 9 empleados
+            listaEquipos = zip(ids, tipos, marcas, modelos, colores, memorias, procesadores, sistemas, cargadores, estados, propietarios, urls_imagenes)
+            
+            contadorHojas = 5
+            if contadorEquiposXHoja == 9:
+                high = 600 - ((contadorEquiposXHoja+1) * 33)
+            else:
+                high = 600 - (contadorEquiposXHoja * 33)
+                
+                
+        
+        if contadorHojas == 3:
+            contadorEquipos = 0
+            contadorEquiposXHoja = 0
+            for equipo in datosEquipos:
+                
+                contadorEquipos += 1 #10
+                if contadorEquipos > 18 and contadorEquipos <=27:
+                    imagen = equipo.imagen
+                    urlimagen = base_dir + '/media/' + str(imagen)
+                    img = Image(urlimagen,50,50)
+                    urls_imagenes.append(img)
+                    
+                    idempleado = equipo.id_empleado_id
+                    if idempleado == None:
+                        propietarios.append("Sin propietario")
+                    else:
+                        info_empleado = Empleados.objects.filter(id_empleado = idempleado)
+                        
+                        for dato in info_empleado:
+                            nombre = dato.nombre
+                            apellidos = dato.apellidos
+                            nombre_completo = nombre + " " + apellidos
+                            propietarios.append(nombre_completo)
+                        
+                    ids.append(str(equipo.id_equipo))
+                    tipos.append(equipo.tipo)
+                    marcas.append(equipo.marca)
+                    modelos.append(equipo.modelo)
+                    colores.append(equipo.color)
+                    memorias.append(equipo.memoriaram)
+                    procesadores.append(equipo.procesador)
+                    sistemas.append(equipo.sistemaoperativo)
+                    cargadores.append(equipo.modelocargador)
+                    estados.append(equipo.estado)
+                    
+                    
+                    contadorEquiposXHoja +=1
+                    
+                
+            #solo 9 empleados
+            listaEquipos = zip(ids, tipos, marcas, modelos, colores, memorias, procesadores, sistemas, cargadores, estados, propietarios, urls_imagenes)
+            
+            contadorHojas = 4
+            if contadorEquiposXHoja == 9:
+                high = 600 - ((contadorEquiposXHoja+1) * 33)
+            else:
+                high = 600 - (contadorEquiposXHoja * 33)
+                
+                
+        
+        if contadorHojas == 2:
+            contadorEquipos = 0
+            contadorEquiposXHoja = 0
+            for equipo in datosEquipos:
+                
+                contadorEquipos += 1 #10
+                if contadorEquipos > 9 and contadorEquipos <=18:
+                    imagen = equipo.imagen
+                    urlimagen = base_dir + '/media/' + str(imagen)
+                    img = Image(urlimagen,50,50)
+                    urls_imagenes.append(img)
+                    
+                    idempleado = equipo.id_empleado_id
+                    if idempleado == None:
+                        propietarios.append("Sin propietario")
+                    else:
+                        info_empleado = Empleados.objects.filter(id_empleado = idempleado)
+                        
+                        for dato in info_empleado:
+                            nombre = dato.nombre
+                            apellidos = dato.apellidos
+                            nombre_completo = nombre + " " + apellidos
+                            propietarios.append(nombre_completo)
+                        
+                    ids.append(str(equipo.id_equipo))
+                    tipos.append(equipo.tipo)
+                    marcas.append(equipo.marca)
+                    modelos.append(equipo.modelo)
+                    colores.append(equipo.color)
+                    memorias.append(equipo.memoriaram)
+                    procesadores.append(equipo.procesador)
+                    sistemas.append(equipo.sistemaoperativo)
+                    cargadores.append(equipo.modelocargador)
+                    estados.append(equipo.estado)
+                    
+                    
+                    contadorEquiposXHoja +=1
+                    
+                
+            #solo 9 empleados
+            listaEquipos = zip(ids, tipos, marcas, modelos, colores, memorias, procesadores, sistemas, cargadores, estados, propietarios, urls_imagenes)
+            
+            contadorHojas = 3
+            if contadorEquiposXHoja == 9:
+                high = 600 - ((contadorEquiposXHoja+1) * 33)
+            else:
+                high = 600 - (contadorEquiposXHoja * 33)
+                
+                    
+        if contadorHojas == 1:
+            contadorEquiposXHoja = 0
+            for equipo in datosEquipos:
+                
+                contadorEquipos += 1 #10
+                if contadorEquipos <= 9:
+                    imagen = equipo.imagen
+                    urlimagen = base_dir + '/media/' + str(imagen)
+                    img = Image(urlimagen,50,50)
+                    urls_imagenes.append(img)
+                    
+                    idempleado = equipo.id_empleado_id
+                    if idempleado == None:
+                        propietarios.append("Sin propietario")
+                    else:
+                        info_empleado = Empleados.objects.filter(id_empleado = idempleado)
+                        
+                        for dato in info_empleado:
+                            nombre = dato.nombre
+                            apellidos = dato.apellidos
+                            nombre_completo = nombre + " " + apellidos
+                            propietarios.append(nombre_completo)
+                        
+                    ids.append(str(equipo.id_equipo))
+                    tipos.append(equipo.tipo)
+                    marcas.append(equipo.marca)
+                    modelos.append(equipo.modelo)
+                    colores.append(equipo.color)
+                    memorias.append(equipo.memoriaram)
+                    procesadores.append(equipo.procesador)
+                    sistemas.append(equipo.sistemaoperativo)
+                    cargadores.append(equipo.modelocargador)
+                    estados.append(equipo.estado)
+                    
+                    
+                    contadorEquiposXHoja +=1
+                    
+                
+            #solo 9 empleados
+            listaEquipos = zip(ids, tipos, marcas, modelos, colores, memorias, procesadores, sistemas, cargadores, estados, propietarios, urls_imagenes)
+            
+            contadorHojas = 2
+            if contadorEquiposXHoja == 9:
+                high = 600 - ((contadorEquiposXHoja+1) * 33)
+            else:
+                high = 600 - (contadorEquiposXHoja * 33)
+            
+            
+
+        
+        #nombre de empresa
+        c.setFont('Helvetica-Oblique', 22)
+        c.drawString(40,750, 'Custom & Co S.A. de C.V.')
+        #fecha
+        hoy=datetime.now()
+        fecha = str(hoy.date())
+        
+        c.setFont('Helvetica', 12)
+        c.drawString(480,750, fecha)
+        
+    
+        
+        
+        
+        #linea guinda
+        color_guinda="#B03A2E"
+        c.setFillColor(color_guinda)
+        c.setStrokeColor(color_guinda)
+        c.line(40,747,560,745)
+        #nombre departamento
+        color_negro="#030305"
+        c.setFillColor(color_negro)
+        c.setFont('Helvetica', 16)
+        c.drawString(60,730, 'Departamento de Sistemas')
+        #titulo
+        c.setFont('Helvetica-Bold', 22)
+        if activo == "A":
+            c.drawString(180,690, 'Reporte Equipos Activos')
+        if activo == "I":
+            c.drawString(180,690, 'Reporte Equipos Inactivos')
+        
+        base_dir = str(settings.BASE_DIR)
+        logo = base_dir+'/static/images/logopdf.png'   
+        c.drawImage(logo, 250,620,120,90, preserveAspectRatio=True)
+        
+        
+        
+        
+        
+        #header de tabla
+        styles = getSampleStyleSheet()
+        styleBH =styles["Normal"]
+        styleBH.alignment = TA_CENTER
+        styleBH.fontSize = 9
+        
+        
+        id_equipo = Paragraph('''ID''', styleBH)
+        tipo = Paragraph('''Tipo''', styleBH)
+        marca = Paragraph('''Marca''', styleBH)
+        modelo = Paragraph('''Modelo''', styleBH)
+        imagen = Paragraph('''Imagen.''', styleBH)
+        ram = Paragraph('''RAM''', styleBH)
+        procesador = Paragraph('''Procesador''', styleBH)
+        sistemaop = Paragraph('''Sistema Operativo''', styleBH)
+        carga = Paragraph('''Cargador''', styleBH)
+        estado = Paragraph('''Estado''', styleBH)
+        prop = Paragraph('''Propietario''', styleBH)
+        filasTabla=[]
+        filasTabla.append([id_equipo, tipo, marca, modelo, imagen, ram, procesador, sistemaop, carga, estado, prop])
+        #Tabla
+        styleN = styles["BodyText"]
+        styleN.alignment = TA_CENTER
+        styleN.fontSize = 7
+        
+            
+        cont = 0
+        for id, tipo, marca, modelo, color, memoria, procesador, sistema, cargador, estado, propietario, imagenes in listaEquipos:
+            campo_equipo = Paragraph(id, styleN)
+            campo_tipo = Paragraph(tipo, styleN)
+            campo_marca = Paragraph(marca, styleN)
+            campo_modelo = Paragraph(modelo, styleN)
+            campo_memoria = Paragraph(memoria, styleN)
+            campo_procesador = Paragraph(procesador, styleN)
+            campo_sistema = Paragraph(sistema, styleN)
+            campo_cargador = Paragraph(cargador, styleN)
+            campo_estado = Paragraph(estado, styleN)
+            campo_propietario = Paragraph(propietario, styleN)
+            
+            fila = [campo_equipo, campo_tipo, campo_marca, campo_modelo, imagenes, campo_memoria, campo_procesador, campo_sistema, 
+                    campo_cargador, campo_estado, campo_propietario]
+            filasTabla.append(fila)
+            
+            high= high - 18 
+            
+            
+        #escribir tabla
+        width, height = letter
+        tabla = Table(filasTabla, colWidths=[.9 * cm, 1.5 * cm, 1.5 * cm, 2 * cm, 2 * cm, 1.5 * cm, 2.3 * cm, 2 * cm, 
+                                             2 * cm,2 * cm,2.5 * cm])
+        tabla.setStyle(TableStyle([
+            ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+            ('BACKGROUND', (0, 0), (-1, 0), '#F5CD04'),
+            ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+        ]))
+        
+        for fila in filasTabla:
+            tabla.setStyle(([
+            ('BACKGROUND', (0, 0), (10,0), colors.crimson),
+            ('TEXTCOLOR',(0,0), (1, 1), colors.whitesmoke)
+        ]))
         
         tabla.wrapOn(c, width, height)
         tabla.drawOn(c, 20, high)

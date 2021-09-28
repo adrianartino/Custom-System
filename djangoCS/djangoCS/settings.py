@@ -82,7 +82,7 @@ DATABASES = {
         'NAME': 'customsystem',
         'USER': 'artino',
         'PASSWORD': 'CustomCo',
-        'HOST': '192.168.10.133',
+        'HOST': '192.168.10.47',
         'PORT': '3306',
     }
 }

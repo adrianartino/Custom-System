@@ -140,6 +140,7 @@ Ver Empleados
                 </div>
                 <br>
                 <form action="/reporteEmpleadosActivos/" method="POST">{% csrf_token %}
+                    <input type="hidden" name="activo" value="A">
                     <button type="submit" class="btn bg-red waves-effect">
                         <i class="material-icons">get_app</i>
                         <span>PDF</span>
@@ -211,7 +212,8 @@ Ver Empleados
                     </table>
                 </div>
                 <br>
-                <form action="/reporteEmpleadosInactivos/" method="POST">{% csrf_token %}
+                <form action="/reporteEmpleadosActivos/" method="POST">{% csrf_token %}
+                    <input type="hidden" name="activo" value="I">
                     <button type="submit" class="btn bg-red waves-effect">
                         <i class="material-icons">get_app</i>
                         <span>PDF</span>

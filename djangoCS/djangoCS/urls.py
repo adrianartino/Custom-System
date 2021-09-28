@@ -73,7 +73,8 @@ urlpatterns = [
     path("bajaImpresora/", views.bajaImpresora),
     
     path("reporteDepartamentos/",views.reporteDepartamentos),
-    path("reporteEmpleadosActivos/",views.reporteEmpleadosActivos)
+    path("reporteEmpleadosActivos/",views.reporteEmpleadosActivos),
+    path("reporteEquiposActivos/",views.reporteEquiposActivos)
     
     
 ]
