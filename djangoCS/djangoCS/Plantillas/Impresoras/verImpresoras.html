@@ -170,6 +170,14 @@ Ver Impresoras
                         </tbody>
                     </table>
                 </div>
+                <form action="/reporteImpresoras/" method="POST">{% csrf_token %}
+                    <input type="hidden" name="activo" value="A">
+                    <button type="submit" class="btn bg-red waves-effect">
+                        
+                        <i class="material-icons">get_app</i>
+                        <span>PDF</span>
+                    </button>
+                </form>
             </div>
             <div class="body" id="divInactivos">
                 <div class="table-responsive">
@@ -248,6 +256,13 @@ Ver Impresoras
                         </tbody>
                     </table>
                 </div>
+                <form action="/reporteImpresoras/" method="POST">{% csrf_token %}
+                    <input type="hidden" name="activo" value="I">
+                    <button type="submit" class="btn bg-red waves-effect">
+                        <i class="material-icons">get_app</i>
+                        <span>PDF</span>
+                    </button>
+                </form>
             </div>
         </div>
     </div>

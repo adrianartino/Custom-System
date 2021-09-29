@@ -77,7 +77,13 @@ urlpatterns = [
     
     path("reporteDepartamentos/",views.reporteDepartamentos),
     path("reporteEmpleadosActivos/",views.reporteEmpleadosActivos),
-    path("reporteEquiposActivos/",views.reporteEquiposActivos)
+    path("reporteEquiposActivos/",views.reporteEquiposActivos),
+    path("reporteImpresoras/", views.reporteImpresoras),
+    path("reporteInsumos/", views.reporteInsumos),
+    path("reporteRenovacionEq/", views.reporteRenovacionEq),
+    path("reporteRenovacionImp/", views.reporteRenovacionImp),
+    
+    path("pdfInfoEquipo/", views.pdfInfoEquipo)
     
     
 ]

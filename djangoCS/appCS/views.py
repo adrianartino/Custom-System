@@ -3209,6 +3209,458 @@ def reporteEmpleadosActivos(request):
     buffer.close()
     respuesta.write(pdf)
     return respuesta
+
+def reporteRenovacionEq(request):
+    
+    
+    renovacionEquipos = Renovacion_Equipos.objects.all()
+    
+    """for datosRenovacion in renovacionEquipos:
+        idEquipo= datosRenovacion.id_renov_equipo
+        equipo= datosRenovacion.id_equipo
+        compra= datosRenovacion.fecha_compra
+        renovacion = datosRenovacion.fecha_renov
+        
+        
+        """
+
+            
+            
+            
+        
+    
+    
+    
+    numero_equipos = 0 #contador
+    for equipo in renovacionEquipos:
+        numero_equipos +=1 #20
+        
+    if numero_equipos == 0:
+        numero_equipos =1
+    
+    division = numero_equipos // 30 #Resultado 2, a fuerzas va a haber 2 hojas en el pdf
+    residuo = numero_equipos%30 #residuo hay 2
+    
+    
+    
+    if residuo == 0:
+        #hojas iguales a division.
+        hojasIguales = True
+        
+    if residuo != 0:
+        division = division + 1   #Número de hojas total. 3
+        
+    #QUITAR ESTO PARA OTRA HOJA
+    #crear el http response con pdf
+    respuesta = HttpResponse(content_type='application/pdf')
+    respuesta['Content-Disposition'] = 'attachment; filename=Reporte Empleados.pdf'
+    #Crear objeto PDF 
+    buffer =BytesIO()
+    c = canvas.Canvas(buffer, pagesize=letter)
+    #HASTA AQUI
+        
+    
+    contadorHojas = 1
+    for hoja in range(division):
+        
+        #HASTA AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+        renovacionEquipos = Renovacion_Equipos.objects.all()
+        
+        
+        ids =[]
+        equiposRe = []
+        propietarios = []
+        departamentos = []
+        compras = []
+        renovaciones = []
+
+        if contadorHojas == 3:
+            contadorEquipos = 0
+            contadorEquiposxHoja = 0
+            for datosRenovacion in renovacionEquipos:
+                
+                contadorEquipos += 1 #10
+                
+                
+                if contadorEquipos > 60 and contadorEquipos <=90:
+                    #Obtener solo empleados que quepan en la hoja
+                    idRenovacion= datosRenovacion.id_renov_equipo
+                    equipo= datosRenovacion.id_equipo_id
+                    compra= datosRenovacion.fecha_compra
+                    renovacion = datosRenovacion.fecha_renov
+                    
+                    ids.append(idRenovacion)
+                    compras.append(compra)
+                    renovaciones.append(renovacion)
+                    
+                    equipos = Equipos.objects.filter(id_equipo=equipo)
+                    for datosEquipo in equipos:
+                        tipo = datosEquipo.tipo
+                        marca = datosEquipo.marca
+                        modelo = datosEquipo.modelo
+                        col= datosEquipo.color
+                        propietario = datosEquipo.id_empleado_id
+                        datosEquipos = tipo + "" + marca + "" + modelo + "" + col
+                        equiposRe.append(datosEquipos)
+                        
+                        if propietario == None:
+                            datosPropietario = "Sin propietario"
+                            area = "Sin departamento"
+                        else:
+                            
+                            propietarios = Empleados.objects.filter(id_empleado = propietario)
+                            for datosProp in propietarios:
+                                nombres = datosProp.nombre
+                                apellidos = datosProp.apellidos
+                                depa = datosProp.id_area_id
+                                datosPropietario= nombres + "" + apellidos
+                        
+                            departamentos = Areas.objects.filter(id_area = depa)
+                            for datosArea in departamentos:
+                                area = datosArea.nombre
+                                color = datosArea.color
+                        propietarios.append(datosPropietario)
+                        departamentos.append(area)
+                    contadorEquiposxHoja +=1
+                
+                        
+                    
+                
+            #solo 9 empleados
+            listaEquipos = zip(ids, equiposRe, propietarios, departamentos, compras, renovaciones )
+            contadorHojas = 4
+            if contadorEquiposxHoja == 30:
+                high = 600 - ((contadorEquiposxHoja+1) * 16)
+            else:
+                high = 600 - (contadorEquiposxHoja * 16)
+
+        if contadorHojas == 2:
+            contadorEquipos = 0
+            contadorEquiposxHoja = 0
+            for datosRenovacion in renovacionEquipos:
+                
+                contadorEquipos += 1 #10
+                
+                
+                if contadorEquipos > 28 and contadorEquipos <= 56:
+                    #Obtener solo empleados que quepan en la hoja
+                    idRenovacion= datosRenovacion.id_renov_equipo
+                    equipo= datosRenovacion.id_equipo_id
+                    compra= datosRenovacion.fecha_compra
+                    renovacion = datosRenovacion.fecha_renov
+                    
+                    ids.append(idRenovacion)
+                    compras.append(compra)
+                    renovaciones.append(renovacion)
+                    
+                    equipos = Equipos.objects.filter(id_equipo=equipo)
+                    for datosEquipo in equipos:
+                        tipo = datosEquipo.tipo
+                        marca = datosEquipo.marca
+                        modelo = datosEquipo.modelo
+                        col= datosEquipo.color
+                        propietario = datosEquipo.id_empleado_id
+                        datosEquipos = tipo + "" + marca + "" + modelo + "" + col
+                        equiposRe.append(datosEquipos)
+                        
+                        if propietario == None:
+                            datosPropietario = "Sin propietario"
+                            area = "Sin departamento"
+                        else:
+                            
+                            propietarios = Empleados.objects.filter(id_empleado = propietario)
+                            for datosProp in propietarios:
+                                nombres = datosProp.nombre
+                                apellidos = datosProp.apellidos
+                                depa = datosProp.id_area_id
+                                datosPropietario= nombres + "" + apellidos
+                        
+                            departamentos = Areas.objects.filter(id_area = depa)
+                            for datosArea in departamentos:
+                                area = datosArea.nombre
+                                color = datosArea.color
+                        propietarios.append(datosPropietario)
+                        departamentos.append(area)
+                    contadorEquiposxHoja +=1
+                
+                        
+                    
+                
+            #solo 9 empleados
+            listaEquipos = zip(ids, equiposRe, propietarios, departamentos, compras, renovaciones )
+            contadorHojas = 3
+            if contadorEquiposxHoja == 28:
+                high = 600 - ((contadorEquiposxHoja+1) * 16)
+            else:
+                high = 600 - (contadorEquiposxHoja * 16)
+        
+    
+        if contadorHojas == 1:
+            contadorEquipos = 0
+            contadorEquiposxHoja = 0
+            contadorEquipos += 1 #10
+            for datosRenovacion in renovacionEquipos:
+                    
+                    
+                    
+                    
+                if contadorEquipos <= 28:
+                    #Obtener solo empleados que quepan en la hoja
+                    idRenovacion= datosRenovacion.id_renov_equipo
+                    equipo= datosRenovacion.id_equipo_id
+                    compra= datosRenovacion.fecha_compra
+                    renovacion = datosRenovacion.fecha_renov
+                        
+                    ids.append(idRenovacion)
+                    compras.append(compra)
+                    renovaciones.append(renovacion)
+                        
+                    equipos = Equipos.objects.filter(id_equipo=equipo)
+                        
+                    for datosEquipo in equipos:
+                        tipo = datosEquipo.tipo
+                        marca = datosEquipo.marca
+                        modelo = datosEquipo.modelo
+                        col= datosEquipo.color
+                        propietario = datosEquipo.id_empleado_id
+                        datosEquipos = tipo + "" + marca + "" + modelo + "" + col
+                        equiposRe.append(datosEquipos)
+                            
+                        if propietario == None:
+                            datosPropietario = "Sin propietario"
+                            area = "Sin departamento"
+                        else:
+                                
+                            propietarios = Empleados.objects.filter(id_empleado = propietario)
+                            for datosProp in propietarios:
+                                nombres = datosProp.nombre
+                                apellidos = datosProp.apellidos
+                                depa = datosProp.id_area_id
+                                datosPropietario= nombres + "" + apellidos
+                            
+                            departamentos = Areas.objects.filter(id_area = depa)
+                            for datosArea in departamentos:
+                                area = datosArea.nombre
+                                color = datosArea.color
+                        propietarios.append(datosPropietario)
+                        departamentos.append(area)
+                    contadorEquiposxHoja +=1
+                
+                #solo 9 empleados
+                listaEquipos = zip(ids, equiposRe, propietarios, departamentos, compras, renovaciones )
+                contadorHojas = 2
+                if contadorEquiposxHoja == 28:
+                    high = 615 - ((contadorEquiposxHoja+1) * 1)
+                else:
+                    high = 615 - (contadorEquiposxHoja * 1)
+            
+            
+
+        
+        #nombre de empresa
+        c.setFont('Helvetica-Oblique', 22)
+        c.drawString(40,750, 'Custom & Co S.A. de C.V.')
+        #fecha
+        hoy=datetime.now()
+        fecha = str(hoy.date())
+        
+        c.setFont('Helvetica', 12)
+        c.drawString(480,750, fecha)
+        #linea guinda
+        color_guinda="#B03A2E"
+        c.setFillColor(color_guinda)
+        c.setStrokeColor(color_guinda)
+        c.line(40,747,560,745)
+        #nombre departamento
+        color_negro="#030305"
+        c.setFillColor(color_negro)
+        c.setFont('Helvetica', 16)
+        c.drawString(60,730, 'Departamento de Sistemas')
+        #titulo
+        c.setFont('Helvetica-Bold', 22)
+       
+        c.drawString(180,690, 'Reporte Renovación Equipos')
+        
+        base_dir = str(settings.BASE_DIR)
+        logo = base_dir+'/static/images/logopdf.png'   
+        c.drawImage(logo, 250,620,120,90, preserveAspectRatio=True)
+        
+        
+        
+        
+        
+        #header de tabla
+        styles = getSampleStyleSheet()
+        styleBH =styles["Normal"]
+        styleBH.alignment = TA_CENTER
+        styleBH.fontSize = 9
+        
+        
+        id_renovacion = Paragraph('''ID''', styleBH)
+        equipo_re = Paragraph('''Equipo''', styleBH)
+        propietario_re = Paragraph('''Propietario''', styleBH)
+        departamento_re = Paragraph('''Departamento''', styleBH)
+        compra_re = Paragraph('''Fecha Compra.''', styleBH)
+        renovacion_re = Paragraph('''Fecha Renovación''', styleBH)
+        
+        filasTabla=[]
+        filasTabla.append([id_renovacion,equipo_re, propietario_re, departamento_re, compra_re, renovacion_re ])
+        #Tabla
+        styleN = styles["BodyText"]
+        styleN.alignment = TA_CENTER
+        styleN.fontSize = 7
+        
+            
+        
+        for id_re, equipo, propietario, departamento, compra, renov in listaEquipos:
+            campo_id = Paragraph(str(id_re), styleN)
+            campo_equipo = Paragraph(str(equipo), styleN)
+            campo_propietario = Paragraph(str(propietario), styleN)
+            campo_departamento = Paragraph(str(departamento), styleN)
+            campo_compra = Paragraph(str(compra), styleN)
+            campo_renovacion = Paragraph(str(renov), styleN)
+           
+            
+            fila = [campo_id, campo_equipo, campo_propietario, campo_departamento, campo_compra, campo_renovacion]
+            filasTabla.append(fila)
+            
+            high= high - 18 
+            
+        #escribir tabla
+        width, height = letter
+        tabla = Table(filasTabla, colWidths=[1 * cm, 5 * cm, 4 * cm, 3 * cm, 3 * cm, 3 * cm])
+        tabla.setStyle(TableStyle([
+            ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+            ('BACKGROUND', (0, 0), (-1, 0), '#F5CD04'),
+            ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+        ]))
+        
+        contador = 0
+        for fila in filasTabla:
+            contador += 1
+            if contador > 1:
+                if fila[2] == "label bg-red":
+                    color = colors.red
+                    tabla.setStyle(TableStyle([
+                        ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                    ]))
+                    
+                elif fila[2] == "label bg-pink":
+                    color = colors.pink
+                    tabla.setStyle(TableStyle([
+                        ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                    ]))
+                elif fila[2] == "label bg-purple":
+                    color = colors.purple
+                    tabla.setStyle(TableStyle([
+                        ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                    ]))
+                elif fila[2] == "label bg-indigo":
+                    color = colors.indigo
+                    tabla.setStyle(TableStyle([
+                        ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                    ]))
+                elif fila[2] == "label bg-blue":
+                    color = colors.blue
+                    tabla.setStyle(TableStyle([
+                        ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                    ]))
+                elif fila[2] == "label bg-cyan":
+                    color = colors.cyan
+                    tabla.setStyle(TableStyle([
+                        ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                    ]))
+                elif fila[2] == "label bg-teal":
+                    color = colors.teal
+                    tabla.setStyle(TableStyle([
+                        ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                    ]))
+                elif fila[2] == "label bg-green":
+                    color = colors.green
+                    tabla.setStyle(TableStyle([
+                        ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                    ]))
+                elif fila[2] == "label bg-light-green":
+                    color = colors.lightgreen
+                    tabla.setStyle(TableStyle([
+                        ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                    ]))
+                elif fila[2] == "label bg-lime":
+                    color = colors.lime
+                    tabla.setStyle(TableStyle([
+                        ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                    ]))
+                elif fila[2] == "label bg-yellow":
+                    color = colors.yellow
+                    tabla.setStyle(TableStyle([
+                        ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                    ]))
+                elif fila[2] == "label bg-amber":
+                    color = colors.orangered
+                    tabla.setStyle(TableStyle([
+                        ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                    ]))
+                elif fila[2] == "label bg-orange":
+                    color = colors.orange
+                    tabla.setStyle(TableStyle([
+                        ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                    ]))
+                elif fila[2] == "label bg-deep-orange":
+                    color = colors.deeppink
+                    tabla.setStyle(TableStyle([
+                        ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                    ]))
+                elif fila[2] == "label bg-brown":
+                    color = colors.brown
+                    tabla.setStyle(TableStyle([
+                        ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                    ]))
+                elif fila[2] == "label bg-grey":
+                    color = colors.gray
+                    tabla.setStyle(TableStyle([
+                        ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                    ]))
+                elif fila[2] == "label bg-blue-grey":
+                    color = colors.blueviolet
+                    tabla.setStyle(TableStyle([
+                        ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                    ]))
+                elif fila[2] == "label bg-black":
+                    color = colors.black
+                    tabla.setStyle(TableStyle([
+                        ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                    ]))
+                    
+        
+        tabla.wrapOn(c, width, height)
+        tabla.drawOn(c, 35, high)
+        
+        #linea guinda
+        color_guinda="#B03A2E"
+        c.setFillColor(color_guinda)
+        c.setStrokeColor(color_guinda)
+        c.line(40,60,560,60)
+        
+        color_negro="#030305"
+        c.setFillColor(color_negro)
+        c.setFont('Helvetica-Bold', 11)
+        c.drawString(170,48, '2021 - Administrador de Custom System. - Versión: 1.0.0 ')
+        
+        #guardar la pagina, y se crea otra en caso de ser necesario
+        c.showPage()
+        
+        
+        
+        #HASTA AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+        
+        
+    #guardar pdf
+    c.save()
+    #obtener valores de bytesIO y esribirlos en la respuesta
+    pdf = buffer.getvalue()
+    buffer.close()
+    respuesta.write(pdf)
+    return respuesta
     
     
     
@@ -3268,7 +3720,7 @@ def reporteEquiposActivos(request):
         
     contadorEquipos = 0
     contadorHojas = 1
-    for hoja2 in range(1):
+    for hoja2 in range(division):
         
         #HASTA AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
         datosEquipos= Equipos.objects.filter(activo__icontains=activo) ##1 equipo
@@ -3679,7 +4131,1220 @@ def reporteEquiposActivos(request):
     buffer.close()
     respuesta.write(pdf)
     return respuesta
+
+def reporteImpresoras(request):
     
+    if request.method == "POST":
+
+        activo= request.POST['activo']
+        
+        
+    
+    impresoras = Impresoras.objects.filter(activo__icontains = activo) #11 empleados
+    
+    numero_impresoras = 0
+    for impresora in impresoras:
+        numero_impresoras +=1
+        
+    if numero_impresoras == 0:
+        numero_impresoras =1
+    
+    division = numero_impresoras // 9 #Resultado 1, sin residuo
+    residuo = numero_impresoras%9 #residuo hay 2
+    
+    
+    
+    if residuo == 0:
+        #hojas iguales a division.
+        hojasIguales = True
+        
+    if residuo != 0:
+        division = division + 1   #Número de hojas total. 2
+        
+    #QUITAR ESTO PARA OTRA HOJA
+    #crear el http response con pdf
+    respuesta = HttpResponse(content_type='application/pdf')
+    respuesta['Content-Disposition'] = 'attachment; filename=Reporte Impresoras.pdf'
+    #Crear objeto PDF 
+    buffer =BytesIO()
+    c = canvas.Canvas(buffer, pagesize=letter)
+    #HASTA AQUI
+        
+    
+    contadorHojas = 1
+    for hoja2 in range(division):
+        
+        #HASTA AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+        datosImpresoras= Impresoras.objects.filter(activo__icontains=activo) ##1 equipo
+        
+        
+        ids =[]
+        marcas = []
+        modelos = []
+        numseries = []
+        tipos = []
+        enredes = []
+        ips = []
+        estados = []
+        areas = []
+        urls_imagenes = []
+        base_dir = str(settings.BASE_DIR)
+        
+        if contadorHojas == 3:
+            contadorImpresorasXHoja = 0
+            contadorImpresoras = 0
+            for impresora in datosImpresoras:
+                
+                contadorImpresoras += 1 #10
+                if contadorImpresoras > 18 and contadorImpresoras <=27:
+                    imagen = impresora.imagen
+                    urlimagen = base_dir + '/media/' + str(imagen)
+                    img = Image(urlimagen,50,50)
+                    urls_imagenes.append(img)
+                    
+                   
+                        
+                    ids.append(str(impresora.id_impresora))
+                    tipos.append(impresora.tipo)
+                    marcas.append(impresora.marca)
+                    modelos.append(impresora.modelo)
+                    numseries.append(impresora.numserie)
+                    if impresora.enred == "S":
+                        enredes.append("SI")
+                    elif impresora.enred == "N":
+                        enredes.append("NO")
+                    if impresora.ip == None:
+                        ips.append("POR CABLE")
+                    else:
+                        ips.append(impresora.ip) 
+                    estados.append(impresora.estado)
+                    
+                    idArea= impresora.id_area_id
+                    
+                    datosAreas= Areas.objects.filter(id_area=idArea)
+                    for datos in datosAreas:
+                        nombre = datos.nombre
+                    areas.append(nombre)
+                   
+                    
+                    
+                    contadorImpresorasXHoja +=1
+                    
+                
+            #solo 9 empleados
+            listaImpresoras = zip(ids, marcas, modelos, numseries, urls_imagenes, tipos, enredes, ips, estados, areas)
+            
+            contadorHojas = 4
+            if contadorImpresorasXHoja == 9:
+                high = 600 - ((contadorImpresorasXHoja+1) * 33)
+            else:
+                high = 600 - (contadorImpresorasXHoja * 33)
+                
+                
+        
+        if contadorHojas == 2:
+            contadorImpresorasXHoja = 0
+            contadorImpresoras = 0
+            for impresora in datosImpresoras:
+                
+                contadorImpresoras += 1 #10
+                if contadorImpresoras > 9 and contadorImpresoras <=18:
+                    imagen = impresora.imagen
+                    urlimagen = base_dir + '/media/' + str(imagen)
+                    img = Image(urlimagen,50,50)
+                    urls_imagenes.append(img)
+                    
+                   
+                        
+                    ids.append(str(impresora.id_impresora))
+                    tipos.append(impresora.tipo)
+                    marcas.append(impresora.marca)
+                    modelos.append(impresora.modelo)
+                    numseries.append(impresora.numserie)
+                    if impresora.enred == "S":
+                        enredes.append("SI")
+                    elif impresora.enred == "N":
+                        enredes.append("NO")
+                    if impresora.ip == None:
+                        ips.append("POR CABLE")
+                    else:
+                        ips.append(impresora.ip) 
+                    estados.append(impresora.estado)
+                    
+                    idArea= impresora.id_area_id
+                    
+                    datosAreas= Areas.objects.filter(id_area=idArea)
+                    for datos in datosAreas:
+                        nombre = datos.nombre
+                    areas.append(nombre)
+                   
+                    
+                    
+                    contadorImpresorasXHoja +=1
+                    
+                
+            #solo 9 empleados
+            listaImpresoras = zip(ids, marcas, modelos, numseries, urls_imagenes, tipos, enredes, ips, estados, areas)
+            
+            contadorHojas = 3
+            if contadorImpresorasXHoja == 9:
+                high = 600 - ((contadorImpresorasXHoja+1) * 33)
+            else:
+                high = 600 - (contadorImpresorasXHoja * 33)
+                
+                    
+        if contadorHojas == 1:
+            contadorImpresorasXHoja = 0
+            contadorImpresoras = 0
+            for impresora in datosImpresoras:
+                
+                contadorImpresoras += 1 #10
+                if contadorImpresoras <= 9:
+                    imagen = impresora.imagen
+                    urlimagen = base_dir + '/media/' + str(imagen)
+                    img = Image(urlimagen,50,50)
+                    urls_imagenes.append(img)
+                    
+                   
+                        
+                    ids.append(str(impresora.id_impresora))
+                    tipos.append(impresora.tipo)
+                    marcas.append(impresora.marca)
+                    modelos.append(impresora.modelo)
+                    numseries.append(impresora.numserie)
+                    if impresora.enred == "S":
+                        enredes.append("SI")
+                    elif impresora.enred == "N":
+                        enredes.append("NO")
+                    if impresora.ip == None:
+                        ips.append("POR CABLE")
+                    else:
+                        ips.append(impresora.ip) 
+                    estados.append(impresora.estado)
+                    
+                    idArea= impresora.id_area_id
+                    
+                    datosAreas= Areas.objects.filter(id_area=idArea)
+                    for datos in datosAreas:
+                        nombre = datos.nombre
+                    areas.append(nombre)
+                   
+                    
+                    
+                    contadorImpresorasXHoja +=1
+                    
+                
+            #solo 9 empleados
+            listaImpresoras = zip(ids, marcas, modelos, numseries, urls_imagenes, tipos, enredes, ips, estados, areas)
+            
+            contadorHojas = 2
+            if contadorImpresorasXHoja == 9:
+                high = 600 - ((contadorImpresorasXHoja+1) * 33)
+            else:
+                high = 600 - (contadorImpresorasXHoja * 33)
+            
+            
+
+        
+        #nombre de empresa
+        c.setFont('Helvetica-Oblique', 22)
+        c.drawString(40,750, 'Custom & Co S.A. de C.V.')
+        #fecha
+        hoy=datetime.now()
+        fecha = str(hoy.date())
+        
+        c.setFont('Helvetica', 12)
+        c.drawString(480,750, fecha)
+        
+    
+        
+        
+        
+        #linea guinda
+        color_guinda="#B03A2E"
+        c.setFillColor(color_guinda)
+        c.setStrokeColor(color_guinda)
+        c.line(40,747,560,745)
+        #nombre departamento
+        color_negro="#030305"
+        c.setFillColor(color_negro)
+        c.setFont('Helvetica', 16)
+        c.drawString(60,730, 'Departamento de Sistemas')
+        #titulo
+        c.setFont('Helvetica-Bold', 22)
+        if activo == "A":
+            c.drawString(180,690, 'Reporte Impresoras Activas')
+        if activo == "I":
+            c.drawString(180,690, 'Reporte Impresoras Inactivas')
+        
+        base_dir = str(settings.BASE_DIR)
+        logo = base_dir+'/static/images/logopdf.png'   
+        c.drawImage(logo, 250,620,120,90, preserveAspectRatio=True)
+        
+        
+        
+        
+        
+        #header de tabla
+        styles = getSampleStyleSheet()
+        styleBH =styles["Normal"]
+        styleBH.alignment = TA_CENTER
+        styleBH.fontSize = 9
+        
+        
+        idImpresora = Paragraph('''ID''', styleBH)
+        marcaInfo = Paragraph('''Marca''', styleBH)
+        modeloInfo = Paragraph('''Modelo''', styleBH)
+        numserieInfo = Paragraph('''Num. Serie''', styleBH)
+        imagenInfo = Paragraph('''Imagen.''', styleBH)
+        tipoInfo= Paragraph('''Tipo''', styleBH)
+        enredInfo = Paragraph('''Red''', styleBH)
+        ipInfo = Paragraph('''Dirección IP''', styleBH)
+        estadoInfo = Paragraph('''Estado''', styleBH)
+        areaInfo = Paragraph('''Area''', styleBH)
+        
+        filasTabla=[]
+        filasTabla.append([idImpresora,marcaInfo, modeloInfo, numserieInfo, imagenInfo, tipoInfo,enredInfo, ipInfo, estadoInfo, areaInfo  ])
+        #Tabla
+        styleN = styles["BodyText"]
+        styleN.alignment = TA_CENTER
+        styleN.fontSize = 7
+        
+            
+        cont = 0
+        for id, marca, modelo, numserie, imagen, tipo, enred, ip, estado, area in listaImpresoras:
+            campo_impresora = Paragraph(id, styleN)
+            campo_marca = Paragraph(marca, styleN)
+            campo_modelo = Paragraph(modelo, styleN)
+            campo_numserie = Paragraph(numserie, styleN)
+            campo_tipo = Paragraph(tipo, styleN)
+            campo_enred = Paragraph(enred, styleN)
+            campo_ip = Paragraph(ip, styleN)
+            campo_estado = Paragraph(estado, styleN)
+            campo_area = Paragraph(area, styleN)
+            
+            
+            fila = [campo_impresora, campo_marca, campo_modelo,campo_numserie, imagen, campo_tipo, campo_enred, campo_ip,campo_estado, campo_area ]
+            filasTabla.append(fila)
+            
+            high= high - 18 
+            
+            
+        #escribir tabla
+        width, height = letter
+        tabla = Table(filasTabla, colWidths=[.9 * cm, 1.5 * cm, 3 * cm, 2 * cm, 2 * cm, 2 * cm, 1.5 * cm, 2.5 * cm, 
+                                             2 * cm,2 * cm])
+        tabla.setStyle(TableStyle([
+            ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+            ('BACKGROUND', (0, 0), (-1, 0), '#F5CD04'),
+            ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+        ]))
+        
+        for fila in filasTabla:
+            tabla.setStyle(([
+            ('BACKGROUND', (0, 0), (10,0), colors.crimson),
+            ('TEXTCOLOR',(0,0), (1, 1), colors.whitesmoke)
+        ]))
+        
+        tabla.wrapOn(c, width, height)
+        tabla.drawOn(c, 30, high)
+        
+        #linea guinda
+        color_guinda="#B03A2E"
+        c.setFillColor(color_guinda)
+        c.setStrokeColor(color_guinda)
+        c.line(40,60,560,60)
+        
+        color_negro="#030305"
+        c.setFillColor(color_negro)
+        c.setFont('Helvetica-Bold', 11)
+        c.drawString(170,48, '2021 - Administrador de Custom System. - Versión: 1.0.0 ')
+        
+        #guardar la pagina, y se crea otra en caso de ser necesario
+        c.showPage()
+        
+        
+        
+        #HASTA AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+    
+    #guardar pdf
+    c.save()
+    #obtener valores de bytesIO y esribirlos en la respuesta
+    pdf = buffer.getvalue()
+    buffer.close()
+    respuesta.write(pdf)
+    return respuesta
+       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def reporteRenovacionImp(request):
+    
+    
+    renovacionImpresoras = Renovacion_Impresoras.objects.all()
+    
+    numero_impresoras = 0 #contador
+    for impresora in renovacionImpresoras:
+        numero_impresoras +=1 #20
+        
+    if numero_impresoras == 0:
+        numero_impresoras =1
+    
+    division = numero_impresoras // 30 #Resultado 2, a fuerzas va a haber 2 hojas en el pdf
+    residuo = numero_impresoras%30 #residuo hay 2
+    
+    if residuo == 0:
+        #hojas iguales a division.
+        hojasIguales = True
+        
+    if residuo != 0:
+        division = division + 1   #Número de hojas total. 3
+        
+    #QUITAR ESTO PARA OTRA HOJA
+    #crear el http response con pdf
+    respuesta = HttpResponse(content_type='application/pdf')
+    respuesta['Content-Disposition'] = 'attachment; filename=Reporte Renovación Impresoras.pdf'
+    #Crear objeto PDF 
+    buffer =BytesIO()
+    c = canvas.Canvas(buffer, pagesize=letter)
+    #HASTA AQUI
+        
+    
+    contadorHojas = 1
+    for hoja in range(division):
+        
+        #HASTA AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+        renovacionImpresoras = Renovacion_Impresoras.objects.all()
+        
+        
+        ids =[]
+        modelos = []
+        imagenes = []
+        departamentos = []
+        compras = []
+        renovaciones = []
+        base_dir = str(settings.BASE_DIR)
+        
+       
+        if contadorHojas == 1:
+            contadorImpresoras = 0
+            contadorImpresorasxHoja = 0
+            for datosRenovacion in renovacionImpresoras:
+                    
+                    
+                contadorImpresoras += 1 #10
+                    
+                    
+                if contadorImpresoras <= 9:
+                    #Obtener solo empleados que quepan en la hoja
+                    idImpresora= datosRenovacion.id_impresora_id
+                    compra= datosRenovacion.fecha_compra
+                    renovacion = datosRenovacion.fecha_renov
+                    
+                        
+                    ids.append(idImpresora)
+                    compras.append(compra)
+                    renovaciones.append(renovacion)
+                        
+                    impresora = Impresoras.objects.filter(id_impresora=idImpresora)
+                        
+                    for datoImpresora in impresora:
+                        marca = datoImpresora.marca
+                        modelo = datoImpresora.modelo
+                        datos_imp = "Impresora" + marca + "" + modelo 
+                        modelos.append(datos_imp)
+                        
+                        area = datoImpresora.id_area_id
+                        
+                        datosArea = Areas.objects.filter(id_area = area)
+                        
+                        for dato in datosArea:
+                            nombre = dato.nombre
+                        
+                        departamentos.append(nombre)
+                        
+                        imagen = datoImpresora.imagen
+                        
+                        urlimagen = base_dir + '/media/' + str(imagen)
+                        img = Image(urlimagen,50,50)
+                        imagenes.append(img)
+                        
+                    contadorImpresorasxHoja +=1
+                
+                #solo 9 empleados
+                listaImpresoras = zip(ids, modelos, imagenes, departamentos, compras, renovaciones)
+                contadorHojas = 2
+                if contadorImpresorasxHoja == 9:
+                    high = 566 - ((contadorImpresorasxHoja+1) * 1)
+                else:
+                    high = 566 - (contadorImpresorasxHoja * 1)
+            
+            
+
+        
+        #nombre de empresa
+        c.setFont('Helvetica-Oblique', 22)
+        c.drawString(40,750, 'Custom & Co S.A. de C.V.')
+        #fecha
+        hoy=datetime.now()
+        fecha = str(hoy.date())
+        
+        c.setFont('Helvetica', 12)
+        c.drawString(480,750, fecha)
+        #linea guinda
+        color_guinda="#B03A2E"
+        c.setFillColor(color_guinda)
+        c.setStrokeColor(color_guinda)
+        c.line(40,747,560,745)
+        #nombre departamento
+        color_negro="#030305"
+        c.setFillColor(color_negro)
+        c.setFont('Helvetica', 16)
+        c.drawString(60,730, 'Departamento de Sistemas')
+        #titulo
+        c.setFont('Helvetica-Bold', 22)
+       
+        c.drawString(150,690, 'Reporte Renovación Impresoras')
+        
+        base_dir = str(settings.BASE_DIR)
+        logo = base_dir+'/static/images/logopdf.png'   
+        c.drawImage(logo, 250,620,120,90, preserveAspectRatio=True)
+        
+        
+        
+        
+        
+        #header de tabla
+        styles = getSampleStyleSheet()
+        styleBH =styles["Normal"]
+        styleBH.alignment = TA_CENTER
+        styleBH.fontSize = 9
+        
+        
+        id_renovacion = Paragraph('''ID''', styleBH)
+        impresora_re = Paragraph('''Equipo''', styleBH)
+        imagen_re = Paragraph('''Imagen''', styleBH)
+        departamento_re = Paragraph('''Departamento''', styleBH)
+        compra_re = Paragraph('''Fecha Compra.''', styleBH)
+        renovacion_re = Paragraph('''Fecha Renovación''', styleBH)
+        
+        filasTabla=[]
+        filasTabla.append([id_renovacion,impresora_re, imagen_re, departamento_re, compra_re, renovacion_re ])
+        #Tabla
+        styleN = styles["BodyText"]
+        styleN.alignment = TA_CENTER
+        styleN.fontSize = 7
+        
+            
+        
+        for id_re, impresora, imagen, departamento, compra, renov in listaImpresoras:
+            campo_id = Paragraph(str(id_re), styleN)
+            campo_impresora = Paragraph(str(impresora), styleN)
+            campo_departamento = Paragraph(str(departamento), styleN)
+            campo_compra = Paragraph(str(compra), styleN)
+            campo_renovacion = Paragraph(str(renov), styleN)
+           
+            
+            fila = [campo_id, campo_impresora, imagen, campo_departamento, campo_compra, campo_renovacion]
+            filasTabla.append(fila)
+            
+            high= high - 18 
+            
+        #escribir tabla
+        width, height = letter
+        tabla = Table(filasTabla, colWidths=[1 * cm, 5 * cm, 4 * cm, 3 * cm, 3 * cm, 3 * cm])
+        tabla.setStyle(TableStyle([
+            ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+            ('BACKGROUND', (0, 0), (-1, 0), '#F5CD04'),
+            ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+        ]))  
+        
+        tabla.wrapOn(c, width, height)
+        tabla.drawOn(c, 35, high)
+        
+        #linea guinda
+        color_guinda="#B03A2E"
+        c.setFillColor(color_guinda)
+        c.setStrokeColor(color_guinda)
+        c.line(40,60,560,60)
+        
+        color_negro="#030305"
+        c.setFillColor(color_negro)
+        c.setFont('Helvetica-Bold', 11)
+        c.drawString(170,48, '2021 - Administrador de Custom System. - Versión: 1.0.0 ')
+        
+        #guardar la pagina, y se crea otra en caso de ser necesario
+        c.showPage()
+        
+        
+        
+        #HASTA AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+        
+        
+    #guardar pdf
+    c.save()
+    #obtener valores de bytesIO y esribirlos en la respuesta
+    pdf = buffer.getvalue()
+    buffer.close()
+    respuesta.write(pdf)
+    return respuesta
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def reporteInsumos(request):
+    
+        
+        
+    
+    insumos = Cartuchos.objects.all() #11 empleados
+    
+    numero_insumos = 0
+    for insumo in insumos:
+        numero_insumos +=1
+        
+    if numero_insumos == 0:
+        numero_insumos =1
+    
+    division = numero_insumos // 9 #Resultado 1, sin residuo
+    residuo = numero_insumos%9 #residuo hay 2
+    
+    
+    
+    if residuo == 0:
+        #hojas iguales a division.
+        hojasIguales = True
+        
+    if residuo != 0:
+        division = division + 1   #Número de hojas total. 2
+        
+    #QUITAR ESTO PARA OTRA HOJA
+    #crear el http response con pdf
+    respuesta = HttpResponse(content_type='application/pdf')
+    respuesta['Content-Disposition'] = 'attachment; filename=Reporte Insumos.pdf'
+    #Crear objeto PDF 
+    buffer =BytesIO()
+    c = canvas.Canvas(buffer, pagesize=letter)
+    #HASTA AQUI
+        
+ 
+    contadorHojas = 1
+    for hoja2 in range(division):
+        
+        #HASTA AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+        insumos= Cartuchos.objects.all() ##1 equipo
+        
+        
+        ids =[]
+        marcas = []
+        modelos = []
+        cantidades = []
+        numseries = []
+        colores = []
+        urls_imagenes = []
+        impresoras = []
+        base_dir = str(settings.BASE_DIR)
+        
+        
+        
+                
+        if contadorHojas == 4:
+            contadorInsumos = 0
+            contadorInsumosXHoja = 0
+            for insumo in insumos:
+                
+                contadorInsumos += 1 #10
+                if contadorInsumos > 27 and contadorInsumos <= 36:
+                    imagen = insumo.imagenCartucho
+                    urlimagen = base_dir + '/media/' + str(imagen)
+                    img = Image(urlimagen,50,50)
+                    urls_imagenes.append(img)
+                    
+                    idimpresora = insumo.id_impresora_id
+                    
+                    datosImpresora= Impresoras.objects.filter(id_impresora=idimpresora)
+                    for dato in datosImpresora:
+                        marca= dato.marca
+                        modelo=dato.modelo
+                    textoImpresora= marca + " " + modelo
+                    impresoras.append(textoImpresora)
+                    ids.append(insumo.id_cartucho)
+                    marcas.append(insumo.marca)
+                    modelos.append(insumo.modelo)
+                    cantidades.append(insumo.cantidad)
+                    numseries.append(insumo.nuserie)
+                    colores.append(insumo.color)
+                   
+                    
+                    
+                    contadorInsumosXHoja +=1
+                    
+                
+            #solo 9 empleados
+            listaInsumos = zip(ids, marcas, modelos, cantidades, numseries, colores, urls_imagenes, impresoras)
+            
+            contadorHojas = 5
+            if contadorInsumosXHoja == 9:
+                high = 600 - ((contadorInsumosXHoja+1) * 33)
+            else:
+                high = 600 - (contadorInsumosXHoja * 33)        
+        
+        if contadorHojas == 3:
+            contadorInsumos = 0
+            contadorInsumosXHoja = 0
+            for insumo in insumos:
+                
+                contadorInsumos += 1 #10
+                if contadorInsumos > 18 and contadorInsumos <= 27:
+                    imagen = insumo.imagenCartucho
+                    urlimagen = base_dir + '/media/' + str(imagen)
+                    img = Image(urlimagen,50,50)
+                    urls_imagenes.append(img)
+                    
+                    idimpresora = insumo.id_impresora_id
+                    
+                    datosImpresora= Impresoras.objects.filter(id_impresora=idimpresora)
+                    for dato in datosImpresora:
+                        marca= dato.marca
+                        modelo=dato.modelo
+                    textoImpresora= marca + " " + modelo
+                    impresoras.append(textoImpresora)
+                    ids.append(insumo.id_cartucho)
+                    marcas.append(insumo.marca)
+                    modelos.append(insumo.modelo)
+                    cantidades.append(insumo.cantidad)
+                    numseries.append(insumo.nuserie)
+                    colores.append(insumo.color)
+                   
+                    
+                    
+                    contadorInsumosXHoja +=1
+                    
+                
+            #solo 9 empleados
+            listaInsumos = zip(ids, marcas, modelos, cantidades, numseries, colores, urls_imagenes, impresoras)
+            
+            contadorHojas = 4
+            if contadorInsumosXHoja == 9:
+                high = 600 - ((contadorInsumosXHoja+1) * 33)
+            else:
+                high = 600 - (contadorInsumosXHoja * 33)
+                
+                
+        
+        if contadorHojas == 2:
+            contadorInsumos = 0
+            contadorInsumosXHoja = 0
+            for insumo in insumos:
+                
+                contadorInsumos += 1 #10
+                if contadorInsumos > 9 and contadorInsumos <= 18:
+                    imagen = insumo.imagenCartucho
+                    urlimagen = base_dir + '/media/' + str(imagen)
+                    img = Image(urlimagen,50,50)
+                    urls_imagenes.append(img)
+                    
+                    idimpresora = insumo.id_impresora_id
+                    
+                    datosImpresora= Impresoras.objects.filter(id_impresora=idimpresora)
+                    for dato in datosImpresora:
+                        marca= dato.marca
+                        modelo=dato.modelo
+                    textoImpresora= marca + " " + modelo
+                    impresoras.append(textoImpresora)
+                    ids.append(insumo.id_cartucho)
+                    marcas.append(insumo.marca)
+                    modelos.append(insumo.modelo)
+                    cantidades.append(insumo.cantidad)
+                    numseries.append(insumo.nuserie)
+                    colores.append(insumo.color)
+                   
+                    
+                    
+                    contadorInsumosXHoja +=1
+                    
+                
+            #solo 9 empleados
+            listaInsumos = zip(ids, marcas, modelos, cantidades, numseries, colores, urls_imagenes, impresoras)
+            
+            contadorHojas = 3
+            if contadorInsumosXHoja == 9:
+                high = 600 - ((contadorInsumosXHoja+1) * 33)
+            else:
+                high = 600 - (contadorInsumosXHoja * 33)
+                
+                    
+        if contadorHojas == 1:
+            contadorInsumos = 0
+            contadorInsumosXHoja = 0
+            for insumo in insumos:
+                
+                contadorInsumos += 1 #10
+                if contadorInsumos <= 9:
+                    imagen = insumo.imagenCartucho
+                    urlimagen = base_dir + '/media/' + str(imagen)
+                    img = Image(urlimagen,50,50)
+                    urls_imagenes.append(img)
+                    
+                    idimpresora = insumo.id_impresora_id
+                    
+                    datosImpresora= Impresoras.objects.filter(id_impresora=idimpresora)
+                    for dato in datosImpresora:
+                        marca= dato.marca
+                        modelo=dato.modelo
+                    textoImpresora= marca + " " + modelo
+                    impresoras.append(textoImpresora)
+                    ids.append(insumo.id_cartucho)
+                    marcas.append(insumo.marca)
+                    modelos.append(insumo.modelo)
+                    cantidades.append(insumo.cantidad)
+                    numseries.append(insumo.nuserie)
+                    colores.append(insumo.color)
+                   
+                    
+                    
+                    contadorInsumosXHoja +=1
+                    
+                
+            #solo 9 empleados
+            listaInsumos = zip(ids, marcas, modelos, cantidades, numseries, colores, urls_imagenes, impresoras)
+            
+            contadorHojas = 2
+            if contadorInsumosXHoja == 9:
+                high = 600 - ((contadorInsumosXHoja+1) * 33)
+            else:
+                high = 600 - (contadorInsumosXHoja * 33)
+            
+            
+
+        
+        #nombre de empresa
+        c.setFont('Helvetica-Oblique', 22)
+        c.drawString(40,750, 'Custom & Co S.A. de C.V.')
+        #fecha
+        hoy=datetime.now()
+        fecha = str(hoy.date())
+        
+        c.setFont('Helvetica', 12)
+        c.drawString(480,750, fecha)
+        
+    
+        
+        
+        
+        #linea guinda
+        color_guinda="#B03A2E"
+        c.setFillColor(color_guinda)
+        c.setStrokeColor(color_guinda)
+        c.line(40,747,560,745)
+        #nombre departamento
+        color_negro="#030305"
+        c.setFillColor(color_negro)
+        c.setFont('Helvetica', 16)
+        c.drawString(60,730, 'Departamento de Sistemas')
+        #titulo
+        c.setFont('Helvetica-Bold', 22)
+        
+        c.drawString(180,690, 'Reporte Insumos')
+        
+        base_dir = str(settings.BASE_DIR)
+        logo = base_dir+'/static/images/logopdf.png'   
+        c.drawImage(logo, 250,620,120,90, preserveAspectRatio=True)
+        
+        
+        
+        
+        
+        #header de tabla
+        styles = getSampleStyleSheet()
+        styleBH =styles["Normal"]
+        styleBH.alignment = TA_CENTER
+        styleBH.fontSize = 9
+        
+        
+        id_insumo = Paragraph('''ID''', styleBH)
+        marca = Paragraph('''Marca''', styleBH)
+        modelo = Paragraph('''Modelo''', styleBH)
+        cantidad= Paragraph('''Cantidad''', styleBH)
+        nserie = Paragraph('''Num. Serie''', styleBH)
+        color = Paragraph('''Color''', styleBH)
+        imagen = Paragraph('''Imagen.''', styleBH)
+        impresora = Paragraph('''Impresora''', styleBH)
+       
+        filasTabla=[]
+        filasTabla.append([id_insumo, marca, modelo, cantidad,nserie, color, imagen,impresora])
+        #Tabla
+        styleN = styles["BodyText"]
+        styleN.alignment = TA_CENTER
+        styleN.fontSize = 7
+        
+            
+        cont = 0
+        for id, marca, modelo, cantidad,nserie,  color,  imagenes, impresora in listaInsumos:
+            campo_insumo = Paragraph(str(id), styleN)
+            campo_marca = Paragraph(marca, styleN)
+            campo_modelo = Paragraph(modelo, styleN)
+            campo_cantidad = Paragraph(str(cantidad), styleN)
+            campo_nserie = Paragraph(nserie, styleN)
+            campo_color = Paragraph(color, styleN)
+            campo_impresora = Paragraph(impresora, styleN)
+            
+            fila = [campo_insumo, campo_marca, campo_modelo, campo_cantidad,  campo_nserie, campo_color, imagenes, campo_impresora]
+            filasTabla.append(fila)
+            
+            high= high - 18 
+            
+            
+        #escribir tabla
+        width, height = letter
+        tabla = Table(filasTabla, colWidths=[.9 * cm, 1.5 * cm, 4* cm, 2 * cm, 2 * cm, 1.5 * cm, 2.3 * cm, 4 * cm])
+        tabla.setStyle(TableStyle([
+            ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+            ('BACKGROUND', (0, 0), (-1, 0), '#F5CD04'),
+            ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+        ]))
+        
+        for fila in filasTabla:
+            tabla.setStyle(([
+            ('BACKGROUND', (0, 0), (10,0), colors.crimson),
+            ('TEXTCOLOR',(0,0), (1, 1), colors.whitesmoke)
+        ]))
+        
+        tabla.wrapOn(c, width, height)
+        tabla.drawOn(c, 50, high)
+        
+        #linea guinda
+        color_guinda="#B03A2E"
+        c.setFillColor(color_guinda)
+        c.setStrokeColor(color_guinda)
+        c.line(40,60,560,60)
+        
+        color_negro="#030305"
+        c.setFillColor(color_negro)
+        c.setFont('Helvetica-Bold', 11)
+        c.drawString(170,48, '2021 - Administrador de Custom System. - Versión: 1.0.0 ')
+        
+        #guardar la pagina, y se crea otra en caso de ser necesario
+        c.showPage()
+        
+        
+        
+        #HASTA AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+        
+    
+    #guardar pdf
+    c.save()
+    #obtener valores de bytesIO y esribirlos en la respuesta
+    pdf = buffer.getvalue()
+    buffer.close()
+    respuesta.write(pdf)
+    return respuesta
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def pdfInfoEquipo(request):
+    
+    if request.method == "POST":
+    
+        equipo_recibido= request.POST['idequipo']
+        
+    datosEquipo = Equipos.objects.filter(id_equipo = equipo_recibido)
+    
+    for dato in datosEquipo:
+        propietario = dato.id_empleado_id
+        
+        if propietario == None:
+            nombreProp = "Sin propietario"
+        else:
+            datosPropietario = Empleados.objects.filter(id_empleado = propietario)
+            
+            for datoPropietario in datosPropietario:
+                nombre = datoPropietario.nombre
+                apellidos = datoPropietario.apellidos
+            nombreProp = nombre + " " + apellidos
+        
+    
+    
+    #crear el http response con pdf
+    respuesta = HttpResponse(content_type='application/pdf')
+    respuesta['Content-Disposition'] = 'attachment; filename=Reporte Deparatmentos.pdf'
+    #Crear objeto PDF 
+    buffer =BytesIO()
+    c = canvas.Canvas(buffer, pagesize=letter)
+    #nombre de empresa
+    c.setFont('Helvetica-Oblique', 22)
+    c.drawString(40,750, 'Custom & Co S.A. de C.V.')
+    #fecha
+    hoy=datetime.now()
+    fecha = str(hoy.date())
+    
+    c.setFont('Helvetica', 12)
+    c.drawString(480,750, fecha)
+    #linea guinda
+    color_guinda="#B03A2E"
+    c.setFillColor(color_guinda)
+    c.setStrokeColor(color_guinda)
+    c.line(40,747,560,745)
+    #nombre departamento
+    color_negro="#030305"
+    c.setFillColor(color_negro)
+    c.setFont('Helvetica', 16)
+    c.drawString(60,730, 'Departamento de Sistemas')
+    #titulo
+    c.setFont('Helvetica-Bold', 22)
+    c.drawString(200,690, 'Información de Equipo')
+    
+    base_dir = str(settings.BASE_DIR)
+    logo = base_dir+'/static/images/logopdf.png'   
+    c.drawImage(logo, 250,620,120,90, preserveAspectRatio=True)
+    
+    for dato in datosEquipo:
+        c.setFont('Helvetica-Bold', 24)
+        c.drawString(200,610, 'Número de equipo: '+str(dato.id_equipo))
+        
+        c.setFont('Helvetica-Bold', 26)
+        c.drawString(130,580, dato.tipo + " " + dato.marca + " " + dato.modelo)
+        
+        imagen = str(dato.imagen)  
+        
+        imagenCompleta = base_dir+"/media/"+imagen 
+        c.drawImage(imagenCompleta, 230,375,200,200, preserveAspectRatio=True)
+        
+        c.setFont('Helvetica-Bold', 20)
+        c.drawString(50,390, "Propietario: " + nombreProp)
+    
+    
+    #obtener datos de area
+    
+    datosAreas= Areas.objects.all()
+    cantidad_empleados = []
+    
+    for area in datosAreas:
+        id_area_una = area.id_area
+        areaInt = int(id_area_una)
+        
+        empleadosEnArea = Empleados.objects.filter(id_area_id__id_area__icontains = areaInt)
+        
+        numero_empleados = 0
+        for empleado in empleadosEnArea:
+            numero_empleados+=1
+        
+        cantidad_empleados.append(numero_empleados)
+        
+    listaAreas = zip(datosAreas, cantidad_empleados)
+    #header de tabla
+    styles = getSampleStyleSheet()
+    styleBH =styles["Normal"]
+    styleBH.alignment = TA_CENTER
+    styleBH.fontSize = 10
+    
+    
+    id_Departamento = Paragraph('''Id Departamento''', styleBH)
+    nombre = Paragraph('''Nombre''', styleBH)
+    color = Paragraph('''Color''', styleBH)
+    numero_empleado = Paragraph('''Numero de empleados''', styleBH)
+    filasTabla=[]
+    filasTabla.append([id_Departamento, nombre, color, numero_empleado])
+    #Tabla
+    styleN = styles["BodyText"]
+    styleN.alignment = TA_CENTER
+    styleN.fontSize = 7
+    
+    high = 100
+    for area, empleados in listaAreas:
+        fila = [area.id_area, area.nombre, area.color, empleados]
+        filasTabla.append(fila)
+        high= high - 18 
+        
+    #escribir tabla
+    width, height = letter
+    tabla = Table(filasTabla, colWidths=[4 * cm, 4 * cm, 4 * cm, 4 * cm])
+    tabla.setStyle(TableStyle([
+        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+        ('BACKGROUND', (0, 0), (-1, 0), '#F5CD04'),
+        ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+    ]))
+    
+    contador = 0
+    for fila in filasTabla:
+        contador += 1
+        if contador > 1:
+            if fila[2] == "label bg-red":
+                color = colors.red
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+                
+            elif fila[2] == "label bg-pink":
+                color = colors.pink
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-purple":
+                color = colors.purple
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-indigo":
+                color = colors.indigo
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-blue":
+                color = colors.blue
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-cyan":
+                color = colors.cyan
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-teal":
+                color = colors.teal
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-green":
+                color = colors.green
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-light-green":
+                color = colors.lightgreen
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-lime":
+                color = colors.lime
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-yellow":
+                color = colors.yellow
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-amber":
+                color = colors.orangered
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-orange":
+                color = colors.orange
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-deep-orange":
+                color = colors.deeppink
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-brown":
+                color = colors.brown
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-grey":
+                color = colors.gray
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-blue-grey":
+                color = colors.blueviolet
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+            elif fila[2] == "label bg-black":
+                color = colors.black
+                tabla.setStyle(TableStyle([
+                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
+                ]))
+                
+    
+    tabla.wrapOn(c, width, height)
+    tabla.drawOn(c, 80, high)
+    
+    #linea guinda
+    color_guinda="#B03A2E"
+    c.setFillColor(color_guinda)
+    c.setStrokeColor(color_guinda)
+    c.line(40,60,560,60)
+    
+    color_negro="#030305"
+    c.setFillColor(color_negro)
+    c.setFont('Helvetica-Bold', 11)
+    c.drawString(170,48, '2021 - Administrador de Custom System. - Versión: 1.0.0 ')
+    
+    
+    c.showPage()
+    
+    
+    
+    #guardar pdf
+    c.save()
+    #obtener valores de bytesIO y esribirlos en la respuesta
+    pdf = buffer.getvalue()
+    buffer.close()
+    respuesta.write(pdf)
+    return respuesta
+
+
+
+
+
+
+
 
 def qrEquipo(request):
     

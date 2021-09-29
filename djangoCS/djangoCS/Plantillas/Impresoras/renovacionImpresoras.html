@@ -101,6 +101,12 @@ Renovación Impresoras
                         </tbody>
                     </table>
                 </div>
+                <form action="/reporteRenovacionImp/" method="POST">{% csrf_token %}
+                    <button type="submit" class="btn bg-red waves-effect">
+                        <i class="material-icons">get_app</i>
+                        <span>PDF</span>
+                    </button>
+                </form>
             </div>
             
            

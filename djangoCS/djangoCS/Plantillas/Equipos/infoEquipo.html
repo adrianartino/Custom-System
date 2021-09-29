@@ -200,7 +200,17 @@ Info Equipos
                         </tbody>
                     </table>
                 </div>
+                <br>
+                <form action="/pdfInfoEquipo/" method="POST">{% csrf_token %}
+                    <label >Descargar PDF </label>
+                    <input type="hidden" value="{{datoEquipo.id_equipo}}" name="idequipo">
+                    <button type="submit" class="btn bg-red waves-effect">
+                        <i class="material-icons">get_app</i>
+                        <span>PDF</span>
+                    </button>
+                </form>
                 {% endfor %}
+                
             </div>
            
             </div>
