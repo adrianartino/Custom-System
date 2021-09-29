@@ -106,7 +106,20 @@ Ver Impresoras
                             {% for impresoras, areas in lista %}
                             <tr>
                                 
-                                <th>{{impresoras.id_impresora}}</th>
+                                <th>
+                                    <form action="/infoImpresora/" method="POST">{% csrf_token %}
+                                        
+                                        
+                                        <center>
+                                            <input type="text" style="border: none; background: none;"  name="idImpresora" value="{{impresoras.id_impresora}}" readonly size="1">
+                                            <button type="submit" class="btn  waves-effect" style="background-color: #0A77F9;">
+                                                <i class="material-icons" style="color: white;">visibility</i>
+                                            </button>
+                                        </center>
+                                        <br>
+                                    </form>
+
+                                </th>
                                 <th>{{impresoras.marca}}</th>
                                 <th>{{impresoras.modelo}}</th>
                                 <th>{{impresoras.numserie}}</th>

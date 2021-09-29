@@ -43,7 +43,7 @@ def login(request):
             correousuario = request.POST['username']
             pwd = request.POST['pass']
 
-            datosUsuario = Empleados.objects.filter(correo__icontains=correousuario)
+            datosUsuario = Empleados.objects.filter(correo=correousuario)
 
             #Si encontro a un usuario con ese correo...
             if datosUsuario:
@@ -635,60 +635,68 @@ def infoEquipo(request):
         idEquipo_recibido = request.POST['idEquipo']
         
         datosEquipo = Equipos.objects.filter(id_equipo=idEquipo_recibido)
-        for datos in datosEquipo:
-            id_equipo= datos.id_equipo
-            propietario= datos.id_empleado
-            
-            sinPropietario = False
-            if propietario == None:
-                sinPropietario = True
-                
-                datosRenovacion= Renovacion_Equipos.objects.filter(id_equipo=id_equipo)
-                for datos in datosRenovacion:
-                    compra= datos.fecha_compra
-                    renovar=  datos.fecha_renov
-                
-                #sinPropietario es true
-                
-                mantenimientos= CalendarioMantenimiento.objects.filter(id_equipo_id__id_equipo__icontains=id_equipo)
-                if mantenimientos:
-                    return render(request, "Equipos/infoEquipo.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "datosEquipo":datosEquipo,
-                                                       "compra":compra, "renovar": renovar, "sinPropietario":sinPropietario, "mantenimientos":mantenimientos})
-                else:
-                      return render(request, "Equipos/infoEquipo.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "datosEquipo":datosEquipo,
-                                                       "compra":compra, "renovar": renovar, "sinPropietario":sinPropietario})  
-            
-            else:
-                datosPropietario= Empleados.objects.filter(id_empleado=propietario)
-                for datos in datosPropietario:
-                    nombre= datos.nombre
-                    apellidos=datos.apellidos
-                    nombreEmpleado= nombre + " " + apellidos
-                    departamento=datos.id_area
-                    datosDepa= Areas.objects.filter(id_area=departamento)
-                    for datos in datosDepa:
-                        nombreArea= datos.nombre
-                        colorArea=datos.color
-                        
-                        
-                datosRenovacion= Renovacion_Equipos.objects.filter(id_equipo=id_equipo)
-                for datos in datosRenovacion:
-                    compra= datos.fecha_compra
-                    renovar=  datos.fecha_renov
-                    
         
-                #sinPropietario es falso
-                mantenimientos= CalendarioMantenimiento.objects.filter(id_equipo_id__id_equipo__icontains=id_equipo)
+        if datosEquipo:
+        
+            for datos in datosEquipo:
+                id_equipo= datos.id_equipo
+                propietario= datos.id_empleado
                 
-                if mantenimientos:
-                    return render(request, "Equipos/infoEquipo.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "datosEquipo":datosEquipo,
-                                                       "nombreEmpleado": nombreEmpleado, "nombreArea": nombreArea, "colorArea": colorArea, "compra":compra, "renovar": renovar, "sinPropietario":sinPropietario,
-                                                       "mantenimientos":mantenimientos})
+                sinPropietario = False
+                if propietario == None:
+                    sinPropietario = True
+                    
+                    datosRenovacion= Renovacion_Equipos.objects.filter(id_equipo=id_equipo)
+                    for datos in datosRenovacion:
+                        compra= datos.fecha_compra
+                        renovar=  datos.fecha_renov
+                    
+                    #sinPropietario es true
+                    
+                    mantenimientos= CalendarioMantenimiento.objects.filter(id_equipo_id__id_equipo__icontains=id_equipo)
+                    if mantenimientos:
+                        return render(request, "Equipos/infoEquipo.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "datosEquipo":datosEquipo,
+                                                        "compra":compra, "renovar": renovar, "sinPropietario":sinPropietario, "mantenimientos":mantenimientos})
+                    else:
+                        return render(request, "Equipos/infoEquipo.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "datosEquipo":datosEquipo,
+                                                        "compra":compra, "renovar": renovar, "sinPropietario":sinPropietario})  
+                
                 else:
-                    return render(request, "Equipos/infoEquipo.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "datosEquipo":datosEquipo,
-                                                       "nombreEmpleado": nombreEmpleado, "nombreArea": nombreArea, "colorArea": colorArea, "compra":compra, "renovar": renovar, "sinPropietario":sinPropietario})
-
-    
+                    datosPropietario= Empleados.objects.filter(id_empleado=propietario)
+                    for datos in datosPropietario:
+                        nombre= datos.nombre
+                        apellidos=datos.apellidos
+                        nombreEmpleado= nombre + " " + apellidos
+                        departamento=datos.id_area
+                        datosDepa= Areas.objects.filter(id_area=departamento)
+                        for datos in datosDepa:
+                            nombreArea= datos.nombre
+                            colorArea=datos.color
+                            
+                            
+                    datosRenovacion= Renovacion_Equipos.objects.filter(id_equipo=id_equipo)
+                    for datos in datosRenovacion:
+                        compra= datos.fecha_compra
+                        renovar=  datos.fecha_renov
+                        
+            
+                    #sinPropietario es falso
+                    mantenimientos= CalendarioMantenimiento.objects.filter(id_equipo_id__id_equipo__icontains=id_equipo)
+                    
+                    if mantenimientos:
+                        return render(request, "Equipos/infoEquipo.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "datosEquipo":datosEquipo,
+                                                        "nombreEmpleado": nombreEmpleado, "nombreArea": nombreArea, "colorArea": colorArea, "compra":compra, "renovar": renovar, "sinPropietario":sinPropietario,
+                                                        "mantenimientos":mantenimientos})
+                    else:
+                        return render(request, "Equipos/infoEquipo.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "datosEquipo":datosEquipo,
+                                                        "nombreEmpleado": nombreEmpleado, "nombreArea": nombreArea, "colorArea": colorArea, "compra":compra, "renovar": renovar, "sinPropietario":sinPropietario})
+        else:
+            
+            noEncontro = True
+            textoError = "No se encontró al equipo"
+            
+            return render (request, "Equipos/qrEquipo.html", {"noEncontro":noEncontro, "textoError":textoError})
+        
 
 def agregarEquipos(request):
 
@@ -1039,6 +1047,64 @@ def renovacionImpresoras(request):
     
     return render(request, "Impresoras/renovacionImpresoras.html", {"estaEnRenovacionImpresoras":estaEnRenovacionImpresoras, "nombreCompleto":nombreCompleto, "correo":correo, 
                                                                     "datosTabla":datosTabla})
+
+def infoImpresora(request):
+    estaEnVerImpresoras = True
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    nombreCompleto = nombre + " " + apellidos
+    
+    if request.method == "POST":
+        
+        idImpresora_recibido = request.POST['idImpresora']
+        
+        datosImpresora = Impresoras.objects.filter(id_impresora=idImpresora_recibido)
+        
+        listaAreas = []
+        
+        #Si encontró a una impresora
+        if datosImpresora:
+        
+            for datos in datosImpresora:
+                id_impresora= datos.id_impresora
+                area= datos.id_area_id
+                 
+                datosArea = Areas.objects.filter(id_area = area)
+                for dato in datosArea:
+                    nombre = dato.nombre
+                    color = dato.color
+                    
+                    listaAreas.append([nombre,color])
+
+                   
+                datosRenovacion= Renovacion_Impresoras.objects.filter(id_impresora=id_impresora)
+                for datos in datosRenovacion:
+                    compra= datos.fecha_compra
+                    renovar=  datos.fecha_renov
+                    
+                lista = zip(listaAreas, datosImpresora)
+                
+                cartuchos = Cartuchos.objects.filter(id_impresora_id__id_impresora__icontains = int(idImpresora_recibido))   
+                 
+                    #sinPropietario es true
+                    
+                    #mantenimientos= CalendarioMantenimiento.objects.filter(id_equipo_id__id_equipo__icontains=id_equipo)
+                    #if mantenimientos:
+                        #return render(request, "Impresoras/infoImpresora.html", {"estaEnVerImpresoras": estaEnVerImpresoras, "nombreCompleto":nombreCompleto, "correo":correo, "datosEquipo":datosEquipo, "compra":compra, "renovar": renovar, "sinPropietario":sinPropietario, "mantenimientos":mantenimientos})
+                    #else:
+                return render(request, "Impresoras/infoImpresora.html", {"estaEnVerImpresoras": estaEnVerImpresoras, "nombreCompleto":nombreCompleto, "correo":correo, "datosImpresora":datosImpresora,
+                                                        "compra":compra, "renovar": renovar, "lista":lista, "cartuchos":cartuchos })  
+                
+                
+        else:
+            
+            noEncontro = True
+            textoError = "No se encontró al equipo"
+            
+            return render (request, "Equipos/qrEquipo.html", {"noEncontro":noEncontro, "textoError":textoError})
+        
+    
 
 def verInsumos(request):
 
@@ -2711,20 +2777,20 @@ def reporteEmpleadosActivos(request):
     
     if request.method == "POST":
 
-        activo= request.POST['activo']
+        activo= request.POST['activo'] #A o I
         
         
     
-    empleaditos = Empleados.objects.filter(activo__icontains = activo) #11 empleados
+    empleaditos = Empleados.objects.filter(activo__icontains = activo) #20 empleados
     
-    numero_empleados = 0
+    numero_empleados = 0 #contador
     for empleado in empleaditos:
-        numero_empleados +=1
+        numero_empleados +=1 #20
         
     if numero_empleados == 0:
         numero_empleados =1
     
-    division = numero_empleados // 9 #Resultado 1, sin residuo
+    division = numero_empleados // 9 #Resultado 2, a fuerzas va a haber 2 hojas en el pdf
     residuo = numero_empleados%9 #residuo hay 2
     
     
@@ -2734,7 +2800,7 @@ def reporteEmpleadosActivos(request):
         hojasIguales = True
         
     if residuo != 0:
-        division = division + 1   #Número de hojas total. 2
+        division = division + 1   #Número de hojas total. 3
         
     #QUITAR ESTO PARA OTRA HOJA
     #crear el http response con pdf
@@ -2745,9 +2811,7 @@ def reporteEmpleadosActivos(request):
     c = canvas.Canvas(buffer, pagesize=letter)
     #HASTA AQUI
         
-    hojaNueva = False
     contadorEmpleados = 0
-    segundaHoja = False
     contadorHojas = 1
     for hoja in range(division):
         
@@ -2763,7 +2827,7 @@ def reporteEmpleadosActivos(request):
         correos = []
         contras = []
         urls_imagenes = []
-        base_dir = str(settings.BASE_DIR)
+        base_dir = str(settings.BASE_DIR) #C:\Users\Sistemas\Desktop\Custom System\Custom-System\djangoCS
         
         if contadorHojas == 4:
             contadorEmpelados4 = 0
@@ -2821,7 +2885,7 @@ def reporteEmpleadosActivos(request):
                     urlimagen = base_dir + '/media/' + str(imagen)
                     img = Image(urlimagen,50,50)
                     
-                    urls_imagenes.append(img)
+                    urls_imagenes.append(img) #Imagen del empleado
                     
                     info_area = Areas.objects.filter(id_area = idarea)
                     
@@ -2880,8 +2944,6 @@ def reporteEmpleadosActivos(request):
                     correos.append(empleado.correo)
                     contras.append(empleado.contraseña)
                 
-                    
-                    contadorEmpleados += 1 #11
                     
                 
                 
@@ -3618,3 +3680,7 @@ def reporteEquiposActivos(request):
     respuesta.write(pdf)
     return respuesta
     
+
+def qrEquipo(request):
+    
+    return render(request, "Equipos/qrEquipo.html")

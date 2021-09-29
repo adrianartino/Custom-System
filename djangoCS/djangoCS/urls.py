@@ -35,6 +35,7 @@ urlpatterns = [
     path('verImpresoras/', views.verImpresoras),
     path('agregarImpresoras/', views.agregarImpresoras),
     path('renovacionImpresoras/', views.renovacionImpresoras),
+    path('infoImpresora/', views.infoImpresora),
     path('verInsumos/', views.verInsumos),
     path('agregarInsumos/', views.agregarInsumos),
     path('actualizarInsumos/', views.actualizarInsumos),
@@ -71,6 +72,8 @@ urlpatterns = [
     path("bajaEquipo/", views.bajaEquipo),
     path("altaImpresora/", views.altaImpresora),
     path("bajaImpresora/", views.bajaImpresora),
+    
+    path("qrEquipo/", views.qrEquipo),
     
     path("reporteDepartamentos/",views.reporteDepartamentos),
     path("reporteEmpleadosActivos/",views.reporteEmpleadosActivos),

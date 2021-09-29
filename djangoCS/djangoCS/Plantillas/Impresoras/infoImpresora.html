@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block titulo %}
-Info Equipos
+Info Impresoras
 {% endblock %}
 
 {% block estilos %}
@@ -40,7 +40,7 @@ Info Equipos
         <div class="card">
             <div class="header">
                 <h2>
-                    INFORMACIÓN DE EQUIPO
+                    INFORMACIÓN DE IMPRESORA
                 </h2>
                 <ul class="header-dropdown m-r--5">
                     <li class="dropdown">
@@ -57,21 +57,17 @@ Info Equipos
                     
             </div>
             <div class="body" id="divActivos">
-                {% for datoEquipo in datosEquipo %}
+                {% for area, datoImpresora in lista %}
                 <center>
                     <h1 style="color: black;"> <span style="font-size: 120%;">
                     
-                        <i class="material-icons" style="color: rgb(158, 154, 154); font-size: 120%;" ">computer</i>
+                        <i class="material-icons" style="color: rgb(158, 154, 154); font-size: 120%;" ">print</i>
 
                    </span> #1</h1>
-                    <h1 style="color: black;">{{datoEquipo.tipo}} {{datoEquipo.marca}} {{datoEquipo.modelo}}</h1>
-                    <img src="{{datoEquipo.imagen.url}}" width="30%" alt="lap">
+                    <h1 style="color: black;">Impresora {{datoImpresora.marca}} {{datoImpresora.modelo}} </h1>
+                    <img src="{{datoImpresora.imagen.url}}" width="30%" alt="lap">
 
-                    {% if sinPropietario %}
-                    <h1 style="color: black;">Propietario: Sin Propietario</h1>
-                    {% else %}
-                    <h1 style="color: black;">Propietario: {{nombreEmpleado}}</h1>
-                    {% endif %}
+                    <h1 style="color: black;">Área: <label class="{{area.1}}">{{area.0}}</label></h1>
                 </center>
                 <div class="row clearfix">
                     <div class="col-md-6">
@@ -101,46 +97,35 @@ Info Equipos
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                         <thead>
                             <tr  style="background-color: #fad60e; color:black">
-                                <th>ID Equipo</th>
-                                <th>Tipo</th>
+                                <th>ID Impresora</th>
                                 <th>Marca</th>
                                 <th>Modelo</th>
-                                <th>Color</th>
-                                <th>Memoria RAM</th>
-                                <th>Procesador</th>
-                                <th>Sistema Operativo</th>
-                                <th>Cargador</th>
-                                <th>Departamento</th>
+                                <th>Tipo</th>
+                                <th>En Red</th>
+                                <th>Dirección IP</th>
                                 <th>Estado</th>
-                                
-                    
-                                
+                                <th>Activo</th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
-                                <th>ID Equipo</th>
-                                <th>Tipo</th>
+                                <th>ID Impresora</th>
                                 <th>Marca</th>
                                 <th>Modelo</th>
-                                <th>Color</th>
-                                <th>Memoria RAM</th>
-                                <th>Procesador</th>
-                                <th>Sistema Operativo</th>
-                                <th>Cargador</th>
-                                <th>Departamento</th>
+                                <th>Tipo</th>
+                                <th>En Red</th>
+                                <th>Dirección IP</th>
                                 <th>Estado</th>
+                                <th>Activo</th>
                             </tr>
                         </tfoot>
                         <tbody>
                            
                             <tr>
                                 <th>
-                                    <form action="/infoEquipo/" method="POST">{% csrf_token %}
-                                        
-                                        
+                                    <form action="/infoImpresora/" method="POST">{% csrf_token %}
                                         <center>
-                                            <input type="text" style="border: none; background: none;"  name="idEquipo" value="{{datoEquipo.id_equipo}}" readonly size="1">
+                                            <input type="text" style="border: none; background: none;"  name="idImpresora" value="{{datoImpresora.id_impresora}}" readonly size="1">
                                             <button type="submit" class="btn  waves-effect" style="background-color: #0A77F9;">
                                                 <i class="material-icons" style="color: white;">visibility</i>
                                             </button>
@@ -148,17 +133,21 @@ Info Equipos
                                         <br>
                                     </form>
                                 </th>
-                                <th>{{datoEquipo.tipo}}</th>
-                                <th>{{datoEquipo.marca}}</th>
-                                <th>{{datoEquipo.modelo}}</th>
-                                <th>{{datoEquipo.color}}</th>
-                            
-                                <th>{{datoEquipo.memoriaram}}</th>
-                                <th>{{datoEquipo.procesador}}</th>
-                                <th>{{datoEquipo.sistemaoperativo}}</th>
-                                <th>{{datoEquipo.modelocargador}}</th>
-                                <th><label class="{{colorArea}}">{{nombreArea}}</label></th>
-                                <th>{{datoEquipo.estado}}</th>
+                                <th>{{datoImpresora.marca}}</th>
+                                <th>{{datoImpresora.modelo}}</th>
+                                <th>{{datoImpresora.tipo}}</th>
+                                {% if datoImpresora.enred == "S" %}
+                                    <th>Si</th>
+                                {% elif datoImpresora.enred == "N" %}
+                                    <th>No</th>
+                                {% endif %}
+                                <th>{{datoImpresora.ip}}</th>
+                                <th>{{datoImpresora.estado}}</th>
+                                {% if datoImpresora.activo == "A" %}
+                                    <th>Activa</th>
+                                {% elif datoImpresora.activo == "I" %}
+                                    <th>No Activa</th>
+                                {% endif %}
                                 
                                     
                             </tr>
@@ -166,40 +155,58 @@ Info Equipos
                         </tbody>
                     </table>
                 </div>
-                <h1 style="color: black;">Mantenimientos</h1>
+
+                <h1 style="color: black;">Cartuchos de impresión</h1>
                 
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                         <thead>
                             <tr  style="background-color: #fad60e; color:black">
-                                <th>ID Operación</th>
-                                <th>Operación</th>
-                                <th>Fecha</th>
-                                <th>Observaciones</th>
-                     
+                                <th>ID Cartucho</th>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>Imagen</th>
+                                <th>Color</th>
+                                <th># Serie</th>
+                                <th>Cantidad</th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
-                                <th>ID Operación</th>
-                                <th>Operación</th>
-                                <th>Fecha</th>
-                                <th>Observaciones</th>
+                                <th>ID Cartucho</th>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>Imagen</th>
+                                <th>Color</th>
+                                <th># Serie</th>
+                                <th>Cantidad</th>
                             </tr>
                         </tfoot>
                         <tbody>
-                            {% for dato in mantenimientos %}
+                           {% for cartucho in cartuchos %}
                             <tr>
-                             
-                                <th>{{dato.id_calmantenimiento}}</th>
-                                <th>{{dato.operacion}}</th>
-                                <th>{{dato.fecha}}</th>
-                                <th>{{dato.observaciones}}</th>   
+                                <th>
+                                    <input type="text" style="border: none; background: none;"  value="{{cartucho.id_cartucho}}" readonly size="1">
+                                </th>
+                                <th>{{cartucho.marca}}</th>
+                                <th>{{cartucho.modelo}}</th>
+                                <th>
+                                    <center>
+                                        <img src="{{cartucho.imagenCartucho.url}}" width="60%" alt="lap">
+                                    </center>
+                                </th>
+                                <th>{{cartucho.color}}</th>
+                                <th>{{cartucho.nuserie}}</th>
+                                <th><span class="label bg-teal">{{cartucho.cantidad}}</span></th>
+                                
+                                    
                             </tr>
                             {% endfor %}
+                          
                         </tbody>
                     </table>
                 </div>
+
                 {% endfor %}
             </div>
            
