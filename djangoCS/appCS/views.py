@@ -2570,33 +2570,48 @@ def reporteDepartamentos(request):
     #Crear objeto PDF 
     buffer =BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
+    base_dir = str(settings.BASE_DIR)
     #nombre de empresa
-    c.setFont('Helvetica-Oblique', 22)
-    c.drawString(40,750, 'Custom & Co S.A. de C.V.')
+    logo = base_dir+'/static/images/logoCustom.PNG'   
+    c.drawImage(logo, 40,700,120,70, preserveAspectRatio=True)
+        
+    c.setFont('Helvetica-Bold', 14)
+    c.drawString(150,750, 'Custom & Co S.A. de C.V.')
+        
+    c.setFont('Helvetica', 8)
+    c.drawString(150,735, 'Allende #646 Sur Colonia Centro, Durango, CP: 35000')
+        
+    c.setFont('Helvetica', 8)
+    c.drawString(150,720, 'RFC: CAC070116IS9')
+        
+    c.setFont('Helvetica', 8)
+    c.drawString(150,705, 'Tel: 8717147716')
     #fecha
     hoy=datetime.now()
     fecha = str(hoy.date())
-    
-    c.setFont('Helvetica', 12)
-    c.drawString(480,750, fecha)
-    #linea guinda
     color_guinda="#B03A2E"
     c.setFillColor(color_guinda)
+        
+    c.setFont('Helvetica-Bold', 12)
+    c.drawString(380,750, "REPORTE DEPARTAMENTOS")
+    color_negro="#030305"
+    c.setFillColor(color_negro)
+    c.setFont('Helvetica-Bold', 10)
+    c.drawString(405,730, "Fecha de impresión: " +fecha)
+    #linea guinda
+        
+    c.setFillColor(color_guinda)
     c.setStrokeColor(color_guinda)
-    c.line(40,747,560,745)
+    c.line(40,695,560,695)
     #nombre departamento
     color_negro="#030305"
     c.setFillColor(color_negro)
-    c.setFont('Helvetica', 16)
-    c.drawString(60,730, 'Departamento de Sistemas')
+    c.setFont('Helvetica', 12)
+    c.drawString(405,710, 'Departamento de Sistemas')
     #titulo
     c.setFont('Helvetica-Bold', 22)
-    c.drawString(180,690, 'Reporte de Departamentos')
-    
-    base_dir = str(settings.BASE_DIR)
-    logo = base_dir+'/static/images/logopdf.png'   
-    c.drawImage(logo, 250,620,120,90, preserveAspectRatio=True)
-    
+        
+    c.drawString(180,660, 'Reporte Departamentos')
     
     #obtener datos de area
     
@@ -3002,34 +3017,52 @@ def reporteEmpleadosActivos(request):
 
         
         #nombre de empresa
-        c.setFont('Helvetica-Oblique', 22)
-        c.drawString(40,750, 'Custom & Co S.A. de C.V.')
+        logo = base_dir+'/static/images/logoCustom.PNG'   
+        c.drawImage(logo, 40,700,120,70, preserveAspectRatio=True)
+        
+        c.setFont('Helvetica-Bold', 14)
+        c.drawString(150,750, 'Custom & Co S.A. de C.V.')
+        
+        c.setFont('Helvetica', 8)
+        c.drawString(150,735, 'Allende #646 Sur Colonia Centro, Durango, CP: 35000')
+        
+        c.setFont('Helvetica', 8)
+        c.drawString(150,720, 'RFC: CAC070116IS9')
+        
+        c.setFont('Helvetica', 8)
+        c.drawString(150,705, 'Tel: 8717147716')
         #fecha
         hoy=datetime.now()
         fecha = str(hoy.date())
-        
-        c.setFont('Helvetica', 12)
-        c.drawString(480,750, fecha)
-        #linea guinda
         color_guinda="#B03A2E"
         c.setFillColor(color_guinda)
+        
+        c.setFont('Helvetica-Bold', 12)
+        if activo == "A":
+            c.drawString(360,750, "REPORTE EMPLEADOS ACTIVOS")
+        elif activo == "I":
+            c.drawString(360,750, "REPORTE EMPLEADOS INACTIVOS")
+        color_negro="#030305"
+        c.setFillColor(color_negro)
+        c.setFont('Helvetica-Bold', 10)
+        c.drawString(405,730, "Fecha de impresión: " +fecha)
+        #linea guinda
+        
+        c.setFillColor(color_guinda)
         c.setStrokeColor(color_guinda)
-        c.line(40,747,560,745)
+        c.line(40,695,560,695)
         #nombre departamento
         color_negro="#030305"
         c.setFillColor(color_negro)
-        c.setFont('Helvetica', 16)
-        c.drawString(60,730, 'Departamento de Sistemas')
+        c.setFont('Helvetica', 12)
+        c.drawString(405,710, 'Departamento de Sistemas')
         #titulo
         c.setFont('Helvetica-Bold', 22)
         if activo == "A":
-            c.drawString(180,690, 'Reporte Empleados Activos')
-        if activo == "I":
-            c.drawString(180,690, 'Reporte Empleados Inctivos')
+            c.drawString(150,660, 'Reporte Empleados Activos')
+        elif activo == "I":
+            c.drawString(150,660, 'Reporte Empleados Inactivos')
         
-        base_dir = str(settings.BASE_DIR)
-        logo = base_dir+'/static/images/logopdf.png'   
-        c.drawImage(logo, 250,620,120,90, preserveAspectRatio=True)
         
         
         
@@ -3215,16 +3248,6 @@ def reporteRenovacionEq(request):
     
     renovacionEquipos = Renovacion_Equipos.objects.all()
     
-    """for datosRenovacion in renovacionEquipos:
-        idEquipo= datosRenovacion.id_renov_equipo
-        equipo= datosRenovacion.id_equipo
-        compra= datosRenovacion.fecha_compra
-        renovacion = datosRenovacion.fecha_renov
-        
-        
-        """
-
-            
             
             
         
@@ -3456,34 +3479,48 @@ def reporteRenovacionEq(request):
             
             
 
-        
+        base_dir = str(settings.BASE_DIR)
         #nombre de empresa
-        c.setFont('Helvetica-Oblique', 22)
-        c.drawString(40,750, 'Custom & Co S.A. de C.V.')
+        logo = base_dir+'/static/images/logoCustom.PNG'   
+        c.drawImage(logo, 40,700,120,70, preserveAspectRatio=True)
+        
+        c.setFont('Helvetica-Bold', 14)
+        c.drawString(150,750, 'Custom & Co S.A. de C.V.')
+        
+        c.setFont('Helvetica', 8)
+        c.drawString(150,735, 'Allende #646 Sur Colonia Centro, Durango, CP: 35000')
+        
+        c.setFont('Helvetica', 8)
+        c.drawString(150,720, 'RFC: CAC070116IS9')
+        
+        c.setFont('Helvetica', 8)
+        c.drawString(150,705, 'Tel: 8717147716')
         #fecha
         hoy=datetime.now()
         fecha = str(hoy.date())
-        
-        c.setFont('Helvetica', 12)
-        c.drawString(480,750, fecha)
-        #linea guinda
         color_guinda="#B03A2E"
         c.setFillColor(color_guinda)
+        
+        c.setFont('Helvetica-Bold', 12)
+        c.drawString(360,750, "REPORTE RENOVACIÓN EQUIPOS")
+        color_negro="#030305"
+        c.setFillColor(color_negro)
+        c.setFont('Helvetica-Bold', 10)
+        c.drawString(405,730, "Fecha de impresión: " +fecha)
+        #linea guinda
+        
+        c.setFillColor(color_guinda)
         c.setStrokeColor(color_guinda)
-        c.line(40,747,560,745)
+        c.line(40,695,560,695)
         #nombre departamento
         color_negro="#030305"
         c.setFillColor(color_negro)
-        c.setFont('Helvetica', 16)
-        c.drawString(60,730, 'Departamento de Sistemas')
+        c.setFont('Helvetica', 12)
+        c.drawString(405,710, 'Departamento de Sistemas')
         #titulo
         c.setFont('Helvetica-Bold', 22)
-       
-        c.drawString(180,690, 'Reporte Renovación Equipos')
         
-        base_dir = str(settings.BASE_DIR)
-        logo = base_dir+'/static/images/logopdf.png'   
-        c.drawImage(logo, 250,620,120,90, preserveAspectRatio=True)
+        c.drawString(150,660, 'Reporte Renovación Equipos')
         
         
         
@@ -3989,39 +4026,52 @@ def reporteEquiposActivos(request):
 
         
         #nombre de empresa
-        c.setFont('Helvetica-Oblique', 22)
-        c.drawString(40,750, 'Custom & Co S.A. de C.V.')
+        logo = base_dir+'/static/images/logoCustom.PNG'   
+        c.drawImage(logo, 40,700,120,70, preserveAspectRatio=True)
+        
+        c.setFont('Helvetica-Bold', 14)
+        c.drawString(150,750, 'Custom & Co S.A. de C.V.')
+        
+        c.setFont('Helvetica', 8)
+        c.drawString(150,735, 'Allende #646 Sur Colonia Centro, Durango, CP: 35000')
+        
+        c.setFont('Helvetica', 8)
+        c.drawString(150,720, 'RFC: CAC070116IS9')
+        
+        c.setFont('Helvetica', 8)
+        c.drawString(150,705, 'Tel: 8717147716')
         #fecha
         hoy=datetime.now()
         fecha = str(hoy.date())
-        
-        c.setFont('Helvetica', 12)
-        c.drawString(480,750, fecha)
-        
-    
-        
-        
-        
-        #linea guinda
         color_guinda="#B03A2E"
         c.setFillColor(color_guinda)
+        
+        c.setFont('Helvetica-Bold', 12)
+        if activo == "A":
+            c.drawString(380,750, "REPORTE EQUIPOS ACTIVOS")
+        elif activo == "I":
+            c.drawString(370,750, "REPORTE EQUIPOS INACTIVOS")
+        color_negro="#030305"
+        c.setFillColor(color_negro)
+        c.setFont('Helvetica-Bold', 10)
+        c.drawString(405,730, "Fecha de impresión: " +fecha)
+        #linea guinda
+        
+        c.setFillColor(color_guinda)
         c.setStrokeColor(color_guinda)
-        c.line(40,747,560,745)
+        c.line(40,695,560,695)
         #nombre departamento
         color_negro="#030305"
         c.setFillColor(color_negro)
-        c.setFont('Helvetica', 16)
-        c.drawString(60,730, 'Departamento de Sistemas')
+        c.setFont('Helvetica', 12)
+        c.drawString(405,710, 'Departamento de Sistemas')
         #titulo
         c.setFont('Helvetica-Bold', 22)
-        if activo == "A":
-            c.drawString(180,690, 'Reporte Equipos Activos')
-        if activo == "I":
-            c.drawString(180,690, 'Reporte Equipos Inactivos')
         
-        base_dir = str(settings.BASE_DIR)
-        logo = base_dir+'/static/images/logopdf.png'   
-        c.drawImage(logo, 250,620,120,90, preserveAspectRatio=True)
+        if activo == "A":
+            c.drawString(180,660, 'Reporte Equipos Activos')
+        elif activo == "I":
+            c.drawString(180,660, 'Reporte Equipos Inactivos')
         
         
         
@@ -4347,39 +4397,52 @@ def reporteImpresoras(request):
 
         
         #nombre de empresa
-        c.setFont('Helvetica-Oblique', 22)
-        c.drawString(40,750, 'Custom & Co S.A. de C.V.')
+        logo = base_dir+'/static/images/logoCustom.PNG'   
+        c.drawImage(logo, 40,700,120,70, preserveAspectRatio=True)
+        
+        c.setFont('Helvetica-Bold', 14)
+        c.drawString(150,750, 'Custom & Co S.A. de C.V.')
+        
+        c.setFont('Helvetica', 8)
+        c.drawString(150,735, 'Allende #646 Sur Colonia Centro, Durango, CP: 35000')
+        
+        c.setFont('Helvetica', 8)
+        c.drawString(150,720, 'RFC: CAC070116IS9')
+        
+        c.setFont('Helvetica', 8)
+        c.drawString(150,705, 'Tel: 8717147716')
         #fecha
         hoy=datetime.now()
         fecha = str(hoy.date())
-        
-        c.setFont('Helvetica', 12)
-        c.drawString(480,750, fecha)
-        
-    
-        
-        
-        
-        #linea guinda
         color_guinda="#B03A2E"
         c.setFillColor(color_guinda)
+        
+        c.setFont('Helvetica-Bold', 12)
+        if activo == "A":
+            c.drawString(360,750, "REPORTE IMPRESORAS ACTIVAS")
+        elif activo == "I":
+            c.drawString(350,750, "REPORTE IMPRESORAS INACTIVAS")
+        color_negro="#030305"
+        c.setFillColor(color_negro)
+        c.setFont('Helvetica-Bold', 10)
+        c.drawString(405,730, "Fecha de impresión: " +fecha)
+        #linea guinda
+        
+        c.setFillColor(color_guinda)
         c.setStrokeColor(color_guinda)
-        c.line(40,747,560,745)
+        c.line(40,695,560,695)
         #nombre departamento
         color_negro="#030305"
         c.setFillColor(color_negro)
-        c.setFont('Helvetica', 16)
-        c.drawString(60,730, 'Departamento de Sistemas')
+        c.setFont('Helvetica', 12)
+        c.drawString(405,710, 'Departamento de Sistemas')
         #titulo
         c.setFont('Helvetica-Bold', 22)
-        if activo == "A":
-            c.drawString(180,690, 'Reporte Impresoras Activas')
-        if activo == "I":
-            c.drawString(180,690, 'Reporte Impresoras Inactivas')
         
-        base_dir = str(settings.BASE_DIR)
-        logo = base_dir+'/static/images/logopdf.png'   
-        c.drawImage(logo, 250,620,120,90, preserveAspectRatio=True)
+        if activo == "A":
+            c.drawString(150,660, 'Reporte Impresoras Activas')
+        elif activo == "I":
+            c.drawString(150,660, 'Reporte Impresoras Inactivas')
         
         
         
@@ -4603,32 +4666,46 @@ def reporteRenovacionImp(request):
 
         
         #nombre de empresa
-        c.setFont('Helvetica-Oblique', 22)
-        c.drawString(40,750, 'Custom & Co S.A. de C.V.')
+        logo = base_dir+'/static/images/logoCustom.PNG'   
+        c.drawImage(logo, 40,700,120,70, preserveAspectRatio=True)
+        
+        c.setFont('Helvetica-Bold', 14)
+        c.drawString(150,750, 'Custom & Co S.A. de C.V.')
+        
+        c.setFont('Helvetica', 8)
+        c.drawString(150,735, 'Allende #646 Sur Colonia Centro, Durango, CP: 35000')
+        
+        c.setFont('Helvetica', 8)
+        c.drawString(150,720, 'RFC: CAC070116IS9')
+        
+        c.setFont('Helvetica', 8)
+        c.drawString(150,705, 'Tel: 8717147716')
         #fecha
         hoy=datetime.now()
         fecha = str(hoy.date())
-        
-        c.setFont('Helvetica', 12)
-        c.drawString(480,750, fecha)
-        #linea guinda
         color_guinda="#B03A2E"
         c.setFillColor(color_guinda)
+        
+        c.setFont('Helvetica-Bold', 12)
+        c.drawString(340,750, "REPORTE RENOVACIÓN IMPRESORAS")
+        color_negro="#030305"
+        c.setFillColor(color_negro)
+        c.setFont('Helvetica-Bold', 10)
+        c.drawString(405,730, "Fecha de impresión: " +fecha)
+        #linea guinda
+        
+        c.setFillColor(color_guinda)
         c.setStrokeColor(color_guinda)
-        c.line(40,747,560,745)
+        c.line(40,695,560,695)
         #nombre departamento
         color_negro="#030305"
         c.setFillColor(color_negro)
-        c.setFont('Helvetica', 16)
-        c.drawString(60,730, 'Departamento de Sistemas')
+        c.setFont('Helvetica', 12)
+        c.drawString(405,710, 'Departamento de Sistemas')
         #titulo
         c.setFont('Helvetica-Bold', 22)
-       
-        c.drawString(150,690, 'Reporte Renovación Impresoras')
         
-        base_dir = str(settings.BASE_DIR)
-        logo = base_dir+'/static/images/logopdf.png'   
-        c.drawImage(logo, 250,620,120,90, preserveAspectRatio=True)
+        c.drawString(150,660, 'Reporte Renovación Impresoras')
         
         
         
@@ -4957,38 +5034,48 @@ def reporteInsumos(request):
             
 
         
+        base_dir = str(settings.BASE_DIR)
         #nombre de empresa
-        c.setFont('Helvetica-Oblique', 22)
-        c.drawString(40,750, 'Custom & Co S.A. de C.V.')
+        logo = base_dir+'/static/images/logoCustom.PNG'   
+        c.drawImage(logo, 40,700,120,70, preserveAspectRatio=True)
+        
+        c.setFont('Helvetica-Bold', 14)
+        c.drawString(150,750, 'Custom & Co S.A. de C.V.')
+        
+        c.setFont('Helvetica', 8)
+        c.drawString(150,735, 'Allende #646 Sur Colonia Centro, Durango, CP: 35000')
+        
+        c.setFont('Helvetica', 8)
+        c.drawString(150,720, 'RFC: CAC070116IS9')
+        
+        c.setFont('Helvetica', 8)
+        c.drawString(150,705, 'Tel: 8717147716')
         #fecha
         hoy=datetime.now()
         fecha = str(hoy.date())
-        
-        c.setFont('Helvetica', 12)
-        c.drawString(480,750, fecha)
-        
-    
-        
-        
-        
-        #linea guinda
         color_guinda="#B03A2E"
         c.setFillColor(color_guinda)
+        
+        c.setFont('Helvetica-Bold', 12)
+        c.drawString(410,750, "REPORTE DE INSUMOS")
+        color_negro="#030305"
+        c.setFillColor(color_negro)
+        c.setFont('Helvetica-Bold', 10)
+        c.drawString(405,730, "Fecha de impresión: " +fecha)
+        #linea guinda
+        
+        c.setFillColor(color_guinda)
         c.setStrokeColor(color_guinda)
-        c.line(40,747,560,745)
+        c.line(40,695,560,695)
         #nombre departamento
         color_negro="#030305"
         c.setFillColor(color_negro)
-        c.setFont('Helvetica', 16)
-        c.drawString(60,730, 'Departamento de Sistemas')
+        c.setFont('Helvetica', 12)
+        c.drawString(405,710, 'Departamento de Sistemas')
         #titulo
         c.setFont('Helvetica-Bold', 22)
         
-        c.drawString(180,690, 'Reporte Insumos')
-        
-        base_dir = str(settings.BASE_DIR)
-        logo = base_dir+'/static/images/logopdf.png'   
-        c.drawImage(logo, 250,620,120,90, preserveAspectRatio=True)
+        c.drawString(200,660, 'Reporte Insumos')
         
         
         
@@ -5112,7 +5199,30 @@ def pdfInfoEquipo(request):
                 nombre = datoPropietario.nombre
                 apellidos = datoPropietario.apellidos
             nombreProp = nombre + " " + apellidos
+            
+    datosRenovacion = Renovacion_Equipos.objects.filter(id_equipo = equipo_recibido)
+    
+    for dato in datosRenovacion:
+        compra = dato.fecha_compra
+        renovacion = dato.fecha_renov  
         
+        meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", 
+                 "Octubre", "Noviembre", "Diciembre"]
+        
+        contadorMeses = 0
+        mesCompra = compra.strftime('%m')
+        intmesCompra = int(mesCompra)
+        
+        messtr = ""
+        for mes in meses:
+            contadorMeses += 1
+            if contadorMeses == intmesCompra:
+                messtr = mes
+        
+        
+        
+        solo_compra_str = compra.strftime('%d de '+ messtr+ ' de %Y')
+        solo_renovacion_str = renovacion.strftime('%d de '+ messtr+ ' de %Y')
     
     
     #crear el http response con pdf
@@ -5121,33 +5231,56 @@ def pdfInfoEquipo(request):
     #Crear objeto PDF 
     buffer =BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
+    base_dir = str(settings.BASE_DIR)
     #nombre de empresa
-    c.setFont('Helvetica-Oblique', 22)
-    c.drawString(40,750, 'Custom & Co S.A. de C.V.')
+    
+    logo = base_dir+'/static/images/logoCustom.PNG'   
+    c.drawImage(logo, 40,700,120,70, preserveAspectRatio=True)
+    
+    c.setFont('Helvetica-Bold', 14)
+    c.drawString(150,750, 'Custom & Co S.A. de C.V.')
+    
+    c.setFont('Helvetica', 8)
+    c.drawString(150,735, 'Allende #646 Sur Colonia Centro, Durango, CP: 35000')
+    
+    c.setFont('Helvetica', 8)
+    c.drawString(150,720, 'RFC: CAC070116IS9')
+    
+    c.setFont('Helvetica', 8)
+    c.drawString(150,705, 'Tel: 8717147716')
     #fecha
     hoy=datetime.now()
     fecha = str(hoy.date())
-    
-    c.setFont('Helvetica', 12)
-    c.drawString(480,750, fecha)
-    #linea guinda
     color_guinda="#B03A2E"
     c.setFillColor(color_guinda)
+    
+    c.setFont('Helvetica-Bold', 12)
+    c.drawString(400,750, "INFORMACIÓN DE EQUIPO")
+    color_negro="#030305"
+    c.setFillColor(color_negro)
+    c.setFont('Helvetica-Bold', 10)
+    c.drawString(405,730, "Fecha de impresión: " +fecha)
+    #linea guinda
+    
+    c.setFillColor(color_guinda)
     c.setStrokeColor(color_guinda)
-    c.line(40,747,560,745)
+    c.line(40,695,560,695)
     #nombre departamento
     color_negro="#030305"
     c.setFillColor(color_negro)
-    c.setFont('Helvetica', 16)
-    c.drawString(60,730, 'Departamento de Sistemas')
+    c.setFont('Helvetica', 12)
+    c.drawString(405,710, 'Departamento de Sistemas')
     #titulo
     c.setFont('Helvetica-Bold', 22)
-    c.drawString(200,690, 'Información de Equipo')
+    c.drawString(200,660, 'Información de Equipo')
     
-    base_dir = str(settings.BASE_DIR)
-    logo = base_dir+'/static/images/logopdf.png'   
-    c.drawImage(logo, 250,620,120,90, preserveAspectRatio=True)
     
+    
+    
+    
+        
+        
+        
     for dato in datosEquipo:
         c.setFont('Helvetica-Bold', 24)
         c.drawString(200,610, 'Número de equipo: '+str(dato.id_equipo))
@@ -5158,30 +5291,47 @@ def pdfInfoEquipo(request):
         imagen = str(dato.imagen)  
         
         imagenCompleta = base_dir+"/media/"+imagen 
-        c.drawImage(imagenCompleta, 230,375,200,200, preserveAspectRatio=True)
+        c.drawImage(imagenCompleta, 210,375,200,200, preserveAspectRatio=True)
         
-        c.setFont('Helvetica-Bold', 20)
-        c.drawString(50,390, "Propietario: " + nombreProp)
+        if nombreProp == "Sin propietario":
+            c.setFont('Helvetica-Bold', 20)
+            c.drawString(190,390, "Propietario: " + nombreProp)
+        else:
+            c.setFont('Helvetica-Bold', 20)
+            c.drawString(50,390, "Propietario: " + nombreProp)
+        
+        c.setFont('Helvetica-Bold', 22)
+        c.drawString(70,360, "Fecha de Compra")
+        
+        c.setFont('Helvetica-Bold', 22)
+        c.drawString(330,360, "Fecha de Renovación")
+        
+        carrito = base_dir+'/static/images/capng.png'   
+        c.drawImage(carrito, 110,285,100,70, preserveAspectRatio=True)
+        
+        carritocompra = base_dir+'/static/images/cacompng.png'   
+        c.drawImage(carritocompra, 390,285,100,70, preserveAspectRatio=True)
+        
+        c.setFont('Helvetica-Bold', 18)
+        c.drawString(60,270, str(solo_compra_str))
+        
+        c.setFont('Helvetica-Bold', 18)
+        c.drawString(340,270, str(solo_renovacion_str))
+        
+        c.setFont('Helvetica-Bold', 22)
+        c.drawString(60,230, "Características")
+        
+        tabla_id = dato.id_equipo
+        tabla_tipo = dato.tipo
+        tabla_marca = dato.marca
+        tabla_modelo = dato.modelo
+        tabla_ram = dato.memoriaram
+        tabla_procesador = dato.procesador
+        tabla_sistema = dato.sistemaoperativo
+        tabla_cargador = dato.modelocargador
+        tabla_estado = dato.estado
     
     
-    #obtener datos de area
-    
-    datosAreas= Areas.objects.all()
-    cantidad_empleados = []
-    
-    for area in datosAreas:
-        id_area_una = area.id_area
-        areaInt = int(id_area_una)
-        
-        empleadosEnArea = Empleados.objects.filter(id_area_id__id_area__icontains = areaInt)
-        
-        numero_empleados = 0
-        for empleado in empleadosEnArea:
-            numero_empleados+=1
-        
-        cantidad_empleados.append(numero_empleados)
-        
-    listaAreas = zip(datosAreas, cantidad_empleados)
     #header de tabla
     styles = getSampleStyleSheet()
     styleBH =styles["Normal"]
@@ -5189,131 +5339,51 @@ def pdfInfoEquipo(request):
     styleBH.fontSize = 10
     
     
-    id_Departamento = Paragraph('''Id Departamento''', styleBH)
-    nombre = Paragraph('''Nombre''', styleBH)
-    color = Paragraph('''Color''', styleBH)
-    numero_empleado = Paragraph('''Numero de empleados''', styleBH)
+    id_equipo = Paragraph('''ID''', styleBH)
+    tipo = Paragraph('''Tipo''', styleBH)
+    marca = Paragraph('''Marca''', styleBH)
+    modelo = Paragraph('''Modelo''', styleBH)
+    ram = Paragraph('''RAM''', styleBH)
+    procesador = Paragraph('''Procesador''', styleBH)
+    sistemaop = Paragraph('''Sistema Operativo''', styleBH)
+    carga = Paragraph('''Cargador''', styleBH)
+    estado = Paragraph('''Estado''', styleBH)
     filasTabla=[]
-    filasTabla.append([id_Departamento, nombre, color, numero_empleado])
+    filasTabla.append([id_equipo, tipo, marca, modelo, ram, procesador, sistemaop, carga, estado])
     #Tabla
     styleN = styles["BodyText"]
     styleN.alignment = TA_CENTER
     styleN.fontSize = 7
     
-    high = 100
-    for area, empleados in listaAreas:
-        fila = [area.id_area, area.nombre, area.color, empleados]
-        filasTabla.append(fila)
-        high= high - 18 
+    high = 170
+    campo_equipo = Paragraph(str(tabla_id), styleN)
+    campo_tipo = Paragraph(tabla_tipo, styleN)
+    campo_marca = Paragraph(tabla_marca, styleN)
+    campo_modelo = Paragraph(tabla_modelo, styleN)
+    campo_memoria = Paragraph(tabla_ram, styleN)
+    campo_procesador = Paragraph(tabla_procesador, styleN)
+    campo_sistema = Paragraph(tabla_sistema, styleN)
+    campo_cargador = Paragraph(tabla_cargador, styleN)
+    campo_estado = Paragraph(tabla_estado, styleN)
+            
+    fila = [campo_equipo, campo_tipo, campo_marca, campo_modelo, campo_memoria, campo_procesador, campo_sistema, 
+                    campo_cargador, campo_estado]
+    filasTabla.append(fila)
+            
+    high= high - 18  
         
     #escribir tabla
     width, height = letter
-    tabla = Table(filasTabla, colWidths=[4 * cm, 4 * cm, 4 * cm, 4 * cm])
+    tabla = Table(filasTabla, colWidths=[1 * cm, 2 * cm, 2 * cm, 2 * cm, 2* cm, 4 * cm, 2 * cm, 2 * cm, 2 * cm])
     tabla.setStyle(TableStyle([
         ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
         ('BACKGROUND', (0, 0), (-1, 0), '#F5CD04'),
         ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
     ]))
     
-    contador = 0
-    for fila in filasTabla:
-        contador += 1
-        if contador > 1:
-            if fila[2] == "label bg-red":
-                color = colors.red
-                tabla.setStyle(TableStyle([
-                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
-                ]))
-                
-            elif fila[2] == "label bg-pink":
-                color = colors.pink
-                tabla.setStyle(TableStyle([
-                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
-                ]))
-            elif fila[2] == "label bg-purple":
-                color = colors.purple
-                tabla.setStyle(TableStyle([
-                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
-                ]))
-            elif fila[2] == "label bg-indigo":
-                color = colors.indigo
-                tabla.setStyle(TableStyle([
-                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
-                ]))
-            elif fila[2] == "label bg-blue":
-                color = colors.blue
-                tabla.setStyle(TableStyle([
-                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
-                ]))
-            elif fila[2] == "label bg-cyan":
-                color = colors.cyan
-                tabla.setStyle(TableStyle([
-                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
-                ]))
-            elif fila[2] == "label bg-teal":
-                color = colors.teal
-                tabla.setStyle(TableStyle([
-                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
-                ]))
-            elif fila[2] == "label bg-green":
-                color = colors.green
-                tabla.setStyle(TableStyle([
-                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
-                ]))
-            elif fila[2] == "label bg-light-green":
-                color = colors.lightgreen
-                tabla.setStyle(TableStyle([
-                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
-                ]))
-            elif fila[2] == "label bg-lime":
-                color = colors.lime
-                tabla.setStyle(TableStyle([
-                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
-                ]))
-            elif fila[2] == "label bg-yellow":
-                color = colors.yellow
-                tabla.setStyle(TableStyle([
-                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
-                ]))
-            elif fila[2] == "label bg-amber":
-                color = colors.orangered
-                tabla.setStyle(TableStyle([
-                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
-                ]))
-            elif fila[2] == "label bg-orange":
-                color = colors.orange
-                tabla.setStyle(TableStyle([
-                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
-                ]))
-            elif fila[2] == "label bg-deep-orange":
-                color = colors.deeppink
-                tabla.setStyle(TableStyle([
-                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
-                ]))
-            elif fila[2] == "label bg-brown":
-                color = colors.brown
-                tabla.setStyle(TableStyle([
-                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
-                ]))
-            elif fila[2] == "label bg-grey":
-                color = colors.gray
-                tabla.setStyle(TableStyle([
-                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
-                ]))
-            elif fila[2] == "label bg-blue-grey":
-                color = colors.blueviolet
-                tabla.setStyle(TableStyle([
-                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
-                ]))
-            elif fila[2] == "label bg-black":
-                color = colors.black
-                tabla.setStyle(TableStyle([
-                    ('TEXTCOLOR', (2 , contador - 1), (-2, contador -1 ), color)
-                ]))
-                
     
     tabla.wrapOn(c, width, height)
-    tabla.drawOn(c, 80, high)
+    tabla.drawOn(c, 40, high)
     
     #linea guinda
     color_guinda="#B03A2E"
@@ -5329,6 +5399,270 @@ def pdfInfoEquipo(request):
     
     c.showPage()
     
+    
+    #SEGUNDA HOJA ----------------------------------------------------------------------------------------
+    
+    mantenimientos= CalendarioMantenimiento.objects.filter(id_equipo_id__id_equipo__icontains=tabla_id) #11 empleados
+    
+    numero_mantanimientos = 0
+    for mant in mantenimientos:
+        numero_mantanimientos +=1
+        
+    if numero_mantanimientos == 0:
+        numero_mantanimientos =1
+    
+    division = numero_mantanimientos // 9 #Resultado 1, sin residuo
+    residuo = numero_mantanimientos%9 #residuo hay 2
+    
+    
+    
+    if residuo == 0:
+        #hojas iguales a division.
+        hojasIguales = True
+        
+    if residuo != 0:
+        division = division + 1   #Número de hojas total. 2
+        
+    contadorHojas = 1
+    mantenimientos = CalendarioMantenimiento.objects.filter(id_equipo_id__id_equipo__icontains=tabla_id)
+            
+    id_mantenimientos = []
+    operaciones = []
+    fechas = []
+    observaciones = []
+    for hoja in range(division):
+        
+        if contadorHojas == 4:
+            contadorMantenimientos = 0
+            contadorMantenimientosxHoja = 0
+        
+            for mantenimiento in mantenimientos:
+                
+                contadorMantenimientos += 1
+                
+                if contadorMantenimientos > 30 and contadorMantenimientos <= 40:
+                    id = mantenimiento.id_calmantenimiento
+                    operacion = mantenimiento.operacion
+                    fecha = mantenimiento.fecha
+                    observacion = mantenimiento.observaciones
+                    
+                    id_mantenimientos.append(str(id))
+                    operaciones.append(operacion)
+                    fechas.append(fecha)
+                    observaciones.append(observacion)
+                    
+                    contadorMantenimientosxHoja+=1
+            
+            listaMantenimientos = zip(id_mantenimientos, operaciones, fechas, observaciones)
+            
+            contadorHojas = 5
+            if contadorMantenimientosxHoja == 20:
+                high = 600 - ((contadorMantenimientosxHoja+1) * 33)
+            else:
+                high = 600 - (contadorMantenimientosxHoja * 33)
+        
+        if contadorHojas == 3:
+            contadorMantenimientos = 0
+            contadorMantenimientosxHoja = 0
+        
+            for mantenimiento in mantenimientos:
+                
+                contadorMantenimientos += 1
+                
+                if contadorMantenimientos > 20 and contadorMantenimientos <= 30:
+                    id = mantenimiento.id_calmantenimiento
+                    operacion = mantenimiento.operacion
+                    fecha = mantenimiento.fecha
+                    observacion = mantenimiento.observaciones
+                    
+                    id_mantenimientos.append(str(id))
+                    operaciones.append(operacion)
+                    fechas.append(fecha)
+                    observaciones.append(observacion)
+                    
+                    contadorMantenimientosxHoja+=1
+            
+            listaMantenimientos = zip(id_mantenimientos, operaciones, fechas, observaciones)
+            
+            contadorHojas = 4
+            if contadorMantenimientosxHoja == 20:
+                high = 600 - ((contadorMantenimientosxHoja+1) * 33)
+            else:
+                high = 600 - (contadorMantenimientosxHoja * 33)
+                
+        
+        if contadorHojas == 2:
+            contadorMantenimientos = 0
+            contadorMantenimientosxHoja = 0
+        
+            for mantenimiento in mantenimientos:
+                
+                contadorMantenimientos += 1
+                
+                if contadorMantenimientos > 10 and contadorMantenimientos <= 20:
+                    id = mantenimiento.id_calmantenimiento
+                    operacion = mantenimiento.operacion
+                    fecha = mantenimiento.fecha
+                    observacion = mantenimiento.observaciones
+                    
+                    id_mantenimientos.append(str(id))
+                    operaciones.append(operacion)
+                    fechas.append(fecha)
+                    observaciones.append(observacion)
+                    
+                    contadorMantenimientosxHoja+=1
+            
+            listaMantenimientos = zip(id_mantenimientos, operaciones, fechas, observaciones)
+            
+            contadorHojas = 3
+            if contadorMantenimientosxHoja == 20:
+                high = 600 - ((contadorMantenimientosxHoja+1) * 33)
+            else:
+                high = 600 - (contadorMantenimientosxHoja * 33)
+                
+        
+        if contadorHojas == 1:
+            contadorMantenimientos = 0
+            contadorMantenimientosxHoja = 0
+        
+            for mantenimiento in mantenimientos:
+                
+                contadorMantenimientos += 1
+                
+                if contadorMantenimientos <= 10:
+                    id = mantenimiento.id_calmantenimiento
+                    operacion = mantenimiento.operacion
+                    fecha = mantenimiento.fecha
+                    observacion = mantenimiento.observaciones
+                    
+                    id_mantenimientos.append(str(id))
+                    operaciones.append(operacion)
+                    fechas.append(fecha)
+                    observaciones.append(observacion)
+                    
+                    contadorMantenimientosxHoja+=1
+            
+            listaMantenimientos = zip(id_mantenimientos, operaciones, fechas, observaciones)
+            
+            contadorHojas = 2
+            if contadorMantenimientosxHoja == 20:
+                high = 710 - ((contadorMantenimientosxHoja+1) * 33)
+            else:
+                high = 710 - (contadorMantenimientosxHoja * 33)
+            
+        #Lleno el arreglo de mantenimientos
+        
+        base_dir = str(settings.BASE_DIR)
+        #nombre de empresa
+        
+        logo = base_dir+'/static/images/logoCustom.PNG'   
+        c.drawImage(logo, 40,700,120,70, preserveAspectRatio=True)
+        
+        c.setFont('Helvetica-Bold', 14)
+        c.drawString(150,750, 'Custom & Co S.A. de C.V.')
+        
+        c.setFont('Helvetica', 8)
+        c.drawString(150,735, 'Allende #646 Sur Colonia Centro, Durango, CP: 35000')
+        
+        c.setFont('Helvetica', 8)
+        c.drawString(150,720, 'RFC: CAC070116IS9')
+        
+        c.setFont('Helvetica', 8)
+        c.drawString(150,705, 'Tel: 8717147716')
+        #fecha
+        hoy=datetime.now()
+        fecha = str(hoy.date())
+        color_guinda="#B03A2E"
+        c.setFillColor(color_guinda)
+        
+        c.setFont('Helvetica-Bold', 12)
+        c.drawString(400,750, "INFORMACIÓN DE EQUIPO")
+        color_negro="#030305"
+        c.setFillColor(color_negro)
+        c.setFont('Helvetica-Bold', 10)
+        c.drawString(405,730, "Fecha de impresión: " +fecha)
+        #linea guinda
+        
+        c.setFillColor(color_guinda)
+        c.setStrokeColor(color_guinda)
+        c.line(40,695,560,695)
+        #nombre departamento
+        color_negro="#030305"
+        c.setFillColor(color_negro)
+        c.setFont('Helvetica', 12)
+        c.drawString(405,710, 'Departamento de Sistemas')
+        #titulo
+        c.setFont('Helvetica-Bold', 22)
+        c.drawString(180,660, 'Mantenimientos de Equipo')
+        
+        
+        
+        
+        
+        
+        
+        
+            
+            
+            
+        
+        
+        #header de tabla
+        styles = getSampleStyleSheet()
+        styleBH =styles["Normal"]
+        styleBH.alignment = TA_CENTER
+        styleBH.fontSize = 10
+        
+        
+        id_operacion = Paragraph('''Id Operación''', styleBH)
+        operacion = Paragraph('''Operación''', styleBH)
+        fecha = Paragraph('''Fecha''', styleBH)
+        observaciones = Paragraph('''Observaciones''', styleBH)
+        filasTabla=[]
+        filasTabla.append([id_operacion, operacion, fecha, observaciones])
+        #Tabla
+        styleN = styles["BodyText"]
+        styleN.alignment = TA_CENTER
+        styleN.fontSize = 7
+        
+        for id, operacion, fecha, observacion in listaMantenimientos:
+            campo_mant = Paragraph(str(id), styleN)
+            campo_operacion = Paragraph(operacion, styleN)
+            campo_fecha = Paragraph(str(fecha), styleN)
+            campo_observacion = Paragraph(observacion, styleN)
+            
+            fila = [campo_mant, campo_operacion, campo_fecha, campo_observacion]
+            filasTabla.append(fila)
+            
+            high= high - 18 
+                 
+            
+        #escribir tabla
+        width, height = letter
+        tabla = Table(filasTabla, colWidths=[3 * cm, 4 * cm, 4 * cm, 8 * cm])
+        tabla.setStyle(TableStyle([
+            ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+            ('BACKGROUND', (0, 0), (-1, 0), '#F5CD04'),
+            ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+        ]))
+        
+        
+        tabla.wrapOn(c, width, height)
+        tabla.drawOn(c, 40, high)
+        
+        #linea guinda
+        color_guinda="#B03A2E"
+        c.setFillColor(color_guinda)
+        c.setStrokeColor(color_guinda)
+        c.line(40,60,560,60)
+        
+        color_negro="#030305"
+        c.setFillColor(color_negro)
+        c.setFont('Helvetica-Bold', 11)
+        c.drawString(170,48, '2021 - Administrador de Custom System. - Versión: 1.0.0 ')
+        
+        
+        c.showPage()
     
     
     #guardar pdf
