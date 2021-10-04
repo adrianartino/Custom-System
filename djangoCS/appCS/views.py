@@ -5680,6 +5680,475 @@ def pdfInfoEquipo(request):
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def pdfInfoImpresora(request):
+    
+    if request.method == "POST":
+    
+        impresora_recibido= request.POST['idimpresora']
+        
+    datosImpresora = Impresoras.objects.filter(id_impresora = impresora_recibido)
+    
+    for dato in datosImpresora:
+        departamento = dato.id_area_id
+        
+        if departamento == None:
+            nombre = "Sin departamento"
+        else:
+            datosDepartamento = Areas.objects.filter(id_area = departamento)
+            
+            for datoDepartamento in datosDepartamento:
+                nombre = datoDepartamento.nombre
+                color = datoDepartamento.color
+            
+            
+    datosRenovacion = Renovacion_Impresoras.objects.filter(id_impresora = impresora_recibido)
+    
+    for dato in datosRenovacion:
+        compra = dato.fecha_compra
+        renovacion = dato.fecha_renov  
+        
+        meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", 
+                 "Octubre", "Noviembre", "Diciembre"]
+        
+        contadorMeses = 0
+        mesCompra = compra.strftime('%m')
+        intmesCompra = int(mesCompra)
+        
+        messtr = ""
+        for mes in meses:
+            contadorMeses += 1
+            if contadorMeses == intmesCompra:
+                messtr = mes
+        
+        
+        
+        solo_compra_str = compra.strftime('%d de '+ messtr+ ' de %Y')
+        solo_renovacion_str = renovacion.strftime('%d de '+ messtr+ ' de %Y')
+    
+    
+    #crear el http response con pdf
+    respuesta = HttpResponse(content_type='application/pdf')
+    respuesta['Content-Disposition'] = 'attachment; filename=Reporte Impresoras General.pdf'
+    #Crear objeto PDF 
+    buffer =BytesIO()
+    c = canvas.Canvas(buffer, pagesize=letter)
+    base_dir = str(settings.BASE_DIR)
+    #nombre de empresa
+    
+    logo = base_dir+'/static/images/logoCustom.PNG'   
+    c.drawImage(logo, 40,700,120,70, preserveAspectRatio=True)
+    
+    c.setFont('Helvetica-Bold', 14)
+    c.drawString(150,750, 'Custom & Co S.A. de C.V.')
+    
+    c.setFont('Helvetica', 8)
+    c.drawString(150,735, 'Allende #646 Sur Colonia Centro, Durango, CP: 35000')
+    
+    c.setFont('Helvetica', 8)
+    c.drawString(150,720, 'RFC: CAC070116IS9')
+    
+    c.setFont('Helvetica', 8)
+    c.drawString(150,705, 'Tel: 8717147716')
+    #fecha
+    hoy=datetime.now()
+    fecha = str(hoy.date())
+    color_guinda="#B03A2E"
+    c.setFillColor(color_guinda)
+    
+    c.setFont('Helvetica-Bold', 12)
+    c.drawString(400,750, "INFORMACIÓN DE IMPRESORA")
+    color_negro="#030305"
+    c.setFillColor(color_negro)
+    c.setFont('Helvetica-Bold', 10)
+    c.drawString(405,730, "Fecha de impresión: " +fecha)
+    #linea guinda
+    
+    c.setFillColor(color_guinda)
+    c.setStrokeColor(color_guinda)
+    c.line(40,695,560,695)
+    #nombre departamento
+    color_negro="#030305"
+    c.setFillColor(color_negro)
+    c.setFont('Helvetica', 12)
+    c.drawString(405,710, 'Departamento de Sistemas')
+    #titulo
+    c.setFont('Helvetica-Bold', 22)
+    c.drawString(200,660, 'Información de Impresora')
+    
+    
+    
+    
+    
+        
+        
+        
+    for dato in datosImpresora:
+        c.setFont('Helvetica-Bold', 24)
+        c.drawString(200,610, 'Número de equipo: '+ str(dato.id_impresora))
+        
+        c.setFont('Helvetica-Bold', 26)
+        c.drawString(130,580, dato.marca + " " + dato.modelo + " " + dato.tipo)
+        
+        imagen = str(dato.imagen)  
+        
+        imagenCompleta = base_dir+"/media/"+imagen 
+        c.drawImage(imagenCompleta, 210,375,200,200, preserveAspectRatio=True)
+        
+        if nombre == "Sin departamento":
+            c.setFont('Helvetica-Bold', 20)
+            c.drawString(190,390, "Departamento: " + nombre)
+        else:
+            c.setFont('Helvetica-Bold', 20)
+            c.drawString(50,390, "Departamento: " + nombre)
+        
+        c.setFont('Helvetica-Bold', 22)
+        c.drawString(70,360, "Fecha de Compra")
+        
+        c.setFont('Helvetica-Bold', 22)
+        c.drawString(330,360, "Fecha de Renovación")
+        
+        carrito = base_dir+'/static/images/capng.png'   
+        c.drawImage(carrito, 110,285,100,70, preserveAspectRatio=True)
+        
+        carritocompra = base_dir+'/static/images/cacompng.png'   
+        c.drawImage(carritocompra, 390,285,100,70, preserveAspectRatio=True)
+        
+        c.setFont('Helvetica-Bold', 18)
+        c.drawString(60,270, str(solo_compra_str))
+        
+        c.setFont('Helvetica-Bold', 18)
+        c.drawString(340,270, str(solo_renovacion_str))
+        
+        c.setFont('Helvetica-Bold', 22)
+        c.drawString(60,230, "Características")
+        
+        tabla_id = dato.id_impresora
+        tabla_marca = dato.marca
+        tabla_modelo = dato.modelo
+        tabla_tipo = dato.tipo
+        tabla_enred= dato.enred
+        tabla_ip = dato.ip
+        tabla_estado = dato.estado
+        tabla_activo = dato.activo
+    
+    
+    
+    #header de tabla
+    styles = getSampleStyleSheet()
+    styleBH =styles["Normal"]
+    styleBH.alignment = TA_CENTER
+    styleBH.fontSize = 10
+    
+    
+    id_impresora = Paragraph('''ID''', styleBH)
+    marca = Paragraph('''Marca''', styleBH)
+    modelo = Paragraph('''Modelo''', styleBH)
+    tipo = Paragraph('''Tipo''', styleBH)
+    red = Paragraph('''En red''', styleBH)
+    ip = Paragraph('''Dirección IP''', styleBH)
+    estado = Paragraph('''Estado''', styleBH)
+    activo = Paragraph('''Activo''', styleBH)
+    
+    filasTabla=[]
+    filasTabla.append([id_impresora, marca, modelo,  tipo, red, ip, estado, activo ])
+    #Tabla
+    styleN = styles["BodyText"]
+    styleN.alignment = TA_CENTER
+    styleN.fontSize = 7
+    
+    high = 170
+    campo_impresora = Paragraph(str(tabla_id), styleN)
+    campo_marca = Paragraph(tabla_marca, styleN)
+    campo_modelo = Paragraph(tabla_modelo, styleN)
+    campo_tipo = Paragraph(tabla_tipo, styleN)
+    campo_red = Paragraph(tabla_enred, styleN)
+    campo_ip = Paragraph(tabla_ip, styleN)
+    campo_estado = Paragraph(tabla_estado, styleN)
+    campo_activo = Paragraph(tabla_activo, styleN)
+    
+            
+    fila = [campo_impresora, campo_marca, campo_modelo,  campo_tipo, campo_red, campo_ip, campo_estado, 
+                    campo_activo]
+    filasTabla.append(fila)
+            
+    high= high - 18  
+        
+    #escribir tabla
+    width, height = letter
+    tabla = Table(filasTabla, colWidths=[1 * cm, 2 * cm, 2 * cm, 2 * cm, 2* cm, 4 * cm, 2 * cm, 2 * cm, 2 * cm])
+    tabla.setStyle(TableStyle([
+        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+        ('BACKGROUND', (0, 0), (-1, 0), '#F5CD04'),
+        ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+    ]))
+    
+    
+    tabla.wrapOn(c, width, height)
+    tabla.drawOn(c, 40, high)
+    
+    #linea guinda
+    color_guinda="#B03A2E"
+    c.setFillColor(color_guinda)
+    c.setStrokeColor(color_guinda)
+    c.line(40,60,560,60)
+    
+    color_negro="#030305"
+    c.setFillColor(color_negro)
+    c.setFont('Helvetica-Bold', 11)
+    c.drawString(170,48, '2021 - Administrador de Custom System. - Versión: 1.0.0 ')
+    
+    
+    c.showPage()
+    
+    
+    #SEGUNDA HOJA ----------------------------------------------------------------------------------------
+    
+    cartuchos= Cartuchos.objects.filter(id_impresora_id__id_impresora__icontains=tabla_id) #11 empleados
+    
+    numero_cartuchos = 0
+    for cart in cartuchos:
+        numero_cartuchos +=1
+        
+    if numero_cartuchos == 0:
+        numero_cartuchos =1
+    
+    division = numero_cartuchos // 9 #Resultado 1, sin residuo
+    residuo = numero_cartuchos%9 #residuo hay 2
+    
+    
+    
+    if residuo == 0:
+        #hojas iguales a division.
+        hojasIguales = True
+        
+    if residuo != 0:
+        division = division + 1   #Número de hojas total. 2
+        
+    contadorHojas = 1
+    cartuchos = Cartuchos.objects.filter(id_impresora_id__id_impresora__icontains=tabla_id)
+            
+    id_cartuchos = []
+    marcas = []
+    modelos = []
+    urls_imagenes = []
+    colores = []
+    series  = []
+    cantidades = []
+    for hoja in range(division):
+        
+        if contadorHojas == 1:
+            contadorCartuchos = 0
+            contadorCartuchosxHoja = 0
+        
+            for cartucho in cartuchos:
+                
+                contadorCartuchos += 1
+                
+                if contadorCartuchos <=10:
+                    id = cartucho.id_cartucho
+                    marca = cartucho.marca
+                    modelo = cartucho.modelo
+                    imagen = cartucho.imagenCartucho
+                    urlimagen = base_dir + '/media/' + str(imagen)
+                    img = Image(urlimagen,50,50)
+                    urls_imagenes.append(img)
+                    color= cartucho.color
+                    serie=cartucho.nuserie
+                    cantidad=cartucho.cantidad
+                    
+                    
+                    id_cartuchos.append(str(id))
+                    marcas.append(marca)
+                    modelos.append(modelo)
+                    colores.append(color)
+                    series.append(serie)
+                    cantidades.append(cantidad)
+                    
+                    contadorCartuchosxHoja+=1
+            
+            listaCartuchos = zip(id_cartuchos, marcas, modelos, urls_imagenes, colores, series, cantidades )
+            
+        
+            
+            contadorHojas = 2
+            if contadorCartuchosxHoja == 20:
+                high = 710 - ((contadorCartuchosxHoja+1) * 33)
+            else:
+                high = 710 - (contadorCartuchosxHoja * 33)
+            
+        #Lleno el arreglo de mantenimientos
+        
+        base_dir = str(settings.BASE_DIR)
+        #nombre de empresa
+        
+        logo = base_dir+'/static/images/logoCustom.PNG'   
+        c.drawImage(logo, 40,700,120,70, preserveAspectRatio=True)
+        
+        c.setFont('Helvetica-Bold', 14)
+        c.drawString(150,750, 'Custom & Co S.A. de C.V.')
+        
+        c.setFont('Helvetica', 8)
+        c.drawString(150,735, 'Allende #646 Sur Colonia Centro, Durango, CP: 35000')
+        
+        c.setFont('Helvetica', 8)
+        c.drawString(150,720, 'RFC: CAC070116IS9')
+        
+        c.setFont('Helvetica', 8)
+        c.drawString(150,705, 'Tel: 8717147716')
+        #fecha
+        hoy=datetime.now()
+        fecha = str(hoy.date())
+        color_guinda="#B03A2E"
+        c.setFillColor(color_guinda)
+        
+        c.setFont('Helvetica-Bold', 12)
+        c.drawString(400,750, "INFORMACIÓN DE EQUIPO")
+        color_negro="#030305"
+        c.setFillColor(color_negro)
+        c.setFont('Helvetica-Bold', 10)
+        c.drawString(405,730, "Fecha de impresión: " +fecha)
+        #linea guinda
+        
+        c.setFillColor(color_guinda)
+        c.setStrokeColor(color_guinda)
+        c.line(40,695,560,695)
+        #nombre departamento
+        color_negro="#030305"
+        c.setFillColor(color_negro)
+        c.setFont('Helvetica', 12)
+        c.drawString(405,710, 'Departamento de Sistemas')
+        #titulo
+        c.setFont('Helvetica-Bold', 22)
+        c.drawString(180,660, 'Cartuchos de Impresora')
+        
+        
+        
+        
+        
+        
+        
+        
+            
+            
+            
+        
+        
+        #header de tabla
+        styles = getSampleStyleSheet()
+        styleBH =styles["Normal"]
+        styleBH.alignment = TA_CENTER
+        styleBH.fontSize = 10
+        
+        
+        id_cartucho = Paragraph('''Id Caetucho''', styleBH)
+        marca = Paragraph('''Marca''', styleBH)
+        modelo = Paragraph('''Modelo''', styleBH)
+        imagen = Paragraph('''Imagen.''', styleBH)
+        color = Paragraph('''Color''', styleBH)
+        serie = Paragraph('''Num. Serie''', styleBH)
+        cantidad = Paragraph('''Cantidad''', styleBH)
+        filasTabla=[]
+        filasTabla.append([id_cartucho, marca, modelo, imagen, color, serie, cantidad])
+        #Tabla
+        styleN = styles["BodyText"]
+        styleN.alignment = TA_CENTER
+        styleN.fontSize = 7
+        
+        for id, marcas, modelos, imagenes,colores,series,cantidades in listaCartuchos:
+            campo_cart = Paragraph(str(id), styleN)
+            campo_marca = Paragraph(marcas, styleN)
+            campo_modelo = Paragraph(str(modelos), styleN)
+            
+            campo_color = Paragraph(colores, styleN)
+            campo_serie = Paragraph(series, styleN)
+            campo_cantidad = Paragraph(str(cantidades), styleN)
+        
+            
+            fila = [campo_cart, campo_marca, campo_modelo,imagenes ,campo_color, campo_serie, campo_cantidad ]
+            filasTabla.append(fila)
+            
+            high= high - 18 
+                 
+            
+        #escribir tabla
+        width, height = letter
+        tabla = Table(filasTabla, colWidths=[3 * cm, 4 * cm, 4 * cm, 8 * cm])
+        tabla.setStyle(TableStyle([
+            ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+            ('BACKGROUND', (0, 0), (-1, 0), '#F5CD04'),
+            ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+        ]))
+        
+        
+        tabla.wrapOn(c, width, height)
+        tabla.drawOn(c, 40, high)
+        
+        #linea guinda
+        color_guinda="#B03A2E"
+        c.setFillColor(color_guinda)
+        c.setStrokeColor(color_guinda)
+        c.line(40,60,560,60)
+        
+        color_negro="#030305"
+        c.setFillColor(color_negro)
+        c.setFont('Helvetica-Bold', 11)
+        c.drawString(170,48, '2021 - Administrador de Custom System. - Versión: 1.0.0 ')
+        
+        
+        c.showPage()
+    
+    
+    #guardar pdf
+    c.save()
+    #obtener valores de bytesIO y esribirlos en la respuesta
+    pdf = buffer.getvalue()
+    buffer.close()
+    respuesta.write(pdf)
+    return respuesta
+
+
+
+
+
+
 def qrEquipo(request):
     
     return render(request, "Equipos/qrEquipo.html")

@@ -83,7 +83,8 @@ urlpatterns = [
     path("reporteRenovacionEq/", views.reporteRenovacionEq),
     path("reporteRenovacionImp/", views.reporteRenovacionImp),
     
-    path("pdfInfoEquipo/", views.pdfInfoEquipo)
+    path("pdfInfoEquipo/", views.pdfInfoEquipo),
+    path("pdfInfoImpresora/", views.pdfInfoImpresora)
     
     
 ]

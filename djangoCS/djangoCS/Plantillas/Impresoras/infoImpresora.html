@@ -123,7 +123,7 @@ Info Impresoras
                            
                             <tr>
                                 <th>
-                                    <form action="/infoImpresora/" method="POST">{% csrf_token %}
+                                    <form action="/pdfInfoImpresora/" method="POST">{% csrf_token %}
                                         <center>
                                             <input type="text" style="border: none; background: none;"  name="idImpresora" value="{{datoImpresora.id_impresora}}" readonly size="1">
                                             <button type="submit" class="btn  waves-effect" style="background-color: #0A77F9;">
@@ -206,6 +206,14 @@ Info Impresoras
                         </tbody>
                     </table>
                 </div>
+                <form action="/pdfInfoImpresora/" method="POST">{% csrf_token %}
+                    <label >Descargar PDF </label>
+                    <input type="hidden" value="{{datoImpresora.id_impresora}}" name="idimpresora">
+                    <button type="submit" class="btn bg-red waves-effect">
+                        <i class="material-icons">get_app</i>
+                        <span>PDF</span>
+                    </button>
+                </form>
 
                 {% endfor %}
             </div>
