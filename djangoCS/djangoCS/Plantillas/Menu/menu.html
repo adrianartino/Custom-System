@@ -72,18 +72,18 @@
             <div class="collapse navbar-collapse" id="navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <!-- Call Search -->
-                    <li><a href="javascript:void(0);" class="js-search" data-close="true"><i class="material-icons">search</i></a></li>
                     <!-- #END# Call Search -->
                     <!-- Notifications -->
                     <li class="dropdown">
                         <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button">
                             <i class="material-icons">notifications</i>
-                            <span class="label-count">7</span>
+                            <span class="label-count">{{numeroNoti}}</span>
                         </a>
                         <ul class="dropdown-menu">
                             <li class="header">NOTIFICACIONES</li>
                             <li class="body">
                                 <ul class="menu">
+                                    {% for computadora in mantenimientosNoti %}
                                     <li>
                                         <a href="javascript:void(0);">
                                             <div class="icon-circle bg-deep-orange">
@@ -91,26 +91,29 @@
                                                
                                             </div>
                                             <div class="menu-info">
-                                                <h4>Mantenimiento a computadora</h4>
+                                                <h4>{{computadora.0}}</h4>
                                                 <p>
-                                                    <i class="material-icons">face</i> Adrian Artiño
+                                                    <i class="material-icons">face</i> {{computadora.1}}
                                                 </p>
                                             </div>
                                         </a>
                                     </li>
+                                    {% endfor %}
+                                    {% for cartucho in cartuchosNoti %}
                                     <li>
                                         <a href="javascript:void(0);">
                                             <div class="icon-circle bg-cyan">
                                                 <i class="material-icons">print</i>
                                             </div>
                                             <div class="menu-info">
-                                                <h4>Falta cartucho</h4>
+                                                <h4>{{cartucho.0}}</h4>
                                                 <p>
-                                                    <i class="material-icons">print_disabled</i> Impresora HP Deskjet 212
+                                                    <i class="material-icons">print_disabled</i> {{cartucho.1}}
                                                 </p>
                                             </div>
                                         </a>
                                     </li>
+                                    {% endfor %}
                                     
                                    
                                     
@@ -144,9 +147,20 @@
                     <div class="btn-group user-helper-dropdown">
                         <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
                         <ul class="dropdown-menu pull-right">
-                            <li><a href="javascript:void(0);"><i class="material-icons">person</i>Perfil</a></li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="javascript:void(0);"><i class="material-icons">group</i>Editar perfil</a></li>
+                            <form id="form_validation" action="/editarEmpleado/" enctype="multipart/form-data"  method="POST" >{% csrf_token %}
+                                
+                                <li>
+                                    <center>
+                                        <button type="submit" style="color: gray; border: none; background-color: white;">
+                                            Editar perfil</button>
+                                    </center>
+                                    
+                                </li>
+                                <li><input type="hidden" id="x" value="{{id_admin}}" name="idEmpleadoEditar"></li>
+
+                            </form>
+                            
                             <li role="separator" class="divider"></li>
                             <li><a href="{% url 'salir' %}"><i class="material-icons">input</i>Salir</a></li>
                         </ul>
@@ -680,21 +694,15 @@
                     <li class="active">
                     {% else %}
                     <li >
-                    {% if estaEnMantenimientoBitacora %}
-                    <li class="active">
-                    {% else %}
-                    <li >
+                    
                     {% if estaEnCartuchosBitacora %}
                     <li class="active">
                     {% else %}
                     <li >
-                    {% if estaEnCartasBitacora %}
-                    <li class="active">
-                    {% else %}
-                    <li >
+                    
                         
-                    {% endif %}
-                    {% endif %}
+                
+                
                     {% endif %}
                     {% endif %}
                     {% endif %}  
@@ -712,23 +720,17 @@
                              <i class="material-icons" style="color: #00917C;!important">import_contacts</i>
                              <span style="color: #00917C;!important">Bitacora</span>
                              {% else %}
-                            {% if estaEnMantenimientoBitacora %}
-                            <i class="material-icons" style="color: #00917C;!important">import_contacts</i>
-                            <span style="color: #00917C;!important">Bitacora</span>
-                             {% else %}
+                            
                              {% if estaEnCartuchosBitacora %}
                              <i class="material-icons" style="color: #00917C;!important">import_contacts</i>
                             <span style="color: #00917C;!important">Bitacora</span>
                              {% else %}
 
-                              {% if estaEnCartasBitacora %}
-                              <i class="material-icons" style="color: #00917C;!important">import_contacts</i>
-                              <span style="color: #00917C;!important">Bitacora</span>
-                              {% else %}
+                              
                               <i class="material-icons" >import_contacts</i>
                               <span >Bitacora</span>
-                              {% endif %}
-                              {% endif %}
+                             
+                        
                               {% endif %}
                               {% endif %}
                               {% endif %}  
@@ -772,17 +774,7 @@
 
 
                             </li>
-                            {% if estaEnMantenimientoBitacora %}
-                            <li class="active">
-                             {% else %}
-                             <li>
-                            {% endif %}
-                                {% if estaEnMantenimientoBitacora %}
-                                <a href="/BitacorasMantenimiento/" style="color: #E40017;!important">Mantenimiento</a>
-                                {% else %}
-                                <a href="/BitacorasMantenimiento/">Mantenimiento</a>
-                                {% endif %}
-                            </li>
+                            
                             {% if estaEnCartuchosBitacora %}
                             <li class="active">
                              {% else %}
@@ -794,17 +786,7 @@
                                 <a href="/BitacorasCartuchos/" >Cartuchos</a>
                                 {% endif %} 
                             </li>
-                            {% if estaEnCartasBitacora %}
-                            <li class="active">
-                             {% else %}
-                             <li>
-                            {% endif %}
-                                {% if estaEnCartasBitacora %}
-                                <a href="/BitacorasCartas/" style="color: #E40017;!important">Cartas</a>
-                                {% else %}
-                                <a href="/BitacorasCartas/" >Cartas</a>
-                                {% endif %}
-                            </li>
+                           
                         </ul>
                     </li>
                     

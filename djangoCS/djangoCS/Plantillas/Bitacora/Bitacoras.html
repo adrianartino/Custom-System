@@ -39,7 +39,7 @@ Bitacora
         <div class="card">
             <div class="header">
                 <h2>
-                    EQUIPOS DE CUSTOM & CO
+                    {{texto}} de Custom & Co
                 </h2>
                 <ul class="header-dropdown m-r--5">
                     <li class="dropdown">
@@ -76,13 +76,14 @@ Bitacora
                             </tr>
                         </tfoot>
                         <tbody>
-                            {% for entidad in datosEntidad %}
+                            {% for bitacora, usuario, equipo in lista %}
                             <tr>
                                 
-                                <th>{{entidad.0}}</th>
-                                <form action="/editarEquipo/" method="POST">{% csrf_token %}
+                                <th>{{usuario}}</th>
+                                {% if texto == "Bitácora de Equipos" %}
+                                <form action="/infoEquipo/" method="POST">{% csrf_token %}
                                     <th>
-                                        <input type="text" name="idEquipo" value="{{entidad.1}}" readonly size="1" style="border: 0; background: none;">
+                                        <input type="text" name="idEquipo" value="{{bitacora.id_objeto}}" readonly size="1" style="border: 0; background: none;">
                                         
                                             <center>
                                                 <button type="submit" class="btn bg-teal waves-effect"><i class="material-icons">visibility</i></button>
@@ -90,9 +91,44 @@ Bitacora
                                         
                                     </th>
                                 </form>
-                                    <th>{{entidad.2}}</th>
-                                    <th>{{entidad.3}}</th>
-                                    <th>{{entidad.4}}</th>
+                                {% elif texto == "Bitácora de Impresoras" %}
+                                <form action="/infoImpresora/" method="POST">{% csrf_token %}
+                                    <th>
+                                        <input type="text" name="idImpresora" value="{{bitacora.id_objeto}}" readonly size="1" style="border: 0; background: none;">
+                                        
+                                            <center>
+                                                <button type="submit" class="btn bg-teal waves-effect"><i class="material-icons">visibility</i></button>
+                                            </center>
+                                        
+                                    </th>
+                                </form>
+                                {% elif texto == "Bitácora de Empleados" %}
+                                <form action="/verEmpleados/" method="POST">{% csrf_token %}
+                                    <th>
+                                        <input type="text"  value="{{bitacora.id_objeto}}" readonly size="1" style="border: 0; background: none;">
+                                        
+                                            <center>
+                                                <button type="submit" class="btn bg-teal waves-effect"><i class="material-icons">visibility</i></button>
+                                            </center>
+                                        
+                                    </th>
+                                </form>
+                                {% elif texto == "Bitácora de Insumos" %}
+                                <form action="/verInsumos/" method="POST">{% csrf_token %}
+                                    <th>
+                                        <input type="text"  value="{{bitacora.id_objeto}}" readonly size="1" style="border: 0; background: none;">
+                                        
+                                            <center>
+                                                <button type="submit" class="btn bg-teal waves-effect"><i class="material-icons">visibility</i></button>
+                                            </center>
+                                        
+                                    </th>
+                                </form>
+
+                                {% endif %}
+                                    <th>{{equipo}}</th>
+                                    <th>{{bitacora.operacion}}</th>
+                                    <th>{{bitacora.fecha_hora}}</th>
                                 
                                 
                             </tr>

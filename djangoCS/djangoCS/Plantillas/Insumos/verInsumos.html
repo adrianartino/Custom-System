@@ -86,7 +86,7 @@ Ver Insumos
                             </tr>
                         </tfoot>
                         <tbody>
-                            {% for cartuchos in datosCartuchos %}
+                            {% for cartuchos, impresora in lista %}
                             <tr>
                                 <th>{{cartuchos.id_cartucho}}</th>
                                 <th>{{cartuchos.marca}}</th>
@@ -112,9 +112,9 @@ Ver Insumos
                                         <img src="{{cartuchos.imagenCartucho.url}}" width="150" height="200" alt="lap">
                                     </center>
                                 </th>
-                                {% for impresora in impresoras %}
+                            
                                 <th>{{impresora.0}} {{impresora.1}} </th>
-                                {% endfor %}
+                              
                             </tr>
                             {% endfor %}
                             

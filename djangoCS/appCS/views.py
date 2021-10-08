@@ -26,6 +26,126 @@ from reportlab.lib.colors import red
 from reportlab.lib.utils import ImageReader
 import PIL.Image
 
+def notificacionInsumos():
+    
+    cartuchosBajos = Cartuchos.objects.filter(cantidad=1)
+    cartuchosNoti = []
+    for cartucho in cartuchosBajos:
+        marca = cartucho.marca
+        modelo = cartucho.modelo
+        color = cartucho.color
+        idImp = cartucho.id_impresora_id
+        
+        
+        cartuchoCompleto = marca + " " + modelo + " " + color
+        datosImpresora = Impresoras.objects.filter(id_impresora=idImp)
+        for impresora in datosImpresora:
+            marcas = impresora.marca
+            modelos = impresora.modelo
+        
+        impresoraCompleta = marcas + " " + modelos
+        cartuchosNoti.append([impresoraCompleta, cartuchoCompleto])
+    
+    return cartuchosNoti
+
+def notificacionLimpiezas():
+    limpiezas = CalendarioMantenimiento.objects.all()
+    fecha = datetime.now()
+    date = fecha.date()
+    año = date.strftime("%Y") #2021
+    mes = date.strftime("%m") #09
+    dia = date.strftime("%d") #23
+    int_dia = int(dia)
+        
+    mes_numero = int(fecha.month)
+        
+        
+    arreglo_meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
+        
+    posicion = 0
+    for mes2 in arreglo_meses:
+        posicion += 1
+        if posicion == mes_numero:
+            mes_texto = mes2
+        
+        
+        
+    limpiezasNoti = []
+    for limpieza in limpiezas:
+        fecha = limpieza.fecha  #23 08 2021
+        año_limpieza = fecha.strftime("%Y") #2021
+        mes_limpieza = fecha.strftime("%m") #08
+        dia_limpieza = fecha.strftime("%d") #23
+        int_dia_limpieza = int(dia_limpieza)
+            
+        resta = int(mes) - int(mes_limpieza)
+            
+        resta_dias= int(dia)+4 #27
+            
+        if año_limpieza == año:
+                
+            if resta == 1:
+                if int_dia_limpieza == int_dia:
+                        
+                    #si está dentro del mes y el dia exacto de limpieza
+                        
+                    if limpieza.operacion == "Limpieza externa - Limpieza interna - ":
+                        id_equipo = limpieza.id_equipo_id
+                            
+                        intEquipo = int(id_equipo)
+                        datosEquipo = Equipos.objects.filter(id_equipo = intEquipo)
+                            
+                        for datoEquipo in datosEquipo:
+                            id_empleado = datoEquipo.id_empleado_id
+                            id_equipo = datoEquipo.id_equipo
+                            tipo = datoEquipo.tipo
+                            marca = datoEquipo.marca
+                            modelo = datoEquipo.modelo
+                            
+                            equipoCompleto = tipo + " " + marca + " " + modelo
+                            
+                            if id_empleado == None:
+                                fecha = limpieza.fecha   
+                                empleado= "Sin Propietario"
+                                
+                            else:
+                                
+                                datosEmpleado = Empleados.objects.filter(id_empleado = id_empleado)
+                                        
+                                for datoEmpleado in datosEmpleado:
+                                    nombree = datoEmpleado.nombre
+                                    apellidose = datoEmpleado.apellidos
+                                        
+                                    fecha = limpieza.fecha   
+                                    empleado =  nombree + " " + apellidose
+                                    
+                        limpiezasNoti.append([equipoCompleto, empleado])
+                
+            
+                
+    return limpiezasNoti
+
+def numNoti():
+    
+    limpiezas = notificacionLimpiezas()
+    cartuchos = notificacionInsumos()
+    
+    contadorlimp = 0
+    contadorCart = 0
+    for limpieza in limpiezas:
+        contadorlimp += 1
+    
+    for cartucho in cartuchos:
+        contadorCart += 1
+        
+    suma = contadorlimp + contadorCart
+    
+    num_notificaciones = str(suma)
+    
+    return num_notificaciones
+                
+            
+
 
 # Create your views here.
 def login(request):
@@ -104,6 +224,7 @@ def inicio(request):
         baseDir = str(settings.BASE_DIR)
         
         estaEnInicio = True
+        id_admin=request.session["idSesion"]
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
         correo = request.session['correoSesion']
@@ -307,12 +428,20 @@ def inicio(request):
             del request.session['recienIniciado']
 
             recienIniciado = True
+            cartuchosNoti = notificacionInsumos()
+            mantenimientosNoti = notificacionLimpiezas()
+            numeroNoti = numNoti()
             
-            return render(request, "Inicio/inicio.html", {"estaEnInicio":estaEnInicio, "nombreCompleto":nombreCompleto, "correo":correo, "recienIniciado":recienIniciado, "nombre": nombre, "cantidades":cantidades, "datosLimpiezas":datosLimpiezas, 
-                                                      "lista":lista, "baseDir":baseDir, "equipos_año":equipos_año, "impresoras_año":impresoras_año, "dia":dia, "mes_texto":mes_texto, "resta_dias":resta_dias, "año":año})
+            return render(request, "Inicio/inicio.html", {"estaEnInicio":estaEnInicio,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "recienIniciado":recienIniciado, "nombre": nombre, "cantidades":cantidades, "datosLimpiezas":datosLimpiezas, 
+                                                      "lista":lista, "baseDir":baseDir, "equipos_año":equipos_año, "impresoras_año":impresoras_año, "dia":dia, "mes_texto":mes_texto, "resta_dias":resta_dias, "año":año, "cartuchosNoti":cartuchosNoti
+                                                      , "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
         else:
-            return render(request, "Inicio/inicio.html", {"estaEnInicio":estaEnInicio, "nombreCompleto":nombreCompleto, "correo":correo, "cantidades":cantidades, "datosLimpiezas":datosLimpiezas, 
-                                                      "lista":lista, "baseDir":baseDir,"equipos_año":equipos_año, "impresoras_año":impresoras_año,  "dia":dia, "mes_texto":mes_texto, "resta_dias":resta_dias, "año":año})
+            cartuchosNoti = notificacionInsumos()
+            mantenimientosNoti = notificacionLimpiezas()
+            numeroNoti = numNoti()
+            return render(request, "Inicio/inicio.html", {"estaEnInicio":estaEnInicio,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cantidades":cantidades, "datosLimpiezas":datosLimpiezas, 
+                                                      "lista":lista, "baseDir":baseDir,"equipos_año":equipos_año, "impresoras_año":impresoras_año,  "dia":dia, "mes_texto":mes_texto, "resta_dias":resta_dias, "año":año ,"cartuchosNoti":cartuchosNoti
+                                                      ,"mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
     
     #Si le da al inicio y no hay una sesión iniciada..
     else:
@@ -323,6 +452,7 @@ def verAreas(request):
     if "idSesion" in request.session:
 
         estaEnVerAreas = True
+        id_admin=request.session["idSesion"]
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
         correo = request.session['correoSesion']
@@ -346,8 +476,12 @@ def verAreas(request):
             cantidad_empleados.append(numero_empleados)
             
         listaAreas = zip(infoAreas, cantidad_empleados)
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
 
-        return render(request, "Areas/verAreas.html", {"estaEnVerAreas":estaEnVerAreas, "nombreCompleto":nombreCompleto, "correo":correo, "listaAreas":listaAreas})
+        return render(request, "Areas/verAreas.html", {"estaEnVerAreas":estaEnVerAreas,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "listaAreas":listaAreas})
     else:
         return redirect('/login/') #redirecciona a url de inicio
 
@@ -357,9 +491,13 @@ def agregarAreas(request):
     if "idSesion" in request.session:
 
         estaEnAgregarAreas = True
+        id_admin=request.session["idSesion"]
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
         correo = request.session['correoSesion']
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
         
         nombreCompleto = nombre + " " + apellidos
         
@@ -414,21 +552,28 @@ def agregarAreas(request):
             if areaExiste:
                 errorExiste= True
                 mensajeError = "El departamento " + area + " ya existe en la base de datos"
-                return render(request,"Areas/agregarAreas.html", {"estaEnAgregarAreas": estaEnAgregarAreas, "arregloColores":colores, "nombresColores":nombresColores,
+                
+                
+                
+                return render(request,"Areas/agregarAreas.html", {"estaEnAgregarAreas": estaEnAgregarAreas, "id_admin":id_admin,"arregloColores":colores, "nombresColores":nombresColores,
                 "infoAreas":infoAreas, "colorExiste": coloresSi, "colorInexistente": coloresNo, "nombreCompleto":nombreCompleto, "correo":correo, "error": errorExiste,
-                "mensaje": mensajeError})
+                "mensaje": mensajeError, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
             else:
                 
                 registro = Areas(nombre=area, color=color)
                 registro.save()
                 guardadoExito = True
                 mensajeExito = "El departamento " + area + " fue agregado exitosamente"
-                return render(request,"Areas/agregarAreas.html", {"estaEnAgregarAreas": estaEnAgregarAreas, "arregloColores":colores, "nombresColores":nombresColores,
-                "infoAreas":infoAreas, "colorExiste": coloresSi, "colorInexistente": coloresNo, "nombreCompleto":nombreCompleto, "correo":correo, "guardado": guardadoExito,
-                "mensaje": mensajeExito})
                 
 
-        return render(request,"Areas/agregarAreas.html", {"estaEnAgregarAreas": estaEnAgregarAreas, "arregloColores":colores, "nombresColores":nombresColores, "infoAreas":infoAreas, "colorExiste": coloresSi, "colorInexistente": coloresNo, "nombreCompleto":nombreCompleto, "correo":correo})
+                return render(request,"Areas/agregarAreas.html", {"estaEnAgregarAreas": estaEnAgregarAreas,"id_admin":id_admin, "arregloColores":colores, "nombresColores":nombresColores,
+                "infoAreas":infoAreas, "colorExiste": coloresSi, "colorInexistente": coloresNo, "nombreCompleto":nombreCompleto, "correo":correo, "guardado": guardadoExito,
+                "mensaje": mensajeExito, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                
+
+        return render(request,"Areas/agregarAreas.html", {"estaEnAgregarAreas": estaEnAgregarAreas, "id_admin":id_admin,"arregloColores":colores, "nombresColores":nombresColores, 
+                                                          "infoAreas":infoAreas, "colorExiste": coloresSi, "colorInexistente": coloresNo, "nombreCompleto":nombreCompleto, "correo":correo, 
+                                                          "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
     else:
         return redirect('/login/') #redirecciona a url de inicio
 
@@ -438,10 +583,14 @@ def verEmpleados(request):
     if "idSesion" in request.session:
 
         estaEnVerEmpleados = True
+        id_admin=request.session["idSesion"]
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
         correo = request.session['correoSesion']
         nombreCompleto = nombre + " " + apellidos
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
         
         empleadosActivos = Empleados.objects.filter(activo__icontains= "A")
         empleadosInactivos = Empleados.objects.filter(activo__icontains= "I")
@@ -490,15 +639,16 @@ def verEmpleados(request):
             alta = True
             mensaje = "Se dio de alta al empleado " + request.session['idEmpleadoAlta']
             del request.session["idEmpleadoAlta"]
-            return render(request,"Empleados/verEmpleados.html", {"estaEnVerEmpleados": estaEnVerEmpleados, "nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"lista1":lista1, "alta":alta, "mensaje":mensaje})
+            return render(request,"Empleados/verEmpleados.html", {"estaEnVerEmpleados": estaEnVerEmpleados,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"lista1":lista1, "alta":alta, "mensaje":mensaje, 
+                                                                  "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
         
         if "idEmpleadoBaja" in request.session:
             baja = True
             mensaje = "Se dio de baja al empleado " + request.session['idEmpleadoBaja']
             del request.session["idEmpleadoBaja"]
-            return render(request,"Empleados/verEmpleados.html", {"estaEnVerEmpleados": estaEnVerEmpleados, "nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"lista1":lista1, "baja":baja, "mensaje":mensaje})
+            return render(request,"Empleados/verEmpleados.html", {"estaEnVerEmpleados": estaEnVerEmpleados, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"lista1":lista1, "baja":baja, "mensaje":mensaje, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
         
-        return render(request,"Empleados/verEmpleados.html", {"estaEnVerEmpleados": estaEnVerEmpleados, "nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"lista1":lista1 })
+        return render(request,"Empleados/verEmpleados.html", {"estaEnVerEmpleados": estaEnVerEmpleados, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"lista1":lista1, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
     else:
         return redirect('/login/') #redirecciona a url de inicio
 
@@ -509,11 +659,15 @@ def agregarEmpleados(request):
     if "idSesion" in request.session:
         
         estaEnAgregarEmpleados = True
-        id_empleado_admin = request.session['idSesion']
+        id_admin=request.session["idSesion"]
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
         correo = request.session['correoSesion']
         nombreCompleto = nombre + " " + apellidos
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
 
         #información de areas para select
         info_areas = Areas.objects.only('id_area', 'nombre', 'color')
@@ -535,47 +689,62 @@ def agregarEmpleados(request):
                 if empleado.apellidos == apellido_recibido and empleado.correo == correo_recibido:
                     yaExiste = True
                     texto_error = "El empleado "+ empleado.nombre + " ya existe en la Base de Datos!"
-                    return render(request,"Empleados/agregarEmpleados.html", {"estaEnAgregarEmpleados": estaEnAgregarEmpleados, "nombreCompleto":nombreCompleto, "correo":correo, "infoAreas":info_areas, "yaExiste":yaExiste, "textoError":texto_error})
+                    return render(request,"Empleados/agregarEmpleados.html", {"estaEnAgregarEmpleados": estaEnAgregarEmpleados, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "infoAreas":info_areas, "yaExiste":yaExiste, "textoError":texto_error})
                 else:
                     noExiste = True
                     if imagen_recibida == "":
                         registro = Empleados(nombre=nombre_recibido, apellidos=apellido_recibido, 
                         id_area = Areas.objects.get(id_area = area_recibida), puesto=puesto_recibido, correo = correo_recibido, contraseña=contra_recibida, activo = "A" )
-                        registro.save()
                         
-                        datosEmpleado = Empleados.objects.filter(apellidos = apellido_recibido)
                         
-                        for dato in datosEmpleado:
-                            id_empleado_agregado = dato.id_emplado
-                        
-                        nombreCompletoEmp = nombre_recibido + " " + apellido_recibido
-                        texto = "Se agregó al empleado "+ nombreCompletoEmp
-                        fecha = datetime.now()
-                        registro_bitacora = Bitacora(id_empleado = Empleados.objects.get(id_empleado = id_empleado_admin), tabla = "Empleados", id_objeto = id_empleado_agregado, operacion = texto, fecha_hora = fecha)
-                        registro_bitacora.save()
-                        
-                        texto_existe = "El empleado "+ nombre_recibido + " fue agregado exitosamente!"
-                        return render(request,"Empleados/agregarEmpleados.html", {"estaEnAgregarEmpleados": estaEnAgregarEmpleados, "nombreCompleto":nombreCompleto, "correo":correo, "infoAreas":info_areas, "noExiste":noExiste, "textoExiste":texto_existe})
+                        if registro:
+                            
+                            registro.save()
+                            
+                            datosEmpleado = Empleados.objects.filter(apellidos = apellido_recibido)
+                            
+                            for dato in datosEmpleado:
+                                id_empleado_agregado = dato.id_emplado
+                            
+                            nombreCompletoEmp = nombre_recibido + " " + apellido_recibido
+                            id_sistemas = request.session['idSesion']
+                
+                            fecha = datetime.now()
+                            
+                            texto= "Se agregó al empleado " + nombreCompletoEmp 
+                            registroBitacora= Bitacora(id_empleado=Empleados.objects.get(id_empleado=id_sistemas), tabla = "Empleados", id_objeto=id_empleado_agregado, operacion=texto, fecha_hora= fecha)
+                            registroBitacora.save()
+                           
+                            
+                            texto_existe = "El empleado "+ nombre_recibido + " fue agregado exitosamente!"
+                            return render(request,"Empleados/agregarEmpleados.html", {"estaEnAgregarEmpleados": estaEnAgregarEmpleados, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "infoAreas":info_areas, "noExiste":noExiste, "textoExiste":texto_existe, 
+                                                                                      "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
                     else:
                         registro = Empleados(nombre=nombre_recibido, apellidos=apellido_recibido, 
                         id_area = Areas.objects.get(id_area = area_recibida), puesto=puesto_recibido, correo = correo_recibido, contraseña=contra_recibida,imagen_empleado = imagen_recibida, activo = "A" )
-                        registro.save()
                         
-                        datosEmpleado = Empleados.objects.filter(apellidos = apellido_recibido)
-                        
-                        for dato in datosEmpleado:
-                            id_empleado_agregado = dato.id_empleado
-                        
-                        nombreCompletoEmp = nombre_recibido + " " + apellido_recibido
-                        texto = "Se agregó al empleado "+ nombreCompletoEmp
-                        fecha = datetime.now()
-                        registro_bitacora = Bitacora(id_empleado = Empleados.objects.get(id_empleado = id_empleado_admin), tabla = "Empleados", id_objeto = id_empleado_agregado, operacion = texto, fecha_hora = fecha)
-                        registro_bitacora.save()
-                        
-                        texto_existe = "El empleado "+ nombre_recibido + " fue agregado exitosamente!"
-                        return render(request,"Empleados/agregarEmpleados.html", {"estaEnAgregarEmpleados": estaEnAgregarEmpleados, "nombreCompleto":nombreCompleto, "correo":correo, "infoAreas":info_areas, "noExiste":noExiste, "textoExiste":texto_existe})
+                        if registro:
+                            registro.save()
+                            
+                            datosEmpleado = Empleados.objects.filter(apellidos = apellido_recibido)
+                            
+                            for dato in datosEmpleado:
+                                id_empleado_agregado = dato.id_empleado
+                            
+                            nombreCompletoEmp = nombre_recibido + " " + apellido_recibido
+                            id_sistemas = request.session['idSesion']
+                
+                            fecha = datetime.now()
+                            
+                            texto= "Se agregó al empleado " + nombreCompletoEmp 
+                            registroBitacora= Bitacora(id_empleado=Empleados.objects.get(id_empleado=id_sistemas), tabla = "Empleados", id_objeto=id_empleado_agregado, operacion=texto, fecha_hora= fecha)
+                            registroBitacora.save()
+                            texto_existe = "El empleado "+ nombre_recibido + " fue agregado exitosamente!"
+                            return render(request,"Empleados/agregarEmpleados.html", {"estaEnAgregarEmpleados": estaEnAgregarEmpleados, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "infoAreas":info_areas, "noExiste":noExiste, "textoExiste":texto_existe, 
+                                                                                      "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
 
-        return render(request,"Empleados/agregarEmpleados.html", {"estaEnAgregarEmpleados": estaEnAgregarEmpleados, "nombreCompleto":nombreCompleto, "correo":correo, "infoAreas":info_areas})
+        return render(request,"Empleados/agregarEmpleados.html", {"estaEnAgregarEmpleados": estaEnAgregarEmpleados, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "infoAreas":info_areas, 
+                                                                  "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
     else:
         return redirect('/login/') #redirecciona a url de inicio
 
@@ -586,10 +755,15 @@ def verEquipos(request):
     if "idSesion" in request.session:
         
         estaEnVerEquipos = True
+        id_admin=request.session["idSesion"]
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
         correo = request.session['correoSesion']
         nombreCompleto = nombre + " " + apellidos
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
         
         equiposActivos = Equipos.objects.filter(activo__icontains= "A")
         equiposInactivos = Equipos.objects.filter(activo__icontains= "I")
@@ -638,8 +812,8 @@ def verEquipos(request):
             else:
                 bajaExito= "Se dió de baja el " + request.session["idEquipoBaja"] + " con éxito!"
             del request.session["idEquipoBaja"]
-            return render(request, "Equipos/verEquipos.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "bajaEquipo":
-                bajaEquipo, "bajaExito": bajaExito, "equiposInactivos":equiposInactivos})
+            return render(request, "Equipos/verEquipos.html", {"estaEnVerEquipos": estaEnVerEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "bajaEquipo":
+                bajaEquipo, "bajaExito": bajaExito, "equiposInactivos":equiposInactivos, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
             
         if "idEquipoAlta" in request.session:
             altaEquipo= True
@@ -649,10 +823,11 @@ def verEquipos(request):
             
                 altaExito= "Se dió de alta el " + request.session["idEquipoAlta"] + " con éxito"
             del request.session["idEquipoAlta"]
-            return render(request, "Equipos/verEquipos.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,
-                                                            "altaEquipo": altaEquipo, "altaExito":altaExito})
+            return render(request, "Equipos/verEquipos.html", {"estaEnVerEquipos": estaEnVerEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,
+                                                            "altaEquipo": altaEquipo, "altaExito":altaExito, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
 
-        return render(request, "Equipos/verEquipos.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "equiposInactivos":equiposInactivos})
+        return render(request, "Equipos/verEquipos.html", {"estaEnVerEquipos": estaEnVerEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "equiposInactivos":equiposInactivos, 
+                                                           "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
 
     else:
         return redirect('/login/') #redirecciona a url de inicio
@@ -663,10 +838,15 @@ def infoEquipo(request):
     if "idSesion" in request.session:
             
         estaEnVerEquipos = True
+        id_admin=request.session["idSesion"]
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
         correo = request.session['correoSesion']
         nombreCompleto = nombre + " " + apellidos
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
         
         if request.method == "POST":
             
@@ -693,11 +873,11 @@ def infoEquipo(request):
                         
                         mantenimientos= CalendarioMantenimiento.objects.filter(id_equipo_id__id_equipo__icontains=id_equipo)
                         if mantenimientos:
-                            return render(request, "Equipos/infoEquipo.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "datosEquipo":datosEquipo,
-                                                            "compra":compra, "renovar": renovar, "sinPropietario":sinPropietario, "mantenimientos":mantenimientos})
+                            return render(request, "Equipos/infoEquipo.html", {"estaEnVerEquipos": estaEnVerEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "datosEquipo":datosEquipo,
+                                                            "compra":compra, "renovar": renovar, "sinPropietario":sinPropietario, "mantenimientos":mantenimientos, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
                         else:
-                            return render(request, "Equipos/infoEquipo.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "datosEquipo":datosEquipo,
-                                                            "compra":compra, "renovar": renovar, "sinPropietario":sinPropietario})  
+                            return render(request, "Equipos/infoEquipo.html", {"estaEnVerEquipos": estaEnVerEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "datosEquipo":datosEquipo,
+                                                            "compra":compra, "renovar": renovar, "sinPropietario":sinPropietario, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})  
                     
                     else:
                         datosPropietario= Empleados.objects.filter(id_empleado=propietario)
@@ -722,18 +902,18 @@ def infoEquipo(request):
                         mantenimientos= CalendarioMantenimiento.objects.filter(id_equipo_id__id_equipo__icontains=id_equipo)
                         
                         if mantenimientos:
-                            return render(request, "Equipos/infoEquipo.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "datosEquipo":datosEquipo,
+                            return render(request, "Equipos/infoEquipo.html", {"estaEnVerEquipos": estaEnVerEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "datosEquipo":datosEquipo,
                                                             "nombreEmpleado": nombreEmpleado, "nombreArea": nombreArea, "colorArea": colorArea, "compra":compra, "renovar": renovar, "sinPropietario":sinPropietario,
-                                                            "mantenimientos":mantenimientos})
+                                                            "mantenimientos":mantenimientos, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
                         else:
-                            return render(request, "Equipos/infoEquipo.html", {"estaEnVerEquipos": estaEnVerEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "datosEquipo":datosEquipo,
-                                                            "nombreEmpleado": nombreEmpleado, "nombreArea": nombreArea, "colorArea": colorArea, "compra":compra, "renovar": renovar, "sinPropietario":sinPropietario})
+                            return render(request, "Equipos/infoEquipo.html", {"estaEnVerEquipos": estaEnVerEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "datosEquipo":datosEquipo,
+                                                            "nombreEmpleado": nombreEmpleado, "nombreArea": nombreArea, "colorArea": colorArea, "compra":compra, "renovar": renovar, "sinPropietario":sinPropietario, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
             else:
                 
                 noEncontro = True
                 textoError = "No se encontró al equipo"
                 
-                return render (request, "Equipos/qrEquipo.html", {"noEncontro":noEncontro, "textoError":textoError})
+                return render (request, "Equipos/qrEquipo.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo,"noEncontro":noEncontro, "textoError":textoError, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
     else:
         return redirect('/login/') #redirecciona a url de inicio        
 
@@ -742,10 +922,15 @@ def agregarEquipos(request):
     if "idSesion" in request.session:
 
         estaEnAgregarEquipos = True
+        id_admin=request.session["idSesion"]
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
         correo = request.session['correoSesion']
         nombreCompleto = nombre + " " + apellidos
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
         
         info_empleados = Empleados.objects.only('id_empleado', 'nombre', 'apellidos') #todos los empleados
         empleadosEquipo = Equipos.objects.only('id_empleado_id') #Los ids de los empleados que estan con equipos
@@ -804,6 +989,14 @@ def agregarEquipos(request):
                         
                         registroAntiguiedad = Renovacion_Equipos(id_equipo = Equipos.objects.get(id_equipo = registros), fecha_compra = fecha_normal, fecha_renov = fecha_renovacion)
                         registroAntiguiedad.save()
+                        
+                        id_sistemas = request.session['idSesion']
+                
+                        fecha = datetime.now()
+                        equipo= tipo_recibido + " " + marca_recibido + " " + modelo_recibida
+                        texto= "Se agregó al equipo " + equipo 
+                        registroBitacora= Bitacora(id_empleado=Empleados.objects.get(id_empleado=id_sistemas), tabla = "Equipos", id_objeto=registros, operacion=texto, fecha_hora= fecha)
+                        registroBitacora.save()
                 else:
                     registroCompu=Equipos(tipo=tipo_recibido,marca=marca_recibido,modelo= modelo_recibida,
                                     color=color_recibido,imagen= imagen_recibido, pdf=pdf_recibido,
@@ -819,9 +1012,19 @@ def agregarEquipos(request):
                         
                         registroAntiguiedad = Renovacion_Equipos(id_equipo = Equipos.objects.get(id_equipo = id_equipo_agregado), fecha_compra = fecha_normal, fecha_renov = fecha_renovacion)
                         registroAntiguiedad.save()
+                        
+                        id_sistemas = request.session['idSesion']
+                
+                        fecha = datetime.now()
+                        equipo= tipo_recibido + " " + marca_recibido + " " + modelo_recibida
+                        texto= "Se agregó al equipo " + equipo 
+                        registroBitacora= Bitacora(id_empleado=Empleados.objects.get(id_empleado=id_sistemas), tabla = "Equipos", id_objeto=ultimo_registro, operacion=texto, fecha_hora= fecha)
+                        registroBitacora.save()
+                        
                 compuSin = True
                 textoCompu = "Se ha guardado "+tipo_recibido +" "+ marca_recibido + " " + modelo_recibida + " sin propietario!"
-                return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos": estaEnAgregarEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "compuSin": compuSin, "textoCompu":textoCompu})
+                return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos": estaEnAgregarEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "compuSin": compuSin, "textoCompu":textoCompu, 
+                                                                      "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
                 
                 
             elif propietario_recibida != "nopropietario":
@@ -849,6 +1052,14 @@ def agregarEquipos(request):
                         
                         registroAntiguiedad = Renovacion_Equipos(id_equipo = Equipos.objects.get(id_equipo = id_equipo_agregado), fecha_compra = fecha_normal, fecha_renov = fecha_renovacion)
                         registroAntiguiedad.save()
+                        id_sistemas = request.session['idSesion']
+                
+                        fecha = datetime.now()
+                        equipo= tipo_recibido + " " + marca_recibido + " " + modelo_recibida
+                        texto= "Se agregó al equipo " + equipo 
+                        registroBitacora= Bitacora(id_empleado=Empleados.objects.get(id_empleado=id_sistemas), tabla = "Equipos", id_objeto=ultimo_registro, operacion=texto, fecha_hora= fecha)
+                        registroBitacora.save()
+                        
                 else: 
                     registroCompu=Equipos(tipo=tipo_recibido,marca=marca_recibido,modelo= modelo_recibida,
                                     color=color_recibido,imagen= imagen_recibido, pdf=pdf_recibido,
@@ -864,7 +1075,16 @@ def agregarEquipos(request):
                         
                         registroAntiguiedad = Renovacion_Equipos(id_equipo = Equipos.objects.get(id_equipo = id_equipo_agregado), fecha_compra = fecha_normal, fecha_renov = fecha_renovacion)
                         registroAntiguiedad.save()
-                return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos": estaEnAgregarEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "compuCon": compuCon, "textoCompu":textoCompu})
+                        id_sistemas = request.session['idSesion']
+                
+                        fecha = datetime.now()
+                        equipo= tipo_recibido + " " + marca_recibido + " " + modelo_recibida
+                        texto= "Se agregó al equipo " + equipo 
+                        registroBitacora= Bitacora(id_empleado=Empleados.objects.get(id_empleado=id_sistemas), tabla = "Equipos", id_objeto=ultimo_registro, operacion=texto, fecha_hora= fecha)
+                        registroBitacora.save()
+                        
+                return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos": estaEnAgregarEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "compuCon": compuCon, "textoCompu":textoCompu, 
+                                                                      "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
         
         if empleadosEquipo:
             
@@ -875,9 +1095,9 @@ def agregarEquipos(request):
                     else:
                         empleadosnoEq.append([empleados.id_empleado,empleados.nombre,empleados.apellidos])
                         
-            return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos": estaEnAgregarEquipos, "nombreCompleto":nombreCompleto, "correo":correo,"info_empleados":info_empleados })
+            return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos": estaEnAgregarEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo,"info_empleados":info_empleados, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
         
-        return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos": estaEnAgregarEquipos, "nombreCompleto":nombreCompleto, "correo":correo,"info_empleados": info_empleados})
+        return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos": estaEnAgregarEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo,"info_empleados": info_empleados, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
     else:
         return redirect('/login/') #redirecciona a url de inicio
 
@@ -886,10 +1106,15 @@ def renovacionEquipos(request):
     if "idSesion" in request.session:
         
         estaEnRenovacionEquipos = True
+        id_admin=request.session["idSesion"]
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
         correo = request.session['correoSesion']
         nombreCompleto = nombre + " " + apellidos
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
         
         equiposRenov = Renovacion_Equipos.objects.all()
         datosTabla = []
@@ -927,7 +1152,7 @@ def renovacionEquipos(request):
             
         
         
-        return render(request, "Equipos/renovacionEquipos.html", {"estaEnRenovacionEquipos": estaEnRenovacionEquipos, "nombreCompleto":nombreCompleto, "correo":correo, "datosTabla":datosTabla})
+        return render(request, "Equipos/renovacionEquipos.html", {"estaEnRenovacionEquipos": estaEnRenovacionEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "datosTabla":datosTabla, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -936,10 +1161,15 @@ def verImpresoras(request):
     if "idSesion" in request.session:
 
         estaEnVerImpresoras = True
+        id_admin=request.session["idSesion"]
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
         correo = request.session['correoSesion']
         nombreCompleto = nombre + " " + apellidos
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
         
         
         impresorasActivas = Impresoras.objects.filter(activo__icontains= "A")
@@ -989,17 +1219,17 @@ def verImpresoras(request):
             alta = True
             mensaje = "Se dio de alta la impresora " + request.session['idImpresoraAlta']
             del request.session["idImpresoraAlta"]
-            return render(request,"Impresoras/verImpresoras.html",{"estaEnVerImpresoras": estaEnVerImpresoras, "nombreCompleto":nombreCompleto, "correo":correo, "lista": lista,
-                                                            "lista2":lista2, "alta": alta, "mensaje": mensaje})
+            return render(request,"Impresoras/verImpresoras.html",{"estaEnVerImpresoras": estaEnVerImpresoras, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista,
+                                                            "lista2":lista2, "alta": alta, "mensaje": mensaje, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
         if "idImpresoraBaja" in request.session:
             baja = True
             mensaje = "Se dio de baja la impresora " + request.session['idImpresoraBaja']
             del request.session["idImpresoraBaja"]
-            return render(request,"Impresoras/verImpresoras.html",{"estaEnVerImpresoras": estaEnVerImpresoras, "nombreCompleto":nombreCompleto, "correo":correo, "lista": lista,
-                                                            "lista2":lista2, "baja": baja, "mensaje": mensaje})
+            return render(request,"Impresoras/verImpresoras.html",{"estaEnVerImpresoras": estaEnVerImpresoras, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista,
+                                                            "lista2":lista2, "baja": baja, "mensaje": mensaje, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
 
-        return render(request,"Impresoras/verImpresoras.html",{"estaEnVerImpresoras": estaEnVerImpresoras, "nombreCompleto":nombreCompleto, "correo":correo, "lista": lista,
-                                                            "lista2":lista2})
+        return render(request,"Impresoras/verImpresoras.html",{"estaEnVerImpresoras": estaEnVerImpresoras, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista,
+                                                            "lista2":lista2, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
     else:
         return redirect('/login/') #redirecciona a url de inicio
 
@@ -1008,10 +1238,15 @@ def agregarImpresoras(request):
     if "idSesion" in request.session:
 
         estaEnAgregarImpresoras = True
+        id_admin=request.session["idSesion"]
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
         correo = request.session['correoSesion']
         nombreCompleto = nombre + " " + apellidos
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
         
         info_areas = Areas.objects.only('id_area', 'nombre', 'color')
         if request.method == "POST":
@@ -1049,12 +1284,20 @@ def agregarImpresoras(request):
                         
                         registroAntiguiedad = Renovacion_Impresoras(id_impresora = Impresoras.objects.get(id_impresora = registros), fecha_compra = fecha_normal, fecha_renov = fecha_renovacion)
                         registroAntiguiedad.save()
+                        
+                        id_sistemas = request.session['idSesion']
+                
+                        fecha = datetime.now()
+                        impresora= marca_recibido + " " + modelo_recibido
+                        texto= "Se agregó la impresora " + impresora 
+                        registroBitacora= Bitacora(id_empleado=Empleados.objects.get(id_empleado=id_sistemas), tabla = "Impresoras", id_objeto=registros, operacion=texto, fecha_hora= fecha)
+                        registroBitacora.save()
             
             impresoraAgregada = True
             
             impresoraExito= "La impresora " + marca_recibido + " " + modelo_recibido + " se guardó con éxito" 
-            return render(request, "Impresoras/agregarImpresoras.html",{"estaEnAgregarImpresoras": estaEnAgregarImpresoras, "nombreCompleto":nombreCompleto, "correo":correo, "info_areas": info_areas,
-                                                                        "impresoraAgregada":impresoraAgregada, "impresoraExito": impresoraExito})
+            return render(request, "Impresoras/agregarImpresoras.html",{"estaEnAgregarImpresoras": estaEnAgregarImpresoras, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "info_areas": info_areas,
+                                                                        "impresoraAgregada":impresoraAgregada, "impresoraExito": impresoraExito, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
             
         
                 
@@ -1064,7 +1307,7 @@ def agregarImpresoras(request):
         
         
         
-        return render(request, "Impresoras/agregarImpresoras.html",{"estaEnAgregarImpresoras": estaEnAgregarImpresoras, "nombreCompleto":nombreCompleto, "correo":correo, "info_areas": info_areas})
+        return render(request, "Impresoras/agregarImpresoras.html",{"estaEnAgregarImpresoras": estaEnAgregarImpresoras,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "info_areas": info_areas, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -1073,10 +1316,15 @@ def renovacionImpresoras(request):
     if "idSesion" in request.session:
         
         estaEnRenovacionImpresoras = True
+        id_admin=request.session["idSesion"]
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
         correo = request.session['correoSesion']
         nombreCompleto = nombre + " " + apellidos
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
         
         ImpresorasRenov = Renovacion_Impresoras.objects.all()
         datosTabla = []
@@ -1103,8 +1351,8 @@ def renovacionImpresoras(request):
         
         
         
-        return render(request, "Impresoras/renovacionImpresoras.html", {"estaEnRenovacionImpresoras":estaEnRenovacionImpresoras, "nombreCompleto":nombreCompleto, "correo":correo, 
-                                                                        "datosTabla":datosTabla})
+        return render(request, "Impresoras/renovacionImpresoras.html", {"estaEnRenovacionImpresoras":estaEnRenovacionImpresoras, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, 
+                                                                        "datosTabla":datosTabla, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
     else:
         return redirect('/login/') #redirecciona a url de inicio
 
@@ -1112,10 +1360,15 @@ def infoImpresora(request):
     if "idSesion" in request.session:
     
         estaEnVerImpresoras = True
+        id_admin=request.session["idSesion"]
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
         correo = request.session['correoSesion']
         nombreCompleto = nombre + " " + apellidos
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
         
         if request.method == "POST":
             
@@ -1156,8 +1409,8 @@ def infoImpresora(request):
                         #if mantenimientos:
                             #return render(request, "Impresoras/infoImpresora.html", {"estaEnVerImpresoras": estaEnVerImpresoras, "nombreCompleto":nombreCompleto, "correo":correo, "datosEquipo":datosEquipo, "compra":compra, "renovar": renovar, "sinPropietario":sinPropietario, "mantenimientos":mantenimientos})
                         #else:
-                    return render(request, "Impresoras/infoImpresora.html", {"estaEnVerImpresoras": estaEnVerImpresoras, "nombreCompleto":nombreCompleto, "correo":correo, "datosImpresora":datosImpresora,
-                                                            "compra":compra, "renovar": renovar, "lista":lista, "cartuchos":cartuchos })  
+                    return render(request, "Impresoras/infoImpresora.html", {"estaEnVerImpresoras": estaEnVerImpresoras, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "datosImpresora":datosImpresora,
+                                                            "compra":compra, "renovar": renovar, "lista":lista, "cartuchos":cartuchos, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})  
                     
                     
             else:
@@ -1165,7 +1418,7 @@ def infoImpresora(request):
                 noEncontro = True
                 textoError = "No se encontró la impresora"
                 
-                return render (request, "Impresoras/qrImpresora.html", {"noEncontro":noEncontro, "textoError":textoError})
+                return render (request, "Impresoras/qrImpresora.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo,"noEncontro":noEncontro, "textoError":textoError, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
     else:
         return redirect('/login/') #redirecciona a url de inicio   
     
@@ -1175,10 +1428,15 @@ def verInsumos(request):
     if "idSesion" in request.session:
         Insumos = True
         estaEnVerInsumos = True
+        id_admin=request.session["idSesion"]
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
         correo = request.session['correoSesion']
         nombreCompleto = nombre + " " + apellidos
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
         
         datosCartuchos = Cartuchos.objects.all()
         
@@ -1195,17 +1453,17 @@ def verInsumos(request):
                     modeloImpresora = datos.modelo
                 
                     impresoras.append([marcaImpresora, modeloImpresora])
-        
+        lista = zip(datosCartuchos, impresoras)
         if "idInsumoActualizado" in request.session:
             insumoActualizado=True
             textoActualizado= request.session['idInsumoActualizado']
             del request.session["idInsumoActualizado"]
             
-            return render(request, "Insumos/verInsumos.html",{"Insumos": Insumos, "estaEnVerInsumos":estaEnVerInsumos, "nombreCompleto":nombreCompleto, "correo":correo, "impresoras": impresoras, 
-                                                        "datosCartuchos":datosCartuchos, "insumoActualizado":insumoActualizado, "textoActualizado":textoActualizado})    
+            return render(request, "Insumos/verInsumos.html",{"Insumos": Insumos, "estaEnVerInsumos":estaEnVerInsumos,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "impresoras": impresoras, 
+                                                        "datosCartuchos":datosCartuchos, "insumoActualizado":insumoActualizado, "textoActualizado":textoActualizado, "lista":lista, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})    
         
-        return render(request, "Insumos/verInsumos.html",{"Insumos": Insumos, "estaEnVerInsumos":estaEnVerInsumos, "nombreCompleto":nombreCompleto, "correo":correo, "impresoras": impresoras, 
-                                                      "datosCartuchos":datosCartuchos})
+        return render(request, "Insumos/verInsumos.html",{"Insumos": Insumos, "estaEnVerInsumos":estaEnVerInsumos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "impresoras": impresoras, 
+                                                      "datosCartuchos":datosCartuchos, "lista":lista, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -1214,10 +1472,16 @@ def agregarInsumos(request):
     if "idSesion" in request.session:
         
         estaEnAgregarInsumos = True
+        id_admin=request.session["idSesion"]
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
         correo = request.session['correoSesion']
         nombreCompleto = nombre + " " + apellidos
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+        
         Insumos = True
         datosImpresoras = Impresoras.objects.all()
         if request.method == "POST":
@@ -1235,15 +1499,32 @@ def agregarInsumos(request):
         
             registroInsumos=Cartuchos(marca=marca_recibido, modelo= modelo_recibido,nuserie=numserie_recibida, cantidad= cantidad_recibida, color= color_recibida,
                                         imagenCartucho=imagen_recibida,id_impresora = Impresoras.objects.get(id_impresora= impresora_recibida))
-            registroInsumos.save()
-            insumoAgregado = True
             
-            insumoExito= "El insumo " + marca_recibido + " " + modelo_recibido + " se guardó con éxito" 
-            return render(request,"Insumos/agregarInsumos.html",{"estaEnAgregarInsumos": estaEnAgregarInsumos, "Insumos": Insumos, "nombreCompleto":nombreCompleto, "correo":correo, 
-                                                            "datosImpresoras":datosImpresoras, "insumoAgregado": insumoAgregado, "insumoExito": insumoExito})
-        
-        return render(request,"Insumos/agregarInsumos.html",{"estaEnAgregarInsumos": estaEnAgregarInsumos, "Insumos": Insumos, "nombreCompleto":nombreCompleto, "correo":correo, 
-                                                         "datosImpresoras":datosImpresoras})
+            
+            if registroInsumos:
+                registroInsumos.save()
+                ultimo_registro = Cartuchos.objects.count() #1
+                        
+                
+                
+                id_sistemas = request.session['idSesion']
+                
+                fecha = datetime.now()
+                cartucho= marca_recibido + " " + modelo_recibido
+                texto= "Se agregó el insumo " + cartucho
+                registroBitacora= Bitacora(id_empleado=Empleados.objects.get(id_empleado=id_sistemas), tabla = "Insumos", id_objeto=ultimo_registro, operacion=texto, fecha_hora= fecha)
+                registroBitacora.save()
+                
+                
+            
+                insumoAgregado = True
+                
+                insumoExito= "El insumo " + marca_recibido + " " + modelo_recibido + " se guardó con éxito" 
+                return render(request,"Insumos/agregarInsumos.html",{"estaEnAgregarInsumos": estaEnAgregarInsumos, "Insumos": Insumos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, 
+                                                                "datosImpresoras":datosImpresoras, "insumoAgregado": insumoAgregado, "insumoExito": insumoExito, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+            
+        return render(request,"Insumos/agregarInsumos.html",{"estaEnAgregarInsumos": estaEnAgregarInsumos, "Insumos": Insumos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, 
+                                                            "datosImpresoras":datosImpresoras, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -1253,10 +1534,12 @@ def actualizarInsumos(request):
     
         Insumos = True
         estaEnVerInsumos = True
+        id_admin=request.session["idSesion"]
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
         correo = request.session['correoSesion']
         nombreCompleto = nombre + " " + apellidos
+        
         
         if request.method == "POST":
             
@@ -1278,9 +1561,20 @@ def actualizarInsumos(request):
             
             actualizar = Cartuchos.objects.filter(id_cartucho__icontains=id_cartucho_recibido).update(cantidad=cantida_recibida)
             
-            textoCartucho = "Se ha actualizado el stock del cartucho "+marca+" "+modelo+" de la impresora "+marcaImpresora + " "+modeloImpresora +"!"
+            if actualizar:
+                id_sistemas = request.session['idSesion']
                 
-            request.session['idInsumoActualizado'] = textoCartucho
+                fecha = datetime.now()
+                cartucho= marca + " " + modelo
+                texto= "Se editó el insumo " + cartucho + " a: " + cantida_recibida + " cartuchos." 
+                registroBitacora= Bitacora(id_empleado=Empleados.objects.get(id_empleado=id_sistemas), tabla = "Insumos", id_objeto=id_cartucho_recibido, operacion=texto, fecha_hora= fecha)
+                registroBitacora.save()
+                
+                
+            
+                textoCartucho = "Se ha actualizado el stock del cartucho "+marca+" "+modelo+" de la impresora "+marcaImpresora + " "+modeloImpresora +"!"
+                    
+                request.session['idInsumoActualizado'] = textoCartucho
             
             return redirect('/verInsumos/')
     else:
@@ -1292,10 +1586,15 @@ def verProgramas(request):
     if "idSesion" in request.session:
 
         estaEnVerProgramas = True
+        id_admin=request.session["idSesion"]
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
         correo = request.session['correoSesion']
         nombreCompleto = nombre + " " + apellidos
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
         
         registrosProgramas = Programas.objects.all()
         
@@ -1341,12 +1640,13 @@ def verProgramas(request):
                         
                     
             
-            return render(request,"Programas/verProgramas.html",{"estaEnVerProgramas": estaEnVerProgramas, "nombreCompleto":nombreCompleto, "correo":correo,
+            return render(request,"Programas/verProgramas.html",{"estaEnVerProgramas": estaEnVerProgramas, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo,
                                                                 "registrosProgramas": registrosProgramas, "nombreArea": nombreArea, "colorArea":colorArea, "id_area_recibido":id_area_recibido, "lista": lista,
-                                                                "n":n, "programaEncontrado":programaEncontrado, "areasPrograma":areasPrograma})
+                                                                "n":n, "programaEncontrado":programaEncontrado, "areasPrograma":areasPrograma, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
         
 
-        return render(request,"Programas/verProgramas.html",{"estaEnVerProgramas": estaEnVerProgramas, "nombreCompleto":nombreCompleto, "correo":correo, "registrosProgramas": registrosProgramas})
+        return render(request,"Programas/verProgramas.html",{"estaEnVerProgramas": estaEnVerProgramas, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "registrosProgramas": registrosProgramas, 
+                                                             "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
     else:
         return redirect('/login/') #redirecciona a url de inicio
 
@@ -1356,10 +1656,15 @@ def agregarProgramas(request):
     if "idSesion" in request.session:
 
         estaEnAgregarProgramas = True
+        id_admin=request.session["idSesion"]
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
         correo = request.session['correoSesion']
         nombreCompleto = nombre + " " + apellidos
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
         
         if request.method == "POST":
             
@@ -1379,14 +1684,14 @@ def agregarProgramas(request):
             
             registroExito =True
             mensajeExito = "Se a guardado el " + nombreVersion_recibido + " con éxito"
-            return render(request,"Programas/agregarProgramas.html",{"estaEnAgregarProgramas": estaEnAgregarProgramas, "nombreCompleto":nombreCompleto, "correo":correo, "registroExito": registroExito,
-                                                                    "mensajeExito":mensajeExito})
+            return render(request,"Programas/agregarProgramas.html",{"estaEnAgregarProgramas": estaEnAgregarProgramas, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "registroExito": registroExito,
+                                                                    "mensajeExito":mensajeExito, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
             
             
         
         
 
-        return render(request,"Programas/agregarProgramas.html",{"estaEnAgregarProgramas": estaEnAgregarProgramas, "nombreCompleto":nombreCompleto, "correo":correo})
+        return render(request,"Programas/agregarProgramas.html",{"estaEnAgregarProgramas": estaEnAgregarProgramas, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -1394,11 +1699,9 @@ def actualizarProgramasArea(request):
     
     if "idSesion" in request.session:
         
-        estaEnverProgramasPorArea = True
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
-        correo = request.session['correoSesion']
-        nombreCompleto = nombre + " " + apellidos
+        
         
         if request.method == "POST":
             
@@ -1470,10 +1773,15 @@ def ProgramasporArea(request):
     if "idSesion" in request.session:
 
         estaEnverProgramasPorArea = True
+        id_admin=request.session["idSesion"]
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
         correo = request.session['correoSesion']
         nombreCompleto = nombre + " " + apellidos
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
         
         areas = Areas.objects.all()
         
@@ -1492,18 +1800,23 @@ def ProgramasporArea(request):
                     
             
 
-        return render(request,"Programas/verProgramasArea.html",{"estaEnverProgramasPorArea": estaEnverProgramasPorArea, "nombreCompleto":nombreCompleto, "correo":correo, "lista":lista})
+        return render(request,"Programas/verProgramasArea.html",{"estaEnverProgramasPorArea": estaEnverProgramasPorArea, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, 
+                                                                 "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
 def verProgramasPorArea(request):
     
     if "idSesion" in request.session:
-        
+        id_admin=request.session["idSesion"]
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
         correo = request.session['correoSesion']
         nombreCompleto = nombre + " " + apellidos
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
 
         if request.method == "POST":
             
@@ -1541,7 +1854,8 @@ def verProgramasPorArea(request):
             #nombreArea = Administracion
 
             estaEnverProgramasPorArea = True
-            return render(request, "Programas/tablaProgArea.html",{"estaEnverProgramasPorArea": estaEnverProgramasPorArea, "nombreArea":nombreArea, "nombreCompleto":nombreCompleto, "correo":correo, "idArea":idArea, "arregloDatosProgramas":arregloDatosProgramas})
+            return render(request, "Programas/tablaProgArea.html",{"estaEnverProgramasPorArea": estaEnverProgramasPorArea, "id_admin":id_admin,"nombreArea":nombreArea, "nombreCompleto":nombreCompleto, "correo":correo, "idArea":idArea, "arregloDatosProgramas":arregloDatosProgramas, 
+                                                                   "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
 
     else:
         return redirect('/login/') #redirecciona a url de inicio
@@ -1551,10 +1865,15 @@ def calendarioMant(request):
     if "idSesion" in request.session:
         
         estaEnCalendario = True
+        id_admin=request.session["idSesion"]
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
         correo = request.session['correoSesion']
         nombreCompleto = nombre + " " + apellidos
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
         
         registroEquipos = CalendarioMantenimiento.objects.all()
         #propietarioCompu = Empleados.objects.all()
@@ -1611,7 +1930,7 @@ def calendarioMant(request):
 
         
         
-        return render(request,"Mantenimiento/calendarioMant.html", {"estaEnCalendario": estaEnCalendario, "nombreCompleto":nombreCompleto, "correo":correo, "lista": lista, "registroEquipos":registroEquipos})
+        return render(request,"Mantenimiento/calendarioMant.html", {"estaEnCalendario": estaEnCalendario, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista, "registroEquipos":registroEquipos, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -1620,10 +1939,15 @@ def formularioMant(request):
     if "idSesion" in request.session:
         
         estaEnFormulario = True
+        id_admin=request.session["idSesion"]
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
         correo = request.session['correoSesion']
         nombreCompleto = nombre + " " + apellidos
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
         
         infoEquipos = Equipos.objects.all()
         
@@ -1679,8 +2003,8 @@ def formularioMant(request):
                                 mantExito = True
                                 mensajeMant = "Se ha agregado el mantenimineto realizado a " + marca + " " + modelo + "con propietario " + nombre + " " + apellidos
                             
-                                return render(request,"Mantenimiento/formularioMant.html",{"estaEnFormulario": estaEnFormulario, "nombreCompleto":nombreCompleto, "correo":correo, 
-                                                                                    "lista": lista, "mantExito":mantExito, "mensajeMant":mensajeMant  })
+                                return render(request,"Mantenimiento/formularioMant.html",{"estaEnFormulario": estaEnFormulario, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, 
+                                                                                    "lista": lista, "mantExito":mantExito, "mensajeMant":mensajeMant, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
                 
             registro = CalendarioMantenimiento(id_equipo=Equipos.objects.get(id_equipo=equipo_recibido), operacion=operacionCompleta, fecha=fecha, observaciones=descripcion_recibida)
             registro.save()
@@ -1694,11 +2018,11 @@ def formularioMant(request):
             mantExito = True
             mensajeMant = "Se ha agregado el mantenimineto realizado a " + marca + " " + modelo + "con propietario " + nombre + " " + apellidos
             
-            return render(request,"Mantenimiento/formularioMant.html",{"estaEnFormulario": estaEnFormulario, "nombreCompleto":nombreCompleto, "correo":correo, 
-                                                                    "lista": lista, "mantExito":mantExito, "mensajeMant":mensajeMant  })
+            return render(request,"Mantenimiento/formularioMant.html",{"estaEnFormulario": estaEnFormulario,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, 
+                                                                    "lista": lista, "mantExito":mantExito, "mensajeMant":mensajeMant, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
 
-        return render(request,"Mantenimiento/formularioMant.html",{"estaEnFormulario": estaEnFormulario, "nombreCompleto":nombreCompleto, "correo":correo, 
-                                                                "lista": lista})
+        return render(request,"Mantenimiento/formularioMant.html",{"estaEnFormulario": estaEnFormulario, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, 
+                                                                "lista": lista, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -1707,10 +2031,15 @@ def verCarta(request):
     if "idSesion" in request.session:
         
         estaEnVerCarta = True
+        id_admin=request.session["idSesion"]
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
         correo = request.session['correoSesion']
         nombreCompleto = nombre + " " + apellidos
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
         
         datosRegistro = Carta.objects.all()
         
@@ -1739,7 +2068,8 @@ def verCarta(request):
         
         
         
-        return render(request,"cartaCompromiso/verCarta.html", {"estaEnVerCarta": estaEnVerCarta, "nombreCompleto":nombreCompleto, "correo":correo, "lista1":lista1})
+        return render(request,"cartaCompromiso/verCarta.html", {"estaEnVerCarta": estaEnVerCarta, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista1":lista1, 
+                                                                "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
 
     else:
         return redirect('/login/') #redirecciona a url de inicio
@@ -1747,11 +2077,15 @@ def verCarta(request):
 def agregarCarta(request):
     
     if "idSesion" in request.session:
-    
+        id_admin=request.session["idSesion"]
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
         correo = request.session['correoSesion']
         nombreCompleto = nombre + " " + apellidos
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
         
         equipos= Equipos.objects.all()
         empledos=Empleados.objects.all()
@@ -1813,13 +2147,13 @@ def agregarCarta(request):
 
         
             estaEnAgregarCarta = True
-            return render(request, "cartaCompromiso/agregarCarta.html",{"estaEnAgregarCarta": estaEnAgregarCarta, "nombreCompleto":nombreCompleto, "correo":correo, "equipos":equipos, "empleados": empledos, "lista":lista, "fecha":fecha,
+            return render(request, "cartaCompromiso/agregarCarta.html",{"estaEnAgregarCarta": estaEnAgregarCarta, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "equipos":equipos, "empleados": empledos, "lista":lista, "fecha":fecha,
                                                                     "compusInactivas": compusInactivas, "compuSeleccionada":compuSeleccionada, "datosEquipo":datosEquipo, "empleadoDatos": empleadoDatos, "areaNombre": areaNombre, "color":color,
-                                                                    "fecha": fecha})
+                                                                    "fecha": fecha, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
 
         estaEnAgregarCarta = True
-        return render(request, "cartaCompromiso/agregarCarta.html",{"estaEnAgregarCarta": estaEnAgregarCarta, "nombreCompleto":nombreCompleto, "correo":correo, "equipos":equipos, "empleados": empledos, "lista":lista, "fecha":fecha,
-                                                                    "compusInactivas": compusInactivas})
+        return render(request, "cartaCompromiso/agregarCarta.html",{"estaEnAgregarCarta": estaEnAgregarCarta, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "equipos":equipos, "empleados": empledos, "lista":lista, "fecha":fecha,
+                                                                    "compusInactivas": compusInactivas, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -1860,12 +2194,55 @@ def BitacorasEquipos(request):
     if "idSesion" in request.session:
         
         estaEnEquiposBitacora = True
+        id_admin=request.session["idSesion"]
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
         correo = request.session['correoSesion']
         nombreCompleto = nombre + " " + apellidos
         
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
         
+        datosBitacora = Bitacora.objects.filter(tabla__icontains="Equipos")
+        nombresUsuarios = []
+        nombresEquipos=[]
+        for dato in datosBitacora:
+            id_user= dato.id_empleado_id
+            
+            datosEmpleados = Empleados.objects.filter(id_empleado = id_user)
+            for empleado in datosEmpleados:
+                idEmpl= empleado.id_empleado
+                nombres = empleado.nombre
+                apellido = empleado.apellidos
+                
+            nombreUsuario = str(idEmpl) + " - " + nombres + " " + apellido
+            nombresUsuarios.append(nombreUsuario)
+            
+            idEntidad = int(dato.id_objeto)
+            
+            datosEquipo = Equipos.objects.filter(id_equipo=idEntidad)
+            for equipo in datosEquipo:
+                tipo = equipo.tipo
+                marca = equipo.marca
+                modelo = equipo.modelo
+                idProp = equipo.id_empleado_id
+                
+                if idProp == None:
+                    equipoCompleto = tipo + " " + marca + " " + modelo + " - sin propietario"
+                else:
+                    datosEmpleados = Empleados.objects.filter(id_empleado = idProp)
+                    for empleado in datosEmpleados:
+                        idEmpl= empleado.id_empleado
+                        nombres = empleado.nombre
+                        apellido = empleado.apellidos
+                        
+                    nombreProp = str(idEmpl) + " - " + nombres + " " + apellido
+                    
+                    equipoCompleto = tipo + " " + marca + " " + modelo + " " + nombreProp
+                nombresEquipos.append(equipoCompleto)
+        lista = zip(datosBitacora,nombresUsuarios, nombresEquipos)
+        texto = "Bitácora de Equipos"
         
         
     
@@ -1879,7 +2256,8 @@ def BitacorasEquipos(request):
         
         
         
-        return render(request, "Bitacora/Bitacoras.html",{"estaEnEquiposBitacora": estaEnEquiposBitacora, "nombreCompleto":nombreCompleto, "correo":correo})
+        return render(request, "Bitacora/Bitacoras.html",{"estaEnEquiposBitacora": estaEnEquiposBitacora, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "texto": texto, 
+                                                          "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
     else:
         return redirect('/login/') #redirecciona a url de inicio
 
@@ -1888,11 +2266,63 @@ def BitacorasImpresoras(request):
     if "idSesion" in request.session:
         
         estaEnImpresorasBitacora = True
+        id_admin=request.session["idSesion"]
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
         correo = request.session['correoSesion']
         nombreCompleto = nombre + " " + apellidos
-        return render(request, "Bitacora/Bitacoras.html",{"estaEnImpresorasBitacora": estaEnImpresorasBitacora, "nombreCompleto":nombreCompleto, "correo":correo})
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+        
+        datosBitacora = Bitacora.objects.filter(tabla__icontains="Impresoras")
+        nombresUsuarios = []
+        nombresImpresoras=[]
+        for dato in datosBitacora:
+            id_user= dato.id_empleado_id
+            
+            datosEmpleados = Empleados.objects.filter(id_empleado = id_user)
+            for empleado in datosEmpleados:
+                idEmpl= empleado.id_empleado
+                nombres = empleado.nombre
+                apellido = empleado.apellidos
+                
+            nombreUsuario = str(idEmpl) + " - " + nombres + " " + apellido
+            nombresUsuarios.append(nombreUsuario)
+            
+            idEntidad = int(dato.id_objeto)
+            
+            datosImpresora = Impresoras.objects.filter(id_impresora=idEntidad)
+            for impresora in datosImpresora:
+                idImp = impresora.id_impresora
+                marca = impresora.marca
+                modelo = impresora.modelo
+                idDepa = impresora.id_area_id
+                
+                if idDepa == None:
+                    impresoraCompleta = idImp + " " + marca + " " + modelo + " - sin departamento"
+                else:
+                    datosDepartamento = Areas.objects.filter(id_area = idDepa)
+                    for departamento in datosDepartamento:
+                        idDep= departamento.id_area
+                        nombre = departamento.nombre
+                        color = departamento.color
+                        
+                    nombreDepar = str(idDep) + " - " + nombre
+                    
+                    impresoraCompleta = marca + " " + modelo + " " + nombreDepar
+                nombresImpresoras.append(impresoraCompleta)
+        lista = zip(datosBitacora,nombresUsuarios, nombresImpresoras)
+        texto = "Bitácora de Impresoras"
+        
+        
+        
+        
+        
+        
+        return render(request, "Bitacora/Bitacoras.html",{"estaEnImpresorasBitacora": estaEnImpresorasBitacora, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "texto":texto, 
+                                                          "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -1901,79 +2331,124 @@ def BitacorasEmpleados(request):
     if "idSesion" in request.session:
         
         estaEnEmpleadosBitacora = True
+        id_admin=request.session["idSesion"]
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
         correo = request.session['correoSesion']
         nombreCompleto = nombre + " " + apellidos
         
-        datosBitacora = Bitacora.objects.filter(tabla = "Empleados")
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
         
-        datosEntidad=[]
-        
-        for fila in datosBitacora:
-            id_admin = fila.id_empleado_id
-            id_entidad = fila.id_objeto
-            operacion = fila.operacion
-            fecha = fila.fecha_hora
+        datosBitacora = Bitacora.objects.filter(tabla__icontains="Empleados")
+        nombresUsuarios = []
+        nombresEmpleados=[]
+        for dato in datosBitacora:
+            id_user= dato.id_empleado_id
             
-            datosEmpleado = Empleados.objects.filter(id_empleado = id_admin)
-            for dato in datosEmpleado:
-                nombre = dato.nombre
-                apellidos = dato.apellidos
+            datosEmpleados = Empleados.objects.filter(id_empleado = id_user)
+            for empleado in datosEmpleados:
+                idEmpl= empleado.id_empleado
+                nombres = empleado.nombre
+                apellido = empleado.apellidos
                 
-            datosEmpleado = Empleados.objects.filter(id_empleado = id_entidad)
-            for datoE in datosEmpleado:
-                nombreEm = datoE.nombre
-                apellidosEm = datoE.apellidos
+            nombreUsuario = str(idEmpl) + " - " + nombres + " " + apellido
+            nombresUsuarios.append(nombreUsuario)
             
-            nombreAdmin = nombre + " " + apellidos
-            nombreEmpleado = nombreEm + " " + apellidosEm
+            idEntidad = int(dato.id_objeto)
             
-            datosEntidad.append([nombreAdmin, id_entidad, nombreEmpleado, operacion, fecha])
+            datosEmpleados = Empleados.objects.filter(id_empleado=idEntidad)
+            for empleado in datosEmpleados:
+                idEmpl = empleado.id_empleado
+                nombres = empleado.nombre
+                apellidos = empleado.apellidos
+                idDepa = empleado.id_area_id
+                
+                if idDepa == None:
+                    empleadoCompleta = nombres + " " + apellidos  + " - sin departamento"
+                else:
+                    datosDepartamento = Areas.objects.filter(id_area = idDepa)
+                    for departamento in datosDepartamento:
+                        idDep= departamento.id_area
+                        nombre = departamento.nombre
+                      
+                        
+                    nombreDepar = str(idDep) + " - " + nombre + " - "
+                    
+                    empleadoCompleta = nombreDepar + " " + nombres + " " + apellidos 
+                nombresEmpleados.append(empleadoCompleta)
+        lista = zip(datosBitacora,nombresUsuarios, nombresEmpleados)
+        texto = "Bitácora de Empleados"
             
-        return render(request, "Bitacora/Bitacoras.html",{"estaEnEmpleadosBitacora": estaEnEmpleadosBitacora, "nombreCompleto":nombreCompleto, "correo":correo, "datosEntidad":datosEntidad})
+        return render(request, "Bitacora/Bitacoras.html",{"estaEnEmpleadosBitacora": estaEnEmpleadosBitacora, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "texto":texto, 
+                                                          "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
     
-def BitacorasMantenimiento(request):
-    
-    if "idSesion" in request.session:
-        
-        estaEnMantenimientoBitacora = True
-        nombre = request.session['nombres']
-        apellidos = request.session['apellidos']
-        correo = request.session['correoSesion']
-        nombreCompleto = nombre + " " + apellidos
-        return render(request, "Bitacora/Bitacoras.html",{"estaEnMantenimientoBitacora": estaEnMantenimientoBitacora, "nombreCompleto":nombreCompleto, "correo":correo})
-    else:
-        return redirect('/login/') #redirecciona a url de inicio
+
     
 def BitacorasCartuchos(request):
     
     if "idSesion" in request.session:
         
         estaEnCartuchosBitacora = True
+        id_admin=request.session["idSesion"]
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
         correo = request.session['correoSesion']
         nombreCompleto = nombre + " " + apellidos
-        return render(request, "Bitacora/Bitacoras.html",{"estaEnCartuchosBitacora": estaEnCartuchosBitacora, "nombreCompleto":nombreCompleto, "correo":correo})
-    else:
-        return redirect('/login/') #redirecciona a url de inicio
-    
-def BitacorasCartas(request):
-    
-    if "idSesion" in request.session:
         
-        estaEnCartasBitacora = True
-        nombre = request.session['nombres']
-        apellidos = request.session['apellidos']
-        correo = request.session['correoSesion']
-        nombreCompleto = nombre + " " + apellidos
-        return render(request, "Bitacora/Bitacoras.html",{"estaEnCartasBitacora": estaEnCartasBitacora, "nombreCompleto":nombreCompleto, "correo":correo})
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+        
+        datosBitacora = Bitacora.objects.filter(tabla__icontains="Insumos")
+        nombresUsuarios = []
+        nombresInsumos=[]
+        for dato in datosBitacora:
+            id_user= dato.id_empleado_id
+            
+            datosEmpleados = Empleados.objects.filter(id_empleado = id_user)
+            for empleado in datosEmpleados:
+                idEmpl= empleado.id_empleado
+                nombres = empleado.nombre
+                apellido = empleado.apellidos
+                
+            nombreUsuario = str(idEmpl) + " - " + nombres + " " + apellido
+            nombresUsuarios.append(nombreUsuario)
+            
+            idEntidad = int(dato.id_objeto)
+            
+            datosCartuchos = Cartuchos.objects.filter(id_cartucho=idEntidad)
+            for cartucho in datosCartuchos:
+               
+                marcas = cartucho.marca
+                modelos = cartucho.modelo
+                idImpre = cartucho.id_impresora_id
+                
+                
+                datosImpresoras = Impresoras.objects.filter(id_impresora = idImpre)
+                for impresora in datosImpresoras:
+                    idIm= impresora.id_impresora
+                    marca = impresora.marca
+                    modelo = impresora.modelo
+                      
+                        
+                    nombreImpres = str(idIm) + " - " + marca + " " + modelo +  " - "
+                    
+                    cartuchoCompleta = nombreImpres + " " + marcas + " " + modelos 
+                nombresInsumos.append(cartuchoCompleta)
+        lista = zip(datosBitacora,nombresUsuarios, nombresInsumos)
+        texto = "Bitácora de Insumos"
+        
+        
+        return render(request, "Bitacora/Bitacoras.html",{"estaEnCartuchosBitacora": estaEnCartuchosBitacora, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "texto":texto, 
+                                                          "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
     else:
         return redirect('/login/') #redirecciona a url de inicio
+    
 
 
 def descargarPDF(request):
@@ -2060,10 +2535,15 @@ def editarEquipo(request):
     if "idSesion" in request.session:
         
         estaEnCartasBitacora = True
+        id_admin=request.session["idSesion"]
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
         correo = request.session['correoSesion']
         nombreCompleto = nombre + " " + apellidos
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
         
         if request.method == "POST":
             equipoRecibido = request.POST['idEquipo']
@@ -2091,7 +2571,8 @@ def editarEquipo(request):
                     
                 sinPropietario = True
                 lista = zip(equipoDatos,empleadosTotales)
-                return render(request, "Editar/editarEquipo.html", {"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"ram": ram,"sistemasOperativos":sistemasOperativos, "equipoRecibido":equipoRecibido, "empleadosTotales":empleadosTotales, "sinPropietario":sinPropietario})
+                return render(request, "Editar/editarEquipo.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"ram": ram,"sistemasOperativos":sistemasOperativos, "equipoRecibido":equipoRecibido, "empleadosTotales":empleadosTotales, "sinPropietario":sinPropietario, 
+                                                                    "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
             else:
                 
                 empleado = Empleados.objects.filter(id_empleado__icontains=empleadoId)
@@ -2134,7 +2615,7 @@ def editarEquipo(request):
                         
                 
             
-                return render(request, "Editar/editarEquipo.html", {"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista, "ram": ram, "sistemasOperativos":sistemasOperativos, "empleado":empleado, "equipoRecibido":equipoRecibido, "datos_empleados":datos_empleados})
+                return render(request, "Editar/editarEquipo.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista, "ram": ram, "sistemasOperativos":sistemasOperativos, "empleado":empleado, "equipoRecibido":equipoRecibido, "datos_empleados":datos_empleados, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
                 
             
 
@@ -2142,7 +2623,7 @@ def editarEquipo(request):
 
 
 
-        return render(request, "Editar/editarEquipo.html", {"nombreCompleto":nombreCompleto, "correo":correo})
+        return render(request, "Editar/editarEquipo.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
     else:
         return redirect('/login/') #redirecciona a url de inicio
 
@@ -2151,17 +2632,22 @@ def editarEmpleado(request):
     if "idSesion" in request.session:
         
         estaEnCartasBitacora = True
+        id_admin=request.session["idSesion"]
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
         correo = request.session['correoSesion']
         nombreCompleto = nombre + " " + apellidos
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
 
         if request.method == "POST":
             
             empleadoRecibido = request.POST['idEmpleadoEditar']
             
             
-            datosEmpleadoEditar = Empleados.objects.filter(id_empleado__icontains = empleadoRecibido)
+            datosEmpleadoEditar = Empleados.objects.filter(id_empleado = empleadoRecibido)
             
             if datosEmpleadoEditar:
                 for datoEditar in datosEmpleadoEditar:
@@ -2184,18 +2670,23 @@ def editarEmpleado(request):
                 else:
                     areasNuevas.append([dato.id_area, dato.nombre])
                     
-            return render(request,"Editar/editarEmpleado.html", { "nombreCompleto":nombreCompleto, "correo":correo, "datosEmpleadoEditar": datosEmpleadoEditar, "nombreArea": nombreArea, "areasNuevas":areasNuevas})
+            return render(request,"Editar/editarEmpleado.html", { "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "datosEmpleadoEditar": datosEmpleadoEditar, "nombreArea": nombreArea, "areasNuevas":areasNuevas, 
+                                                                 "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
 def editarEmpleadoBd(request):
     
     if "idSesion" in request.session:
-        
+        id_admin=request.session["idSesion"]
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
         correo = request.session['correoSesion']
         nombreCompleto = nombre + " " + apellidos
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
         
         if request.method == "POST":
             
@@ -2219,34 +2710,45 @@ def editarEmpleadoBd(request):
                                                                                             correo=correoEditar, contraseña=contraseñaEditar, 
                                                                                             )
             
-            
-            editado = True
-            textoEdicion = "Se ha editado al empleado " + nombreEditar + " con éxito!"
-            
-            datosEmpleadoEditar = Empleados.objects.filter(id_empleado__icontains = idEmpleado)
-            
-            if datosEmpleadoEditar:
-                for datoEditar in datosEmpleadoEditar:
+            if actualizacion:
+                id_sistemas = request.session['idSesion']
                 
-                    idareaEmpleado = datoEditar.id_area_id
-                    
-            datosArea = Areas.objects.filter(id_area__icontains = idareaEmpleado)
-            if datosArea:
-                for nombreEditar in datosArea:
-                    
-                    nombreArea =  nombreEditar.nombre
+                fecha = datetime.now()
+                empleado= nombreEditar + " " + apellidoEditar 
+                texto= "Se editó al empleado " + empleado 
+                registroBitacora= Bitacora(id_empleado=Empleados.objects.get(id_empleado=id_sistemas), tabla = "Equipos", id_objeto=idEmpleado, operacion=texto, fecha_hora= fecha)
+                registroBitacora.save()
+                
             
-            areas = Areas.objects.all()
             
-            areasNuevas = []
-            
-            for dato in areas:
-                if idareaEmpleado == dato.id_area:
-                    yaEsta = True
-                else:
-                    areasNuevas.append([dato.id_area, dato.nombre])
+                editado = True
+                textoEdicion = "Se ha editado al empleado " + nombreEditar + " con éxito!"
+                
+                datosEmpleadoEditar = Empleados.objects.filter(id_empleado__icontains = idEmpleado)
+                
+                if datosEmpleadoEditar:
+                    for datoEditar in datosEmpleadoEditar:
                     
-            return render(request,"Editar/editarEmpleado.html", { "nombreCompleto":nombreCompleto, "correo":correo, "datosEmpleadoEditar": datosEmpleadoEditar, "nombreArea": nombreArea, "areasNuevas":areasNuevas, "editado":editado, "textoEdicion":textoEdicion, "areaEditar":areaEditar})
+                        idareaEmpleado = datoEditar.id_area_id
+                        
+                datosArea = Areas.objects.filter(id_area__icontains = idareaEmpleado)
+                if datosArea:
+                    for nombreEditar in datosArea:
+                        
+                        nombreArea =  nombreEditar.nombre
+                
+                areas = Areas.objects.all()
+                
+                areasNuevas = []
+                
+                for dato in areas:
+                    if idareaEmpleado == dato.id_area:
+                        yaEsta = True
+                    else:
+                        areasNuevas.append([dato.id_area, dato.nombre])
+                        
+                return render(request,"Editar/editarEmpleado.html", {"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "datosEmpleadoEditar": datosEmpleadoEditar, "nombreArea": nombreArea, "areasNuevas":areasNuevas, "editado":editado, "textoEdicion":textoEdicion, 
+                                                                     "areaEditar":areaEditar, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -2254,11 +2756,15 @@ def editarEquipoBd(request):
     
     if "idSesion" in request.session:
         
-        
+        id_admin=request.session["idSesion"]
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
         correo = request.session['correoSesion']
         nombreCompleto = nombre + " " + apellidos
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
         
         if request.method == "POST":
             equipoId = request.POST['idEquipo']
@@ -2330,8 +2836,8 @@ def editarEquipoBd(request):
                         
                     sinPropietario = True
                     lista = zip(equipoDatos,empleadosTotales)
-                    return render(request, "Editar/editarEquipo.html", {"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"ram": ram,"sistemasOperativos":sistemasOperativos, "equipoRecibido":equipoRecibido, "empleadosTotales":empleadosTotales, "sinPropietario":sinPropietario, 
-                                                                        "editado":editado, "textoEdicion":textoEdicion})
+                    return render(request, "Editar/editarEquipo.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"ram": ram,"sistemasOperativos":sistemasOperativos, "equipoRecibido":equipoRecibido, "empleadosTotales":empleadosTotales, "sinPropietario":sinPropietario, 
+                                                                        "editado":editado, "textoEdicion":textoEdicion, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
                 else:
                     
                     empleado = Empleados.objects.filter(id_empleado__icontains=empleadoId)
@@ -2374,8 +2880,8 @@ def editarEquipoBd(request):
                             
                     
                 
-                    return render(request, "Editar/editarEquipo.html", {"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista, "ram": ram, "sistemasOperativos":sistemasOperativos, "empleado":empleado, "equipoRecibido":equipoRecibido, "datos_empleados":datos_empleados, 
-                                                                        "editado":editado, "textoEdicion":textoEdicion})
+                    return render(request, "Editar/editarEquipo.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista, "ram": ram, "sistemasOperativos":sistemasOperativos, "empleado":empleado, "equipoRecibido":equipoRecibido, "datos_empleados":datos_empleados, 
+                                                                        "editado":editado, "textoEdicion":textoEdicion, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
             else:
                 datos = Equipos.objects.filter(id_equipo__icontains = equipoId)
                 
@@ -2417,8 +2923,8 @@ def editarEquipoBd(request):
                         
                     sinPropietario = True
                     lista = zip(equipoDatos,empleadosTotales)
-                    return render(request, "Editar/editarEquipo.html", {"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"ram": ram,"sistemasOperativos":sistemasOperativos, "equipoRecibido":equipoRecibido, "empleadosTotales":empleadosTotales, "sinPropietario":sinPropietario, 
-                                                                        "editado":editado, "textoEdicion":textoEdicion})
+                    return render(request, "Editar/editarEquipo.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"ram": ram,"sistemasOperativos":sistemasOperativos, "equipoRecibido":equipoRecibido, "empleadosTotales":empleadosTotales, "sinPropietario":sinPropietario, 
+                                                                        "editado":editado, "textoEdicion":textoEdicion, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
                 else:
                     
                     empleado = Empleados.objects.filter(id_empleado__icontains=empleadoId)
@@ -2461,8 +2967,8 @@ def editarEquipoBd(request):
                             
                     
                 
-                    return render(request, "Editar/editarEquipo.html", {"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista, "ram": ram, "sistemasOperativos":sistemasOperativos, "empleado":empleado, "equipoRecibido":equipoRecibido, "datos_empleados":datos_empleados, 
-                                                                        "editado":editado, "textoEdicion":textoEdicion})
+                    return render(request, "Editar/editarEquipo.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista, "ram": ram, "sistemasOperativos":sistemasOperativos, "empleado":empleado, "equipoRecibido":equipoRecibido, "datos_empleados":datos_empleados, 
+                                                                        "editado":editado, "textoEdicion":textoEdicion, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
                    
         
         
@@ -2470,18 +2976,22 @@ def editarEquipoBd(request):
         
         
     
-        return render(request,"Editar/editarEmpleado.html", { "nombreCompleto":nombreCompleto, "correo":correo})
+        return render(request,"Editar/editarEmpleado.html", {"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
 def editarImpresoraBd(request):
     
     if "idSesion" in request.session:
-        
+        id_admin=request.session["idSesion"]
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
         correo = request.session['correoSesion']
         nombreCompleto = nombre + " " + apellidos
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
         
         if request.method == "POST":
             impresora_id = request.POST['idImpresora']
@@ -2516,40 +3026,54 @@ def editarImpresoraBd(request):
                 else:
                     actualizar = Impresoras.objects.filter(id_impresora__icontains=impresora_id).update(id_area_id=area_actualizar, estado=estado_actualizar,
                                                 enred="S", ip=ip_actualizar, activo = "I")
-                
-            datos_impresora = Impresoras.objects.filter(id_impresora__icontains = impresora_id)
-            
-            if datos_impresora:
-                for datoEditar in datos_impresora:
-                
-                    idAreaImpresora = datoEditar.id_area_id
                     
-            datosArea = Areas.objects.filter(id_area__icontains = idAreaImpresora)
-            if datosArea:
-                for nombreEditar in datosArea:
                     
-                    nombreArea =  nombreEditar.nombre
-            
-            areas = Areas.objects.all()
-            
-            areasNuevas = []
-            
-            for dato in areas:
-                if idAreaImpresora == dato.id_area:
-                    yaEsta = True
-                else:
-                    areasNuevas.append([dato.id_area, dato.nombre])
-            
-            editado = True
-            textoEditado = "Se ha editado la impresora " + marcaMostrar + " " + modeloMostrar + " con éxito!"
-            
-            return render(request,"Editar/editarImpresora.html", {"impresoraAEditar":datos_impresora, "nombreCompleto":nombreCompleto, "correo":correo, "nombreArea":nombreArea, "areasNuevas":areasNuevas, "editado":editado, "textoEditado":textoEditado})
+            if actualizar:
+                
+                
+                datos_impresora = Impresoras.objects.filter(id_impresora__icontains = impresora_id)
+                
+                if datos_impresora:
+                    for datoEditar in datos_impresora:
+                    
+                        idAreaImpresora = datoEditar.id_area_id
+                        
+                datosArea = Areas.objects.filter(id_area__icontains = idAreaImpresora)
+                if datosArea:
+                    for nombreEditar in datosArea:
+                        
+                        nombreArea =  nombreEditar.nombre
+                
+                areas = Areas.objects.all()
+                
+                areasNuevas = []
+                
+                for dato in areas:
+                    if idAreaImpresora == dato.id_area:
+                        yaEsta = True
+                    else:
+                        areasNuevas.append([dato.id_area, dato.nombre])
+                
+                editado = True
+                textoEditado = "Se ha editado la impresora " + marcaMostrar + " " + modeloMostrar + " con éxito!"
+                
+                id_sistemas = request.session['idSesion']
+                
+                fecha = datetime.now()
+                impresora= marcaMostrar + " " + modeloMostrar
+                texto= "Se editó la impresora " + impresora 
+                registroBitacora= Bitacora(id_empleado=Empleados.objects.get(id_empleado=id_sistemas), tabla = "Impresoras", id_objeto=impresora_id, operacion=texto, fecha_hora= fecha)
+                registroBitacora.save()
+                
+                return render(request,"Editar/editarImpresora.html", {"impresoraAEditar":datos_impresora, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "nombreArea":nombreArea,
+                                                                      "areasNuevas":areasNuevas, "editado":editado, "textoEditado":textoEditado, 
+                                                                      "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
                 
             
             
             
         
-        return render(request,"Editar/editarImpresora.html", { "nombreCompleto":nombreCompleto, "correo":correo})
+        return render(request,"Editar/editarImpresora.html", {"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -2571,14 +3095,18 @@ def altaEmpleado(request):
             
             actualizacion = Empleados.objects.filter(id_empleado__icontains = idAlta).update(activo = "A")
             if actualizacion:
-                texto = "Se dió se alta al empleado "+nombreCompletoEmp
+                id_sistemas = request.session['idSesion']
+                
                 fecha = datetime.now()
-                registro_bitacora = Bitacora(id_empleado = Empleados.objects.get(id_empleado = id_empleado_admin), tabla = "Empleados", id_objeto = idAlta, operacion = texto, fecha_hora = fecha)
-                registro_bitacora.save()
+    
+                texto= "Se dió de alta al empleado " + nombreCompletoEmp 
+                registroBitacora= Bitacora(id_empleado=Empleados.objects.get(id_empleado=id_sistemas), tabla = "Empleados", id_objeto=idAlta, operacion=texto, fecha_hora= fecha)
+                registroBitacora.save()
+                
             
-            request.session['idEmpleadoAlta'] = nombreCompletoEmp
-            
-            return redirect('/verEmpleados/')
+                request.session['idEmpleadoAlta'] = nombreCompletoEmp
+                
+                return redirect('/verEmpleados/')
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -2601,14 +3129,18 @@ def bajaEmpleado(request):
             
             actualizacion = Empleados.objects.filter(id_empleado__icontains = idBaja).update(activo = "I")
             if actualizacion:
-                texto = "Se dió se baja al empleado "+nombreCompletoEmp
-                fecha = datetime.now()
-                registro_bitacora = Bitacora(id_empleado = Empleados.objects.get(id_empleado = id_empleado_admin), tabla = "Empleados", id_objeto = idBaja, operacion = texto, fecha_hora = fecha)
-                registro_bitacora.save()
                 
-            request.session['idEmpleadoBaja'] = nombreCompletoEmp
-            
-            return redirect('/verEmpleados/')
+                id_sistemas = request.session['idSesion']
+                
+                fecha = datetime.now()
+    
+                texto= "Se dió de baja al empleado " + nombreCompletoEmp 
+                registroBitacora= Bitacora(id_empleado=Empleados.objects.get(id_empleado=id_sistemas), tabla = "Empleados", id_objeto=idBaja, operacion=texto, fecha_hora= fecha)
+                registroBitacora.save()
+                
+                request.session['idEmpleadoBaja'] = nombreCompletoEmp
+                
+                return redirect('/verEmpleados/')
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -2630,10 +3162,19 @@ def altaImpresora(request):
             
             actualizacion = Impresoras.objects.filter(id_impresora__icontains = idAlta).update(activo = "A")
             
+            if actualizacion: 
+                id_sistemas = request.session['idSesion']
+                
+                fecha = datetime.now()
+               
+                texto= "Se dió de alta a la impresora" + nombreCompletoImp 
+                registroBitacora= Bitacora(id_empleado=Empleados.objects.get(id_empleado=id_sistemas), tabla = "Impresoras", id_objeto=idAlta, operacion=texto, fecha_hora= fecha)
+                registroBitacora.save()
             
-            request.session['idImpresoraAlta'] = nombreCompletoImp
             
-            return redirect('/verImpresoras/')
+                request.session['idImpresoraAlta'] = nombreCompletoImp
+                
+                return redirect('/verImpresoras/')
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -2655,9 +3196,19 @@ def bajaImpresora(request):
             
             actualizacion = Impresoras.objects.filter(id_impresora__icontains = idBaja).update(activo = "I")
             
-            request.session['idImpresoraBaja'] = nombreCompletoImp
+            if actualizacion:
+                
+                id_sistemas = request.session['idSesion']
+                
+                fecha = datetime.now()
+               
+                texto= "Se dió de baja a la impresora" + nombreCompletoImp 
+                registroBitacora= Bitacora(id_empleado=Empleados.objects.get(id_empleado=id_sistemas), tabla = "Impresoras", id_objeto=idBaja, operacion=texto, fecha_hora= fecha)
+                registroBitacora.save()
             
-            return redirect('/verImpresoras/')
+                request.session['idImpresoraBaja'] = nombreCompletoImp
+                
+                return redirect('/verImpresoras/')
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -2756,6 +3307,10 @@ def editarImpresora(request):
         apellidos = request.session['apellidos']
         correo = request.session['correoSesion']
         nombreCompleto = nombre + " " + apellidos
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
 
         if request.method == "POST":
 
@@ -2783,7 +3338,8 @@ def editarImpresora(request):
                 else:
                     areasNuevas.append([dato.id_area, dato.nombre])
 
-            return render(request,"Editar/editarImpresora.html", {"impresoraAEditar":datos_impresora, "nombreCompleto":nombreCompleto, "correo":correo, "nombreArea":nombreArea, "areasNuevas":areasNuevas})
+            return render(request,"Editar/editarImpresora.html", {"impresoraAEditar":datos_impresora, "nombreCompleto":nombreCompleto, "correo":correo, "nombreArea":nombreArea, "areasNuevas":areasNuevas, 
+                                                                  "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -6498,3 +7054,5 @@ def qrImpresora(request):
     
     else:
         return redirect('/login/') #redirecciona a url de inicio
+    
+#Fin, todooo tiene un fiiiiiin
