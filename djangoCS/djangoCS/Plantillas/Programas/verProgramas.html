@@ -117,10 +117,10 @@ Ver Programas
                                         <td>
                                             {% if check.1 == "1" %}
                                             <input type="checkbox" id="md_checkbox_{{programa.id_programa}}{{id_area_recibido}}" class="filled-in chk-col-cyan"  checked name="area{{id_area_recibido}}programa{{programa.id_programa}}" />
-                                            <label for="md_checkbox_{{programa.id_programa}}{{id_area_recibido}}">{{check.0}} {{check.1}}</label>
+                                            <label for="md_checkbox_{{programa.id_programa}}{{id_area_recibido}}"></label>
                                             {% elif check.1 == "0" %}
                                             <input type="checkbox" id="md_checkbox_{{programa.id_programa}}{{id_area_recibido}}" class="filled-in chk-col-cyan"   name="area{{id_area_recibido}}programa{{programa.id_programa}}" />
-                                            <label for="md_checkbox_{{programa.id_programa}}{{id_area_recibido}}">{{check.0}} {{check.1}}</label>
+                                            <label for="md_checkbox_{{programa.id_programa}}{{id_area_recibido}}"></label>
                                             {% endif %}
                                         </td>
                                     </tr>

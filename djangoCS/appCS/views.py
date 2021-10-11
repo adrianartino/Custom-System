@@ -1,30 +1,38 @@
+#Librerías
 import mimetypes
 import os
+import base64
+from io  import BytesIO
+
+#Renderizado
 from django.http import response
 from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.shortcuts import redirect
-from reportlab.lib import colors
-from reportlab.lib.enums import TA_CENTER
+
+#Importación de modelos
 from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras
-import base64
+
+#Librería para manejar archivos en Python
 from django.core.files.base import ContentFile
+
+#Librerías de fecha
 from datetime import date, datetime
 from datetime import timedelta
 from calendar import calendar
 from dateutil.relativedelta import relativedelta
+
+#Archivo configuración Django
 from django.conf import settings
 
 #Librerias reportes pdf
-from io  import BytesIO
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import cm
 from reportlab.platypus import Image, Paragraph, Table, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.lib.colors import red
-from reportlab.lib.utils import ImageReader
-import PIL.Image
+from reportlab.lib import colors
+from reportlab.lib.enums import TA_CENTER
 
 def notificacionInsumos():
     
@@ -35,7 +43,6 @@ def notificacionInsumos():
         modelo = cartucho.modelo
         color = cartucho.color
         idImp = cartucho.id_impresora_id
-        
         
         cartuchoCompleto = marca + " " + modelo + " " + color
         datosImpresora = Impresoras.objects.filter(id_impresora=idImp)
@@ -56,20 +63,7 @@ def notificacionLimpiezas():
     mes = date.strftime("%m") #09
     dia = date.strftime("%d") #23
     int_dia = int(dia)
-        
-    mes_numero = int(fecha.month)
-        
-        
-    arreglo_meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
-        
-    posicion = 0
-    for mes2 in arreglo_meses:
-        posicion += 1
-        if posicion == mes_numero:
-            mes_texto = mes2
-        
-        
-        
+          
     limpiezasNoti = []
     for limpieza in limpiezas:
         fecha = limpieza.fecha  #23 08 2021
@@ -79,8 +73,6 @@ def notificacionLimpiezas():
         int_dia_limpieza = int(dia_limpieza)
             
         resta = int(mes) - int(mes_limpieza)
-            
-        resta_dias= int(dia)+4 #27
             
         if año_limpieza == año:
                 
@@ -120,9 +112,7 @@ def notificacionLimpiezas():
                                     empleado =  nombree + " " + apellidose
                                     
                         limpiezasNoti.append([equipoCompleto, empleado])
-                
-            
-                
+    
     return limpiezasNoti
 
 def numNoti():
@@ -172,16 +162,11 @@ def login(request):
                     id = dato.id_empleado
                     nombres = dato.nombre
                     apellidos = dato.apellidos
-                    puesto = dato.puesto
                     correo = dato.correo
                     contraReal = dato.contraseña
-                    activo = dato.activo
-                    area = dato.id_area
-
+                    
                 #Si la contraseña es igual...
                 if correousuario == correo and pwd == contraReal :
-
-                    usuarioLogueado = True #Para indicar que el usuario entro al sistema..
 
                     request.session['idSesion'] = id
                     request.session['correoSesion'] = correo
@@ -209,6 +194,7 @@ def login(request):
 
 def salir(request):
 
+    #Cerrar variables de sesión
    del request.session["idSesion"]
    del request.session['correoSesion']
    del request.session['nombres'] 
@@ -229,17 +215,17 @@ def inicio(request):
         apellidos = request.session['apellidos']
         correo = request.session['correoSesion']
 
-       
-        #So no es la primera vez que inicia sesión
         nombreCompleto = nombre + " " + apellidos #Blanca Yesenia Gaeta Talamantes
+        
+        #arreglo cantidades de filas por tabla
         limpiezas = CalendarioMantenimiento.objects.count()
         equipos = Equipos.objects.count()
         impresoras = Impresoras.objects.count()
         empleados = Empleados.objects.count()
-        
         cantidades = []
         cantidades.append([limpiezas, equipos, impresoras, empleados])
         
+        #próximas limpiezas
         limpiezas = CalendarioMantenimiento.objects.all()
         
         fecha = datetime.now()
@@ -259,8 +245,6 @@ def inicio(request):
             posicion += 1
             if posicion == mes_numero:
                 mes_texto = mes2
-        
-        
         
         datosLimpiezas = []
         for limpieza in limpiezas:
@@ -309,10 +293,8 @@ def inicio(request):
                                     fecha = limpieza.fecha   
                                     datosLimpiezas.append([nombree,apellidose,tipo,marca,modelo, fecha])
                 
-            
-            
-                
-        cartuchos = Cartuchos.objects.all()
+        #Datos cartuchos    
+        cartuchos = Cartuchos.objects.filter(cantidad=1)
         
         impresoras = []
         
@@ -380,9 +362,7 @@ def inicio(request):
         date = fecha.date()
         año = date.strftime("%Y") #2021
         mes = date.strftime("%m") #09
-        
 
-        
         impresoras_año = []
         
         for impresora in impresoras_renovacion:
@@ -417,15 +397,12 @@ def inicio(request):
                         
                         impresoras_año.append([datos_impresora2, nombre, color, fecha_compra, fecha_renovacion2])
                     
-                    
-                        
-                
-                
-          #Si es la primera vez que inicia sesión.. Bienvenida 
+ 
+        #Si es la primera vez que inicia sesión.. Bienvenida 
         if "recienIniciado" in request.session:
             nombreCompleto = nombre + " " + apellidos #Blanca Yesenia Gaeta Talamantes
 
-            del request.session['recienIniciado']
+            del request.session['recienIniciado']#se cierra la sesión del primer inicio de sesión
 
             recienIniciado = True
             cartuchosNoti = notificacionInsumos()
@@ -467,7 +444,7 @@ def verAreas(request):
             id_area_una = area.id_area
             areaInt = int(id_area_una)
             
-            empleadosEnArea = Empleados.objects.filter(id_area_id__id_area__icontains = areaInt)
+            empleadosEnArea = Empleados.objects.filter(id_area_id__id_area = areaInt)#filtro de los empleados que esten dentro de un area especifica
             
             numero_empleados = 0
             for empleado in empleadosEnArea:
@@ -503,7 +480,7 @@ def agregarAreas(request):
         
         
                 
-        
+        #arreglo de nombres de clases que le dan color a un label
         colores = [
                     ["label bg-red", "radio_30", "with-gap radio-col-red", "Rojo"], #color.0 , color.1, color.2, color.3
                     ["label bg-pink", "radio_31", "with-gap radio-col-pink", "Rosa"],
@@ -524,7 +501,7 @@ def agregarAreas(request):
                     ["label bg-blue-grey", "radio_46", "with-gap radio-col-blue-grey", "Gris Azulado"],
                     ["label bg-black", "radio_47", "with-gap radio-col-black", "Negro"]
                 ]
-        
+        #arreglo de nombres de colores
         nombresColores = ["Rojo", "Rosa", "Morado", "Indigo", "Azul", "Cyan", "Aqua", "Verde", "Verde bajo", "Verde Lima", "Amarillo", "Ambar", "Naranja", 
                         "Naranja Oscuro", "Cafe", "Gris", "Gris Azulado", "Negro"]
         
@@ -535,7 +512,7 @@ def agregarAreas(request):
         coloresNo = []
         
         for color in colores: 
-            datosAreaCoincide = Areas.objects.filter(color__icontains=color[0])
+            datosAreaCoincide = Areas.objects.filter(color=color[0])
             if datosAreaCoincide:
                 coloresSi.append([color[0],color[1], color[2], color[3]] )
                 
@@ -545,15 +522,11 @@ def agregarAreas(request):
         if request.method == "POST":
             area = request.POST['area']
             color = request.POST['colorElegido']
-            
-            
-                    
-            areaExiste = Areas.objects.filter(nombre__icontains= area)
+                  
+            areaExiste = Areas.objects.filter(nombre= area)
             if areaExiste:
                 errorExiste= True
                 mensajeError = "El departamento " + area + " ya existe en la base de datos"
-                
-                
                 
                 return render(request,"Areas/agregarAreas.html", {"estaEnAgregarAreas": estaEnAgregarAreas, "id_admin":id_admin,"arregloColores":colores, "nombresColores":nombresColores,
                 "infoAreas":infoAreas, "colorExiste": coloresSi, "colorInexistente": coloresNo, "nombreCompleto":nombreCompleto, "correo":correo, "error": errorExiste,
@@ -603,7 +576,7 @@ def verEmpleados(request):
             areasEnActivos.append(empleado.id_area_id)
             
         for id in areasEnActivos:
-            datosArea = Areas.objects.filter(id_area__icontains = id) 
+            datosArea = Areas.objects.filter(id_area = id) 
             
             if datosArea:
                 for dato in datosArea:
@@ -623,7 +596,7 @@ def verEmpleados(request):
             areasEnInactivos.append(empleado.id_area_id)
             
         for id in areasEnInactivos:
-            areasInactivos = Areas.objects.filter(id_area__contains = id)
+            areasInactivos = Areas.objects.filter(id_area = id)
                 
             if areasInactivos:
                 for dato in areasInactivos:
@@ -685,64 +658,48 @@ def agregarEmpleados(request):
     
             lista_empleados = Empleados.objects.all()
 
+            empleadoEnBd = False #booleano para ver si existe en la bd
             for empleado in lista_empleados:
                 if empleado.apellidos == apellido_recibido and empleado.correo == correo_recibido:
-                    yaExiste = True
-                    texto_error = "El empleado "+ empleado.nombre + " ya existe en la Base de Datos!"
-                    return render(request,"Empleados/agregarEmpleados.html", {"estaEnAgregarEmpleados": estaEnAgregarEmpleados, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "infoAreas":info_areas, "yaExiste":yaExiste, "textoError":texto_error})
-                else:
-                    noExiste = True
-                    if imagen_recibida == "":
-                        registro = Empleados(nombre=nombre_recibido, apellidos=apellido_recibido, 
+                    empleadoEnBd = True #ya existe
+            
+            if empleadoEnBd == True:        
+                yaExiste = True
+                texto_error = "El empleado "+ nombre_recibido + " ya existe en la Base de Datos!"
+                return render(request,"Empleados/agregarEmpleados.html", {"estaEnAgregarEmpleados": estaEnAgregarEmpleados, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "infoAreas":info_areas, "yaExiste":yaExiste, "textoError":texto_error})
+            
+            elif empleadoEnBd == False:
+                noExiste = True
+                if imagen_recibida == "":
+                    registro = Empleados(nombre=nombre_recibido, apellidos=apellido_recibido, 
                         id_area = Areas.objects.get(id_area = area_recibida), puesto=puesto_recibido, correo = correo_recibido, contraseña=contra_recibida, activo = "A" )
-                        
-                        
-                        if registro:
-                            
-                            registro.save()
-                            
-                            datosEmpleado = Empleados.objects.filter(apellidos = apellido_recibido)
-                            
-                            for dato in datosEmpleado:
-                                id_empleado_agregado = dato.id_emplado
-                            
-                            nombreCompletoEmp = nombre_recibido + " " + apellido_recibido
-                            id_sistemas = request.session['idSesion']
-                
-                            fecha = datetime.now()
-                            
-                            texto= "Se agregó al empleado " + nombreCompletoEmp 
-                            registroBitacora= Bitacora(id_empleado=Empleados.objects.get(id_empleado=id_sistemas), tabla = "Empleados", id_objeto=id_empleado_agregado, operacion=texto, fecha_hora= fecha)
-                            registroBitacora.save()
-                           
-                            
-                            texto_existe = "El empleado "+ nombre_recibido + " fue agregado exitosamente!"
-                            return render(request,"Empleados/agregarEmpleados.html", {"estaEnAgregarEmpleados": estaEnAgregarEmpleados, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "infoAreas":info_areas, "noExiste":noExiste, "textoExiste":texto_existe, 
-                                                                                      "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
-                    else:
-                        registro = Empleados(nombre=nombre_recibido, apellidos=apellido_recibido, 
+                else:
+                    registro = Empleados(nombre=nombre_recibido, apellidos=apellido_recibido, 
                         id_area = Areas.objects.get(id_area = area_recibida), puesto=puesto_recibido, correo = correo_recibido, contraseña=contra_recibida,imagen_empleado = imagen_recibida, activo = "A" )
                         
-                        if registro:
-                            registro.save()
+                    if registro:
                             
-                            datosEmpleado = Empleados.objects.filter(apellidos = apellido_recibido)
+                        registro.save()
                             
-                            for dato in datosEmpleado:
-                                id_empleado_agregado = dato.id_empleado
+                        datosEmpleado = Empleados.objects.filter(apellidos = apellido_recibido)
                             
-                            nombreCompletoEmp = nombre_recibido + " " + apellido_recibido
-                            id_sistemas = request.session['idSesion']
+                        for dato in datosEmpleado:
+                            id_empleado_agregado = dato.id_emplado
+                            
+                        nombreCompletoEmp = nombre_recibido + " " + apellido_recibido
+                        id_sistemas = request.session['idSesion']
                 
-                            fecha = datetime.now()
+                        fecha = datetime.now()
                             
-                            texto= "Se agregó al empleado " + nombreCompletoEmp 
-                            registroBitacora= Bitacora(id_empleado=Empleados.objects.get(id_empleado=id_sistemas), tabla = "Empleados", id_objeto=id_empleado_agregado, operacion=texto, fecha_hora= fecha)
-                            registroBitacora.save()
-                            texto_existe = "El empleado "+ nombre_recibido + " fue agregado exitosamente!"
-                            return render(request,"Empleados/agregarEmpleados.html", {"estaEnAgregarEmpleados": estaEnAgregarEmpleados, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "infoAreas":info_areas, "noExiste":noExiste, "textoExiste":texto_existe, 
+                        texto= "Se agregó al empleado " + nombreCompletoEmp 
+                        registroBitacora= Bitacora(id_empleado=Empleados.objects.get(id_empleado=id_sistemas), tabla = "Empleados", id_objeto=id_empleado_agregado, operacion=texto, fecha_hora= fecha)
+                        registroBitacora.save()
+                           
+                            
+                        texto_existe = "El empleado "+ nombre_recibido + " fue agregado exitosamente!"
+                        return render(request,"Empleados/agregarEmpleados.html", {"estaEnAgregarEmpleados": estaEnAgregarEmpleados, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "infoAreas":info_areas, "noExiste":noExiste, "textoExiste":texto_existe, 
                                                                                       "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
-
+                
         return render(request,"Empleados/agregarEmpleados.html", {"estaEnAgregarEmpleados": estaEnAgregarEmpleados, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "infoAreas":info_areas, 
                                                                   "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
     else:
@@ -785,14 +742,14 @@ def verEquipos(request):
                 datosAreasEnActivos.append(["", "", "", ""])
                 
             elif id != None:
-                datosEmpleado = Empleados.objects.filter(id_empleado__icontains = id) #["1", "Sistemas", "rojo"]
+                datosEmpleado = Empleados.objects.filter(id_empleado = id) #["1", "Sistemas", "rojo"]
                 
                 if datosEmpleado:
                     for dato in datosEmpleado:
                         nombreEmpleado = dato.nombre
                         apellidosEmpleado = dato.apellidos
                         areaEmpleado = dato.id_area_id
-                        datosArea = Areas.objects.filter(id_area__icontains=areaEmpleado)
+                        datosArea = Areas.objects.filter(id_area=areaEmpleado)
                         
                         if datosArea:
                             for dato in datosArea:
@@ -871,7 +828,7 @@ def infoEquipo(request):
                         
                         #sinPropietario es true
                         
-                        mantenimientos= CalendarioMantenimiento.objects.filter(id_equipo_id__id_equipo__icontains=id_equipo)
+                        mantenimientos= CalendarioMantenimiento.objects.filter(id_equipo_id__id_equipo=id_equipo)
                         if mantenimientos:
                             return render(request, "Equipos/infoEquipo.html", {"estaEnVerEquipos": estaEnVerEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "datosEquipo":datosEquipo,
                                                             "compra":compra, "renovar": renovar, "sinPropietario":sinPropietario, "mantenimientos":mantenimientos, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
@@ -899,7 +856,7 @@ def infoEquipo(request):
                             
                 
                         #sinPropietario es falso
-                        mantenimientos= CalendarioMantenimiento.objects.filter(id_equipo_id__id_equipo__icontains=id_equipo)
+                        mantenimientos= CalendarioMantenimiento.objects.filter(id_equipo_id__id_equipo=id_equipo)
                         
                         if mantenimientos:
                             return render(request, "Equipos/infoEquipo.html", {"estaEnVerEquipos": estaEnVerEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "datosEquipo":datosEquipo,
@@ -1028,7 +985,7 @@ def agregarEquipos(request):
                 
                 
             elif propietario_recibida != "nopropietario":
-                infoEmpleado = Empleados.objects.filter(id_empleado__icontains=propietario_recibida)
+                infoEmpleado = Empleados.objects.filter(id_empleado=propietario_recibida)
                 
                 for dato in infoEmpleado:
                     nombre = dato.nombre
@@ -1136,7 +1093,7 @@ def renovacionEquipos(request):
                     departamento= "Sin departamento"
                 else:
                     int_propietario = int(propietario)
-                    datosEmpleado= Empleados.objects.filter(id_empleado__icontains=int_propietario)
+                    datosEmpleado= Empleados.objects.filter(id_empleado=int_propietario)
                     for datosEmpl in datosEmpleado:
                         nombre= datosEmpl.nombre
                         apellidos=datosEmpl.apellidos
@@ -1184,7 +1141,7 @@ def verImpresoras(request):
             #areasEnActivos = ["1"]
             
         for id in areasEnActivos:
-            datosArea = Areas.objects.filter(id_area__icontains = id) #["1", "Sistemas", "rojo"]
+            datosArea = Areas.objects.filter(id_area = id) #["1", "Sistemas", "rojo"]
             
             if datosArea:
                 for dato in datosArea:
@@ -1204,7 +1161,7 @@ def verImpresoras(request):
             #areasEnActivos = ["1"]
             
         for id in areasEnInactivos:
-            datosArea = Areas.objects.filter(id_area__icontains = id) #["1", "Sistemas", "rojo"]
+            datosArea = Areas.objects.filter(id_area= id) #["1", "Sistemas", "rojo"]
             
             if datosArea:
                 for dato in datosArea:
@@ -1298,14 +1255,6 @@ def agregarImpresoras(request):
             impresoraExito= "La impresora " + marca_recibido + " " + modelo_recibido + " se guardó con éxito" 
             return render(request, "Impresoras/agregarImpresoras.html",{"estaEnAgregarImpresoras": estaEnAgregarImpresoras, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "info_areas": info_areas,
                                                                         "impresoraAgregada":impresoraAgregada, "impresoraExito": impresoraExito, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
-            
-        
-                
-        
-                
-            
-        
-        
         
         return render(request, "Impresoras/agregarImpresoras.html",{"estaEnAgregarImpresoras": estaEnAgregarImpresoras,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "info_areas": info_areas, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
     else:
@@ -1342,14 +1291,12 @@ def renovacionImpresoras(request):
                 impresoraDatos= marca + " " + modelo
         
                 int_area = int(departamento)
-                datosArea= Areas.objects.filter(id_area__icontains=int_area)
+                datosArea= Areas.objects.filter(id_area=int_area)
                 for datos in datosArea:
                     nombre= datos.nombre
                     color= datos.color
                     
             datosTabla.append([idImpresora, impresoraDatos, imagen, nombre, color, fechaCompra, fechaRenov])
-        
-        
         
         return render(request, "Impresoras/renovacionImpresoras.html", {"estaEnRenovacionImpresoras":estaEnRenovacionImpresoras, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, 
                                                                         "datosTabla":datosTabla, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
@@ -1401,18 +1348,11 @@ def infoImpresora(request):
                         
                     lista = zip(listaAreas, datosImpresora)
                     
-                    cartuchos = Cartuchos.objects.filter(id_impresora_id__id_impresora__icontains = int(idImpresora_recibido))   
+                    cartuchos = Cartuchos.objects.filter(id_impresora_id__id_impresora = int(idImpresora_recibido))   
                     
-                        #sinPropietario es true
-                        
-                        #mantenimientos= CalendarioMantenimiento.objects.filter(id_equipo_id__id_equipo__icontains=id_equipo)
-                        #if mantenimientos:
-                            #return render(request, "Impresoras/infoImpresora.html", {"estaEnVerImpresoras": estaEnVerImpresoras, "nombreCompleto":nombreCompleto, "correo":correo, "datosEquipo":datosEquipo, "compra":compra, "renovar": renovar, "sinPropietario":sinPropietario, "mantenimientos":mantenimientos})
-                        #else:
                     return render(request, "Impresoras/infoImpresora.html", {"estaEnVerImpresoras": estaEnVerImpresoras, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "datosImpresora":datosImpresora,
                                                             "compra":compra, "renovar": renovar, "lista":lista, "cartuchos":cartuchos, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})  
-                    
-                    
+
             else:
                 
                 noEncontro = True
@@ -1442,9 +1382,9 @@ def verInsumos(request):
         
         impresoras = []
         for cartuchos in datosCartuchos:
-            idImpresora = cartuchos.id_impresora
+            idImpresora = cartuchos.id_impresora_id
             
-            datosimpresoras = Impresoras.objects.filter(id_impresora__icontains=idImpresora)
+            datosimpresoras = Impresoras.objects.filter(id_impresora=idImpresora)
             
         
             if datosimpresoras:
@@ -1546,20 +1486,20 @@ def actualizarInsumos(request):
             id_cartucho_recibido = request.POST['idCartucho']
             cantida_recibida = request.POST['cantidadCartucho']
             
-            datosCartucho = Cartuchos.objects.filter(id_cartucho__icontains=id_cartucho_recibido)
+            datosCartucho = Cartuchos.objects.filter(id_cartucho=id_cartucho_recibido)
             
             for dato in datosCartucho:
                 marca = dato.marca
                 modelo = dato.modelo
                 idimpresora = dato.id_impresora_id
                 
-            datosImpresora = Impresoras.objects.filter(id_impresora__icontains = idimpresora)
+            datosImpresora = Impresoras.objects.filter(id_impresora = idimpresora)
             
             for dato in datosImpresora:
                 marcaImpresora = dato.marca
                 modeloImpresora = dato.modelo
             
-            actualizar = Cartuchos.objects.filter(id_cartucho__icontains=id_cartucho_recibido).update(cantidad=cantida_recibida)
+            actualizar = Cartuchos.objects.filter(id_cartucho=id_cartucho_recibido).update(cantidad=cantida_recibida)
             
             if actualizar:
                 id_sistemas = request.session['idSesion']
@@ -1602,20 +1542,17 @@ def verProgramas(request):
             
             id_area_recibido = request.POST['idArea']
             
-            datosArea = Areas.objects.filter(id_area__icontains=id_area_recibido)
+            datosArea = Areas.objects.filter(id_area=id_area_recibido)
             
             for dato in datosArea:
                 nombreArea = dato.nombre
                 colorArea = dato.color
-                
-            programas= Programas.objects.all()
-            programasArea = ProgramasArea.objects.all()
             
             programasCasillas = []
             
             for programa in registrosProgramas:
                 idPrograma = int(programa.id_programa)
-                programaEncontrado = ProgramasArea.objects.filter(id_programa_id__id_programa__icontains=idPrograma) #(1,1), (1,6), (1,7)
+                programaEncontrado = ProgramasArea.objects.filter(id_programa_id__id_programa=idPrograma) #(1,1), (1,6), (1,7)
                 areasPrograma=[]
                 n=0
                 
@@ -1721,7 +1658,7 @@ def actualizarProgramasArea(request):
                     
                 if areaTienePrograma:
                     idPrograma = int(programa.id_programa)
-                    programaGuardado = ProgramasArea.objects.filter(id_programa_id__id_programa__icontains=idPrograma) #(1,1), (1,6), (1,7)
+                    programaGuardado = ProgramasArea.objects.filter(id_programa_id__id_programa=idPrograma) #(1,1), (1,6), (1,7)
                     
                     areasPrograma=[]
                     
@@ -1738,7 +1675,7 @@ def actualizarProgramasArea(request):
                 
                 elif areaTienePrograma == False: #No checkeado, verificar si está chequeado
                     idPrograma = int(programa.id_programa)
-                    programaGuardado = ProgramasArea.objects.filter(id_programa_id__id_programa__icontains=idPrograma) #(1,1), (1,6), (1,7)
+                    programaGuardado = ProgramasArea.objects.filter(id_programa_id__id_programa=idPrograma) #(1,1), (1,6), (1,7)
                     
                     areasPrograma=[]
                     
@@ -1748,7 +1685,7 @@ def actualizarProgramasArea(request):
                         
                     if int(id_area_actualizar) in areasPrograma:
                         area = int(id_area_actualizar)
-                        borrado = ProgramasArea.objects.get(id_area_id__id_area__icontains = area, id_programa_id__id_programa__icontains = idPrograma)
+                        borrado = ProgramasArea.objects.get(id_area_id__id_area = area, id_programa_id__id_programa = idPrograma)
                         borrado.delete()
                         
                     else: #No esta esa área en la tabla, agregarlo
@@ -1757,16 +1694,11 @@ def actualizarProgramasArea(request):
             
             return redirect("/ProgramaPorArea/")   
                 
-        
-        
         return redirect("/ProgramaPorArea/")
     
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
-    
-
-
 
 def ProgramasporArea(request):
     
@@ -1821,7 +1753,7 @@ def verProgramasPorArea(request):
         if request.method == "POST":
             
             nombreArea = request.POST['nombreArea']
-            datosArea = Areas.objects.filter(nombre__icontains = nombreArea)
+            datosArea = Areas.objects.filter(nombre = nombreArea)
             
             for dato in datosArea:
                 idArea = dato.id_area
@@ -1921,15 +1853,7 @@ def calendarioMant(request):
                 
         lista = zip (registroEquipos, equipoPropietario, fechasNuevas)
         
-        
-        
-                
-                
-        
-    
 
-        
-        
         return render(request,"Mantenimiento/calendarioMant.html", {"estaEnCalendario": estaEnCalendario, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista, "registroEquipos":registroEquipos, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
     else:
         return redirect('/login/') #redirecciona a url de inicio
@@ -1961,7 +1885,7 @@ def formularioMant(request):
                 empleadosEquipo.append([texto])
 
             else:
-                empleados = Empleados.objects.filter(id_empleado__icontains = idEmpleado)
+                empleados = Empleados.objects.filter(id_empleado = idEmpleado)
 
                 for empleadoEquipo in empleados:
                     nombre = empleadoEquipo.nombre
@@ -1994,7 +1918,7 @@ def formularioMant(request):
                         for operacion in operaciones:
                             if operacion == "Limpieza externa" or operacion == "Limpieza interna":
                                 actualizacion = CalendarioMantenimiento.objects.filter(id_equipo =  equipo_recibido, operacion = "Limpieza externa - Limpieza Interna - ").update(fecha=fecha, observaciones=descripcion_recibida)
-                                equipos = Equipos.objects.filter(id_equipo__icontains = equipo_recibido)
+                                equipos = Equipos.objects.filter(id_equipo = equipo_recibido)
             
                                 for equipo in equipos:
                                     marca = equipo.marca
@@ -2009,7 +1933,7 @@ def formularioMant(request):
             registro = CalendarioMantenimiento(id_equipo=Equipos.objects.get(id_equipo=equipo_recibido), operacion=operacionCompleta, fecha=fecha, observaciones=descripcion_recibida)
             registro.save()
             
-            equipos = Equipos.objects.filter(id_equipo__icontains = equipo_recibido)
+            equipos = Equipos.objects.filter(id_equipo = equipo_recibido)
             
             for equipo in equipos:
                 marca = equipo.marca
@@ -2088,7 +2012,7 @@ def agregarCarta(request):
         numeroNoti = numNoti()
         
         equipos= Equipos.objects.all()
-        empledos=Empleados.objects.all()
+        empledos=Empleados.objects.filter(activo="A")
         cartas= Carta.objects.all()
         fecha= datetime.now()
         areas=[]
@@ -2098,7 +2022,7 @@ def agregarCarta(request):
         
         for empleado in empledos:
             idarea= int(empleado.id_area_id)
-            nombreArea= Areas.objects.filter(id_area__icontains=idarea)
+            nombreArea= Areas.objects.filter(id_area=idarea)
             
             for area in nombreArea:
                 nombreAreas= area.nombre
@@ -2123,10 +2047,10 @@ def agregarCarta(request):
             #crear variables de sesión.
             
             fecha= datetime.now()
-            datosEquipo = Equipos.objects.filter(id_equipo__icontains = compuS)
+            datosEquipo = Equipos.objects.filter(id_equipo = compuS)
         
             compuSeleccionada = True 
-            empleadoDatos = Empleados.objects.filter(id_empleado__icontains=empleSeleccionado)
+            empleadoDatos = Empleados.objects.filter(id_empleado=empleSeleccionado)
             
             for empleados in empleadoDatos:
                 idArea= empleados.id_area_id
@@ -2136,16 +2060,9 @@ def agregarCarta(request):
             for area in datosArea:
                 areaNombre= area.nombre
                 color= area.color
-                
-        
-            
-        
-
-            
 
             #Guardar datos en la tabla Carta de la base de datos
 
-        
             estaEnAgregarCarta = True
             return render(request, "cartaCompromiso/agregarCarta.html",{"estaEnAgregarCarta": estaEnAgregarCarta, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "equipos":equipos, "empleados": empledos, "lista":lista, "fecha":fecha,
                                                                     "compusInactivas": compusInactivas, "compuSeleccionada":compuSeleccionada, "datosEquipo":datosEquipo, "empleadoDatos": empleadoDatos, "areaNombre": areaNombre, "color":color,
@@ -2244,18 +2161,6 @@ def BitacorasEquipos(request):
         lista = zip(datosBitacora,nombresUsuarios, nombresEquipos)
         texto = "Bitácora de Equipos"
         
-        
-    
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         return render(request, "Bitacora/Bitacoras.html",{"estaEnEquiposBitacora": estaEnEquiposBitacora, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "texto": texto, 
                                                           "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
     else:
@@ -2316,11 +2221,7 @@ def BitacorasImpresoras(request):
         lista = zip(datosBitacora,nombresUsuarios, nombresImpresoras)
         texto = "Bitácora de Impresoras"
         
-        
-        
-        
-        
-        
+
         return render(request, "Bitacora/Bitacoras.html",{"estaEnImpresorasBitacora": estaEnImpresorasBitacora, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "texto":texto, 
                                                           "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
     else:
@@ -2386,8 +2287,6 @@ def BitacorasEmpleados(request):
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
-    
-
     
 def BitacorasCartuchos(request):
     
@@ -2547,7 +2446,7 @@ def editarEquipo(request):
         
         if request.method == "POST":
             equipoRecibido = request.POST['idEquipo']
-            equipoDatos = Equipos.objects.filter(id_equipo__icontains=equipoRecibido)
+            equipoDatos = Equipos.objects.filter(id_equipo=equipoRecibido)
 
             
             for dato in equipoDatos:
@@ -2575,7 +2474,7 @@ def editarEquipo(request):
                                                                     "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
             else:
                 
-                empleado = Empleados.objects.filter(id_empleado__icontains=empleadoId)
+                empleado = Empleados.objects.filter(id_empleado=empleadoId)
                 ram = ["1 GB", "2 GB", "4 GB", "8 GB", "12 GB", "16 GB", "32 GB"]
                 for memoria in ram:
                         if memoria == ramequipo:
@@ -2616,12 +2515,6 @@ def editarEquipo(request):
                 
             
                 return render(request, "Editar/editarEquipo.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista, "ram": ram, "sistemasOperativos":sistemasOperativos, "empleado":empleado, "equipoRecibido":equipoRecibido, "datos_empleados":datos_empleados, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
-                
-            
-
-
-
-
 
         return render(request, "Editar/editarEquipo.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
     else:
@@ -2654,7 +2547,7 @@ def editarEmpleado(request):
                 
                     idareaEmpleado = datoEditar.id_area_id
                     
-            datosArea = Areas.objects.filter(id_area__icontains = idareaEmpleado)
+            datosArea = Areas.objects.filter(id_area= idareaEmpleado)
             if datosArea:
                 for nombreEditar in datosArea:
                     
@@ -2699,13 +2592,13 @@ def editarEmpleadoBd(request):
             
             areaInt = int(areaEditar)
             
-            datosEmpleado = Empleados.objects.filter(correo__icontains = correoEditar)
+            datosEmpleado = Empleados.objects.filter(correo = correoEditar)
             
             if datosEmpleado:
                 for dato in datosEmpleado:
                     idEmpleado = dato.id_empleado
             
-            actualizacion = Empleados.objects.filter(correo__icontains = correoEditar).update(nombre=nombreEditar, apellidos=apellidoEditar,
+            actualizacion = Empleados.objects.filter(correo = correoEditar).update(nombre=nombreEditar, apellidos=apellidoEditar,
                                                                                             id_area=areaInt, puesto=puestoEditar, 
                                                                                             correo=correoEditar, contraseña=contraseñaEditar, 
                                                                                             )
@@ -2724,14 +2617,14 @@ def editarEmpleadoBd(request):
                 editado = True
                 textoEdicion = "Se ha editado al empleado " + nombreEditar + " con éxito!"
                 
-                datosEmpleadoEditar = Empleados.objects.filter(id_empleado__icontains = idEmpleado)
+                datosEmpleadoEditar = Empleados.objects.filter(id_empleado = idEmpleado)
                 
                 if datosEmpleadoEditar:
                     for datoEditar in datosEmpleadoEditar:
                     
                         idareaEmpleado = datoEditar.id_area_id
                         
-                datosArea = Areas.objects.filter(id_area__icontains = idareaEmpleado)
+                datosArea = Areas.objects.filter(id_area = idareaEmpleado)
                 if datosArea:
                     for nombreEditar in datosArea:
                         
@@ -2773,25 +2666,21 @@ def editarEquipoBd(request):
             sistema_actualizar = request.POST['sistema']
             estado_actualizar = request.POST['estado']
             cargador_actualizar = request.POST['cargador']
-            
-            
-                
-                
-            
+
             
             if propietario_actualizar == "sinPropietario":
-                actualizar = Equipos.objects.filter(id_equipo__icontains=equipoId).update(memoriaram=ram_actualizar, id_empleado_id=None,
+                actualizar = Equipos.objects.filter(id_equipo=equipoId).update(memoriaram=ram_actualizar, id_empleado_id=None,
                                                 sistemaoperativo= sistema_actualizar, estado= estado_actualizar, modelocargador = cargador_actualizar, activo="I")
                 
                 
             elif propietario_actualizar !=  "sinPropietario": 
                 int_empleado = int(propietario_actualizar)
-                actualizar = Equipos.objects.filter(id_equipo__icontains=equipoId).update(memoriaram=ram_actualizar, id_empleado_id=Empleados.objects.get(id_empleado = int_empleado),
+                actualizar = Equipos.objects.filter(id_equipo=equipoId).update(memoriaram=ram_actualizar, id_empleado_id=Empleados.objects.get(id_empleado = int_empleado),
                                                 sistemaoperativo= sistema_actualizar, estado= estado_actualizar, modelocargador = cargador_actualizar, activo="A")
             
             if actualizar:
                
-                datos = Equipos.objects.filter(id_equipo__icontains = equipoId)
+                datos = Equipos.objects.filter(id_equipo = equipoId)
                 
                 for dato in datos:
                     tipo = dato.tipo
@@ -2812,7 +2701,7 @@ def editarEquipoBd(request):
                 
 
                 equipoRecibido = equipoId
-                equipoDatos = Equipos.objects.filter(id_equipo__icontains=equipoRecibido)
+                equipoDatos = Equipos.objects.filter(id_equipo=equipoRecibido)
 
                 
                 for dato in equipoDatos:
@@ -2840,7 +2729,7 @@ def editarEquipoBd(request):
                                                                         "editado":editado, "textoEdicion":textoEdicion, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
                 else:
                     
-                    empleado = Empleados.objects.filter(id_empleado__icontains=empleadoId)
+                    empleado = Empleados.objects.filter(id_empleado=empleadoId)
                     ram = ["1 GB", "2 GB", "4 GB", "8 GB", "12 GB", "16 GB", "32 GB"]
                     for memoria in ram:
                             if memoria == ramequipo:
@@ -2877,13 +2766,11 @@ def editarEquipoBd(request):
                             apellidos_empleado = dato.apellidos
                         datos_empleados.append([id_empleado, nombre_empleado, apellidos_empleado])    
                         
-                            
-                    
-                
+
                     return render(request, "Editar/editarEquipo.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista, "ram": ram, "sistemasOperativos":sistemasOperativos, "empleado":empleado, "equipoRecibido":equipoRecibido, "datos_empleados":datos_empleados, 
                                                                         "editado":editado, "textoEdicion":textoEdicion, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
             else:
-                datos = Equipos.objects.filter(id_equipo__icontains = equipoId)
+                datos = Equipos.objects.filter(id_equipo = equipoId)
                 
                 for dato in datos:
                     tipo = dato.tipo
@@ -2893,13 +2780,12 @@ def editarEquipoBd(request):
                 todoCompu = tipo + " " + marca + " " + modelo
                 
                 
-                
                 editado = True
                 textoEdicion = "Error en la base de datos!"
                
              
                 equipoRecibido = equipoId
-                equipoDatos = Equipos.objects.filter(id_equipo__icontains=equipoRecibido)
+                equipoDatos = Equipos.objects.filter(id_equipo=equipoRecibido)
 
                 
                 for dato in equipoDatos:
@@ -2927,7 +2813,7 @@ def editarEquipoBd(request):
                                                                         "editado":editado, "textoEdicion":textoEdicion, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
                 else:
                     
-                    empleado = Empleados.objects.filter(id_empleado__icontains=empleadoId)
+                    empleado = Empleados.objects.filter(id_empleado=empleadoId)
                     ram = ["1 GB", "2 GB", "4 GB", "8 GB", "12 GB", "16 GB", "32 GB"]
                     for memoria in ram:
                             if memoria == ramequipo:
@@ -2969,12 +2855,6 @@ def editarEquipoBd(request):
                 
                     return render(request, "Editar/editarEquipo.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista, "ram": ram, "sistemasOperativos":sistemasOperativos, "empleado":empleado, "equipoRecibido":equipoRecibido, "datos_empleados":datos_empleados, 
                                                                         "editado":editado, "textoEdicion":textoEdicion, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
-                   
-        
-        
-        
-        
-        
     
         return render(request,"Editar/editarEmpleado.html", {"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
     else:
@@ -2998,7 +2878,7 @@ def editarImpresoraBd(request):
             area_actualizar = request.POST['areaEditar']
             estado_actualizar = request.POST['estadoEditar']
             
-            datosImpresora = Impresoras.objects.filter(id_impresora__icontains=impresora_id)
+            datosImpresora = Impresoras.objects.filter(id_impresora=impresora_id)
             
             for dato in datosImpresora:
                 marcaMostrar = dato.marca
@@ -3014,31 +2894,31 @@ def editarImpresoraBd(request):
             
             if laVaAPonerEnRed == False:
                 if estado_actualizar == "Funcional":
-                    actualizar = Impresoras.objects.filter(id_impresora__icontains=impresora_id).update(id_area_id=area_actualizar, estado=estado_actualizar,
+                    actualizar = Impresoras.objects.filter(id_impresora=impresora_id).update(id_area_id=area_actualizar, estado=estado_actualizar,
                                                 enred="N", ip="", activo = "A")
                 else:
-                    actualizar = Impresoras.objects.filter(id_impresora__icontains=impresora_id).update(id_area_id=area_actualizar, estado=estado_actualizar,
+                    actualizar = Impresoras.objects.filter(id_impresoras=impresora_id).update(id_area_id=area_actualizar, estado=estado_actualizar,
                                                 enred="N", ip="", activo = "I")
             elif laVaAPonerEnRed == True:
                 if estado_actualizar == "Funcional":
-                    actualizar = Impresoras.objects.filter(id_impresora__icontains=impresora_id).update(id_area_id=area_actualizar, estado=estado_actualizar,
+                    actualizar = Impresoras.objects.filter(id_impresora=impresora_id).update(id_area_id=area_actualizar, estado=estado_actualizar,
                                                 enred="S", ip=ip_actualizar, activo = "A")
                 else:
-                    actualizar = Impresoras.objects.filter(id_impresora__icontains=impresora_id).update(id_area_id=area_actualizar, estado=estado_actualizar,
+                    actualizar = Impresoras.objects.filter(id_impresoras=impresora_id).update(id_area_id=area_actualizar, estado=estado_actualizar,
                                                 enred="S", ip=ip_actualizar, activo = "I")
                     
                     
             if actualizar:
                 
                 
-                datos_impresora = Impresoras.objects.filter(id_impresora__icontains = impresora_id)
+                datos_impresora = Impresoras.objects.filter(id_impresora = impresora_id)
                 
                 if datos_impresora:
                     for datoEditar in datos_impresora:
                     
                         idAreaImpresora = datoEditar.id_area_id
                         
-                datosArea = Areas.objects.filter(id_area__icontains = idAreaImpresora)
+                datosArea = Areas.objects.filter(id_area = idAreaImpresora)
                 if datosArea:
                     for nombreEditar in datosArea:
                         
@@ -3068,10 +2948,7 @@ def editarImpresoraBd(request):
                 return render(request,"Editar/editarImpresora.html", {"impresoraAEditar":datos_impresora, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "nombreArea":nombreArea,
                                                                       "areasNuevas":areasNuevas, "editado":editado, "textoEditado":textoEditado, 
                                                                       "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
-                
-            
-            
-            
+
         
         return render(request,"Editar/editarImpresora.html", {"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo})
     else:
@@ -3085,7 +2962,7 @@ def altaEmpleado(request):
         
             idAlta= request.POST['idEmpleadoAlta']
             
-            datosEmpleado = Empleados.objects.filter(id_empleado__icontains = idAlta)
+            datosEmpleado = Empleados.objects.filter(id_empleado = idAlta)
             
             for dato in datosEmpleado:
                 nombre = dato.nombre
@@ -3093,7 +2970,7 @@ def altaEmpleado(request):
                 
             nombreCompletoEmp = nombre + " " + apellido
             
-            actualizacion = Empleados.objects.filter(id_empleado__icontains = idAlta).update(activo = "A")
+            actualizacion = Empleados.objects.filter(id_empleado = idAlta).update(activo = "A")
             if actualizacion:
                 id_sistemas = request.session['idSesion']
                 
@@ -3119,7 +2996,7 @@ def bajaEmpleado(request):
         
             idBaja= request.POST['idEmpleadoBaja']
             
-            datosEmpleado = Empleados.objects.filter(id_empleado__icontains = idBaja)
+            datosEmpleado = Empleados.objects.filter(id_empleado = idBaja)
             
             for dato in datosEmpleado:
                 nombre = dato.nombre
@@ -3127,7 +3004,7 @@ def bajaEmpleado(request):
             
             nombreCompletoEmp = nombre + " " + apellido
             
-            actualizacion = Empleados.objects.filter(id_empleado__icontains = idBaja).update(activo = "I")
+            actualizacion = Empleados.objects.filter(id_empleado = idBaja).update(activo = "I")
             if actualizacion:
                 
                 id_sistemas = request.session['idSesion']
@@ -3152,7 +3029,7 @@ def altaImpresora(request):
         
             idAlta= request.POST['idImpresoraAlta']
             
-            datosImpresora = Impresoras.objects.filter(id_impresora__icontains = idAlta)
+            datosImpresora = Impresoras.objects.filter(id_impresora = idAlta)
             
             for dato in datosImpresora:
                 marca = dato.marca
@@ -3160,7 +3037,7 @@ def altaImpresora(request):
                 
             nombreCompletoImp = marca + " " + modelo
             
-            actualizacion = Impresoras.objects.filter(id_impresora__icontains = idAlta).update(activo = "A")
+            actualizacion = Impresoras.objects.filter(id_impresora = idAlta).update(activo = "A")
             
             if actualizacion: 
                 id_sistemas = request.session['idSesion']
@@ -3186,7 +3063,7 @@ def bajaImpresora(request):
         
             idBaja= request.POST['idImpresoraBaja']
             
-            datosImpresora = Impresoras.objects.filter(id_impresora__icontains = idBaja)
+            datosImpresora = Impresoras.objects.filter(id_impresora = idBaja)
             
             for dato in datosImpresora:
                 marca = dato.marca
@@ -3194,7 +3071,7 @@ def bajaImpresora(request):
             
             nombreCompletoImp = marca + " " + modelo
             
-            actualizacion = Impresoras.objects.filter(id_impresora__icontains = idBaja).update(activo = "I")
+            actualizacion = Impresoras.objects.filter(id_impresora = idBaja).update(activo = "I")
             
             if actualizacion:
                 
@@ -3220,7 +3097,7 @@ def altaEquipo(request):
             
             idAlta= request.POST['idEquipoAlta']
             
-            datosEquipo = Equipos.objects.filter(id_equipo__icontains = idAlta)
+            datosEquipo = Equipos.objects.filter(id_equipo = idAlta)
             
             for dato in datosEquipo:
                 marca = dato.marca
@@ -3228,7 +3105,7 @@ def altaEquipo(request):
             
             equipo = marca + " " + modelo
             
-            actualizacion = Equipos.objects.filter(id_equipo__icontains = idAlta).update(activo = "A")
+            actualizacion = Equipos.objects.filter(id_equipo = idAlta).update(activo = "A")
             
             if actualizacion:
                 
@@ -3262,7 +3139,7 @@ def bajaEquipo(request):
             
             idBaja= request.POST['idEquipoBaja']
             
-            datosEquipo = Equipos.objects.filter(id_equipo__icontains = idBaja)
+            datosEquipo = Equipos.objects.filter(id_equipo = idBaja)
             
             for dato in datosEquipo:
                 marca = dato.marca
@@ -3270,7 +3147,7 @@ def bajaEquipo(request):
             
             equipo = marca + " " + modelo
             
-            actualizacion = Equipos.objects.filter(id_equipo__icontains = idBaja).update(activo = "I")
+            actualizacion = Equipos.objects.filter(id_equipo = idBaja).update(activo = "I")
             
             if actualizacion:
                 
@@ -3280,10 +3157,7 @@ def bajaEquipo(request):
                 texto= "Se dio de baja al equipo " + equipo 
                 registroBitacora= Bitacora(id_empleado=Empleados.objects.get(id_empleado=id_sistemas), tabla = "Equipos", id_objeto=idBaja, operacion=texto, fecha_hora= fecha)
                 registroBitacora.save()
-                    
-                
-                
-                
+
                 
                 request.session['idEquipoBaja'] = equipo
                 
@@ -3315,14 +3189,14 @@ def editarImpresora(request):
         if request.method == "POST":
 
             idImpresora= request.POST['idImpresoraEditar']
-            datos_impresora = Impresoras.objects.filter(id_impresora__icontains = idImpresora)
+            datos_impresora = Impresoras.objects.filter(id_impresora = idImpresora)
             
             if datos_impresora:
                 for datoEditar in datos_impresora:
                 
                     idAreaImpresora = datoEditar.id_area_id
                     
-            datosArea = Areas.objects.filter(id_area__icontains = idAreaImpresora)
+            datosArea = Areas.objects.filter(id_area = idAreaImpresora)
             if datosArea:
                 for nombreEditar in datosArea:
                     
@@ -3424,7 +3298,7 @@ def reporteDepartamentos(request):
         #Crear objeto PDF 
         buffer =BytesIO()
         c = canvas.Canvas(buffer, pagesize=letter)
-        base_dir = str(settings.BASE_DIR)
+        base_dir = str(settings.BASE_DIR) #C:\Users\AuxSistemas\Desktop\CS Escritorio\Custom-System\djangoCS
         #nombre de empresa
         logo = base_dir+'/static/images/logoCustom.PNG'   
         c.drawImage(logo, 40,700,120,70, preserveAspectRatio=True)
@@ -3476,7 +3350,7 @@ def reporteDepartamentos(request):
             id_area_una = area.id_area
             areaInt = int(id_area_una)
             
-            empleadosEnArea = Empleados.objects.filter(id_area_id__id_area__icontains = areaInt)
+            empleadosEnArea = Empleados.objects.filter(id_area_id__id_area = areaInt)
             
             numero_empleados = 0
             for empleado in empleadosEnArea:
@@ -3734,9 +3608,7 @@ def reporteEmpleadosActivos(request):
                     
                         
                         contadorEmpleados += 1 #11
-                        
-                    
-                    
+  
                     
                 listaEmpleados = zip(ids, nombres, apellidos, areas, puestos, correos, contras, urls_imagenes)
                 contadorHojas = 4
@@ -3776,18 +3648,14 @@ def reporteEmpleadosActivos(request):
                     
                         
                         contadorEmpleados += 1 #11
-                        
-                    
-                    
-                    
+
                 listaEmpleados = zip(ids, nombres, apellidos, areas, puestos, correos, contras, urls_imagenes)
                 contadorHojas = 4
                 if contadorEmpleadosxHoja == 9:
                     high = 600 - ((contadorEmpleadosxHoja+1) * 33)
                 else:
                     high = 600 - (contadorEmpleadosxHoja * 33)
-                
-                
+
             
             if contadorHojas == 2:
                 contadorEmpelados2 = 0
@@ -3818,19 +3686,14 @@ def reporteEmpleadosActivos(request):
                         correos.append(empleado.correo)
                         contras.append(empleado.contraseña)
                     
-                        
-                    
-                    
-                    
+
                 listaEmpleados = zip(ids, nombres, apellidos, areas, puestos, correos, contras, urls_imagenes)
                 contadorHojas = 3
                 if contadorEmpleadosxHoja == 9:
                     high = 600 - ((contadorEmpleadosxHoja+1) * 33)
                 else:
                     high = 600 - (contadorEmpleadosxHoja * 33)
-                    
-            
-                
+
             if contadorHojas == 1:
                 contadorEmpleadosxHoja1 = 0
                 for empleado in datosEmpleados:
@@ -3860,10 +3723,7 @@ def reporteEmpleadosActivos(request):
                         correos.append(empleado.correo)
                         contras.append(empleado.contraseña)
                         contadorEmpleadosxHoja1 +=1
-                    
-                            
-                        
-                    
+
                 #solo 9 empleados
                 listaEmpleados = zip(ids, nombres, apellidos, areas, puestos, correos, contras, urls_imagenes)
                 contadorHojas = 2
@@ -3872,9 +3732,7 @@ def reporteEmpleadosActivos(request):
                 else:
                     high = 600 - (contadorEmpleadosxHoja1 * 33)
                 
-                
 
-            
             #nombre de empresa
             logo = base_dir+'/static/images/logoCustom.PNG'   
             c.drawImage(logo, 40,700,120,70, preserveAspectRatio=True)
@@ -3922,11 +3780,7 @@ def reporteEmpleadosActivos(request):
             elif activo == "I":
                 c.drawString(150,660, 'Reporte Empleados Inactivos')
             
-            
-            
-            
-            
-            
+
             #header de tabla
             styles = getSampleStyleSheet()
             styleBH =styles["Normal"]
@@ -3948,8 +3802,7 @@ def reporteEmpleadosActivos(request):
             styleN = styles["BodyText"]
             styleN.alignment = TA_CENTER
             styleN.fontSize = 7
-            
-                
+     
             
             for id, nombre, apellido, areas, puesto, correo, contra, imagenes in listaEmpleados:
                 campo_empleado = Paragraph(id, styleN)
@@ -4111,12 +3964,6 @@ def reporteRenovacionEq(request):
     
         renovacionEquipos = Renovacion_Equipos.objects.all()
         
-                
-                
-            
-        
-        
-        
         numero_equipos = 0 #contador
         for equipo in renovacionEquipos:
             numero_equipos +=1 #20
@@ -4126,8 +3973,6 @@ def reporteRenovacionEq(request):
         
         division = numero_equipos // 30 #Resultado 2, a fuerzas va a haber 2 hojas en el pdf
         residuo = numero_equipos%30 #residuo hay 2
-        
-        
         
         if residuo == 0:
             #hojas iguales a division.
@@ -4139,7 +3984,7 @@ def reporteRenovacionEq(request):
         #QUITAR ESTO PARA OTRA HOJA
         #crear el http response con pdf
         respuesta = HttpResponse(content_type='application/pdf')
-        respuesta['Content-Disposition'] = 'attachment; filename=Reporte Empleados.pdf'
+        respuesta['Content-Disposition'] = 'attachment; filename=Reporte renovación de equipos.pdf'
         #Crear objeto PDF 
         buffer =BytesIO()
         c = canvas.Canvas(buffer, pagesize=letter)
@@ -4209,9 +4054,7 @@ def reporteRenovacionEq(request):
                             departamentos.append(area)
                         contadorEquiposxHoja +=1
                     
-                            
-                        
-                    
+ 
                 #solo 9 empleados
                 listaEquipos = zip(ids, equiposRe, propietarios, departamentos, compras, renovaciones )
                 contadorHojas = 4
@@ -4268,9 +4111,7 @@ def reporteRenovacionEq(request):
                             propietarios.append(datosPropietario)
                             departamentos.append(area)
                         contadorEquiposxHoja +=1
-                    
-                            
-                        
+   
                     
                 #solo 9 empleados
                 listaEquipos = zip(ids, equiposRe, propietarios, departamentos, compras, renovaciones )
@@ -4287,9 +4128,7 @@ def reporteRenovacionEq(request):
                 contadorEquipos += 1 #10
                 for datosRenovacion in renovacionEquipos:
                         
-                        
-                        
-                        
+    
                     if contadorEquipos <= 28:
                         #Obtener solo empleados que quepan en la hoja
                         idRenovacion= datosRenovacion.id_renov_equipo
@@ -4339,8 +4178,6 @@ def reporteRenovacionEq(request):
                         high = 615 - ((contadorEquiposxHoja+1) * 1)
                     else:
                         high = 615 - (contadorEquiposxHoja * 1)
-                
-                
 
             base_dir = str(settings.BASE_DIR)
             #nombre de empresa
@@ -4385,10 +4222,7 @@ def reporteRenovacionEq(request):
             
             c.drawString(150,660, 'Reporte Renovación Equipos')
             
-            
-            
-            
-            
+
             #header de tabla
             styles = getSampleStyleSheet()
             styleBH =styles["Normal"]
@@ -4410,8 +4244,7 @@ def reporteRenovacionEq(request):
             styleN.alignment = TA_CENTER
             styleN.fontSize = 7
             
-                
-            
+
             for id_re, equipo, propietario, departamento, compra, renov in listaEquipos:
                 campo_id = Paragraph(str(id_re), styleN)
                 campo_equipo = Paragraph(str(equipo), styleN)
@@ -4550,10 +4383,6 @@ def reporteRenovacionEq(request):
             c.showPage()
             
             
-            
-            #HASTA AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
-            
-            
         #guardar pdf
         c.save()
         #obtener valores de bytesIO y esribirlos en la respuesta
@@ -4562,24 +4391,7 @@ def reporteRenovacionEq(request):
         respuesta.write(pdf)
         return respuesta
     else:
-        return redirect('/login/') #redirecciona a url de inicio    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+        return redirect('/login/') #redirecciona a url de inicio     
     
 def reporteEquiposActivos(request):
     
@@ -4888,9 +4700,7 @@ def reporteEquiposActivos(request):
                 else:
                     high = 600 - (contadorEquiposXHoja * 33)
                 
-                
 
-            
             #nombre de empresa
             logo = base_dir+'/static/images/logoCustom.PNG'   
             c.drawImage(logo, 40,700,120,70, preserveAspectRatio=True)
@@ -4938,10 +4748,6 @@ def reporteEquiposActivos(request):
                 c.drawString(180,660, 'Reporte Equipos Activos')
             elif activo == "I":
                 c.drawString(180,660, 'Reporte Equipos Inactivos')
-            
-            
-            
-            
             
             #header de tabla
             styles = getSampleStyleSheet()
@@ -5021,24 +4827,6 @@ def reporteEquiposActivos(request):
             
             #guardar la pagina, y se crea otra en caso de ser necesario
             c.showPage()
-          
-            
-        
-        #HASTA AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
-        
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
             #guardar pdf
             c.save()
@@ -5059,8 +4847,6 @@ def reporteImpresoras(request):
         if request.method == "POST":
 
             activo= request.POST['activo']
-            
-            
         
         impresoras = Impresoras.objects.filter(activo__icontains = activo) #11 empleados
         
@@ -5073,8 +4859,6 @@ def reporteImpresoras(request):
         
         division = numero_impresoras // 9 #Resultado 1, sin residuo
         residuo = numero_impresoras%9 #residuo hay 2
-        
-        
         
         if residuo == 0:
             #hojas iguales a division.
@@ -5123,8 +4907,6 @@ def reporteImpresoras(request):
                         urlimagen = base_dir + '/media/' + str(imagen)
                         img = Image(urlimagen,50,50)
                         urls_imagenes.append(img)
-                        
-                    
                             
                         ids.append(str(impresora.id_impresora))
                         tipos.append(impresora.tipo)
@@ -5175,9 +4957,7 @@ def reporteImpresoras(request):
                         urlimagen = base_dir + '/media/' + str(imagen)
                         img = Image(urlimagen,50,50)
                         urls_imagenes.append(img)
-                        
-                    
-                            
+
                         ids.append(str(impresora.id_impresora))
                         tipos.append(impresora.tipo)
                         marcas.append(impresora.marca)
@@ -5199,9 +4979,7 @@ def reporteImpresoras(request):
                         for datos in datosAreas:
                             nombre = datos.nombre
                         areas.append(nombre)
-                    
-                        
-                        
+ 
                         contadorImpresorasXHoja +=1
                         
                     
@@ -5265,9 +5043,7 @@ def reporteImpresoras(request):
                 else:
                     high = 600 - (contadorImpresorasXHoja * 33)
                 
-                
 
-            
             #nombre de empresa
             logo = base_dir+'/static/images/logoCustom.PNG'   
             c.drawImage(logo, 40,700,120,70, preserveAspectRatio=True)
@@ -5315,11 +5091,7 @@ def reporteImpresoras(request):
                 c.drawString(150,660, 'Reporte Impresoras Activas')
             elif activo == "I":
                 c.drawString(150,660, 'Reporte Impresoras Inactivas')
-            
-            
-            
-            
-            
+
             #header de tabla
             styles = getSampleStyleSheet()
             styleBH =styles["Normal"]
@@ -5397,10 +5169,6 @@ def reporteImpresoras(request):
             
             #guardar la pagina, y se crea otra en caso de ser necesario
             c.showPage()
-            
-            
-            
-            #HASTA AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
         
         #guardar pdf
         c.save()
@@ -5413,28 +5181,6 @@ def reporteImpresoras(request):
     else:
         return redirect('/login/') #redirecciona a url de inicio
        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 def reporteRenovacionImp(request):
     
@@ -5583,10 +5329,6 @@ def reporteRenovacionImp(request):
             
             c.drawString(150,660, 'Reporte Renovación Impresoras')
             
-            
-            
-            
-            
             #header de tabla
             styles = getSampleStyleSheet()
             styleBH =styles["Normal"]
@@ -5607,8 +5349,6 @@ def reporteRenovacionImp(request):
             styleN = styles["BodyText"]
             styleN.alignment = TA_CENTER
             styleN.fontSize = 7
-            
-                
             
             for id_re, impresora, imagen, departamento, compra, renov in listaImpresoras:
                 campo_id = Paragraph(str(id_re), styleN)
@@ -5648,12 +5388,7 @@ def reporteRenovacionImp(request):
             
             #guardar la pagina, y se crea otra en caso de ser necesario
             c.showPage()
-            
-            
-            
-            #HASTA AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
-            
-            
+
         #guardar pdf
         c.save()
         #obtener valores de bytesIO y esribirlos en la respuesta
@@ -5664,27 +5399,6 @@ def reporteRenovacionImp(request):
     
     else:
         return redirect('/login/') #redirecciona a url de inicio
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 def reporteInsumos(request):
@@ -5705,8 +5419,6 @@ def reporteInsumos(request):
         
         division = numero_insumos // 9 #Resultado 1, sin residuo
         residuo = numero_insumos%9 #residuo hay 2
-        
-        
         
         if residuo == 0:
             #hojas iguales a division.
@@ -5741,10 +5453,7 @@ def reporteInsumos(request):
             urls_imagenes = []
             impresoras = []
             base_dir = str(settings.BASE_DIR)
-            
-            
-            
-                    
+ 
             if contadorHojas == 4:
                 contadorInsumos = 0
                 contadorInsumosXHoja = 0
@@ -5772,8 +5481,6 @@ def reporteInsumos(request):
                         numseries.append(insumo.nuserie)
                         colores.append(insumo.color)
                     
-                        
-                        
                         contadorInsumosXHoja +=1
                         
                     
@@ -5812,8 +5519,6 @@ def reporteInsumos(request):
                         cantidades.append(insumo.cantidad)
                         numseries.append(insumo.nuserie)
                         colores.append(insumo.color)
-                    
-                        
                         
                         contadorInsumosXHoja +=1
                         
@@ -5827,8 +5532,6 @@ def reporteInsumos(request):
                 else:
                     high = 600 - (contadorInsumosXHoja * 33)
                     
-                    
-            
             if contadorHojas == 2:
                 contadorInsumos = 0
                 contadorInsumosXHoja = 0
@@ -5856,8 +5559,6 @@ def reporteInsumos(request):
                         numseries.append(insumo.nuserie)
                         colores.append(insumo.color)
                     
-                        
-                        
                         contadorInsumosXHoja +=1
                         
                     
@@ -5897,8 +5598,6 @@ def reporteInsumos(request):
                         cantidades.append(insumo.cantidad)
                         numseries.append(insumo.nuserie)
                         colores.append(insumo.color)
-                    
-                        
                         
                         contadorInsumosXHoja +=1
                         
@@ -5911,9 +5610,6 @@ def reporteInsumos(request):
                     high = 600 - ((contadorInsumosXHoja+1) * 33)
                 else:
                     high = 600 - (contadorInsumosXHoja * 33)
-                
-                
-
             
             base_dir = str(settings.BASE_DIR)
             #nombre de empresa
@@ -5957,11 +5653,7 @@ def reporteInsumos(request):
             c.setFont('Helvetica-Bold', 22)
             
             c.drawString(200,660, 'Reporte Insumos')
-            
-            
-            
-            
-            
+ 
             #header de tabla
             styles = getSampleStyleSheet()
             styleBH =styles["Normal"]
@@ -6033,11 +5725,6 @@ def reporteInsumos(request):
             
             #guardar la pagina, y se crea otra en caso de ser necesario
             c.showPage()
-            
-            
-            
-            #HASTA AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
-            
         
         #guardar pdf
         c.save()
@@ -6049,16 +5736,6 @@ def reporteInsumos(request):
 
     else:
         return redirect('/login/') #redirecciona a url de inicio
-
-
-
-
-
-
-
-
-
-
 
 
 def pdfInfoEquipo(request):
@@ -6158,13 +5835,7 @@ def pdfInfoEquipo(request):
         c.setFont('Helvetica-Bold', 22)
         c.drawString(200,660, 'Información de Equipo')
         
-        
-        
-        
-        
-            
-            
-            
+
         for dato in datosEquipo:
             c.setFont('Helvetica-Bold', 24)
             c.drawString(200,610, 'Número de equipo: '+str(dato.id_equipo))
@@ -6480,17 +6151,6 @@ def pdfInfoEquipo(request):
             c.drawString(180,660, 'Mantenimientos de Equipo')
             
             
-            
-            
-            
-            
-            
-            
-                
-                
-                
-            
-            
             #header de tabla
             styles = getSampleStyleSheet()
             styleBH =styles["Normal"]
@@ -6559,48 +6219,6 @@ def pdfInfoEquipo(request):
 
     else:
         return redirect('/login/') #redirecciona a url de inicio
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 def pdfInfoImpresora(request):
@@ -6700,13 +6318,7 @@ def pdfInfoImpresora(request):
         c.setFont('Helvetica-Bold', 22)
         c.drawString(200,660, 'Información de Impresora')
         
-        
-        
-        
-        
-            
-            
-            
+ 
         for dato in datosImpresora:
             c.setFont('Helvetica-Bold', 24)
             c.drawString(200,610, 'Número de equipo: '+ str(dato.id_impresora))
@@ -6755,7 +6367,6 @@ def pdfInfoImpresora(request):
             tabla_ip = dato.ip
             tabla_estado = dato.estado
             tabla_activo = dato.activo
-        
         
         
         #header de tabla
@@ -6947,17 +6558,6 @@ def pdfInfoImpresora(request):
             c.drawString(180,660, 'Cartuchos de Impresora')
             
             
-            
-            
-            
-            
-            
-            
-                
-                
-                
-            
-            
             #header de tabla
             styles = getSampleStyleSheet()
             styleBH =styles["Normal"]
@@ -7033,11 +6633,6 @@ def pdfInfoImpresora(request):
     
     else:
         return redirect('/login/') #redirecciona a url de inicio
-
-
-
-
-
 
 def qrEquipo(request):
     
