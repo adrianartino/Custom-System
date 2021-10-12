@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block titulo %}
-Ver Programas
+Programas | Custom System
 {% endblock %}
 
 {% block estilos %}
@@ -38,26 +38,16 @@ Ver Programas
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <div class="card">
             <div class="header">
-                <h2>
+                <h2 style="font-family: 'Oswald', sans-serif;">
                     {% if nombreArea %}
                     Asignar programas al area de <span class="{{colorArea}}"> {{nombreArea}}</span>
                     {% else %}
-                    PROGRAMAS
+                    PROGRAMAS/SOFTWARE PARA USO LABORAL
+                    <small style="color: #790C05;">Vista de listado de programas utilizados por los equipos de la empresa.</small>
                     {% endif %}
 
                 </h2>
-                <ul class="header-dropdown m-r--5">
-                    <li class="dropdown">
-                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                            <i class="material-icons">more_vert</i>
-                        </a>
-                        <ul class="dropdown-menu pull-right">
-                            <li><a href="javascript:void(0);">Action</a></li>
-                            <li><a href="javascript:void(0);">Another action</a></li>
-                            <li><a href="javascript:void(0);">Something else here</a></li>
-                        </ul>
-                    </li>
-                </ul>
+                
             </div>
             <div class="body">
                 <div class="table-responsive">

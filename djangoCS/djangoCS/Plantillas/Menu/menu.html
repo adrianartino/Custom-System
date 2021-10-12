@@ -15,8 +15,15 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tourney:wght@800;900&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
     <!-- Font Custom -->
     <link href={% static 'font/stylesheet.css' %} rel="stylesheet" />
+
+    <!-- Light Gallery Plugin Css -->
+    <link href={% static 'panel/plugins/light-gallery/css/lightgallery.css' %} rel="stylesheet">
     {% block estilos %}
 
     {% endblock %}
@@ -63,7 +70,7 @@
             <div class="navbar-header">
                 <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
                 <a href="javascript:void(0);" class="bars"></a>
-                <img class="navbar-brand" src={% static 'images/rayocustom.png' %}  alt="User" height="100%" "/>
+                <img class="navbar-brand" src={% static 'images/rayocustom.png' %} height="20%" alt="User">
                 <a class="navbar-brand" href="index.html"><span class="login100-form-title-1" style="font-family: 'ground_controlregular', cursive; font-size: 25px;">
                     Custom System
                 </span></a>
@@ -971,7 +978,11 @@
 
    
 
-    
+    <!-- Light Gallery Plugin Js -->
+    <script src={% static 'panel/plugins/light-gallery/js/lightgallery-all.js' %}></script>
+
+    <!-- Custom Js -->
+    <script src={% static 'panel/js/pages/medias/image-gallery.js' %}></script>
 
     
 </body>

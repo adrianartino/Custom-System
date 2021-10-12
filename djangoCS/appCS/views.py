@@ -815,7 +815,7 @@ def infoEquipo(request):
             
                 for datos in datosEquipo:
                     id_equipo= datos.id_equipo
-                    propietario= datos.id_empleado
+                    propietario= datos.id_empleado_id
                     
                     sinPropietario = False
                     if propietario == None:
@@ -842,7 +842,7 @@ def infoEquipo(request):
                             nombre= datos.nombre
                             apellidos=datos.apellidos
                             nombreEmpleado= nombre + " " + apellidos
-                            departamento=datos.id_area
+                            departamento=datos.id_area_id
                             datosDepa= Areas.objects.filter(id_area=departamento)
                             for datos in datosDepa:
                                 nombreArea= datos.nombre
@@ -2539,6 +2539,22 @@ def editarEmpleado(request):
             
             empleadoRecibido = request.POST['idEmpleadoEditar']
             
+            datosEquipos = []
+            equipo = Equipos.objects.filter(id_empleado_id__id_empleado = empleadoRecibido)
+            for dato in equipo:
+                id = dato.id_equipo
+                tipo = dato.tipo
+                marca = dato.marca
+                modelo = dato.modelo
+                imagen = dato.imagen
+                
+                equipoCompleto = "#" + str(id) +" - "+ tipo + " " + marca + " " + modelo
+                
+                datosEquipos.append([equipoCompleto, imagen])    
+            
+                
+            
+            
             
             datosEmpleadoEditar = Empleados.objects.filter(id_empleado = empleadoRecibido)
             
@@ -2563,7 +2579,7 @@ def editarEmpleado(request):
                 else:
                     areasNuevas.append([dato.id_area, dato.nombre])
                     
-            return render(request,"Editar/editarEmpleado.html", { "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "datosEmpleadoEditar": datosEmpleadoEditar, "nombreArea": nombreArea, "areasNuevas":areasNuevas, 
+            return render(request,"Editar/editarEmpleado.html", { "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "datosEmpleadoEditar": datosEmpleadoEditar, "nombreArea": nombreArea, "areasNuevas":areasNuevas, "datosEquipos":datosEquipos, 
                                                                  "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
     else:
         return redirect('/login/') #redirecciona a url de inicio
@@ -2619,6 +2635,19 @@ def editarEmpleadoBd(request):
                 
                 datosEmpleadoEditar = Empleados.objects.filter(id_empleado = idEmpleado)
                 
+                datosEquipos = []
+                equipo = Equipos.objects.filter(id_empleado_id__id_empleado = idEmpleado)
+                for dato in equipo:
+                    id = dato.id_equipo
+                    tipo = dato.tipo
+                    marca = dato.marca
+                    modelo = dato.modelo
+                    imagen = dato.imagen
+                    
+                    equipoCompleto = "#" + str(id) +" - "+ tipo + " " + marca + " " + modelo
+                    
+                    datosEquipos.append([equipoCompleto, imagen])   
+                
                 if datosEmpleadoEditar:
                     for datoEditar in datosEmpleadoEditar:
                     
@@ -2641,7 +2670,7 @@ def editarEmpleadoBd(request):
                         areasNuevas.append([dato.id_area, dato.nombre])
                         
                 return render(request,"Editar/editarEmpleado.html", {"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "datosEmpleadoEditar": datosEmpleadoEditar, "nombreArea": nombreArea, "areasNuevas":areasNuevas, "editado":editado, "textoEdicion":textoEdicion, 
-                                                                     "areaEditar":areaEditar, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                                     "areaEditar":areaEditar, "datosEquipos":datosEquipos, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     

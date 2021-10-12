@@ -1,26 +1,26 @@
 ﻿.profile-card {
     .profile-header {
         background-color: #ad1455;
-        padding: 42px 0;
+        padding: 30px 0;
     }
 
     .profile-body {
         .image-area {
             text-align: center;
-            margin-top: -64px;
+            margin-top: -50px;
 
             img {
-                border: 2px solid #ad1455;
+                border: 2px solid #F39C12 ;
                 padding: 2px;
                 margin: 2px;
-                @include border-radius(50%);
+                @include border-radius(30%);
             }
         }
 
         .content-area {
             text-align: center;
             border-bottom: 1px solid #ddd;
-            padding-bottom: 15px;
+            padding-bottom: 3px;
 
             p {
                 margin-bottom: 0;
