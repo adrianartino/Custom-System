@@ -234,7 +234,7 @@ def inicio(request):
         mes = date.strftime("%m") #09
         dia = date.strftime("%d") #23
         int_dia = int(dia)
-        
+        resta_dias= int(dia)+4 #27
         mes_numero = int(fecha.month)
         
         
@@ -256,7 +256,8 @@ def inicio(request):
             
             resta = int(mes) - int(mes_limpieza)
             
-            resta_dias= int(dia)+4 #27
+           
+          
             
             if año_limpieza == año:
                 
@@ -292,7 +293,7 @@ def inicio(request):
                                         
                                     fecha = limpieza.fecha   
                                     datosLimpiezas.append([nombree,apellidose,tipo,marca,modelo, fecha])
-                
+         
         #Datos cartuchos    
         cartuchos = Cartuchos.objects.filter(cantidad=1)
         
@@ -397,7 +398,7 @@ def inicio(request):
                         
                         impresoras_año.append([datos_impresora2, nombre, color, fecha_compra, fecha_renovacion2])
                     
- 
+        
         #Si es la primera vez que inicia sesión.. Bienvenida 
         if "recienIniciado" in request.session:
             nombreCompleto = nombre + " " + apellidos #Blanca Yesenia Gaeta Talamantes
@@ -684,7 +685,7 @@ def agregarEmpleados(request):
                         datosEmpleado = Empleados.objects.filter(apellidos = apellido_recibido)
                             
                         for dato in datosEmpleado:
-                            id_empleado_agregado = dato.id_emplado
+                            id_empleado_agregado = dato.id_empleado
                             
                         nombreCompletoEmp = nombre_recibido + " " + apellido_recibido
                         id_sistemas = request.session['idSesion']
@@ -938,7 +939,7 @@ def agregarEquipos(request):
                     registroCompu=Equipos(tipo=tipo_recibido,marca=marca_recibido,modelo= modelo_recibida,
                                     color=color_recibido,imagen= imagen_recibido, pdf=pdf_recibido,
                                     memoriaram=memoriaram_recibida,procesador=procesador_recibida,sistemaoperativo= sistemaop_recibida,
-                                    estado=estado_recibida, activo="I")
+                                    estado=estado_recibida, activo="I",modelocargador = "Sin cargador")
                     if registroCompu:
                         registroCompu.save()
                         
@@ -998,16 +999,14 @@ def agregarEquipos(request):
                     registroCompu=Equipos(tipo=tipo_recibido,marca=marca_recibido,modelo= modelo_recibida,
                                     color=color_recibido,imagen= imagen_recibido, pdf=pdf_recibido,
                                     memoriaram=memoriaram_recibida,procesador=procesador_recibida,sistemaoperativo= sistemaop_recibida,
-                                    id_empleado =Empleados.objects.get(id_empleado = propietario_recibida),estado=estado_recibida, activo="A")
+                                    id_empleado =Empleados.objects.get(id_empleado = propietario_recibida),estado=estado_recibida, activo="A", modelocargador = "Sin cargador")
                     if registroCompu:
                         registroCompu.save()
                         
-                        ultimo_registro = Equipos.objects.all().last()
+                        ultimo_registro = Equipos.objects.count()
                         
-                        for dato in ultimo_registro:
-                            id_equipo_agregado = dato.id_equipo
                         
-                        registroAntiguiedad = Renovacion_Equipos(id_equipo = Equipos.objects.get(id_equipo = id_equipo_agregado), fecha_compra = fecha_normal, fecha_renov = fecha_renovacion)
+                        registroAntiguiedad = Renovacion_Equipos(id_equipo = Equipos.objects.get(id_equipo = ultimo_registro), fecha_compra = fecha_normal, fecha_renov = fecha_renovacion)
                         registroAntiguiedad.save()
                         id_sistemas = request.session['idSesion']
                 
@@ -4185,15 +4184,15 @@ def reporteRenovacionEq(request):
                                 area = "Sin departamento"
                             else:
                                     
-                                propietarios = Empleados.objects.filter(id_empleado = propietario)
-                                for datosProp in propietarios:
+                                propietariosx = Empleados.objects.filter(id_empleado = propietario)
+                                for datosProp in propietariosx:
                                     nombres = datosProp.nombre
                                     apellidos = datosProp.apellidos
                                     depa = datosProp.id_area_id
                                     datosPropietario= nombres + "" + apellidos
                                 
-                                departamentos = Areas.objects.filter(id_area = depa)
-                                for datosArea in departamentos:
+                                departamentosx = Areas.objects.filter(id_area = depa)
+                                for datosArea in departamentosx:
                                     area = datosArea.nombre
                                     color = datosArea.color
                             propietarios.append(datosPropietario)
@@ -4204,9 +4203,9 @@ def reporteRenovacionEq(request):
                     listaEquipos = zip(ids, equiposRe, propietarios, departamentos, compras, renovaciones )
                     contadorHojas = 2
                     if contadorEquiposxHoja == 28:
-                        high = 615 - ((contadorEquiposxHoja+1) * 1)
+                        high = 600 - ((contadorEquiposxHoja+1) * 1)
                     else:
-                        high = 615 - (contadorEquiposxHoja * 1)
+                        high = 600 - (contadorEquiposxHoja * 1)
 
             base_dir = str(settings.BASE_DIR)
             #nombre de empresa
