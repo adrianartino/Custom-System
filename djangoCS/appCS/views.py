@@ -5874,7 +5874,7 @@ def pdfInfoEquipo(request):
             imagen = str(dato.imagen)  
             
             imagenCompleta = base_dir+"/media/"+imagen 
-            c.drawImage(imagenCompleta, 210,375,200,200, preserveAspectRatio=True)
+            c.drawImage(imagenCompleta, 210,410,170,150, preserveAspectRatio=True)
             
             if nombreProp == "Sin propietario":
                 c.setFont('Helvetica-Bold', 20)
@@ -6129,9 +6129,9 @@ def pdfInfoEquipo(request):
                 
                 contadorHojas = 2
                 if contadorMantenimientosxHoja == 20:
-                    high = 710 - ((contadorMantenimientosxHoja+1) * 33)
+                    high = 650 - ((contadorMantenimientosxHoja+1) * 33)
                 else:
-                    high = 710 - (contadorMantenimientosxHoja * 33)
+                    high = 650 - (contadorMantenimientosxHoja * 33)
                 
             #Lleno el arreglo de mantenimientos
             

@@ -80,7 +80,16 @@ Calendario Mantenimiento | Custom System
                                 <th>{{fecha.operacion}}</th>
                                 <th>{{fecha.observaciones}}</th>
                                 <th>{{fecha.fecha}}</th>
-                                <th>{{fechaproxima}}</th>
+                                {% if fechaproxima == "" %}
+                                <th>No se realizó limpieza</th>
+                                {% else %}
+                                <th>
+                                    <button type="button" class="btn bg-pink waves-effect">
+                                        <i class="material-icons">date_range</i>
+                                        <span>{{fechaproxima}}</span>
+                                    </button>
+                                </th>
+                                {% endif %}
                             </tr>
                             {% endfor %}
                             
