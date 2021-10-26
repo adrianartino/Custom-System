@@ -1691,6 +1691,8 @@ def actualizarProgramasArea(request):
                         #no va aguardar nada
                         nada = True
             
+            request.session["notificacion"] = "Se han actualizado los programas del area!"
+            
             return redirect("/ProgramaPorArea/")   
                 
         return redirect("/ProgramaPorArea/")
@@ -1729,7 +1731,18 @@ def ProgramasporArea(request):
             
         
                     
+        if "notificacion" in request.session:
             
+            noti = request.session["notificacion"]
+            
+            del request.session["notificacion"]
+            
+            siNoti = True
+            
+            
+            
+            return render(request,"Programas/verProgramasArea.html",{"estaEnverProgramasPorArea": estaEnverProgramasPorArea, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, 
+                                                                 "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "noti":noti, "siNoti":siNoti})            
 
         return render(request,"Programas/verProgramasArea.html",{"estaEnverProgramasPorArea": estaEnverProgramasPorArea, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, 
                                                                  "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
@@ -1904,29 +1917,31 @@ def formularioMant(request):
                 operacionCompleta+= operacion+" - "
                 if operacion == "Limpieza externa" or operacion == "Limpieza interna":
                     
-                    limpiezaEquipoExiste = CalendarioMantenimiento.objects.filter(id_equipo = equipo_recibido)
+                    historialEquipo = CalendarioMantenimiento.objects.filter(id_equipo = equipo_recibido)
                     
-                    if limpiezaEquipoExiste:
+                    if historialEquipo: #Si al equipo ya se le realizó algo..
                         operacionEquipoExistente = CalendarioMantenimiento.objects.filter(id_equipo = equipo_recibido)
                         
                         for dato in operacionEquipoExistente:
                             operacion = dato.operacion
                         
-                        operaciones = operacion.split(" - ")
                         
-                        for operacion in operaciones:
-                            if operacion == "Limpieza externa" or operacion == "Limpieza interna":
+                        if operacion == "Limpieza externa - Limpieza interna - " or operacion == "Limpieza interna - Limpieza externa - ":
+                            if operacion == "Limpieza externa - Limpieza interna - ":
                                 actualizacion = CalendarioMantenimiento.objects.filter(id_equipo =  equipo_recibido, operacion = "Limpieza externa - Limpieza Interna - ").update(fecha=fecha, observaciones=descripcion_recibida)
-                                equipos = Equipos.objects.filter(id_equipo = equipo_recibido)
+                            if operacion == "Limpieza interna - Limpieza externa - ":
+                                actualizacion = CalendarioMantenimiento.objects.filter(id_equipo =  equipo_recibido, operacion = "Limpieza interna - Limpieza externa - ").update(fecha=fecha, observaciones=descripcion_recibida)
+                            
+                            equipos = Equipos.objects.filter(id_equipo = equipo_recibido)
             
-                                for equipo in equipos:
-                                    marca = equipo.marca
-                                    modelo = equipo.modelo
+                            for equipo in equipos:
+                                marca = equipo.marca
+                                modelo = equipo.modelo
                             
-                                mantExito = True
-                                mensajeMant = "Se ha agregado el mantenimineto realizado a " + marca + " " + modelo + "con propietario " + nombre + " " + apellidos
+                            mantExito = True
+                            mensajeMant = "Se ha agregado el mantenimineto realizado a " + marca + " " + modelo + "con propietario " + nombre + " " + apellidos
                             
-                                return render(request,"Mantenimiento/formularioMant.html",{"estaEnFormulario": estaEnFormulario, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, 
+                            return render(request,"Mantenimiento/formularioMant.html",{"estaEnFormulario": estaEnFormulario, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, 
                                                                                     "lista": lista, "mantExito":mantExito, "mensajeMant":mensajeMant, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
                 
             registro = CalendarioMantenimiento(id_equipo=Equipos.objects.get(id_equipo=equipo_recibido), operacion=operacionCompleta, fecha=fecha, observaciones=descripcion_recibida)
@@ -2624,7 +2639,7 @@ def editarEmpleadoBd(request):
                 fecha = datetime.now()
                 empleado= nombreEditar + " " + apellidoEditar 
                 texto= "Se editó al empleado " + empleado 
-                registroBitacora= Bitacora(id_empleado=Empleados.objects.get(id_empleado=id_sistemas), tabla = "Equipos", id_objeto=idEmpleado, operacion=texto, fecha_hora= fecha)
+                registroBitacora= Bitacora(id_empleado=Empleados.objects.get(id_empleado=id_sistemas), tabla = "Empleados", id_objeto=idEmpleado, operacion=texto, fecha_hora= fecha)
                 registroBitacora.save()
                 
             
