@@ -1691,6 +1691,8 @@ def actualizarProgramasArea(request):
                         #no va aguardar nada
                         nada = True
             
+            request.session["notificacion"] = "Se han actualizado los programas del area!"
+            
             return redirect("/ProgramaPorArea/")   
                 
         return redirect("/ProgramaPorArea/")
@@ -1729,7 +1731,18 @@ def ProgramasporArea(request):
             
         
                     
+        if "notificacion" in request.session:
             
+            noti = request.session["notificacion"]
+            
+            del request.session["notificacion"]
+            
+            siNoti = True
+            
+            
+            
+            return render(request,"Programas/verProgramasArea.html",{"estaEnverProgramasPorArea": estaEnverProgramasPorArea, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, 
+                                                                 "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "noti":noti, "siNoti":siNoti})            
 
         return render(request,"Programas/verProgramasArea.html",{"estaEnverProgramasPorArea": estaEnverProgramasPorArea, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, 
                                                                  "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
@@ -1904,29 +1917,31 @@ def formularioMant(request):
                 operacionCompleta+= operacion+" - "
                 if operacion == "Limpieza externa" or operacion == "Limpieza interna":
                     
-                    limpiezaEquipoExiste = CalendarioMantenimiento.objects.filter(id_equipo = equipo_recibido)
+                    historialEquipo = CalendarioMantenimiento.objects.filter(id_equipo = equipo_recibido)
                     
-                    if limpiezaEquipoExiste:
+                    if historialEquipo: #Si al equipo ya se le realizó algo..
                         operacionEquipoExistente = CalendarioMantenimiento.objects.filter(id_equipo = equipo_recibido)
                         
                         for dato in operacionEquipoExistente:
                             operacion = dato.operacion
                         
-                        operaciones = operacion.split(" - ")
                         
-                        for operacion in operaciones:
-                            if operacion == "Limpieza externa" or operacion == "Limpieza interna":
+                        if operacion == "Limpieza externa - Limpieza interna - " or operacion == "Limpieza interna - Limpieza externa - ":
+                            if operacion == "Limpieza externa - Limpieza interna - ":
                                 actualizacion = CalendarioMantenimiento.objects.filter(id_equipo =  equipo_recibido, operacion = "Limpieza externa - Limpieza Interna - ").update(fecha=fecha, observaciones=descripcion_recibida)
-                                equipos = Equipos.objects.filter(id_equipo = equipo_recibido)
+                            if operacion == "Limpieza interna - Limpieza externa - ":
+                                actualizacion = CalendarioMantenimiento.objects.filter(id_equipo =  equipo_recibido, operacion = "Limpieza interna - Limpieza externa - ").update(fecha=fecha, observaciones=descripcion_recibida)
+                            
+                            equipos = Equipos.objects.filter(id_equipo = equipo_recibido)
             
-                                for equipo in equipos:
-                                    marca = equipo.marca
-                                    modelo = equipo.modelo
+                            for equipo in equipos:
+                                marca = equipo.marca
+                                modelo = equipo.modelo
                             
-                                mantExito = True
-                                mensajeMant = "Se ha agregado el mantenimineto realizado a " + marca + " " + modelo + "con propietario " + nombre + " " + apellidos
+                            mantExito = True
+                            mensajeMant = "Se ha agregado el mantenimineto realizado a " + marca + " " + modelo + "con propietario " + nombre + " " + apellidos
                             
-                                return render(request,"Mantenimiento/formularioMant.html",{"estaEnFormulario": estaEnFormulario, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, 
+                            return render(request,"Mantenimiento/formularioMant.html",{"estaEnFormulario": estaEnFormulario, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, 
                                                                                     "lista": lista, "mantExito":mantExito, "mensajeMant":mensajeMant, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
                 
             registro = CalendarioMantenimiento(id_equipo=Equipos.objects.get(id_equipo=equipo_recibido), operacion=operacionCompleta, fecha=fecha, observaciones=descripcion_recibida)
@@ -2624,7 +2639,7 @@ def editarEmpleadoBd(request):
                 fecha = datetime.now()
                 empleado= nombreEditar + " " + apellidoEditar 
                 texto= "Se editó al empleado " + empleado 
-                registroBitacora= Bitacora(id_empleado=Empleados.objects.get(id_empleado=id_sistemas), tabla = "Equipos", id_objeto=idEmpleado, operacion=texto, fecha_hora= fecha)
+                registroBitacora= Bitacora(id_empleado=Empleados.objects.get(id_empleado=id_sistemas), tabla = "Empleados", id_objeto=idEmpleado, operacion=texto, fecha_hora= fecha)
                 registroBitacora.save()
                 
             
@@ -3617,7 +3632,7 @@ def reporteEmpleadosActivos(request):
                         idarea = empleado.id_area_id
                         imagen = empleado.imagen_empleado
                         urlimagen = base_dir + '/media/' + str(imagen)
-                        img = Image(urlimagen,50,50)
+                        img = Image(urlimagen,width=50, height=50)
                         
                         urls_imagenes.append(img)
                         
@@ -3657,7 +3672,7 @@ def reporteEmpleadosActivos(request):
                         idarea = empleado.id_area_id
                         imagen = empleado.imagen_empleado
                         urlimagen = base_dir + '/media/' + str(imagen)
-                        img = Image(urlimagen,50,50)
+                        img = Image(urlimagen,width=50, height=50)
                         
                         urls_imagenes.append(img) #Imagen del empleado
                         
@@ -3697,7 +3712,7 @@ def reporteEmpleadosActivos(request):
                         idarea = empleado.id_area_id
                         imagen = empleado.imagen_empleado
                         urlimagen = base_dir + '/media/' + str(imagen)
-                        img = Image(urlimagen,50,50)
+                        img = Image(urlimagen,width=50, height=50)
                         
                         urls_imagenes.append(img)
                         
@@ -3734,7 +3749,7 @@ def reporteEmpleadosActivos(request):
                         idarea = empleado.id_area_id
                         imagen = empleado.imagen_empleado
                         urlimagen = base_dir + '/media/' + str(imagen)
-                        img = Image(urlimagen,50,50)
+                        img = Image(urlimagen,width=50, height=50)
                         
                         urls_imagenes.append(img)
                         
@@ -4493,7 +4508,7 @@ def reporteEquiposActivos(request):
                     if contadorEquipos > 36 and contadorEquipos <=45:
                         imagen = equipo.imagen
                         urlimagen = base_dir + '/media/' + str(imagen)
-                        img = Image(urlimagen,50,50)
+                        img = Image(urlimagen,width=40, height=40)
                         urls_imagenes.append(img)
                         
                         idempleado = equipo.id_empleado_id
@@ -4541,7 +4556,7 @@ def reporteEquiposActivos(request):
                     if contadorEquipos > 27 and contadorEquipos <=36:
                         imagen = equipo.imagen
                         urlimagen = base_dir + '/media/' + str(imagen)
-                        img = Image(urlimagen,50,50)
+                        img = Image(urlimagen,width=40, height=40)
                         urls_imagenes.append(img)
                         
                         idempleado = equipo.id_empleado_id
@@ -4591,7 +4606,7 @@ def reporteEquiposActivos(request):
                     if contadorEquipos > 18 and contadorEquipos <=27:
                         imagen = equipo.imagen
                         urlimagen = base_dir + '/media/' + str(imagen)
-                        img = Image(urlimagen,50,50)
+                        img = Image(urlimagen,width=40, height=40)
                         urls_imagenes.append(img)
                         
                         idempleado = equipo.id_empleado_id
@@ -4641,7 +4656,7 @@ def reporteEquiposActivos(request):
                     if contadorEquipos > 9 and contadorEquipos <=18:
                         imagen = equipo.imagen
                         urlimagen = base_dir + '/media/' + str(imagen)
-                        img = Image(urlimagen,50,50)
+                        img = Image(urlimagen,width=40, height=40)
                         urls_imagenes.append(img)
                         
                         idempleado = equipo.id_empleado_id
@@ -4689,7 +4704,7 @@ def reporteEquiposActivos(request):
                     if contadorEquipos <= 9:
                         imagen = equipo.imagen
                         urlimagen = base_dir + '/media/' + str(imagen)
-                        img = Image(urlimagen,50,50)
+                        img = Image(urlimagen,width=40, height=40)
                         urls_imagenes.append(img)
                         
                         idempleado = equipo.id_empleado_id
@@ -4933,7 +4948,7 @@ def reporteImpresoras(request):
                     if contadorImpresoras > 18 and contadorImpresoras <=27:
                         imagen = impresora.imagen
                         urlimagen = base_dir + '/media/' + str(imagen)
-                        img = Image(urlimagen,50,50)
+                        img = Image(urlimagen,width=50, height=50)
                         urls_imagenes.append(img)
                             
                         ids.append(str(impresora.id_impresora))
@@ -4983,7 +4998,7 @@ def reporteImpresoras(request):
                     if contadorImpresoras > 9 and contadorImpresoras <=18:
                         imagen = impresora.imagen
                         urlimagen = base_dir + '/media/' + str(imagen)
-                        img = Image(urlimagen,50,50)
+                        img = Image(urlimagen,width=50, height=50)
                         urls_imagenes.append(img)
 
                         ids.append(str(impresora.id_impresora))
@@ -5030,7 +5045,7 @@ def reporteImpresoras(request):
                     if contadorImpresoras <= 9:
                         imagen = impresora.imagen
                         urlimagen = base_dir + '/media/' + str(imagen)
-                        img = Image(urlimagen,50,50)
+                        img = Image(urlimagen,width=50, height=50)
                         urls_imagenes.append(img)
                         
                     
@@ -5491,7 +5506,7 @@ def reporteInsumos(request):
                     if contadorInsumos > 27 and contadorInsumos <= 36:
                         imagen = insumo.imagenCartucho
                         urlimagen = base_dir + '/media/' + str(imagen)
-                        img = Image(urlimagen,50,50)
+                        img = Image(urlimagen,width=50, height=50)
                         urls_imagenes.append(img)
                         
                         idimpresora = insumo.id_impresora_id
@@ -5530,7 +5545,7 @@ def reporteInsumos(request):
                     if contadorInsumos > 18 and contadorInsumos <= 27:
                         imagen = insumo.imagenCartucho
                         urlimagen = base_dir + '/media/' + str(imagen)
-                        img = Image(urlimagen,50,50)
+                        img = Image(urlimagen,width=50, height=50)
                         urls_imagenes.append(img)
                         
                         idimpresora = insumo.id_impresora_id
@@ -5569,7 +5584,7 @@ def reporteInsumos(request):
                     if contadorInsumos > 9 and contadorInsumos <= 18:
                         imagen = insumo.imagenCartucho
                         urlimagen = base_dir + '/media/' + str(imagen)
-                        img = Image(urlimagen,50,50)
+                        img = Image(urlimagen,width=50, height=50)
                         urls_imagenes.append(img)
                         
                         idimpresora = insumo.id_impresora_id
@@ -5609,7 +5624,7 @@ def reporteInsumos(request):
                     if contadorInsumos <= 9:
                         imagen = insumo.imagenCartucho
                         urlimagen = base_dir + '/media/' + str(imagen)
-                        img = Image(urlimagen,50,50)
+                        img = Image(urlimagen,width=50, height=50)
                         urls_imagenes.append(img)
                         
                         idimpresora = insumo.id_impresora_id
@@ -5693,7 +5708,7 @@ def reporteInsumos(request):
             marca = Paragraph('''Marca''', styleBH)
             modelo = Paragraph('''Modelo''', styleBH)
             cantidad= Paragraph('''Cantidad''', styleBH)
-            nserie = Paragraph('''Num. Serie''', styleBH)
+            nserie = Paragraph('''N° Serie''', styleBH)
             color = Paragraph('''Color''', styleBH)
             imagen = Paragraph('''Imagen.''', styleBH)
             impresora = Paragraph('''Impresora''', styleBH)
@@ -5874,7 +5889,7 @@ def pdfInfoEquipo(request):
             imagen = str(dato.imagen)  
             
             imagenCompleta = base_dir+"/media/"+imagen 
-            c.drawImage(imagenCompleta, 210,410,170,150, preserveAspectRatio=True)
+            c.drawImage(imagenCompleta, 210,410,width=160,height=160)
             
             if nombreProp == "Sin propietario":
                 c.setFont('Helvetica-Bold', 20)
@@ -6349,7 +6364,7 @@ def pdfInfoImpresora(request):
  
         for dato in datosImpresora:
             c.setFont('Helvetica-Bold', 24)
-            c.drawString(200,610, 'Número de equipo: '+ str(dato.id_impresora))
+            c.drawString(200,610, 'Número de impresora: '+ str(dato.id_impresora))
             
             c.setFont('Helvetica-Bold', 22)
             c.drawString(70,580, dato.marca + " " + dato.modelo + " " + dato.tipo)
@@ -6357,7 +6372,7 @@ def pdfInfoImpresora(request):
             imagen = str(dato.imagen)  
             
             imagenCompleta = base_dir+"/media/"+imagen 
-            c.drawImage(imagenCompleta, 210,390,180,180, preserveAspectRatio=True)
+            c.drawImage(imagenCompleta, 210,390,width=180,height=180)
             
             if nombre == "Sin departamento":
                 c.setFont('Helvetica-Bold', 20)
