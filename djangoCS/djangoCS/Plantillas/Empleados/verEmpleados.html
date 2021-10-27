@@ -119,17 +119,14 @@ Empleados | Custom System
                                         
                                     </th>
                                 </form>
-                                <form action="/bajaEmpleado/" method="POST">{% csrf_token %}
+                                
                                     <th>
-                                        <input type="hidden" name="idEmpleadoBaja" value="{{empleado.id_empleado}}">
                                         <center>
-                                            <button type="submit" class="btn bg-red waves-effect">
+                                            <button type="button" class="btn bg-red waves-effect" data-toggle="modal" data-target="#{{empleado.id_empleado}}">
                                                 <i class="material-icons">cancel</i>
                                             </button>
                                         </center>
-                                        
                                     </th>
-                                </form>
                             </tr>
                             {% endfor %}
                             
@@ -194,19 +191,13 @@ Empleados | Custom System
                                 <td>{{empleado.puesto}}</td>
                                 <td>{{empleado.correo}}</td>
                                 <td>{{empleado.contraseña}}</td>
-                                <form action="/altaEmpleado/" method="POST">{% csrf_token %}
                                     <th>
-                                        <input type="hidden" name="idEmpleadoAlta" value="{{empleado.id_empleado}}">
-                                       
                                             <center>
-                                                <button type="submit" class="btn bg-green waves-effect">
+                                                <button type="button" class="btn bg-green waves-effect"  data-toggle="modal" data-target="#{{empleado.id_empleado}}">
                                                     <i class="material-icons">upgrade</i>
                                                 </button>
                                             </center>
-                                       
-                                        
                                     </th>
-                                </form>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -224,6 +215,119 @@ Empleados | Custom System
         </div>
     </div>
 </div>
+
+
+{% for empleado, area in listaModal1 %}
+<!-- Default Size -->
+<div class="modal fade" id="{{empleado.id_empleado}}" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="border-radius: 16px;">
+            <div class="modal-header">
+                <center>
+                    <h1 style="color: crimson; font-family: 'Oswald', sans-serif;">DAR DE BAJA EMPLEADO <i class="material-icons" style="color:black; font-size:100%">get_app</i></h1>
+                    <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
+
+                </center>
+            </div>
+            <div class="modal-body">
+                <form action="/bajaEmpleado/" method="POST">{% csrf_token %}
+                    <div class="body table-responsive">
+                        <table class="table" >
+                            <thead>
+                                <tr class="bg-teal">
+                                    <th>Nombre</th>
+                                    <th>Apellidos</th>
+                                    <th>Imagen</th>
+                                    <th>Departamento</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="color: black;">{{empleado.nombre}}</td>
+                                    <td style="color: black;">{{empleado.apellidos}}</td>
+                                    <th> <img src="{{empleado.imagen_empleado.url}}" width="120" height="150" alt="lap"></th>
+                                    <td> <label class="{{area.1}}">{{area.0}}</label> </td>
+                                </tr>
+                                
+                               
+                            </tbody>
+                        </table>
+                        
+                    
+                        
+                    </div>
+                    <center>
+                        <input type="hidden" value="{{empleado.id_empleado}}" name="idEmpleadoBaja">
+                        <h3 style="color: black;">Seguro que desea dar de baja al empleado?</h3>
+                        <button type="submit" class="btn bg-red waves-effect">
+                            <i class="material-icons">cancel</i>
+                            <span>DAR DE BAJA</span>
+                        </button>
+                    </center>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endfor %}
+
+{% for empleado, area in listaModal2 %}
+<!-- Default Size -->
+<div class="modal fade" id="{{empleado.id_empleado}}" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="border-radius: 16px;">
+            <div class="modal-header">
+                <center>
+                    <h1 style="color: green; font-family: 'Oswald', sans-serif;">DAR DE ALTA EMPLEADO <i class="material-icons" style="color:black; font-size:100%">upgrade</i></h1>
+                    <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
+
+                </center>
+            </div>
+            <div class="modal-body">
+                <form action="/altaEmpleado/" method="POST">{% csrf_token %}
+                    <div class="body table-responsive">
+                        <table class="table" >
+                            <thead>
+                                <tr class="bg-teal">
+                                    <th>Nombre</th>
+                                    <th>Apellidos</th>
+                                    <th>Imagen</th>
+                                    <th>Departamento</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="color: black;">{{empleado.nombre}}</td>
+                                    <td style="color: black;">{{empleado.apellidos}}</td>
+                                    <th> <img src="{{empleado.imagen_empleado.url}}" width="120" height="150" alt="lap"></th>
+                                    <td> <label class="{{area.1}}">{{area.0}}</label> </td>
+                                </tr>
+                                
+                               
+                            </tbody>
+                        </table>
+                        
+                    
+                        
+                    </div>
+                    <center>
+                        <input type="hidden" value="{{empleado.id_empleado}}" name="idEmpleadoAlta">
+                        <h3 style="color: black;">Seguro que desea dar de alta al empleado?</h3>
+                        <button type="submit" class="btn bg-green waves-effect">
+                            <i class="material-icons">upgrade</i>
+                            <span>DAR DE ALTA</span>
+                        </button>
+                    </center>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endfor %}
+
+
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     {% if alta %}
     <script type="text/javascript">

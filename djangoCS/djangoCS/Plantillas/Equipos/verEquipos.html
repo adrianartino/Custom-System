@@ -162,17 +162,15 @@ Equipos | Custom System
                                     
                                     </th>
                                
-                                <form action="/bajaEquipo/" method="POST">{% csrf_token %}
+                                
                                     <th>
-                                        <input type="hidden" name="idEquipoBaja" value="{{equipo.id_equipo}}">
                                         <center>
-                                            <button type="submit" class="btn bg-red waves-effect">
+                                            <button type="button" class="btn bg-red waves-effect" data-toggle="modal" data-target="#{{equipo.id_equipo}}">
                                                 <i class="material-icons">cancel</i>
                                             </button>
                                         </center>
                                         
                                     </th>
-                                </form>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -258,18 +256,18 @@ Equipos | Custom System
                                     <th>{{equipoIna.modelocargador}}</th>
                                     
                                     <th>{{equipoIna.estado}}</th>
-                                    <form action="/altaEquipo/" method="POST">{% csrf_token %}
+                                    
                                         <th>
-                                            <input type="hidden" name="idEquipoAlta" value="{{equipoIna.id_equipo}}">
+                                           
                                             
                                             <center>
-                                                <button type="submit" class="btn bg-green waves-effect">
+                                                <button type="button" class="btn bg-green waves-effect" data-toggle="modal" data-target="#{{equipoIna.id_equipo}}">
                                                     <i class="material-icons">upgrade</i>
                                                 </button>
                                             </center>
                                         
                                         </th>
-                                    </form>
+                                    
                                 
                                 
                                 
@@ -297,6 +295,117 @@ Equipos | Custom System
     </div>
     
 </div>
+
+{% for equipo, empleado in lista2 %}
+<!-- Default Size -->
+<div class="modal fade" id="{{equipo.id_equipo}}" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="border-radius: 16px;">
+            <div class="modal-header">
+                <center>
+                    <h1 style="color: crimson; font-family: 'Oswald', sans-serif;">DAR DE BAJA EQUIPO <i class="material-icons" style="color:black; font-size:100%">get_app</i></h1>
+                    <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
+
+                </center>
+            </div>
+            <div class="modal-body">
+                <form action="/bajaEquipo/" method="POST">{% csrf_token %}
+                    <div class="body table-responsive">
+                        <table class="table" >
+                            <thead>
+                                <tr class="bg-teal">
+                                    <th>Imagen</th>
+                                    <th>Marca</th>
+                                    <th>Modelo</th>
+                                    <th>Propietario</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr >
+                                    <th> <img src="{{equipo.imagen.url}}" width="150" height="200" alt="lap"></th>
+                                    <td style="color: black;">{{equipo.marca}}</td>
+                                    <td style="color: black;">{{equipo.modelo}}</td>
+                                    <th style="color: black;">{{empleado.0}} {{empleado.1}}</th>
+                                </tr>
+                                
+                               
+                            </tbody>
+                        </table>
+                        
+                    
+                        
+                    </div>
+                    <center>
+                        <input type="hidden" value="{{equipo.id_equipo}}" name="idEquipoBaja">
+                        <h3 style="color: black;">Seguro que desea dar de baja al equipo?</h3>
+                        <button type="submit" class="btn bg-red waves-effect">
+                            <i class="material-icons">cancel</i>
+                            <span>DAR DE BAJA</span>
+                        </button>
+                    </center>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endfor %}
+
+{% for equipoIna in equiposInactivos %}
+<!-- Default Size -->
+<div class="modal fade" id="{{equipoIna.id_equipo}}" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="border-radius: 16px;">
+            <div class="modal-header">
+                <center>
+                    <h1 style="color: green; font-family: 'Oswald', sans-serif;">DAR DE ALTA EQUIPO <i class="material-icons" style="color:black; font-size:100%">upgrade</i></h1>
+                    <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
+
+                </center>
+            </div>
+            <div class="modal-body">
+                <form action="/altaEquipo/" method="POST">{% csrf_token %}
+                    <div class="body table-responsive">
+                        <table class="table" >
+                            <thead>
+                                <tr class="bg-teal">
+                                    <th>Imagen</th>
+                                    <th>Marca</th>
+                                    <th>Modelo</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr >
+                                    <th> <img src="{{equipoIna.imagen.url}}" width="150" height="200" alt="lap"></th>
+                                    <td style="color: black;">{{equipoIna.marca}}</td>
+                                    <td style="color: black;">{{equipoIna.modelo}}</td>
+                                   
+                                </tr>
+                                
+                               
+                            </tbody>
+                        </table>
+                        
+                    
+                        
+                    </div>
+                    <center>
+                        <input type="hidden" value="{{equipoIna.id_equipo}}" name="idEquipoAlta">
+                        <h3 style="color: black;">Seguro que desea dar de alta al equipo?</h3>
+                        <h4>Se le asignará un propietario despues de dar de alta en la opción editar equipo</h4>
+                        <button type="submit" class="btn bg-green waves-effect">
+                            <i class="material-icons">upgrade</i>
+                            <span>DAR DE ALTA</span>
+                        </button>
+                    </center>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endfor %}
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     {% if bajaEquipo %}
     <script type="text/javascript">

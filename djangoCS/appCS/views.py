@@ -587,6 +587,7 @@ def verEmpleados(request):
             datosAreasEnActivos.append([nombreArea, colorArea])
             
         lista = zip(empleadosActivos, datosAreasEnActivos)
+        listaModal1 = zip(empleadosActivos, datosAreasEnActivos)
                     
         
         #empleadosInactivos
@@ -606,7 +607,8 @@ def verEmpleados(request):
                         
             datosAreasEnInactivos.append([nombreArea, colorArea])
                 
-        lista1 = zip (empleadosInactivos, datosAreasEnInactivos)
+        lista1 = zip(empleadosInactivos, datosAreasEnInactivos)
+        listaModal2 = zip(empleadosInactivos, datosAreasEnInactivos)
         
         #Notificaciones altas y bajas
         if "idEmpleadoAlta" in request.session:
@@ -614,15 +616,15 @@ def verEmpleados(request):
             mensaje = "Se dio de alta al empleado " + request.session['idEmpleadoAlta']
             del request.session["idEmpleadoAlta"]
             return render(request,"Empleados/verEmpleados.html", {"estaEnVerEmpleados": estaEnVerEmpleados,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"lista1":lista1, "alta":alta, "mensaje":mensaje, 
-                                                                  "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                                  "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "listaModal1":listaModal1, "listaModal2":listaModal2})
         
         if "idEmpleadoBaja" in request.session:
             baja = True
             mensaje = "Se dio de baja al empleado " + request.session['idEmpleadoBaja']
             del request.session["idEmpleadoBaja"]
-            return render(request,"Empleados/verEmpleados.html", {"estaEnVerEmpleados": estaEnVerEmpleados, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"lista1":lista1, "baja":baja, "mensaje":mensaje, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+            return render(request,"Empleados/verEmpleados.html", {"estaEnVerEmpleados": estaEnVerEmpleados, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"lista1":lista1, "baja":baja, "mensaje":mensaje, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "listaModal1":listaModal1, "listaModal2":listaModal2})
         
-        return render(request,"Empleados/verEmpleados.html", {"estaEnVerEmpleados": estaEnVerEmpleados, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"lista1":lista1, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+        return render(request,"Empleados/verEmpleados.html", {"estaEnVerEmpleados": estaEnVerEmpleados, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"lista1":lista1, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "listaModal1":listaModal1, "listaModal2":listaModal2})
     else:
         return redirect('/login/') #redirecciona a url de inicio
 
@@ -760,6 +762,7 @@ def verEquipos(request):
                 datosAreasEnActivos.append([nombreEmpleado, apellidosEmpleado, nombreArea, color])
             
         lista = zip(equiposActivos, datosAreasEnActivos)
+        lista2=zip(equiposActivos, datosAreasEnActivos)
         
         
         
@@ -771,7 +774,7 @@ def verEquipos(request):
                 bajaExito= "Se dió de baja el " + request.session["idEquipoBaja"] + " con éxito!"
             del request.session["idEquipoBaja"]
             return render(request, "Equipos/verEquipos.html", {"estaEnVerEquipos": estaEnVerEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "bajaEquipo":
-                bajaEquipo, "bajaExito": bajaExito, "equiposInactivos":equiposInactivos, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                bajaEquipo, "bajaExito": bajaExito, "equiposInactivos":equiposInactivos, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "equiposActivos":equiposActivos, "lista2":lista2})
             
         if "idEquipoAlta" in request.session:
             altaEquipo= True
@@ -782,10 +785,10 @@ def verEquipos(request):
                 altaExito= "Se dió de alta el " + request.session["idEquipoAlta"] + " con éxito"
             del request.session["idEquipoAlta"]
             return render(request, "Equipos/verEquipos.html", {"estaEnVerEquipos": estaEnVerEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,
-                                                            "altaEquipo": altaEquipo, "altaExito":altaExito, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                            "altaEquipo": altaEquipo, "altaExito":altaExito, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti,  "equiposActivos":equiposActivos, "lista2":lista2})
 
         return render(request, "Equipos/verEquipos.html", {"estaEnVerEquipos": estaEnVerEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "equiposInactivos":equiposInactivos, 
-                                                           "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                           "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti,  "equiposActivos":equiposActivos, "lista2":lista2})
 
     else:
         return redirect('/login/') #redirecciona a url de inicio
@@ -963,12 +966,11 @@ def agregarEquipos(request):
                     if registroCompu:
                         registroCompu.save()
                         
-                        ultimo_registro = Equipos.objects.all().last()
+                        registros = Equipos.objects.count()
                         
-                        for dato in ultimo_registro:
-                            id_equipo_agregado = dato.id_equipo
                         
-                        registroAntiguiedad = Renovacion_Equipos(id_equipo = Equipos.objects.get(id_equipo = id_equipo_agregado), fecha_compra = fecha_normal, fecha_renov = fecha_renovacion)
+                        
+                        registroAntiguiedad = Renovacion_Equipos(id_equipo = Equipos.objects.get(id_equipo = registros), fecha_compra = fecha_normal, fecha_renov = fecha_renovacion)
                         registroAntiguiedad.save()
                         
                         id_sistemas = request.session['idSesion']
@@ -976,7 +978,7 @@ def agregarEquipos(request):
                         fecha = datetime.now()
                         equipo= tipo_recibido + " " + marca_recibido + " " + modelo_recibida
                         texto= "Se agregó al equipo " + equipo 
-                        registroBitacora= Bitacora(id_empleado=Empleados.objects.get(id_empleado=id_sistemas), tabla = "Equipos", id_objeto=ultimo_registro, operacion=texto, fecha_hora= fecha)
+                        registroBitacora= Bitacora(id_empleado=Empleados.objects.get(id_empleado=id_sistemas), tabla = "Equipos", id_objeto=registros, operacion=texto, fecha_hora= fecha)
                         registroBitacora.save()
                         
                 compuSin = True
@@ -1024,22 +1026,21 @@ def agregarEquipos(request):
                     if registroCompu:
                         registroCompu.save()
                         
-                        ultimo_registro = Equipos.objects.all().last()
+                        registros = Equipos.objects.count()
                         
-                        for dato in ultimo_registro:
-                            id_equipo_agregado = dato.id_equipo
                         
-                        registroAntiguiedad = Renovacion_Equipos(id_equipo = Equipos.objects.get(id_equipo = id_equipo_agregado), fecha_compra = fecha_normal, fecha_renov = fecha_renovacion)
+                        
+                        registroAntiguiedad = Renovacion_Equipos(id_equipo = Equipos.objects.get(id_equipo =  registros), fecha_compra = fecha_normal, fecha_renov = fecha_renovacion)
                         registroAntiguiedad.save()
                         id_sistemas = request.session['idSesion']
                 
                         fecha = datetime.now()
                         equipo= tipo_recibido + " " + marca_recibido + " " + modelo_recibida
                         texto= "Se agregó al equipo " + equipo 
-                        registroBitacora= Bitacora(id_empleado=Empleados.objects.get(id_empleado=id_sistemas), tabla = "Equipos", id_objeto=ultimo_registro, operacion=texto, fecha_hora= fecha)
+                        registroBitacora= Bitacora(id_empleado=Empleados.objects.get(id_empleado=id_sistemas), tabla = "Equipos", id_objeto= registros, operacion=texto, fecha_hora= fecha)
                         registroBitacora.save()
                         
-                return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos": estaEnAgregarEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "compuCon": compuCon, "textoCompu":textoCompu, 
+                return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos ": estaEnAgregarEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "compuCon": compuCon, "textoCompu":textoCompu, 
                                                                       "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
         
         if empleadosEquipo:
@@ -1150,6 +1151,7 @@ def verImpresoras(request):
             datosAreasEnActivos.append([nombreArea, colorArea])
             
         lista = zip(impresorasActivas, datosAreasEnActivos)
+        listaModal1 = zip(impresorasActivas, datosAreasEnActivos)
         
         #impresoras inactivos
         areasEnInactivos = []
@@ -1170,22 +1172,23 @@ def verImpresoras(request):
             datosAreasEnInactivos.append([nombreArea, colorArea])
             
         lista2 = zip(impresorasInactivas, datosAreasEnInactivos)
+        listaModal2 = zip(impresorasInactivas, datosAreasEnInactivos)
         
         if "idImpresoraAlta" in request.session:
             alta = True
             mensaje = "Se dio de alta la impresora " + request.session['idImpresoraAlta']
             del request.session["idImpresoraAlta"]
             return render(request,"Impresoras/verImpresoras.html",{"estaEnVerImpresoras": estaEnVerImpresoras, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista,
-                                                            "lista2":lista2, "alta": alta, "mensaje": mensaje, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                            "lista2":lista2, "alta": alta, "mensaje": mensaje, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "listaModal1":listaModal1, "listaModal2":listaModal2})
         if "idImpresoraBaja" in request.session:
             baja = True
             mensaje = "Se dio de baja la impresora " + request.session['idImpresoraBaja']
             del request.session["idImpresoraBaja"]
             return render(request,"Impresoras/verImpresoras.html",{"estaEnVerImpresoras": estaEnVerImpresoras, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista,
-                                                            "lista2":lista2, "baja": baja, "mensaje": mensaje, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                            "lista2":lista2, "baja": baja, "mensaje": mensaje, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "listaModal1":listaModal1, "listaModal2":listaModal2})
 
         return render(request,"Impresoras/verImpresoras.html",{"estaEnVerImpresoras": estaEnVerImpresoras, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista,
-                                                            "lista2":lista2, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                            "lista2":lista2, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "listaModal1":listaModal1, "listaModal2":listaModal2})
     else:
         return redirect('/login/') #redirecciona a url de inicio
 

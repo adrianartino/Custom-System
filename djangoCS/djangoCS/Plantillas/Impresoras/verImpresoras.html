@@ -140,17 +140,14 @@ Impresoras | Custom System
                                         
                                     </th>
                                 </form>
-                                <form action="/bajaImpresora/" method="POST">{% csrf_token %}
                                     <th>
-                                        <input type="hidden" name="idImpresoraBaja" value="{{impresoras.id_impresora}}">
                                         <center>
-                                            <button type="submit" class="btn bg-red waves-effect">
+                                            <button type="button" class="btn bg-red waves-effect" data-toggle="modal" data-target="#{{impresoras.id_impresora}}">
                                                 <i class="material-icons">cancel</i>
                                             </button>
                                         </center>
                                         
                                     </th>
-                                </form>
                                 
                             </tr>
                             {% endfor %}
@@ -226,18 +223,15 @@ Impresoras | Custom System
                                 <th>{{impresorasI.ip}}</th>
                                 <th>{{impresorasI.estado}}</th>
                                 <th><label class="{{areasI.1}}">{{areasI.0}}</label> </th>
-                                <form action="/altaImpresora/" method="POST">{% csrf_token %}
                                     <th>
-                                        <input type="hidden" name="idImpresoraAlta" value="{{impresorasI.id_impresora}}">
                                         
                                         <center>
-                                            <button type="submit" class="btn bg-green waves-effect">
+                                            <button type="submit" class="btn bg-green waves-effect" data-toggle="modal" data-target="#{{impresorasI.id_impresora}}">
                                                 <i class="material-icons">upgrade</i>
                                             </button>
                                         </center>
                                     
                                     </th>
-                                </form>
                             </tr>
                             {% endfor %}
                             
@@ -258,6 +252,117 @@ Impresoras | Custom System
         </div>
     </div>
 </div>
+
+{% for impresoras, areas in listaModal1 %}
+<!-- Default Size -->
+<div class="modal fade" id="{{impresoras.id_impresora}}" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="border-radius: 16px;">
+            <div class="modal-header">
+                <center>
+                    <h1 style="color: crimson; font-family: 'Oswald', sans-serif;">DAR DE BAJA IMPRESORA <i class="material-icons" style="color:black; font-size:100%">get_app</i></h1>
+                    <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
+
+                </center>
+            </div>
+            <div class="modal-body">
+                <form action="/bajaImpresora/" method="POST">{% csrf_token %}
+                    <div class="body table-responsive">
+                        <table class="table" >
+                            <thead>
+                                <tr class="bg-teal">
+                                    <th>Imagen</th>
+                                    <th>Marca</th>
+                                    <th>Modelo</th>
+                                    <th>Área</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr >
+                                    <th> <img src="{{impresoras.imagen.url}}" width="150" height="200" alt="lap"></th>
+                                    <td style="color: black;">{{impresoras.marca}}</td>
+                                    <td style="color: black;">{{impresoras.modelo}}</td>
+                                    <th><label class="{{areas.1}}">{{areas.0}}</label> </th>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                    
+                        
+                    </div>
+                    <center>
+                        <input type="hidden" value="{{impresoras.id_impresora}}" name="idImpresoraBaja">
+                        <h3 style="color: black;">Seguro que desea dar de baja a la impresora?</h3>
+                        <button type="submit" class="btn bg-red waves-effect">
+                            <i class="material-icons">cancel</i>
+                            <span>DAR DE BAJA</span>
+                        </button>
+                    </center>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endfor %}
+
+{% for impresorasI, areasI in listaModal2 %}
+<!-- Default Size -->
+<div class="modal fade" id="{{impresorasI.id_impresora}}" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="border-radius: 16px;">
+            <div class="modal-header">
+                <center>
+                    <h1 style="color: green; font-family: 'Oswald', sans-serif;">DAR DE ALTA IMPRESORA <i class="material-icons" style="color:black; font-size:100%">upgrade</i></h1>
+                    <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
+
+                </center>
+            </div>
+            <div class="modal-body">
+                <form action="/altaImpresora/" method="POST">{% csrf_token %}
+                    <div class="body table-responsive">
+                        <table class="table" >
+                            <thead>
+                                <tr class="bg-teal">
+                                    <th>Imagen</th>
+                                    <th>Marca</th>
+                                    <th>Modelo</th>
+                                    <th>Área</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr >
+                                    <th> <img src="{{impresorasI.imagen.url}}" width="150" height="200" alt="lap"></th>
+                                    <td style="color: black;">{{impresorasI.marca}}</td>
+                                    <td style="color: black;">{{impresorasI.modelo}}</td>
+                                    <th><label class="{{areasI.1}}">{{areasI.0}}</label> </th>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                    
+                        
+                    </div>
+                    <center>
+                        <input type="hidden" value="{{impresorasI.id_impresora}}" name="idImpresoraAlta">
+                        <h3 style="color: black;">Seguro que desea dar de alta a la impresora?</h3>
+                        <button type="submit" class="btn bg-green waves-effect">
+                            <i class="material-icons">upgrade</i>
+                            <span>DAR DE ALTA</span>
+                        </button>
+                    </center>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endfor %}
+
+
+
+
+
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     {% if baja %}
     <script type="text/javascript">
