@@ -60,7 +60,7 @@ Agregar Equipos | Custom System
                 <form  action="/agregarEquipos/"  enctype="multipart/form-data" method="POST">{% csrf_token %}
                     <div class="row clearfix">
                         <div class="col-md-3">
-                            <label for="email_address">Tipo:</label>
+                            <label for="email_address"><span style="color: #078F68;">* </span>Tipo:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">computer</i>
@@ -72,7 +72,7 @@ Agregar Equipos | Custom System
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <label for="email_address">Marca:</label>
+                            <label for="email_address"><span style="color: #078F68;">* </span>Marca:</label>
                             
                             <div class="input-group">
                                 <span class="input-group-addon">
@@ -92,7 +92,7 @@ Agregar Equipos | Custom System
                         </div>
                         
                         <div class="col-md-3">
-                            <label for="email_address">Modelo:</label>
+                            <label for="email_address"><span style="color: #078F68;">* </span>Modelo:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">branding_watermark</i>
@@ -103,7 +103,7 @@ Agregar Equipos | Custom System
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <label for="email_address">Color:</label>
+                            <label for="email_address"><span style="color: #078F68;">* </span>Color:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">palette</i>
@@ -124,7 +124,7 @@ Agregar Equipos | Custom System
 
                     <div class="row clearfix">
                         <div class="col-md-3">
-                            <label for="email_address">Memoria RAM:</label>
+                            <label for="email_address"><span style="color: #078F68;">* </span>Memoria RAM:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">trending_up</i>
@@ -141,7 +141,7 @@ Agregar Equipos | Custom System
                             </div>
                         </div> 
                         <div class="col-md-3">
-                            <label for="email_address">Procesador:</label>
+                            <label for="email_address"><span style="color: #078F68;">* </span>Procesador:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">memory</i>
@@ -152,7 +152,7 @@ Agregar Equipos | Custom System
                             </div>
                         </div> 
                         <div class="col-md-3">
-                            <label for="email_address">Sistema Operativo:</label>
+                            <label for="email_address"><span style="color: #078F68;">* </span>Sistema Operativo:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">verified_user</i>
@@ -168,7 +168,7 @@ Agregar Equipos | Custom System
                             </div>
                         </div> 
                         <div class="col-md-3">
-                            <label for="email_address">Estado:</label>
+                            <label for="email_address"><span style="color: #078F68;">* </span>Estado:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">build</i>
@@ -198,8 +198,11 @@ Agregar Equipos | Custom System
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <h2 class="card-inside-title">Fecha de Compra:</h2>
-                            <div class="form-group">
+                            <h2 class="card-inside-title"><span style="color: #078F68;">* </span>Fecha de Compra:</h2>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">date_range</i>
+                                </span>
                                 <div class="form-line" id="bs_datepicker_container">
                                     <input type="text" class="form-control" name="fecha_compra" placeholder="Seleccionar fecha" required>
                                 </div>
@@ -207,7 +210,7 @@ Agregar Equipos | Custom System
                         </div>
                       
                         <div class="col-md-4">
-                            <label for="email_address">Propietario:</label>
+                            <label for="email_address"><span style="color: #078F68;">* </span>Propietario:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">badge</i>
@@ -226,7 +229,7 @@ Agregar Equipos | Custom System
                     </div>
                     <div class="row clearfix">
                         <div class="col-md-5">
-                            <label for="email_address">Imagen de equipo:</label>
+                            <label for="email_address"><span style="color: #078F68;">* </span>Imagen de equipo:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">add_photo_alternate</i>
@@ -237,7 +240,7 @@ Agregar Equipos | Custom System
                             </div>
                         </div>
                         <div class="col-md-5">
-                            <label for="email_address">Ficha Técnica:</label>
+                            <label for="email_address"><span style="color: #078F68;">* </span>Ficha Técnica:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">picture_as_pdf</i>

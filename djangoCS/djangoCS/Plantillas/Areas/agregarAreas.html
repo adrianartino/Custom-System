@@ -50,19 +50,19 @@ Agregar Departamento | Custom System
                 <form id="form_validation" action="/agregarAreas/" method="POST">{% csrf_token %}
 
                     <div class="form-group form-float">
-                        <label for="email_address">Nombre del departamento</label>
+                        <label for="email_address"><span style="color: #078F68;">* </span>Nombre del departamento</label>
                         <div class="input-group">
                             <span class="input-group-addon">
                                 <i class="material-icons">work</i>
                             </span>
                             <div class="form-line">
                                 <input onkeypress='return soloLetras(event)' type="text" name="area"
-                                    class="form-control date" placeholder="Ingresar nombre de área"
+                                    class="form-control date" placeholder="Ingresar nombre de departamento"
                                     title="No se permiten caracteres especiales." required>
                             </div>
                         </div>
                     </div>
-                    <label for="email_address">Color:</label>
+                    <label for="email_address"><span style="color: #078F68;">* </span>Color:</label>
                     <div class="input-group">
                         <span class="input-group-addon">
                             <i class="material-icons">palette</i>

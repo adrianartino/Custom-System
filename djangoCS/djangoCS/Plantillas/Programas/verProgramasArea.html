@@ -37,7 +37,7 @@ Ver Programas por area
 </div>
 <div class="row">
     {% for area, programas in lista %}
-    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 animate__animated animate__bounceIn">
         <div class="info-box-4 hover-zoom-effect">
             <form action="/verProgramasPorArea/" method="POST">{% csrf_token %}
                 <div class="icon">

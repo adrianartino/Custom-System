@@ -46,7 +46,7 @@ Departamentos | Custom System
             </div>
             <div class="body">
                 <div class="table-responsive">
-                    <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                    <table class="table table-bordered table-striped table-hover dataTable js-exportable ">
                         <thead>
                             <tr style="background-color: #fad60e; color: black;">
                                 <th>ID Departamento</th>
@@ -63,7 +63,7 @@ Departamentos | Custom System
                                 <th>Número de Empleados</th>
                             </tr>
                         </tfoot>
-                        <tbody>
+                        <tbody class="animate__animated animate__backInDown">
                             {% for area, empleado in listaAreas %}
                             <tr>
                                 <td>{{area.id_area}}</td>

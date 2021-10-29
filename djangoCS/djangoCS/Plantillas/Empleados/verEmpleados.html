@@ -93,7 +93,7 @@ Empleados | Custom System
                                 <th>Baja</th>
                             </tr>
                         </tfoot>
-                        <tbody>
+                        <tbody class="animate__animated animate__backInDown">
                             {% for empleado, area in lista %}
                             <tr>
                                 <td>{{empleado.id_empleado}}</td>
@@ -149,7 +149,7 @@ Empleados | Custom System
             <div class="body" id="divInactivos">
                 <div class="table-responsive">
 
-                    <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                    <table class="table table-bordered table-striped table-hover dataTable js-exportable ">
                         <thead>
                             <tr style="background-color: #E05D5D; color: whitesmoke;">
                                 <th>ID</th>
