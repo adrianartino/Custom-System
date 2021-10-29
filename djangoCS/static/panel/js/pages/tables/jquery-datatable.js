@@ -8,7 +8,7 @@ $(function () {
         dom: 'Bfrtip',
         responsive: true,
         buttons: [
-            'excel', 'pdf'
+        
         ]
     });
 });

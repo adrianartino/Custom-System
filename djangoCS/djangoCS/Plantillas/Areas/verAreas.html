@@ -43,6 +43,27 @@ Departamentos | Custom System
                     DEPARTAMENTOS CUSTOM & CO
                     <small style="color: #790C05;">Vista de listado de departamentos de la empresa.</small>
                 </h2>
+                <br>
+                <div class="row clear-fix">
+                    <div class="col-sm-1">
+                        <form action="/reporteDepartamentos/" method="POST">{% csrf_token %}
+                            <button type="submit" class="btn bg-red waves-effect">
+                                <i class="material-icons">picture_as_pdf</i>
+                                <span>PDF</span>
+                            </button>
+                        </form>
+                    </div>
+                    <div class="col-sm-2">
+                        <form action="/reporteDepartamentos/" method="POST">{% csrf_token %}
+                            <button type="submit" class="btn waves-effect" style="background-color: #26731B; color: white;">
+                                <i class="material-icons">grid_on</i>
+                                <span>Excel</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                
+                
             </div>
             <div class="body">
                 <div class="table-responsive">
@@ -78,12 +99,7 @@ Departamentos | Custom System
                         </tbody>
                     </table>
                 </div>
-                <form action="/reporteDepartamentos/" method="POST">{% csrf_token %}
-                    <button type="submit" class="btn bg-red waves-effect">
-                        <i class="material-icons">get_app</i>
-                        <span>PDF</span>
-                    </button>
-                </form>
+                
             </div>
         </div>
     </div>
