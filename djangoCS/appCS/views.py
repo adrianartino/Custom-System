@@ -222,11 +222,11 @@ def inicio(request):
         
         estaEnInicio = True
         id_admin=request.session["idSesion"]
-        nombre = request.session['nombres']
-        apellidos = request.session['apellidos']
+        nombreini = request.session['nombres']
+        apellidosini = request.session['apellidos']
         correo = request.session['correoSesion']
 
-        nombreCompleto = nombre + " " + apellidos #Blanca Yesenia Gaeta Talamantes
+        nombreCompleto = nombreini + " " + apellidosini #Blanca Yesenia Gaeta Talamantes
         
         foto = fotoAdmin(request)
         
@@ -415,7 +415,7 @@ def inicio(request):
         
         #Si es la primera vez que inicia sesión.. Bienvenida 
         if "recienIniciado" in request.session:
-            nombreCompleto = nombre + " " + apellidos #Blanca Yesenia Gaeta Talamantes
+            nombreCompleto = nombreini + " " + apellidosini #Blanca Yesenia Gaeta Talamantes
 
             del request.session['recienIniciado']#se cierra la sesión del primer inicio de sesión
 
@@ -493,6 +493,7 @@ def agregarAreas(request):
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
+        foto = fotoAdmin(request)
         
         nombreCompleto = nombre + " " + apellidos
         
@@ -548,7 +549,7 @@ def agregarAreas(request):
                 
                 return render(request,"Areas/agregarAreas.html", {"estaEnAgregarAreas": estaEnAgregarAreas, "id_admin":id_admin,"arregloColores":colores, "nombresColores":nombresColores,
                 "infoAreas":infoAreas, "colorExiste": coloresSi, "colorInexistente": coloresNo, "nombreCompleto":nombreCompleto, "correo":correo, "error": errorExiste,
-                "mensaje": mensajeError, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                "mensaje": mensajeError, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
             else:
                 
                 registro = Areas(nombre=area, color=color)
@@ -559,12 +560,12 @@ def agregarAreas(request):
 
                 return render(request,"Areas/agregarAreas.html", {"estaEnAgregarAreas": estaEnAgregarAreas,"id_admin":id_admin, "arregloColores":colores, "nombresColores":nombresColores,
                 "infoAreas":infoAreas, "colorExiste": coloresSi, "colorInexistente": coloresNo, "nombreCompleto":nombreCompleto, "correo":correo, "guardado": guardadoExito,
-                "mensaje": mensajeExito, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                "mensaje": mensajeExito, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
                 
 
         return render(request,"Areas/agregarAreas.html", {"estaEnAgregarAreas": estaEnAgregarAreas, "id_admin":id_admin,"arregloColores":colores, "nombresColores":nombresColores, 
                                                           "infoAreas":infoAreas, "colorExiste": coloresSi, "colorInexistente": coloresNo, "nombreCompleto":nombreCompleto, "correo":correo, 
-                                                          "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                          "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
     else:
         return redirect('/login/') #redirecciona a url de inicio
 
@@ -582,6 +583,7 @@ def verEmpleados(request):
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
+        foto = fotoAdmin(request)
         
         empleadosActivos = Empleados.objects.filter(activo__icontains= "A")
         empleadosInactivos = Empleados.objects.filter(activo__icontains= "I")
@@ -633,15 +635,16 @@ def verEmpleados(request):
             mensaje = "Se dio de alta al empleado " + request.session['idEmpleadoAlta']
             del request.session["idEmpleadoAlta"]
             return render(request,"Empleados/verEmpleados.html", {"estaEnVerEmpleados": estaEnVerEmpleados,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"lista1":lista1, "alta":alta, "mensaje":mensaje, 
-                                                                  "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "listaModal1":listaModal1, "listaModal2":listaModal2})
+                                                                  "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "listaModal1":listaModal1, "listaModal2":listaModal2, "foto":foto})
         
         if "idEmpleadoBaja" in request.session:
             baja = True
             mensaje = "Se dio de baja al empleado " + request.session['idEmpleadoBaja']
             del request.session["idEmpleadoBaja"]
-            return render(request,"Empleados/verEmpleados.html", {"estaEnVerEmpleados": estaEnVerEmpleados, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"lista1":lista1, "baja":baja, "mensaje":mensaje, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "listaModal1":listaModal1, "listaModal2":listaModal2})
+            return render(request,"Empleados/verEmpleados.html", {"estaEnVerEmpleados": estaEnVerEmpleados, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"lista1":lista1, "baja":baja, "mensaje":mensaje, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "listaModal1":listaModal1, "listaModal2":listaModal2
+                                                                  , "foto":foto})
         
-        return render(request,"Empleados/verEmpleados.html", {"estaEnVerEmpleados": estaEnVerEmpleados, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"lista1":lista1, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "listaModal1":listaModal1, "listaModal2":listaModal2})
+        return render(request,"Empleados/verEmpleados.html", {"estaEnVerEmpleados": estaEnVerEmpleados, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"lista1":lista1, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "listaModal1":listaModal1, "listaModal2":listaModal2, "foto":foto})
     else:
         return redirect('/login/') #redirecciona a url de inicio
 
@@ -661,6 +664,7 @@ def agregarEmpleados(request):
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
+        foto = fotoAdmin(request)
 
         #información de areas para select
         info_areas = Areas.objects.only('id_area', 'nombre', 'color')
@@ -686,7 +690,7 @@ def agregarEmpleados(request):
             if empleadoEnBd == True:        
                 yaExiste = True
                 texto_error = "El empleado "+ nombre_recibido + " ya existe en la Base de Datos!"
-                return render(request,"Empleados/agregarEmpleados.html", {"estaEnAgregarEmpleados": estaEnAgregarEmpleados, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "infoAreas":info_areas, "yaExiste":yaExiste, "textoError":texto_error})
+                return render(request,"Empleados/agregarEmpleados.html", {"estaEnAgregarEmpleados": estaEnAgregarEmpleados, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "infoAreas":info_areas, "yaExiste":yaExiste, "textoError":texto_error, "foto":foto})
             
             elif empleadoEnBd == False:
                 noExiste = True
@@ -718,10 +722,10 @@ def agregarEmpleados(request):
                             
                         texto_existe = "El empleado "+ nombre_recibido + " fue agregado exitosamente!"
                         return render(request,"Empleados/agregarEmpleados.html", {"estaEnAgregarEmpleados": estaEnAgregarEmpleados, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "infoAreas":info_areas, "noExiste":noExiste, "textoExiste":texto_existe, 
-                                                                                      "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                                                      "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
                 
         return render(request,"Empleados/agregarEmpleados.html", {"estaEnAgregarEmpleados": estaEnAgregarEmpleados, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "infoAreas":info_areas, 
-                                                                  "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                                  "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
     else:
         return redirect('/login/') #redirecciona a url de inicio
 
@@ -741,6 +745,7 @@ def verEquipos(request):
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
+        foto = fotoAdmin(request)
         
         equiposActivos = Equipos.objects.filter(activo__icontains= "A")
         equiposInactivos = Equipos.objects.filter(activo__icontains= "I")
@@ -791,7 +796,7 @@ def verEquipos(request):
                 bajaExito= "Se dió de baja el " + request.session["idEquipoBaja"] + " con éxito!"
             del request.session["idEquipoBaja"]
             return render(request, "Equipos/verEquipos.html", {"estaEnVerEquipos": estaEnVerEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "bajaEquipo":
-                bajaEquipo, "bajaExito": bajaExito, "equiposInactivos":equiposInactivos, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "equiposActivos":equiposActivos, "lista2":lista2})
+                bajaEquipo, "bajaExito": bajaExito, "equiposInactivos":equiposInactivos, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "equiposActivos":equiposActivos, "lista2":lista2, "foto":foto})
             
         if "idEquipoAlta" in request.session:
             altaEquipo= True
@@ -802,10 +807,10 @@ def verEquipos(request):
                 altaExito= "Se dió de alta el " + request.session["idEquipoAlta"] + " con éxito"
             del request.session["idEquipoAlta"]
             return render(request, "Equipos/verEquipos.html", {"estaEnVerEquipos": estaEnVerEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,
-                                                            "altaEquipo": altaEquipo, "altaExito":altaExito, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti,  "equiposActivos":equiposActivos, "lista2":lista2})
+                                                            "altaEquipo": altaEquipo, "altaExito":altaExito, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti,  "equiposActivos":equiposActivos, "lista2":lista2, "foto":foto})
 
         return render(request, "Equipos/verEquipos.html", {"estaEnVerEquipos": estaEnVerEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "equiposInactivos":equiposInactivos, 
-                                                           "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti,  "equiposActivos":equiposActivos, "lista2":lista2})
+                                                           "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti,  "equiposActivos":equiposActivos, "lista2":lista2, "foto":foto})
 
     else:
         return redirect('/login/') #redirecciona a url de inicio
@@ -825,6 +830,8 @@ def infoEquipo(request):
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
+        
+        foto = fotoAdmin(request)
         
         if request.method == "POST":
             
@@ -852,10 +859,10 @@ def infoEquipo(request):
                         mantenimientos= CalendarioMantenimiento.objects.filter(id_equipo_id__id_equipo=id_equipo)
                         if mantenimientos:
                             return render(request, "Equipos/infoEquipo.html", {"estaEnVerEquipos": estaEnVerEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "datosEquipo":datosEquipo,
-                                                            "compra":compra, "renovar": renovar, "sinPropietario":sinPropietario, "mantenimientos":mantenimientos, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                            "compra":compra, "renovar": renovar, "sinPropietario":sinPropietario, "mantenimientos":mantenimientos, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
                         else:
                             return render(request, "Equipos/infoEquipo.html", {"estaEnVerEquipos": estaEnVerEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "datosEquipo":datosEquipo,
-                                                            "compra":compra, "renovar": renovar, "sinPropietario":sinPropietario, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})  
+                                                            "compra":compra, "renovar": renovar, "sinPropietario":sinPropietario, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})  
                     
                     else:
                         datosPropietario= Empleados.objects.filter(id_empleado=propietario)
@@ -882,16 +889,16 @@ def infoEquipo(request):
                         if mantenimientos:
                             return render(request, "Equipos/infoEquipo.html", {"estaEnVerEquipos": estaEnVerEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "datosEquipo":datosEquipo,
                                                             "nombreEmpleado": nombreEmpleado, "nombreArea": nombreArea, "colorArea": colorArea, "compra":compra, "renovar": renovar, "sinPropietario":sinPropietario,
-                                                            "mantenimientos":mantenimientos, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                            "mantenimientos":mantenimientos, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
                         else:
                             return render(request, "Equipos/infoEquipo.html", {"estaEnVerEquipos": estaEnVerEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "datosEquipo":datosEquipo,
-                                                            "nombreEmpleado": nombreEmpleado, "nombreArea": nombreArea, "colorArea": colorArea, "compra":compra, "renovar": renovar, "sinPropietario":sinPropietario, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                            "nombreEmpleado": nombreEmpleado, "nombreArea": nombreArea, "colorArea": colorArea, "compra":compra, "renovar": renovar, "sinPropietario":sinPropietario, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
             else:
                 
                 noEncontro = True
                 textoError = "No se encontró al equipo"
                 
-                return render (request, "Equipos/qrEquipo.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo,"noEncontro":noEncontro, "textoError":textoError, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                return render (request, "Equipos/qrEquipo.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo,"noEncontro":noEncontro, "textoError":textoError, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
     else:
         return redirect('/login/') #redirecciona a url de inicio        
 
@@ -909,6 +916,7 @@ def agregarEquipos(request):
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
+        foto = fotoAdmin(request)
         
         info_empleados = Empleados.objects.only('id_empleado', 'nombre', 'apellidos') #todos los empleados
         empleadosEquipo = Equipos.objects.only('id_empleado_id') #Los ids de los empleados que estan con equipos
@@ -1001,7 +1009,7 @@ def agregarEquipos(request):
                 compuSin = True
                 textoCompu = "Se ha guardado "+tipo_recibido +" "+ marca_recibido + " " + modelo_recibida + " sin propietario!"
                 return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos": estaEnAgregarEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "compuSin": compuSin, "textoCompu":textoCompu, 
-                                                                      "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                                      "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
                 
                 
             elif propietario_recibida != "nopropietario":
@@ -1058,7 +1066,7 @@ def agregarEquipos(request):
                         registroBitacora.save()
                         
                 return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos ": estaEnAgregarEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "compuCon": compuCon, "textoCompu":textoCompu, 
-                                                                      "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                                      "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
         
         if empleadosEquipo:
             
@@ -1069,9 +1077,9 @@ def agregarEquipos(request):
                     else:
                         empleadosnoEq.append([empleados.id_empleado,empleados.nombre,empleados.apellidos])
                         
-            return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos": estaEnAgregarEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo,"info_empleados":info_empleados, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+            return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos": estaEnAgregarEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo,"info_empleados":info_empleados, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
         
-        return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos": estaEnAgregarEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo,"info_empleados": info_empleados, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+        return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos": estaEnAgregarEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo,"info_empleados": info_empleados, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
     else:
         return redirect('/login/') #redirecciona a url de inicio
 
@@ -1089,6 +1097,7 @@ def renovacionEquipos(request):
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
+        foto = fotoAdmin(request)
         
         equiposRenov = Renovacion_Equipos.objects.all()
         datosTabla = []
@@ -1126,7 +1135,7 @@ def renovacionEquipos(request):
             
         
         
-        return render(request, "Equipos/renovacionEquipos.html", {"estaEnRenovacionEquipos": estaEnRenovacionEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "datosTabla":datosTabla, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+        return render(request, "Equipos/renovacionEquipos.html", {"estaEnRenovacionEquipos": estaEnRenovacionEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "datosTabla":datosTabla, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -1144,6 +1153,7 @@ def verImpresoras(request):
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
+        foto = fotoAdmin(request)
         
         
         impresorasActivas = Impresoras.objects.filter(activo__icontains= "A")
@@ -1196,16 +1206,16 @@ def verImpresoras(request):
             mensaje = "Se dio de alta la impresora " + request.session['idImpresoraAlta']
             del request.session["idImpresoraAlta"]
             return render(request,"Impresoras/verImpresoras.html",{"estaEnVerImpresoras": estaEnVerImpresoras, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista,
-                                                            "lista2":lista2, "alta": alta, "mensaje": mensaje, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "listaModal1":listaModal1, "listaModal2":listaModal2})
+                                                            "lista2":lista2, "alta": alta, "mensaje": mensaje, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "listaModal1":listaModal1, "listaModal2":listaModal2, "foto":foto})
         if "idImpresoraBaja" in request.session:
             baja = True
             mensaje = "Se dio de baja la impresora " + request.session['idImpresoraBaja']
             del request.session["idImpresoraBaja"]
             return render(request,"Impresoras/verImpresoras.html",{"estaEnVerImpresoras": estaEnVerImpresoras, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista,
-                                                            "lista2":lista2, "baja": baja, "mensaje": mensaje, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "listaModal1":listaModal1, "listaModal2":listaModal2})
+                                                            "lista2":lista2, "baja": baja, "mensaje": mensaje, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "listaModal1":listaModal1, "listaModal2":listaModal2, "foto":foto})
 
         return render(request,"Impresoras/verImpresoras.html",{"estaEnVerImpresoras": estaEnVerImpresoras, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista,
-                                                            "lista2":lista2, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "listaModal1":listaModal1, "listaModal2":listaModal2})
+                                                            "lista2":lista2, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "listaModal1":listaModal1, "listaModal2":listaModal2, "foto":foto})
     else:
         return redirect('/login/') #redirecciona a url de inicio
 
@@ -1223,6 +1233,7 @@ def agregarImpresoras(request):
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
+        foto = fotoAdmin(request)
         
         info_areas = Areas.objects.only('id_area', 'nombre', 'color')
         if request.method == "POST":
@@ -1273,9 +1284,9 @@ def agregarImpresoras(request):
             
             impresoraExito= "La impresora " + marca_recibido + " " + modelo_recibido + " se guardó con éxito" 
             return render(request, "Impresoras/agregarImpresoras.html",{"estaEnAgregarImpresoras": estaEnAgregarImpresoras, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "info_areas": info_areas,
-                                                                        "impresoraAgregada":impresoraAgregada, "impresoraExito": impresoraExito, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                                        "impresoraAgregada":impresoraAgregada, "impresoraExito": impresoraExito, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
         
-        return render(request, "Impresoras/agregarImpresoras.html",{"estaEnAgregarImpresoras": estaEnAgregarImpresoras,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "info_areas": info_areas, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+        return render(request, "Impresoras/agregarImpresoras.html",{"estaEnAgregarImpresoras": estaEnAgregarImpresoras,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "info_areas": info_areas, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -1293,6 +1304,7 @@ def renovacionImpresoras(request):
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
+        foto = fotoAdmin(request)
         
         ImpresorasRenov = Renovacion_Impresoras.objects.all()
         datosTabla = []
@@ -1318,7 +1330,7 @@ def renovacionImpresoras(request):
             datosTabla.append([idImpresora, impresoraDatos, imagen, nombre, color, fechaCompra, fechaRenov])
         
         return render(request, "Impresoras/renovacionImpresoras.html", {"estaEnRenovacionImpresoras":estaEnRenovacionImpresoras, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, 
-                                                                        "datosTabla":datosTabla, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                                        "datosTabla":datosTabla, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
     else:
         return redirect('/login/') #redirecciona a url de inicio
 
@@ -1335,6 +1347,7 @@ def infoImpresora(request):
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
+        foto = fotoAdmin(request)
         
         if request.method == "POST":
             
@@ -1370,14 +1383,14 @@ def infoImpresora(request):
                     cartuchos = Cartuchos.objects.filter(id_impresora_id__id_impresora = int(idImpresora_recibido))   
                     
                     return render(request, "Impresoras/infoImpresora.html", {"estaEnVerImpresoras": estaEnVerImpresoras, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "datosImpresora":datosImpresora,
-                                                            "compra":compra, "renovar": renovar, "lista":lista, "cartuchos":cartuchos, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})  
+                                                            "compra":compra, "renovar": renovar, "lista":lista, "cartuchos":cartuchos, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})  
 
             else:
                 
                 noEncontro = True
                 textoError = "No se encontró la impresora"
                 
-                return render (request, "Impresoras/qrImpresora.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo,"noEncontro":noEncontro, "textoError":textoError, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                return render (request, "Impresoras/qrImpresora.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo,"noEncontro":noEncontro, "textoError":textoError, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
     else:
         return redirect('/login/') #redirecciona a url de inicio   
     
@@ -1396,6 +1409,7 @@ def verInsumos(request):
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
+        foto = fotoAdmin(request)
         
         datosCartuchos = Cartuchos.objects.all()
         
@@ -1419,10 +1433,10 @@ def verInsumos(request):
             del request.session["idInsumoActualizado"]
             
             return render(request, "Insumos/verInsumos.html",{"Insumos": Insumos, "estaEnVerInsumos":estaEnVerInsumos,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "impresoras": impresoras, 
-                                                        "datosCartuchos":datosCartuchos, "insumoActualizado":insumoActualizado, "textoActualizado":textoActualizado, "lista":lista, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})    
+                                                        "datosCartuchos":datosCartuchos, "insumoActualizado":insumoActualizado, "textoActualizado":textoActualizado, "lista":lista, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})    
         
         return render(request, "Insumos/verInsumos.html",{"Insumos": Insumos, "estaEnVerInsumos":estaEnVerInsumos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "impresoras": impresoras, 
-                                                      "datosCartuchos":datosCartuchos, "lista":lista, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                      "datosCartuchos":datosCartuchos, "lista":lista, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -1440,6 +1454,7 @@ def agregarInsumos(request):
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
+        foto = fotoAdmin(request)
         
         Insumos = True
         datosImpresoras = Impresoras.objects.all()
@@ -1480,10 +1495,10 @@ def agregarInsumos(request):
                 
                 insumoExito= "El insumo " + marca_recibido + " " + modelo_recibido + " se guardó con éxito" 
                 return render(request,"Insumos/agregarInsumos.html",{"estaEnAgregarInsumos": estaEnAgregarInsumos, "Insumos": Insumos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, 
-                                                                "datosImpresoras":datosImpresoras, "insumoAgregado": insumoAgregado, "insumoExito": insumoExito, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                                "datosImpresoras":datosImpresoras, "insumoAgregado": insumoAgregado, "insumoExito": insumoExito, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
             
         return render(request,"Insumos/agregarInsumos.html",{"estaEnAgregarInsumos": estaEnAgregarInsumos, "Insumos": Insumos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, 
-                                                            "datosImpresoras":datosImpresoras, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                            "datosImpresoras":datosImpresoras, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -1554,6 +1569,7 @@ def verProgramas(request):
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
+        foto = fotoAdmin(request)
         
         registrosProgramas = Programas.objects.all()
         
@@ -1598,11 +1614,11 @@ def verProgramas(request):
             
             return render(request,"Programas/verProgramas.html",{"estaEnVerProgramas": estaEnVerProgramas, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo,
                                                                 "registrosProgramas": registrosProgramas, "nombreArea": nombreArea, "colorArea":colorArea, "id_area_recibido":id_area_recibido, "lista": lista,
-                                                                "n":n, "programaEncontrado":programaEncontrado, "areasPrograma":areasPrograma, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                                "n":n, "programaEncontrado":programaEncontrado, "areasPrograma":areasPrograma, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
         
 
         return render(request,"Programas/verProgramas.html",{"estaEnVerProgramas": estaEnVerProgramas, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "registrosProgramas": registrosProgramas, 
-                                                             "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                             "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
     else:
         return redirect('/login/') #redirecciona a url de inicio
 
@@ -1621,6 +1637,7 @@ def agregarProgramas(request):
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
+        foto = fotoAdmin(request)
         
         if request.method == "POST":
             
@@ -1641,13 +1658,13 @@ def agregarProgramas(request):
             registroExito =True
             mensajeExito = "Se a guardado el " + nombreVersion_recibido + " con éxito"
             return render(request,"Programas/agregarProgramas.html",{"estaEnAgregarProgramas": estaEnAgregarProgramas, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "registroExito": registroExito,
-                                                                    "mensajeExito":mensajeExito, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                                    "mensajeExito":mensajeExito, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
             
             
         
         
 
-        return render(request,"Programas/agregarProgramas.html",{"estaEnAgregarProgramas": estaEnAgregarProgramas, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo})
+        return render(request,"Programas/agregarProgramas.html",{"estaEnAgregarProgramas": estaEnAgregarProgramas, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "foto":foto})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -1735,6 +1752,7 @@ def ProgramasporArea(request):
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
+        foto = fotoAdmin(request)
         
         areas = Areas.objects.all()
         
@@ -1762,10 +1780,10 @@ def ProgramasporArea(request):
             
             
             return render(request,"Programas/verProgramasArea.html",{"estaEnverProgramasPorArea": estaEnverProgramasPorArea, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, 
-                                                                 "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "noti":noti, "siNoti":siNoti})            
+                                                                 "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "noti":noti, "siNoti":siNoti, "foto":foto})            
 
         return render(request,"Programas/verProgramasArea.html",{"estaEnverProgramasPorArea": estaEnverProgramasPorArea, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, 
-                                                                 "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                                 "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -1781,6 +1799,7 @@ def verProgramasPorArea(request):
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
+        foto = fotoAdmin(request)
 
         if request.method == "POST":
             
@@ -1819,7 +1838,7 @@ def verProgramasPorArea(request):
 
             estaEnverProgramasPorArea = True
             return render(request, "Programas/tablaProgArea.html",{"estaEnverProgramasPorArea": estaEnverProgramasPorArea, "id_admin":id_admin,"nombreArea":nombreArea, "nombreCompleto":nombreCompleto, "correo":correo, "idArea":idArea, "arregloDatosProgramas":arregloDatosProgramas, 
-                                                                   "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                                   "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
 
     else:
         return redirect('/login/') #redirecciona a url de inicio
@@ -1838,6 +1857,7 @@ def calendarioMant(request):
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
+        foto = fotoAdmin(request)
         
         registroEquipos = CalendarioMantenimiento.objects.all()
         #propietarioCompu = Empleados.objects.all()
@@ -1886,7 +1906,8 @@ def calendarioMant(request):
         lista = zip (registroEquipos, equipoPropietario, fechasNuevas)
         
 
-        return render(request,"Mantenimiento/calendarioMant.html", {"estaEnCalendario": estaEnCalendario, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista, "registroEquipos":registroEquipos, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+        return render(request,"Mantenimiento/calendarioMant.html", {"estaEnCalendario": estaEnCalendario, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista, "registroEquipos":registroEquipos, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti
+                                                                    , "foto":foto})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -1904,6 +1925,7 @@ def formularioMant(request):
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
+        foto = fotoAdmin(request)
         
         infoEquipos = Equipos.objects.all()
         
@@ -1962,7 +1984,8 @@ def formularioMant(request):
                             mensajeMant = "Se ha agregado el mantenimineto realizado a " + marca + " " + modelo + "con propietario " + nombre + " " + apellidos
                             
                             return render(request,"Mantenimiento/formularioMant.html",{"estaEnFormulario": estaEnFormulario, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, 
-                                                                                    "lista": lista, "mantExito":mantExito, "mensajeMant":mensajeMant, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                                                    "lista": lista, "mantExito":mantExito, "mensajeMant":mensajeMant, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti
+                                                                                    , "foto":foto})
                 
             registro = CalendarioMantenimiento(id_equipo=Equipos.objects.get(id_equipo=equipo_recibido), operacion=operacionCompleta, fecha=fecha, observaciones=descripcion_recibida)
             registro.save()
@@ -1977,10 +2000,10 @@ def formularioMant(request):
             mensajeMant = "Se ha agregado el mantenimineto realizado a " + marca + " " + modelo + "con propietario " + nombre + " " + apellidos
             
             return render(request,"Mantenimiento/formularioMant.html",{"estaEnFormulario": estaEnFormulario,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, 
-                                                                    "lista": lista, "mantExito":mantExito, "mensajeMant":mensajeMant, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                                    "lista": lista, "mantExito":mantExito, "mensajeMant":mensajeMant, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
 
         return render(request,"Mantenimiento/formularioMant.html",{"estaEnFormulario": estaEnFormulario, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, 
-                                                                "lista": lista, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                                "lista": lista, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -1998,6 +2021,7 @@ def verCarta(request):
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
+        foto = fotoAdmin(request)
         
         datosRegistro = Carta.objects.all()
         
@@ -2027,7 +2051,7 @@ def verCarta(request):
         
         
         return render(request,"cartaCompromiso/verCarta.html", {"estaEnVerCarta": estaEnVerCarta, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista1":lista1, 
-                                                                "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                                "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
 
     else:
         return redirect('/login/') #redirecciona a url de inicio
@@ -2044,6 +2068,7 @@ def agregarCarta(request):
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
+        foto = fotoAdmin(request)
         
         equipos= Equipos.objects.all()
         empledos=Empleados.objects.filter(activo="A")
@@ -2100,11 +2125,11 @@ def agregarCarta(request):
             estaEnAgregarCarta = True
             return render(request, "cartaCompromiso/agregarCarta.html",{"estaEnAgregarCarta": estaEnAgregarCarta, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "equipos":equipos, "empleados": empledos, "lista":lista, "fecha":fecha,
                                                                     "compusInactivas": compusInactivas, "compuSeleccionada":compuSeleccionada, "datosEquipo":datosEquipo, "empleadoDatos": empleadoDatos, "areaNombre": areaNombre, "color":color,
-                                                                    "fecha": fecha, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                                    "fecha": fecha, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
 
         estaEnAgregarCarta = True
         return render(request, "cartaCompromiso/agregarCarta.html",{"estaEnAgregarCarta": estaEnAgregarCarta, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "equipos":equipos, "empleados": empledos, "lista":lista, "fecha":fecha,
-                                                                    "compusInactivas": compusInactivas, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                                    "compusInactivas": compusInactivas, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -2154,6 +2179,7 @@ def BitacorasEquipos(request):
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
+        foto = fotoAdmin(request)
         
         datosBitacora = Bitacora.objects.filter(tabla__icontains="Equipos")
         nombresUsuarios = []
@@ -2196,7 +2222,7 @@ def BitacorasEquipos(request):
         texto = "Bitácora de Equipos"
         
         return render(request, "Bitacora/Bitacoras.html",{"estaEnEquiposBitacora": estaEnEquiposBitacora, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "texto": texto, 
-                                                          "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                          "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
     else:
         return redirect('/login/') #redirecciona a url de inicio
 
@@ -2214,6 +2240,8 @@ def BitacorasImpresoras(request):
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
+        foto = fotoAdmin(request)
+
         
         datosBitacora = Bitacora.objects.filter(tabla__icontains="Impresoras")
         nombresUsuarios = []
@@ -2257,7 +2285,7 @@ def BitacorasImpresoras(request):
         
 
         return render(request, "Bitacora/Bitacoras.html",{"estaEnImpresorasBitacora": estaEnImpresorasBitacora, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "texto":texto, 
-                                                          "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                          "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -2275,6 +2303,7 @@ def BitacorasEmpleados(request):
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
+        foto = fotoAdmin(request)
         
         datosBitacora = Bitacora.objects.filter(tabla__icontains="Empleados")
         nombresUsuarios = []
@@ -2317,7 +2346,7 @@ def BitacorasEmpleados(request):
         texto = "Bitácora de Empleados"
             
         return render(request, "Bitacora/Bitacoras.html",{"estaEnEmpleadosBitacora": estaEnEmpleadosBitacora, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "texto":texto, 
-                                                          "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                          "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -2336,6 +2365,7 @@ def BitacorasCartuchos(request):
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
+        foto = fotoAdmin(request)
         
         datosBitacora = Bitacora.objects.filter(tabla__icontains="Insumos")
         nombresUsuarios = []
@@ -2378,7 +2408,7 @@ def BitacorasCartuchos(request):
         
         
         return render(request, "Bitacora/Bitacoras.html",{"estaEnCartuchosBitacora": estaEnCartuchosBitacora, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "texto":texto, 
-                                                          "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                          "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -2477,6 +2507,7 @@ def editarEquipo(request):
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
+        foto = fotoAdmin(request)
         
         if request.method == "POST":
             equipoRecibido = request.POST['idEquipo']
@@ -2505,7 +2536,7 @@ def editarEquipo(request):
                 sinPropietario = True
                 lista = zip(equipoDatos,empleadosTotales)
                 return render(request, "Editar/editarEquipo.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"ram": ram,"sistemasOperativos":sistemasOperativos, "equipoRecibido":equipoRecibido, "empleadosTotales":empleadosTotales, "sinPropietario":sinPropietario, 
-                                                                    "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                                    "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
             else:
                 
                 empleado = Empleados.objects.filter(id_empleado=empleadoId)
@@ -2548,9 +2579,9 @@ def editarEquipo(request):
                         
                 
             
-                return render(request, "Editar/editarEquipo.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista, "ram": ram, "sistemasOperativos":sistemasOperativos, "empleado":empleado, "equipoRecibido":equipoRecibido, "datos_empleados":datos_empleados, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                return render(request, "Editar/editarEquipo.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista, "ram": ram, "sistemasOperativos":sistemasOperativos, "empleado":empleado, "equipoRecibido":equipoRecibido, "datos_empleados":datos_empleados, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
 
-        return render(request, "Editar/editarEquipo.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+        return render(request, "Editar/editarEquipo.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
     else:
         return redirect('/login/') #redirecciona a url de inicio
 
@@ -2568,6 +2599,7 @@ def editarEmpleado(request):
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
+        foto = fotoAdmin(request)
 
         if request.method == "POST":
             
@@ -2614,7 +2646,7 @@ def editarEmpleado(request):
                     areasNuevas.append([dato.id_area, dato.nombre])
                     
             return render(request,"Editar/editarEmpleado.html", { "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "datosEmpleadoEditar": datosEmpleadoEditar, "nombreArea": nombreArea, "areasNuevas":areasNuevas, "datosEquipos":datosEquipos, 
-                                                                 "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                                 "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -2630,6 +2662,7 @@ def editarEmpleadoBd(request):
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
+        foto = fotoAdmin(request)
         
         if request.method == "POST":
             
@@ -2704,7 +2737,7 @@ def editarEmpleadoBd(request):
                         areasNuevas.append([dato.id_area, dato.nombre])
                         
                 return render(request,"Editar/editarEmpleado.html", {"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "datosEmpleadoEditar": datosEmpleadoEditar, "nombreArea": nombreArea, "areasNuevas":areasNuevas, "editado":editado, "textoEdicion":textoEdicion, 
-                                                                     "areaEditar":areaEditar, "datosEquipos":datosEquipos, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                                     "areaEditar":areaEditar, "datosEquipos":datosEquipos, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -2721,6 +2754,7 @@ def editarEquipoBd(request):
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
+        foto = fotoAdmin(request)
         
         if request.method == "POST":
             equipoId = request.POST['idEquipo']
@@ -2789,7 +2823,7 @@ def editarEquipoBd(request):
                     sinPropietario = True
                     lista = zip(equipoDatos,empleadosTotales)
                     return render(request, "Editar/editarEquipo.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"ram": ram,"sistemasOperativos":sistemasOperativos, "equipoRecibido":equipoRecibido, "empleadosTotales":empleadosTotales, "sinPropietario":sinPropietario, 
-                                                                        "editado":editado, "textoEdicion":textoEdicion, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                                        "editado":editado, "textoEdicion":textoEdicion, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
                 else:
                     
                     empleado = Empleados.objects.filter(id_empleado=empleadoId)
@@ -2831,7 +2865,7 @@ def editarEquipoBd(request):
                         
 
                     return render(request, "Editar/editarEquipo.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista, "ram": ram, "sistemasOperativos":sistemasOperativos, "empleado":empleado, "equipoRecibido":equipoRecibido, "datos_empleados":datos_empleados, 
-                                                                        "editado":editado, "textoEdicion":textoEdicion, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                                        "editado":editado, "textoEdicion":textoEdicion, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
             else:
                 datos = Equipos.objects.filter(id_equipo = equipoId)
                 
@@ -2873,7 +2907,7 @@ def editarEquipoBd(request):
                     sinPropietario = True
                     lista = zip(equipoDatos,empleadosTotales)
                     return render(request, "Editar/editarEquipo.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"ram": ram,"sistemasOperativos":sistemasOperativos, "equipoRecibido":equipoRecibido, "empleadosTotales":empleadosTotales, "sinPropietario":sinPropietario, 
-                                                                        "editado":editado, "textoEdicion":textoEdicion, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                                        "editado":editado, "textoEdicion":textoEdicion, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
                 else:
                     
                     empleado = Empleados.objects.filter(id_empleado=empleadoId)
@@ -2917,9 +2951,9 @@ def editarEquipoBd(request):
                     
                 
                     return render(request, "Editar/editarEquipo.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista, "ram": ram, "sistemasOperativos":sistemasOperativos, "empleado":empleado, "equipoRecibido":equipoRecibido, "datos_empleados":datos_empleados, 
-                                                                        "editado":editado, "textoEdicion":textoEdicion, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                                        "editado":editado, "textoEdicion":textoEdicion, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
     
-        return render(request,"Editar/editarEmpleado.html", {"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+        return render(request,"Editar/editarEmpleado.html", {"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -2935,6 +2969,7 @@ def editarImpresoraBd(request):
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
+        foto = fotoAdmin(request)
         
         if request.method == "POST":
             impresora_id = request.POST['idImpresora']
@@ -3010,10 +3045,10 @@ def editarImpresoraBd(request):
                 
                 return render(request,"Editar/editarImpresora.html", {"impresoraAEditar":datos_impresora, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "nombreArea":nombreArea,
                                                                       "areasNuevas":areasNuevas, "editado":editado, "textoEditado":textoEditado, 
-                                                                      "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                                      "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
 
         
-        return render(request,"Editar/editarImpresora.html", {"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo})
+        return render(request,"Editar/editarImpresora.html", {"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "foto":foto})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
