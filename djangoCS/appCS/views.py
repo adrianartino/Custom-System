@@ -202,6 +202,17 @@ def salir(request):
 
    return redirect('/login/')
 
+def fotoAdmin(request):
+    idadministrador=request.session["idSesion"]
+    datosEmpleado = Empleados.objects.filter(id_empleado=idadministrador)
+        
+    for dato in datosEmpleado:
+        foto = dato.imagen_empleado
+        
+    return foto
+            
+    
+    
 def inicio(request):
     
     #Si ya hay una sesión iniciada..
@@ -216,6 +227,9 @@ def inicio(request):
         correo = request.session['correoSesion']
 
         nombreCompleto = nombre + " " + apellidos #Blanca Yesenia Gaeta Talamantes
+        
+        foto = fotoAdmin(request)
+        
         
         #arreglo cantidades de filas por tabla
         limpiezas = CalendarioMantenimiento.objects.count()
@@ -412,14 +426,14 @@ def inicio(request):
             
             return render(request, "Inicio/inicio.html", {"estaEnInicio":estaEnInicio,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "recienIniciado":recienIniciado, "nombre": nombre, "cantidades":cantidades, "datosLimpiezas":datosLimpiezas, 
                                                       "lista":lista, "baseDir":baseDir, "equipos_año":equipos_año, "impresoras_año":impresoras_año, "dia":dia, "mes_texto":mes_texto, "resta_dias":resta_dias, "año":año, "cartuchosNoti":cartuchosNoti
-                                                      , "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                      , "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
         else:
             cartuchosNoti = notificacionInsumos()
             mantenimientosNoti = notificacionLimpiezas()
             numeroNoti = numNoti()
             return render(request, "Inicio/inicio.html", {"estaEnInicio":estaEnInicio,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cantidades":cantidades, "datosLimpiezas":datosLimpiezas, 
                                                       "lista":lista, "baseDir":baseDir,"equipos_año":equipos_año, "impresoras_año":impresoras_año,  "dia":dia, "mes_texto":mes_texto, "resta_dias":resta_dias, "año":año ,"cartuchosNoti":cartuchosNoti
-                                                      ,"mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti})
+                                                      ,"mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
     
     #Si le da al inicio y no hay una sesión iniciada..
     else:
@@ -436,6 +450,8 @@ def verAreas(request):
         correo = request.session['correoSesion']
         
         nombreCompleto = nombre + " " + apellidos
+        
+        foto = fotoAdmin(request)
         
         infoAreas = Areas.objects.all()
         
@@ -459,7 +475,8 @@ def verAreas(request):
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
 
-        return render(request, "Areas/verAreas.html", {"estaEnVerAreas":estaEnVerAreas,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "listaAreas":listaAreas})
+        return render(request, "Areas/verAreas.html", {"estaEnVerAreas":estaEnVerAreas,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "listaAreas":listaAreas
+                                                       , "foto":foto})
     else:
         return redirect('/login/') #redirecciona a url de inicio
 
