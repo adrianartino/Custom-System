@@ -5378,9 +5378,9 @@ def reporteRenovacionImp(request):
                     listaImpresoras = zip(ids, modelos, imagenes, departamentos, compras, renovaciones)
                     contadorHojas = 2
                     if contadorImpresorasxHoja == 9:
-                        high = 566 - ((contadorImpresorasxHoja+1) * 1)
+                        high = 500 - ((contadorImpresorasxHoja+1) * 1)
                     else:
-                        high = 566 - (contadorImpresorasxHoja * 1)
+                        high = 500 - (contadorImpresorasxHoja * 1)
                 
                 
 
