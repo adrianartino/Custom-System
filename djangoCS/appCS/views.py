@@ -1817,6 +1817,11 @@ def verProgramasPorArea(request):
                 arregloProgramas.append(datos.id_programa_id)
                 
             arregloDatosProgramas = []
+            arregloSistemasOperativos = []
+            arregloMemoriasRAM = []
+            arregloProcesadores = []
+            
+            
             
             for dato in arregloProgramas:
                 datosPrograma = Programas.objects.filter(id_programa = dato)
@@ -1832,13 +1837,73 @@ def verProgramasPorArea(request):
                     procesador = programa.procesador
                     imagen = programa.imagenPrograma
                     
+                arregloSistemasOperativos.append(sistemaoperativo)
+                arregloMemoriasRAM.append(memoria)
+                arregloProcesadores.append(procesador)
                 arregloDatosProgramas.append([id,nombre,tipo,licencia,idioma,sistemaoperativo,memoria,procesador,imagen])
             
             #nombreArea = Administracion
 
             estaEnverProgramasPorArea = True
+            
+            soBasico = ""
+            soRecomendado = ""
+            memoriaBasico = ""
+            memoriaRecomendad = ""
+            
+            if "Windows 7 64 bit" in arregloSistemasOperativos:
+                soBasico = "Windows 10 64 bits"
+                soRecomendado = "Windows 10 64 bits"
+                
+            if "Windows 8 64 bit" in arregloSistemasOperativos:
+                soBasico = "Windows 10 64 bits"
+                soRecomendado = "Windows 10 64 bits"
+            
+            if "Windows 10 64 bit" in arregloSistemasOperativos:
+                soBasico = "Windows 10 64 bits"
+                soRecomendado = "Windows 10 64 bits"
+                
+            if "4 GB" in arregloMemoriasRAM:
+                memoriaBasico = "4 GB"
+                memoriaRecomendada = "8 GB"
+                
+            if "8 GB" in arregloMemoriasRAM:
+                memoriaBasico = "8 GB"
+                memoriaRecomendada = "16 GB"
+                
+            procesadorMayor = ""
+            velocidadesProcesadores = []
+            for velocidad in arregloProcesadores:
+                velovidadSeparada = velocidad.split()
+                cont = 0
+                for x in velovidadSeparada:
+                    cont = cont + 1
+                    if cont == 1:
+                        intVelocidad = float(x)
+                        velocidadesProcesadores.append(intVelocidad)
+                
+            contador = 0
+            for vel in velocidadesProcesadores:
+                contador = contador + 1
+                if contador == 1:
+                    procesadorMayor = vel
+                elif contador > 1:
+                    if vel > procesadorMayor:
+                        procesadorMayor = vel
+                      
+            intVel = float(procesadorMayor)
+            velovidadRecomendada = intVel + .4   
+            
+        
+            datosCompu = []
+            datosCompu.append([soBasico, soRecomendado, memoriaBasico, memoriaRecomendada, str(procesadorMayor), str(velovidadRecomendada)])
+                    
+                
+                
+                
+                
             return render(request, "Programas/tablaProgArea.html",{"estaEnverProgramasPorArea": estaEnverProgramasPorArea, "id_admin":id_admin,"nombreArea":nombreArea, "nombreCompleto":nombreCompleto, "correo":correo, "idArea":idArea, "arregloDatosProgramas":arregloDatosProgramas, 
-                                                                   "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+                                                                   "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto, "datosCompu":datosCompu})
 
     else:
         return redirect('/login/') #redirecciona a url de inicio
