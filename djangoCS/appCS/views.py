@@ -34,6 +34,9 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_CENTER
 
+#Libreria excel.
+import xlwt
+
 def notificacionInsumos():
     
     cartuchosBajos = Cartuchos.objects.filter(cantidad=1)
@@ -6812,5 +6815,166 @@ def qrImpresora(request):
     
     else:
         return redirect('/login/') #redirecciona a url de inicio
+    
+    
+    
+    
+#EXCEEELES
+
+def xlDepartamentos(request):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename=Reporte Departamentos.xls'
+    
+    #creación de libro de excel
+    libro = xlwt.Workbook(encoding='utf-8')
+    hoja = libro.add_sheet('Departamentos')
+    
+    numero_fila = 0
+    estilo_fuente = xlwt.XFStyle()
+    estilo_fuente.font.bold = True
+    
+    columnas = ['Id Departamento','Nombre', 'Color', 'Número de empleados']
+    for columna in range(len(columnas)):
+        hoja.write(numero_fila, columna, columnas[columna], estilo_fuente)
+        
+    cantidad_empleados = []
+    infoAreas = Areas.objects.all()
+        
+    for area in infoAreas:
+        id_area_una = area.id_area
+        areaInt = int(id_area_una)
+            
+        empleadosEnArea = Empleados.objects.filter(id_area_id__id_area = areaInt)#filtro de los empleados que esten dentro de un area especifica
+            
+        numero_empleados = 0
+        for empleado in empleadosEnArea:
+            numero_empleados+=1
+            
+        cantidad_empleados.append(str(numero_empleados)+" empleados")
+    
+    #lista la lista de cantidad_empleados
+        
+    areas = Areas.objects.all()
+    
+    datosAreas = []
+    cont=0
+    color = ""
+    for x in areas:
+        cont+=1
+        if x.color == "label bg-red":
+            color = "Rojo"
+        elif x.color == "label bg-pink":
+            color = "Rosa"
+        elif x.color == "label bg-purple":
+            color = "Morado"
+        elif x.color == "label bg-indigo":
+            color = "Indigo"
+        elif x.color == "label bg-blue":
+            color = "Azul"
+        elif x.color == "label bg-cyan":
+            color = "Cyan"
+        elif x.color == "label bg-teal":
+            color = "Teal"
+        elif x.color == "label bg-Green":
+            color = "Verde"
+        elif x.color == "label bg-Light-Green":
+            color = "Verde bajo"
+        elif x.color == "label bg-lime":
+            color = "Lima"
+        elif x.color == "label bg-yellow":
+            color = "Amarillo"
+        elif x.color == "label bg-amber":
+            color = "Amber"
+        elif x.color == "label bg-orange":
+            color = "Naranja"
+        elif x.color == "label bg-deep-orange":
+            color = "Naranja Oscuro"
+        elif x.color == "label bg-brown":
+            color = "Cafe"
+        elif x.color == "label bg-grey":
+            color = "Gris"
+        elif x.color == "label bg-blue-grey":
+            color = "Gris azulado"
+        elif x.color == "label bg-black":
+            color = "Negro"
+            
+        datosAreas.append([x.id_area, x.nombre, color, cantidad_empleados[cont-1]])
+            
+        
+    estilo_fuente = xlwt.XFStyle()
+    for area in datosAreas:
+        numero_fila+=1
+        for columna in range(len(area)):
+            hoja.write(numero_fila, columna, str(area[columna]), estilo_fuente)
+        
+    
+    
+    
+        
+    libro.save(response)
+    return response    
+
+
+
+def xlEmpleados(request):
+    if request.method == "POST":
+    
+        activoa= request.POST['activo'] #A o I
+            
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename=Reporte Empleados.xls'
+    
+    #creación de libro de excel
+    libro = xlwt.Workbook(encoding='utf-8')
+    hoja = libro.add_sheet('Empleados')
+    
+    numero_fila = 0
+    estilo_fuente = xlwt.XFStyle()
+    estilo_fuente.font.bold = True
+    
+    columnas = ['Id','Nombre', 'Apellidos', 'Departamento', 'Puesto', 'Correo', 'Contraseña']
+    for columna in range(len(columnas)):
+        hoja.write(numero_fila, columna, columnas[columna], estilo_fuente)
+        
+    departamentos = []
+    infoEmpleados = Empleados.objects.filter(activo = activoa)
+        
+    for empleado in infoEmpleados:
+        id_depa = empleado.id_area_id
+            
+        datosArea = Areas.objects.filter(id_area = id_depa)#filtro de los empleados que esten dentro de un area especifica
+        
+        for dato in datosArea:
+            nombre = dato.nombre
+        
+        departamentos.append(nombre)
+    
+    #lista la lista de departamentos de empleados
+        
+    empleados = Empleados.objects.filter(activo = activoa)
+    
+    datosEmpleados = []
+    cont=0
+    for x in empleados:
+        cont+=1
+        datosEmpleados.append([x.id_empleado, x.nombre, x.apellidos, departamentos[cont-1], 
+                               x.puesto, x.correo, x.contraseña])
+            
+        
+    estilo_fuente = xlwt.XFStyle()
+    for empleadito in datosEmpleados:
+        numero_fila+=1
+        for columna in range(len(empleadito)):
+            hoja.write(numero_fila, columna, str(empleadito[columna]), estilo_fuente)
+        
+    
+    
+    
+        
+    libro.save(response)
+    return response    
+    #creación 
+    
+    
     
 #Fin, todooo tiene un fiiiiiin
