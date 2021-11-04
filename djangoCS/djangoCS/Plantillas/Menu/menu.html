@@ -71,7 +71,7 @@
                 <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
                 <a href="javascript:void(0);" class="bars"></a>
                 <img class="navbar-brand" src={% static 'images/rayocustom.png' %} height="20%" alt="User">
-                <a class="navbar-brand" href="index.html"><span class="login100-form-title-1" style="font-family: 'ground_controlregular', cursive; font-size: 25px;">
+                <a class="navbar-brand" href="/inicio/"><span class="login100-form-title-1" style="font-family: 'ground_controlregular', cursive; font-size: 25px;">
                     Custom System
                 </span></a>
                 
@@ -143,10 +143,7 @@
             <!-- User Info -->
             <div class="user-info">
                 <div >
-                    <center>
-                        <img src="{{foto.url}}"width="75" height="75"  alt="User" style="border-radius: 40px;"/>
-                    </center>
-                    
+                        <img src="{{foto.url}}"width="65" height="65"  alt="User" style="border-radius: 120px;"/>
                 </div>
                 <div class="info-container">
                     <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{nombreCompleto}}</div>
@@ -472,11 +469,14 @@
                                 
                                 <a href="javascript:void(0);" class="menu-toggle">
                                     {% if estaEnAgregarInsumos %}
+                                    <i class="material-icons"  style="color: #00917C;!important">opacity</i>
                                     <span style="color: #E40017;!important">Insumos</span>
                                     {% else %}
                                     {% if estaEnVerInsumos %}
+                                    <i class="material-icons"  style="color: #00917C;!important">opacity</i>
                                     <span style="color: #E40017;!important">Insumos</span>
                                     {% else %}
+                                    <i class="material-icons" >opacity</i>
                                     <span>Insumos</span>
                                     {% endif %}
                                     {% endif %}
@@ -490,6 +490,7 @@
                                         {% if estaEnVerInsumos %}
                                         <a href="/verInsumos/" style="color: #d49e0a;!important">Ver insumos</a>
                                         {% else %}
+                                        
                                         <a href="/verInsumos/" >Ver insumos</a>
                                         {% endif %}
 

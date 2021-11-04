@@ -43,8 +43,28 @@ Renovación Impresoras
                     RENOVACIÓN DE IMPRESORAS DE CUSTOM & CO
                     <small style="color: #790C05;">Vista de listado de renovación de impresoras la empresa.</small>
                 </h2>
-                
-                
+                <br>
+                <div class="row clear-fix">
+                    <div class="col-xs-12 col-sm-1">
+                        <form action="/reporteRenovacionImp/" method="POST">{% csrf_token %}
+                            <button type="submit" class="btn bg-red waves-effect"
+                            data-toggle="tooltip" data-placement="bottom" title="Descargar reporte de Renovación de impresoras en PDF.">
+                                <i class="material-icons">picture_as_pdf</i>
+                                <span>PDF</span>
+                            </button>
+                        </form>
+                    </div>
+                    <div class="col-xs-12 col-sm-1">
+                        <form action="/xlRenovacionImpresoras/" method="POST">{% csrf_token %}
+                            <button type="submit" class="btn bg-green waves-effect"
+                            data-toggle="tooltip" data-placement="right" title="Descargar reporte de Renovación de impresoras en Excel.">
+                                <i class="material-icons">grid_on</i>
+                                <span>Excel</span>
+                            </button>
+                        </form>
+                    </div>
+                    
+                </div>
                     
             </div>
             <div class="body" id="divActivos">
@@ -101,12 +121,7 @@ Renovación Impresoras
                         </tbody>
                     </table>
                 </div>
-                <form action="/reporteRenovacionImp/" method="POST">{% csrf_token %}
-                    <button type="submit" class="btn bg-red waves-effect">
-                        <i class="material-icons">get_app</i>
-                        <span>PDF</span>
-                    </button>
-                </form>
+                
             </div>
             
            
@@ -211,6 +226,7 @@ Renovación Impresoras
 
 <!-- Custom Js -->
 <script src={% static 'panel/js/admin.js' %}></script>
+<script src={% static 'panel/js/pages/ui/tooltips-popovers.js' %}></script>
 <script src={% static 'panel/js/pages/tables/jquery-datatable.js' %}></script>
 
 <!-- Demo Js -->

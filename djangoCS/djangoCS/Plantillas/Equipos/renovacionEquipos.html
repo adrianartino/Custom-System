@@ -43,6 +43,29 @@ Renovación Equipos | Custom System
                     RENOVACIÓN DE EQUIPOS DE CUSTOM & CO
                     <small style="color: #790C05;">Vista de listado de renovación de equipos la empresa.</small>
                 </h2>
+                <br>
+                <div class="row clear-fix">
+                    <div class="col-xs-12 col-sm-1">
+                        <form action="/reporteRenovacionEq/" method="POST">{% csrf_token %}
+                            <button type="submit" class="btn bg-red waves-effect"
+                            data-toggle="tooltip" data-placement="bottom" title="Descargar reporte Renovación de equipos en PDF.">
+                                <i class="material-icons">picture_as_pdf</i>
+                                <span>PDF</span>
+                            </button>
+                        </form>
+                    </div>
+                    <div class="col-xs-12 col-sm-1">
+                        <form action="/xlRenovacionEquipos/" method="POST">{% csrf_token %}
+                            <button type="submit" class="btn bg-green waves-effect"
+                            data-toggle="tooltip" data-placement="right" title="Descargar reporte Renovación de equipos en Excel.">
+                                <i class="material-icons">grid_on</i>
+                                <span>Excel</span>
+                            </button>
+                        </form>
+                    </div>
+                    
+                </div>
+                
                 
                 
                     
@@ -99,12 +122,7 @@ Renovación Equipos | Custom System
                         </tbody>
                     </table>
                 </div>
-                <form action="/reporteRenovacionEq/" method="POST">{% csrf_token %}
-                    <button type="submit" class="btn bg-red waves-effect">
-                        <i class="material-icons">get_app</i>
-                        <span>PDF</span>
-                    </button>
-                </form>
+                
             </div>
             
            
@@ -209,6 +227,7 @@ Renovación Equipos | Custom System
 
 <!-- Custom Js -->
 <script src={% static 'panel/js/admin.js' %}></script>
+<script src={% static 'panel/js/pages/ui/tooltips-popovers.js' %}></script>
 <script src={% static 'panel/js/pages/tables/jquery-datatable.js' %}></script>
 
 <!-- Demo Js -->

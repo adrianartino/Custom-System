@@ -44,8 +44,30 @@ Insumos | Custom System
                     INSUMOS DE IMPRESORAS DE CUSTOM & CO
                     <small style="color: #790C05;">Vista de listado de insumos de impresoras de la empresa.</small>
                 </h2>
-                
                 <br>
+                <div class="row clear-fix">
+                    <div class="col-xs-12 col-sm-1">
+                        <form action="/reporteInsumos/" method="POST">{% csrf_token %}
+                            <button type="submit" class="btn bg-red waves-effect" data-toggle="tooltip" data-placement="bottom" title="Descargar reporte de insumos en PDF.">
+                                <i class="material-icons">picture_as_pdf</i>
+                                <span>PDF</span>
+                            </button>
+                        </form>
+                    </div>
+                    <div class="col-xs-12 col-sm-1">
+                        <form action="/xlInsumos/" method="POST">{% csrf_token %}
+                            <input type="hidden" name="activo" value="I">
+                            <button type="submit" class="btn bg-green waves-effect"  data-toggle="tooltip" data-placement="bottom" title="Descargar reporte de insumos en Excel.">
+                                <i class="material-icons">grid_on</i>
+                                <span>Excel</span>
+                            </button>
+                        </form>
+                    </div>
+                    <div class="col-xs-12 col-sm-4">
+                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarInsumos/" >Agregar Insumos</a>
+                    </div>
+                    
+                </div>
             </div>
              
             <div class="body">
@@ -114,12 +136,7 @@ Insumos | Custom System
                     </table>
                     
                 </div>
-                <form action="/reporteInsumos/" method="POST">{% csrf_token %}
-                    <button type="submit" class="btn bg-red waves-effect">
-                        <i class="material-icons">get_app</i>
-                        <span>PDF</span>
-                    </button>
-                </form>
+                
             </div>
         </div>
     </div>
@@ -244,8 +261,9 @@ Insumos | Custom System
 
 <!-- Custom Js -->
 <script src={% static 'panel/js/admin.js' %}></script>
+<script src={% static 'panel/js/pages/ui/tooltips-popovers.js' %}></script>
 <script src={% static 'panel/js/pages/tables/jquery-datatable.js' %}></script>
-    <script src={% static 'panel/js/pages/ui/modals.js' %}></script>
+<script src={% static 'panel/js/pages/ui/modals.js' %}></script>
 
 <!-- Demo Js -->
 <script src={% static 'panel/js/demo.js' %}></script>

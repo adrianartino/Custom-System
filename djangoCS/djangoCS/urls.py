@@ -87,7 +87,12 @@ urlpatterns = [
     path("pdfInfoImpresora/", views.pdfInfoImpresora),
     
     path("xlDepartamentos/", views.xlDepartamentos),
-    path("xlEmpleados/", views.xlEmpleados)
+    path("xlEmpleados/", views.xlEmpleados),
+    path("xlEquipos/", views.xlEquipos),
+    path("xlRenovacionEquipos/", views.xlRenovacionEquipos),
+    path("xlImpresoras/",views.xlImpresoras),
+    path("xlRenovacionImpresoras/", views.xlRenovacionImpresoras),
+    path("xlInsumos/", views.xlInsumos)
     
     
 ]

@@ -58,6 +58,32 @@ Impresoras | Custom System
                     </div>
             </div>
             <div class="body" id="divActivos">
+                <div class="row clear-fix">
+                    <div class="col-xs-12 col-sm-1">
+                        <form action="/reporteImpresoras/" method="POST">{% csrf_token %}
+                            <input type="hidden" name="activo" value="A">
+                            <button type="submit" class="btn bg-red waves-effect"
+                            data-toggle="tooltip" data-placement="bottom" title="Descargar reporte de Impresoras activas en PDF.">
+                                <i class="material-icons">get_app</i>
+                                <span>PDF</span>
+                            </button>
+                        </form>
+                    </div>
+                    <div class="col-xs-12 col-sm-1">
+                        <form action="/xlImpresoras/" method="POST">{% csrf_token %}
+                            <input type="hidden" name="activo" value="A">
+                            <button type="submit" class="btn bg-green waves-effect"
+                            data-toggle="tooltip" data-placement="bottom" title="Descargar reporte de Impresoras activas en Excel.">
+                                <i class="material-icons">grid_on</i>
+                                <span>Excel</span>
+                            </button>
+                        </form>
+                    </div>
+                    <div class="col-xs-12 col-sm-4">
+                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarImpresoras/">Agregar Impresora</a>
+                    </div>
+                    
+                </div>
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                         <thead>
@@ -158,16 +184,35 @@ Impresoras | Custom System
                     </table>
                 </div>
                 <br>
-                <form action="/reporteImpresoras/" method="POST">{% csrf_token %}
-                    <input type="hidden" name="activo" value="A">
-                    <button type="submit" class="btn bg-red waves-effect">
-                        
-                        <i class="material-icons">get_app</i>
-                        <span>PDF</span>
-                    </button>
-                </form>
+                
             </div>
             <div class="body" id="divInactivos">
+                <div class="row clear-fix">
+                    <div class="col-xs-12 col-sm-1">
+                        <form action="/reporteImpresoras/" method="POST">{% csrf_token %}
+                            <input type="hidden" name="activo" value="I">
+                            <button type="submit" class="btn bg-red waves-effect"
+                            data-toggle="tooltip" data-placement="bottom" title="Descargar reporte de Impresoras de baja en PDF.">
+                                <i class="material-icons">get_app</i>
+                                <span>PDF</span>
+                            </button>
+                        </form>
+                    </div>
+                    <div class="col-xs-12 col-sm-1">
+                        <form action="/xlImpresoras/" method="POST">{% csrf_token %}
+                            <input type="hidden" name="activo" value="I">
+                            <button type="submit" class="btn bg-green waves-effect"
+                            data-toggle="tooltip" data-placement="bottom" title="Descargar reporte de Impresoras de baja en Excel.">
+                                <i class="material-icons">grid_on</i>
+                                <span>Excel</span>
+                            </button>
+                        </form>
+                    </div>
+                    <div class="col-xs-12 col-sm-4">
+                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarImpresoras/">Agregar Impresora</a>
+                    </div>
+                    
+                </div>
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable ">
                         <thead>
@@ -241,13 +286,7 @@ Impresoras | Custom System
                         </tbody>
                     </table>
                 </div>
-                <form action="/reporteImpresoras/" method="POST">{% csrf_token %}
-                    <input type="hidden" name="activo" value="I">
-                    <button type="submit" class="btn bg-red waves-effect">
-                        <i class="material-icons">get_app</i>
-                        <span>PDF</span>
-                    </button>
-                </form>
+                
             </div>
         </div>
     </div>
@@ -458,6 +497,7 @@ Impresoras | Custom System
 
 <!-- Custom Js -->
 <script src={% static 'panel/js/admin.js' %}></script>
+<script src={% static 'panel/js/pages/ui/tooltips-popovers.js' %}></script>
 <script src={% static 'panel/js/pages/tables/jquery-datatable.js' %}></script>
 
 <!-- Demo Js -->

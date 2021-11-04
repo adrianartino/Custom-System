@@ -66,20 +66,25 @@ Empleados | Custom System
                     <div class="col-xs-12 col-sm-1">
                         <form action="/reporteEmpleadosActivos/" method="POST">{% csrf_token %}
                             <input type="hidden" name="activo" value="A">
-                            <button type="submit" class="btn bg-red waves-effect">
-                                <i class="material-icons">get_app</i>
+                            <button type="submit" class="btn bg-red waves-effect"
+                            data-toggle="tooltip" data-placement="bottom" title="Descargar reporte Empleados Activos en PDF.">
+                                <i class="material-icons">picture_as_pdf</i>
                                 <span>PDF</span>
                             </button>
                         </form>
                     </div>
-                    <div class="col-xs-12 col-sm-3">
+                    <div class="col-xs-12 col-sm-1">
                         <form action="/xlEmpleados/" method="POST">{% csrf_token %}
                             <input type="hidden" name="activo" value="A">
-                            <button type="submit" class="btn bg-green waves-effect">
+                            <button type="submit" class="btn bg-green waves-effect"
+                            data-toggle="tooltip" data-placement="bottom" title="Descargar reporte Empleados Activos en Excel.">
                                 <i class="material-icons">grid_on</i>
                                 <span>Excel</span>
                             </button>
                         </form>
+                    </div>
+                    <div class="col-xs-12 col-sm-4">
+                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarEmpleados/">Agregar Empleado</a>
                     </div>
                     
                 </div>
@@ -167,20 +172,25 @@ Empleados | Custom System
                     <div class="col-xs-12 col-sm-1">
                         <form action="/reporteEmpleadosActivos/" method="POST">{% csrf_token %}
                             <input type="hidden" name="activo" value="I">
-                            <button type="submit" class="btn bg-red waves-effect">
-                                <i class="material-icons">get_app</i>
+                            <button type="submit" class="btn bg-red waves-effect"
+                            data-toggle="tooltip" data-placement="bottom" title="Descargar reporte Empleados de baja en PDF.">
+                                <i class="material-icons">picture_as_pdf</i>
                                 <span>PDF</span>
                             </button>
                         </form>
                     </div>
-                    <div class="col-xs-12 col-sm-3">
+                    <div class="col-xs-12 col-sm-1">
                         <form action="/xlEmpleados/" method="POST">{% csrf_token %}
                             <input type="hidden" name="activo" value="I">
-                            <button type="submit" class="btn bg-green waves-effect">
+                            <button type="submit" class="btn bg-green waves-effect" 
+                            data-toggle="tooltip" data-placement="bottom" title="Descargar reporte Empleados de baja en Excel.">
                                 <i class="material-icons">grid_on</i>
                                 <span>Excel</span>
                             </button>
                         </form>
+                    </div>
+                    <div class="col-xs-12 col-sm-4">
+                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarEmpleados/">Agregar Empleado</a>
                     </div>
                     
                 </div>
@@ -457,6 +467,7 @@ Empleados | Custom System
 
 <!-- Custom Js -->
 <script src={% static 'panel/js/admin.js' %}></script>
+<script src={% static 'panel/js/pages/ui/tooltips-popovers.js' %}></script>
 <script src={% static 'panel/js/pages/tables/jquery-datatable.js' %}></script>
 <script src={% static 'panel/js/pages/forms/advanced-form-elements.js' %}></script>
 

@@ -3460,7 +3460,7 @@ def reporteDepartamentos(request):
             
         #crear el http response con pdf
         respuesta = HttpResponse(content_type='application/pdf')
-        respuesta['Content-Disposition'] = 'attachment; filename=Reporte Deparatmentos.pdf'
+        respuesta['Content-Disposition'] = 'attachment; filename=Reporte Deparatmentos'+str(datetime.today().strftime('%Y-%m-%d'))+'.pdf'
         #Crear objeto PDF 
         buffer =BytesIO()
         c = canvas.Canvas(buffer, pagesize=letter)
@@ -3719,7 +3719,7 @@ def reporteEmpleadosActivos(request):
         #QUITAR ESTO PARA OTRA HOJA
         #crear el http response con pdf
         respuesta = HttpResponse(content_type='application/pdf')
-        respuesta['Content-Disposition'] = 'attachment; filename=Reporte Empleados.pdf'
+        respuesta['Content-Disposition'] = 'attachment; filename=Reporte Empleados'+str(datetime.today().strftime('%Y-%m-%d'))+'.pdf'
         #Crear objeto PDF 
         buffer =BytesIO()
         c = canvas.Canvas(buffer, pagesize=letter)
@@ -4150,7 +4150,7 @@ def reporteRenovacionEq(request):
         #QUITAR ESTO PARA OTRA HOJA
         #crear el http response con pdf
         respuesta = HttpResponse(content_type='application/pdf')
-        respuesta['Content-Disposition'] = 'attachment; filename=Reporte renovación de equipos.pdf'
+        respuesta['Content-Disposition'] = 'attachment; filename=Reporte renovación de equipos'+str(datetime.today().strftime('%Y-%m-%d'))+'.pdf'
         #Crear objeto PDF 
         buffer =BytesIO()
         c = canvas.Canvas(buffer, pagesize=letter)
@@ -4593,7 +4593,7 @@ def reporteEquiposActivos(request):
         #QUITAR ESTO PARA OTRA HOJA
         #crear el http response con pdf
         respuesta = HttpResponse(content_type='application/pdf')
-        respuesta['Content-Disposition'] = 'attachment; filename=Reporte Equipos.pdf'
+        respuesta['Content-Disposition'] = 'attachment; filename=Reporte Equipos'+str(datetime.today().strftime('%Y-%m-%d'))+'.xls'
         #Crear objeto PDF 
         buffer =BytesIO()
         c = canvas.Canvas(buffer, pagesize=letter)
@@ -5036,7 +5036,7 @@ def reporteImpresoras(request):
         #QUITAR ESTO PARA OTRA HOJA
         #crear el http response con pdf
         respuesta = HttpResponse(content_type='application/pdf')
-        respuesta['Content-Disposition'] = 'attachment; filename=Reporte Impresoras.pdf'
+        respuesta['Content-Disposition'] = 'attachment; filename=Reporte Impresoras'+str(datetime.today().strftime('%Y-%m-%d'))+'.pdf'
         #Crear objeto PDF 
         buffer =BytesIO()
         c = canvas.Canvas(buffer, pagesize=letter)
@@ -5374,7 +5374,7 @@ def reporteRenovacionImp(request):
         #QUITAR ESTO PARA OTRA HOJA
         #crear el http response con pdf
         respuesta = HttpResponse(content_type='application/pdf')
-        respuesta['Content-Disposition'] = 'attachment; filename=Reporte Renovación Impresoras.pdf'
+        respuesta['Content-Disposition'] = 'attachment; filename=Reporte Renovación Impresoras'+str(datetime.today().strftime('%Y-%m-%d'))+'.pdf'
         #Crear objeto PDF 
         buffer =BytesIO()
         c = canvas.Canvas(buffer, pagesize=letter)
@@ -5596,7 +5596,7 @@ def reporteInsumos(request):
         #QUITAR ESTO PARA OTRA HOJA
         #crear el http response con pdf
         respuesta = HttpResponse(content_type='application/pdf')
-        respuesta['Content-Disposition'] = 'attachment; filename=Reporte Insumos.pdf'
+        respuesta['Content-Disposition'] = 'attachment; filename=Reporte Insumos'+str(datetime.today().strftime('%Y-%m-%d'))+'.pdf'
         #Crear objeto PDF 
         buffer =BytesIO()
         c = canvas.Canvas(buffer, pagesize=letter)
@@ -5954,7 +5954,7 @@ def pdfInfoEquipo(request):
         
         #crear el http response con pdf
         respuesta = HttpResponse(content_type='application/pdf')
-        respuesta['Content-Disposition'] = 'attachment; filename=Reporte Deparatmentos.pdf'
+        respuesta['Content-Disposition'] = 'attachment; filename=Info Equipo'+str(datetime.today().strftime('%Y-%m-%d'))+'.pdf'
         #Crear objeto PDF 
         buffer =BytesIO()
         c = canvas.Canvas(buffer, pagesize=letter)
@@ -6437,7 +6437,7 @@ def pdfInfoImpresora(request):
         
         #crear el http response con pdf
         respuesta = HttpResponse(content_type='application/pdf')
-        respuesta['Content-Disposition'] = 'attachment; filename=Reporte Impresoras General.pdf'
+        respuesta['Content-Disposition'] = 'attachment; filename=Reporte Impresoras General'+str(datetime.today().strftime('%Y-%m-%d'))+'.pdf'
         #Crear objeto PDF 
         buffer =BytesIO()
         c = canvas.Canvas(buffer, pagesize=letter)
@@ -6823,7 +6823,7 @@ def qrImpresora(request):
 
 def xlDepartamentos(request):
     response = HttpResponse(content_type='application/ms-excel')
-    response['Content-Disposition'] = 'attachment; filename=Reporte Departamentos.xls'
+    response['Content-Disposition'] = 'attachment; filename=Reporte Departamentos'+str(datetime.today().strftime('%Y-%m-%d'))+'.xls'
     
     #creación de libro de excel
     libro = xlwt.Workbook(encoding='utf-8')
@@ -6922,7 +6922,7 @@ def xlEmpleados(request):
         activoa= request.POST['activo'] #A o I
             
     response = HttpResponse(content_type='application/ms-excel')
-    response['Content-Disposition'] = 'attachment; filename=Reporte Empleados.xls'
+    response['Content-Disposition'] = 'attachment; filename=Reporte Empleados'+str(datetime.today().strftime('%Y-%m-%d'))+'.xls'
     
     #creación de libro de excel
     libro = xlwt.Workbook(encoding='utf-8')
@@ -6975,6 +6975,383 @@ def xlEmpleados(request):
     return response    
     #creación 
     
+def xlEquipos(request):
+    if request.method == "POST":
     
+        activoa= request.POST['activo'] #A o I
+            
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename=Reporte Equipos'+str(datetime.today().strftime('%Y-%m-%d'))+'.xls'
+    
+    #creación de libro de excel
+    libro = xlwt.Workbook(encoding='utf-8')
+    hoja = libro.add_sheet('Equipos')
+    
+    numero_fila = 0
+    estilo_fuente = xlwt.XFStyle()
+    estilo_fuente.font.bold = True
+    
+    columnas = ['Id','Tipo', 'Marca', 'Modelo', 'Color', 'RAM', 'Procesador', 'SO', 'Cargador', 'Propietario', 'Departamento', 'Estado']
+    for columna in range(len(columnas)):
+        hoja.write(numero_fila, columna, columnas[columna], estilo_fuente)
+        
+    propietarios = []
+    departamentos = []
+    cargadores = []
+    infoEquipos = Equipos.objects.filter(activo = activoa)
+        
+    for equipo in infoEquipos:
+        id_emp = equipo.id_empleado_id
+        mcargador = equipo.modelocargador
+        
+        if id_emp == "" and mcargador == "":
+            nombreEmpleado = "Sin propietario"
+            departamento = "Sin departamento"
+            cargador = "Sin cargador"
+            
+            propietarios.append(nombreEmpleado)
+            departamentos.append(departamento)
+            cargadores.append(cargador)
+        
+        elif id_emp == "":
+            nombreEmpleado = "Sin propietario"
+            departamento = "Sin departamento"
+            cargador = equipo.modelocargador
+            
+            propietarios.append(nombreEmpleado)
+            departamentos.append(departamento)
+            cargadores.append(cargador)
+        
+        elif mcargador == "":
+            cargador = "Sin cargador"
+            datosEmpleado = Empleados.objects.filter(id_empleado = id_emp)#filtro de los empleados que esten dentro de un area especifica
+            
+            for dato in datosEmpleado:
+                nombre = dato.nombre
+                apellidos = dato.apellidos
+                id_depa = dato.id_area_id
+                
+                infoDepa = Areas.objects.filter(id_area = id_depa)
+                for dato in infoDepa:
+                    departamento = dato.nombre
+            nombreEmpleado = nombre + " " + apellidos
+            
+            propietarios.append(nombreEmpleado)
+            departamentos.append(departamento)
+            cargadores.append(cargador)
+            
+        else:
+            datosEmpleado = Empleados.objects.filter(id_empleado = id_emp)#filtro de los empleados que esten dentro de un area especifica
+            
+            for dato in datosEmpleado:
+                nombre = dato.nombre
+                apellidos = dato.apellidos
+                id_depa = dato.id_area_id
+                
+                infoDepa = Areas.objects.filter(id_area = id_depa)
+                for dato in infoDepa:
+                    departamento = dato.nombre
+            nombreEmpleado = nombre + " " + apellidos
+            cargador = equipo.modelocargador
+            
+            propietarios.append(nombreEmpleado)
+            departamentos.append(departamento)
+            cargadores.append(cargador)
+        
+        
+    
+    #lista la lista de propietarios de equipos, incluyendo los que no tienen propietario.
+        
+    equipos = Equipos.objects.filter(activo = activoa)
+    
+    datosEquipos = []
+    cont=0
+    for x in equipos:
+        cont+=1
+        datosEquipos.append([x.id_equipo, x.tipo, x.marca, x.modelo, x.color, x.memoriaram, x.procesador, 
+                             x.sistemaoperativo, cargadores[cont-1], propietarios[cont-1], departamentos[cont-1], 
+                             x.estado])
+            
+        
+    estilo_fuente = xlwt.XFStyle()
+    for equipito in datosEquipos:
+        numero_fila+=1
+        for columna in range(len(equipito)):
+            hoja.write(numero_fila, columna, str(equipito[columna]), estilo_fuente)
+    
+    libro.save(response)
+    return response    
+    #creación 
+    
+def xlRenovacionEquipos(request):
+            
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename=Reporte Renovación Equipos'+str(datetime.today().strftime('%Y-%m-%d'))+'.xls'
+    
+    #creación de libro de excel
+    libro = xlwt.Workbook(encoding='utf-8')
+    hoja = libro.add_sheet('Renovacion Equipos')
+    
+    numero_fila = 0
+    estilo_fuente = xlwt.XFStyle()
+    estilo_fuente.font.bold = True
+    
+    columnas = ['Id','Equipo', 'Propietario', 'Departamento', 'Fecha de compra', 'Fecha de renovación']
+    for columna in range(len(columnas)):
+        hoja.write(numero_fila, columna, columnas[columna], estilo_fuente)
+        
+    listaEquipos = []
+    listaPropietarios =[]
+    listaDepartamentos = []
+    infoRenovaciones = Renovacion_Equipos.objects.all()
+        
+    for renovacion in infoRenovaciones:
+        id_equipo_renov = renovacion.id_equipo_id
+        
+        infoEquipo = Equipos.objects.filter(id_equipo = id_equipo_renov)
+        
+        for dato in infoEquipo:
+            tipo = dato.tipo
+            marca = dato.marca
+            modelo = dato.modelo
+            color = dato.color
+            propietario = dato.id_empleado_id
+            
+            if propietario == "":
+                propietarioEq = "Sin propietario"
+                departamento = "Sin departamento"
+            else:
+                datosPropietario = Empleados.objects.filter(id_empleado = propietario)
+                
+                for d in datosPropietario:
+                    nombre = d.nombre
+                    apellidos = d.apellidos
+                    id_area_prop = d.id_area_id
+                    
+                    infoArea = Areas.objects.filter(id_area = id_area_prop)
+                    for datoArea in infoArea:
+                        departamento = datoArea.nombre
+                    
+                propietarioEq = nombre + " " + apellidos
+            
+        equipoCompleto = tipo + " " + marca + " " + modelo + " " + color
+        listaEquipos.append(equipoCompleto)
+        listaPropietarios.append(propietarioEq)
+        listaDepartamentos.append(departamento)
+        
+    #lista la lista de propietarios de equipos, incluyendo los que no tienen propietario.
+        
+    renovaciones = Renovacion_Equipos.objects.all()
+    
+    datosRenovaviones = []
+    cont=0
+    for x in renovaciones:
+        cont+=1
+        datosRenovaviones.append([x.id_equipo_id, listaEquipos[cont-1], listaPropietarios[cont-1], listaDepartamentos[cont-1], 
+                             x.fecha_compra, x.fecha_renov])
+            
+        
+    estilo_fuente = xlwt.XFStyle()
+    for renovacionsita in datosRenovaviones:
+        numero_fila+=1
+        for columna in range(len(renovacionsita)):
+            hoja.write(numero_fila, columna, str(renovacionsita[columna]), estilo_fuente)
+        
+    
+    
+    
+        
+    libro.save(response)
+    return response    
+    #creación 
+    
+    
+def xlImpresoras(request):
+    if request.method == "POST":
+    
+        activoa= request.POST['activo'] #A o I
+            
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename=Reporte Impresoras'+str(datetime.today().strftime('%Y-%m-%d'))+'.xls'
+    
+    #creación de libro de excel
+    libro = xlwt.Workbook(encoding='utf-8')
+    hoja = libro.add_sheet('Impresoras')
+    
+    numero_fila = 0
+    estilo_fuente = xlwt.XFStyle()
+    estilo_fuente.font.bold = True
+    
+    columnas = ['Id','Marca', 'Modelo', 'N° Serie', 'Tipo', 'En red', 'Dirección IP', 'Estado', 'Área']
+    for columna in range(len(columnas)):
+        hoja.write(numero_fila, columna, columnas[columna], estilo_fuente)
+        
+    enRed = []
+    direccionesIP = []
+    areas = []
+    infoImpresoras = Impresoras.objects.filter(activo = activoa)
+        
+    for impresora in infoImpresoras:
+        enredd = impresora.enred
+        areaImpresora = impresora.id_area_id
+        
+        
+        if enredd == "N":
+            red = "No"
+            direccionIP = "-"
+        else:
+            red = "Si"
+            direccionIP = impresora.ip
+            
+        infoArea = Areas.objects.filter(id_area = areaImpresora)
+        for dato in infoArea:
+            nombreArea = dato.nombre
+
+        enRed.append(red)
+        direccionesIP.append(direccionIP)
+        areas.append(nombreArea)
+        
+    #lista la lista de propietarios de equipos, incluyendo los que no tienen propietario.
+        
+    impresoras = Impresoras.objects.filter(activo = activoa)
+    
+    datosImpresoras = []
+    cont=0
+    for x in impresoras:
+        cont+=1
+        datosImpresoras.append([x.id_impresora, x.marca, x.modelo, x.numserie, x.tipo, 
+                                enRed[cont-1], direccionesIP[cont-1], x.estado, 
+                             areas[cont-1]])
+            
+        
+    estilo_fuente = xlwt.XFStyle()
+    for impresorita in datosImpresoras:
+        numero_fila+=1
+        for columna in range(len(impresorita)):
+            hoja.write(numero_fila, columna, str(impresorita[columna]), estilo_fuente)
+    
+    libro.save(response)
+    return response    
+    #creación 
+    
+    
+def xlRenovacionImpresoras(request):
+            
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename=Reporte Renovación Impresoras'+str(datetime.today().strftime('%Y-%m-%d'))+'.xls'
+    
+    #creación de libro de excel
+    libro = xlwt.Workbook(encoding='utf-8')
+    hoja = libro.add_sheet('Renovacion Impresoras')
+    
+    numero_fila = 0
+    estilo_fuente = xlwt.XFStyle()
+    estilo_fuente.font.bold = True
+    
+    columnas = ['Id Impresora','Modelo', 'Departamento', 'Fecha de compra', 'Fecha de renovación']
+    for columna in range(len(columnas)):
+        hoja.write(numero_fila, columna, columnas[columna], estilo_fuente)
+        
+    listaImpresoras = []
+    listaDepartamentos = []
+    infoRenovaciones = Renovacion_Impresoras.objects.all()
+        
+    for renovacion in infoRenovaciones:
+        id_impresora_renov = renovacion.id_impresora_id
+        
+        infoImpresora = Impresoras.objects.filter(id_impresora = id_impresora_renov)
+        
+        for dato in infoImpresora:
+            marca = dato.marca
+            modelo = dato.modelo
+            
+            areaImp = dato.id_area_id
+            
+            datosArea = Areas.objects.filter(id_area = areaImp)
+                
+            for d in datosArea:
+                departamento = d.nombre
+            
+            impresora = marca + " " + modelo
+            
+            listaImpresoras.append(impresora)
+            listaDepartamentos.append(departamento)
+    #lista la lista de impresoras, incluyendo sus areas.
+        
+    renovaciones = Renovacion_Impresoras.objects.all()
+    
+    datosRenovaviones = []
+    cont=0
+    for x in renovaciones:
+        cont+=1
+        datosRenovaviones.append([x.id_impresora_id, listaImpresoras[cont-1], listaDepartamentos[cont-1], 
+                             x.fecha_compra, x.fecha_renov])
+            
+        
+    estilo_fuente = xlwt.XFStyle()
+    for renovacionsita in datosRenovaviones:
+        numero_fila+=1
+        for columna in range(len(renovacionsita)):
+            hoja.write(numero_fila, columna, str(renovacionsita[columna]), estilo_fuente)
+
+    libro.save(response)
+    return response    
+    #creación 
+    
+    
+def xlInsumos(request):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename=Reporte Insumos'+str(datetime.today().strftime('%Y-%m-%d'))+'.xls'
+    
+    #creación de libro de excel
+    libro = xlwt.Workbook(encoding='utf-8')
+    hoja = libro.add_sheet('Insumos')
+    
+    numero_fila = 0
+    estilo_fuente = xlwt.XFStyle()
+    estilo_fuente.font.bold = True
+    
+    columnas = ['Id Cartucho','Marca', 'Modelo', 'Cantidad', 'N° de serue', 'Color', 'Impresora']
+    for columna in range(len(columnas)):
+        hoja.write(numero_fila, columna, columnas[columna], estilo_fuente)
+        
+    impresorasss = []
+    infoInsumos = Cartuchos.objects.all()
+        
+    for cartucho in infoInsumos:
+        id_impresoraCart = cartucho.id_impresora_id
+            
+        infoImpresora = Impresoras.objects.filter(id_impresora = id_impresoraCart)#filtro de los empleados que esten dentro de un area especifica
+            
+        for dato in infoImpresora:
+            marca = dato.marca
+            modelo = dato.modelo
+            
+        impresora = marca + " " + modelo
+            
+        impresorasss.append(impresora)
+    
+    #lista la lista de impresoras
+        
+    insumos = Cartuchos.objects.all()
+    
+    datosInsumos = []
+    cont=0
+    color = ""
+    for x in insumos:
+        cont+=1
+        datosInsumos.append([x.id_cartucho, x.marca, x.modelo, x.cantidad, x.nuserie, x.color, impresorasss[cont-1]])
+            
+        
+    estilo_fuente = xlwt.XFStyle()
+    for ins in datosInsumos:
+        numero_fila+=1
+        for columna in range(len(ins)):
+            hoja.write(numero_fila, columna, str(ins[columna]), estilo_fuente)
+        
+    libro.save(response)
+    return response    
+
+
     
 #Fin, todooo tiene un fiiiiiin
