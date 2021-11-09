@@ -6802,16 +6802,39 @@ def pdfInfoImpresora(request):
 
 def qrEquipo(request):
     
+    id_admin=request.session["idSesion"]
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    nombreCompleto = nombre + " " + apellidos
+        
+    cartuchosNoti = notificacionInsumos()
+    mantenimientosNoti = notificacionLimpiezas()
+    numeroNoti = numNoti()
+        
+    foto = fotoAdmin(request)
+    
     if "idSesion" in request.session:
         
-        return render(request, "Equipos/qrEquipo.html")
+        return render(request, "Equipos/qrEquipo.html", {"nombreCompleto": nombreCompleto, "correo": correo, "cartuchosNoti": cartuchosNoti, "mantenimientosNoti":mantenimientosNoti,"numeroNoti":numeroNoti,"foto":foto } )
     else:
         return redirect('/login/') #redirecciona a url de inicio
 
 def qrImpresora(request):
     
+    id_admin=request.session["idSesion"]
+    nombre = request.session['nombres']
+    apellidos = request.session['apellidos']
+    correo = request.session['correoSesion']
+    nombreCompleto = nombre + " " + apellidos
+        
+    cartuchosNoti = notificacionInsumos()
+    mantenimientosNoti = notificacionLimpiezas()
+    numeroNoti = numNoti()
+        
+    foto = fotoAdmin(request)
     if "idSesion" in request.session:
-        return render(request, "Impresoras/qrImpresora.html")
+        return render(request, "Impresoras/qrImpresora.html", {"nombreCompleto": nombreCompleto, "correo": correo, "cartuchosNoti": cartuchosNoti, "mantenimientosNoti":mantenimientosNoti,"numeroNoti":numeroNoti,"foto":foto })
     
     else:
         return redirect('/login/') #redirecciona a url de inicio
