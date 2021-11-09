@@ -427,7 +427,7 @@ def inicio(request):
             mantenimientosNoti = notificacionLimpiezas()
             numeroNoti = numNoti()
             
-            return render(request, "Inicio/inicio.html", {"estaEnInicio":estaEnInicio,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "recienIniciado":recienIniciado, "nombre": nombre, "cantidades":cantidades, "datosLimpiezas":datosLimpiezas, 
+            return render(request, "Inicio/inicio.html", {"estaEnInicio":estaEnInicio,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "recienIniciado":recienIniciado, "cantidades":cantidades, "datosLimpiezas":datosLimpiezas, 
                                                       "lista":lista, "baseDir":baseDir, "equipos_año":equipos_año, "impresoras_año":impresoras_año, "dia":dia, "mes_texto":mes_texto, "resta_dias":resta_dias, "año":año, "cartuchosNoti":cartuchosNoti
                                                       , "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
         else:
@@ -2526,40 +2526,37 @@ def descargarPDF2(request):
     
 def guardarImagen(request):
     
-    if "idSesion" in request.session:
         
-        estaEnAgregarCarta = True
+    estaEnAgregarCarta = True
 
-        if request.method == "POST":
+    if request.method == "POST":
             
-            idEquipo= request.POST['idEquipo']
-            idEmpleado= request.POST['idEmpleado']
-            fecha=datetime.now()
+        idEquipo= request.POST['idEquipo']
+        idEmpleado= request.POST['idEmpleado']
+        fecha=datetime.now()
             
-            canvasLargo = request.POST['canvasData']
-            format, imgstr = canvasLargo.split(';base64,')
-            ext = format.split('/')[-1]
-            archivo = ContentFile(base64.b64decode(imgstr), name= idEmpleado+ '.' + ext)
+        canvasLargo = request.POST['canvasData']
+        format, imgstr = canvasLargo.split(';base64,')
+        ext = format.split('/')[-1]
+        archivo = ContentFile(base64.b64decode(imgstr), name= idEmpleado+ '.' + ext)
             
-            numeroFirmas = Carta.objects.count() #1
+        numeroFirmas = Carta.objects.count() #1
             
-            registroFirma = Carta.objects.get(id_carta=numeroFirmas)
-            registroFirma.firma = archivo
-            registroFirma.save()
+        registroFirma = Carta.objects.get(id_carta=numeroFirmas)
+        registroFirma.firma = archivo
+        registroFirma.save()
             
             #preregistro = Carta(id_empleado = Empleados.objects.get(id_empleado = idEmpleado), id_equipo = Equipos.objects.get(id_equipo = idEquipo), fecha = fecha, firma = archivo)
             #preregistro.save()
             
-            imagenGuardada = True
-            request.session['imagenGuardada'] = imagenGuardada
+        imagenGuardada = True
+        request.session['imagenGuardada'] = imagenGuardada
             #acutalizacion = Equipos.objects.filter(id_equipo = idEquipo).update(id_empleado = Empleados.objects.get(id_empleado = idEmpleado), activo = "A")
             
             
-            return redirect('/firmarCarta/')
+        return redirect('/firmarCarta/')
 
-        return render(request, "cartaCompromiso/agregarCarta.html",{"estaEnAgregarCarta": estaEnAgregarCarta})
-    else:
-        return redirect('/login/') #redirecciona a url de inicio
+    return render(request, "cartaCompromiso/agregarCarta.html",{"estaEnAgregarCarta": estaEnAgregarCarta})
     
 def editarEquipo(request):
     
