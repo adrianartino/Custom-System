@@ -47,7 +47,7 @@ Renovación Impresoras
                 <div class="row clear-fix">
                     <div class="col-xs-12 col-sm-1">
                         <form action="/reporteRenovacionImp/" method="POST">{% csrf_token %}
-                            <button type="submit" class="btn bg-red waves-effect"
+                            <button type="submit" class="btn bg-red waves-effect animate__animated animate__flipInX"
                             data-toggle="tooltip" data-placement="bottom" title="Descargar reporte de Renovación de impresoras en PDF.">
                                 <i class="material-icons">picture_as_pdf</i>
                                 <span>PDF</span>
@@ -56,7 +56,7 @@ Renovación Impresoras
                     </div>
                     <div class="col-xs-12 col-sm-1">
                         <form action="/xlRenovacionImpresoras/" method="POST">{% csrf_token %}
-                            <button type="submit" class="btn bg-green waves-effect"
+                            <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
                             data-toggle="tooltip" data-placement="right" title="Descargar reporte de Renovación de impresoras en Excel.">
                                 <i class="material-icons">grid_on</i>
                                 <span>Excel</span>

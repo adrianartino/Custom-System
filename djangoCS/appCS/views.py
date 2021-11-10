@@ -1813,101 +1813,125 @@ def verProgramasPorArea(request):
                 idArea = dato.id_area
                 
             datosAreasProgramas = ProgramasArea.objects.filter(id_area_id = idArea)
+            if datosAreasProgramas:
             
-            arregloProgramas =[]
-            
-            for datos in datosAreasProgramas:
-                arregloProgramas.append(datos.id_programa_id)
+                arregloProgramas =[]
                 
-            arregloDatosProgramas = []
-            arregloSistemasOperativos = []
-            arregloMemoriasRAM = []
-            arregloProcesadores = []
-            
-            
-            
-            for dato in arregloProgramas:
-                datosPrograma = Programas.objects.filter(id_programa = dato)
-                
-                for programa in datosPrograma:
-                    id = programa.id_programa
-                    nombre = programa.nombre_version
-                    tipo = programa.tipo
-                    licencia = programa.licencia
-                    idioma = programa.idioma
-                    sistemaoperativo = programa.sistemaoperativo_arq
-                    memoria = programa.memoria_ram
-                    procesador = programa.procesador
-                    imagen = programa.imagenPrograma
+                for datos in datosAreasProgramas:
+                    arregloProgramas.append(datos.id_programa_id)
                     
-                arregloSistemasOperativos.append(sistemaoperativo)
-                arregloMemoriasRAM.append(memoria)
-                arregloProcesadores.append(procesador)
-                arregloDatosProgramas.append([id,nombre,tipo,licencia,idioma,sistemaoperativo,memoria,procesador,imagen])
-            
-            #nombreArea = Administracion
+                arregloDatosProgramas = []
+                arregloSistemasOperativos = []
+                arregloMemoriasRAM = []
+                arregloProcesadores = []
+                
+                
+                
+                for dato in arregloProgramas:
+                    datosPrograma = Programas.objects.filter(id_programa = dato)
+                    
+                    for programa in datosPrograma:
+                        id = programa.id_programa
+                        nombre = programa.nombre_version
+                        tipo = programa.tipo
+                        licencia = programa.licencia
+                        idioma = programa.idioma
+                        sistemaoperativo = programa.sistemaoperativo_arq
+                        memoria = programa.memoria_ram
+                        procesador = programa.procesador
+                        imagen = programa.imagenPrograma
+                        
+                    arregloSistemasOperativos.append(sistemaoperativo)
+                    arregloMemoriasRAM.append(memoria)
+                    arregloProcesadores.append(procesador)
+                    arregloDatosProgramas.append([id,nombre,tipo,licencia,idioma,sistemaoperativo,memoria,procesador,imagen])
+                
+                #nombreArea = Administracion
 
-            estaEnverProgramasPorArea = True
-            
-            soBasico = ""
-            soRecomendado = ""
-            memoriaBasico = ""
-            memoriaRecomendad = ""
-            
-            if "Windows 7 64 bit" in arregloSistemasOperativos:
-                soBasico = "Windows 10 64 bits"
-                soRecomendado = "Windows 10 64 bits"
+                estaEnverProgramasPorArea = True
                 
-            if "Windows 8 64 bit" in arregloSistemasOperativos:
-                soBasico = "Windows 10 64 bits"
-                soRecomendado = "Windows 10 64 bits"
-            
-            if "Windows 10 64 bit" in arregloSistemasOperativos:
-                soBasico = "Windows 10 64 bits"
-                soRecomendado = "Windows 10 64 bits"
+                soBasico = ""
+                soRecomendado = ""
+                memoriaBasico = ""
+                memoriaRecomendad = ""
                 
-            if "4 GB" in arregloMemoriasRAM:
-                memoriaBasico = "4 GB"
-                memoriaRecomendada = "8 GB"
+                if "Windows 7 64 bit" in arregloSistemasOperativos:
+                    soBasico = "Windows 7 64 bits"
+                    soRecomendado = "Windows 8 64 bits"
+                    
+                if "Windows 8 64 bit" in arregloSistemasOperativos:
+                    soBasico = "Windows 8 64 bits"
+                    soRecomendado = "Windows 10 64 bits"
                 
-            if "8 GB" in arregloMemoriasRAM:
-                memoriaBasico = "8 GB"
-                memoriaRecomendada = "16 GB"
-                
-            procesadorMayor = ""
-            velocidadesProcesadores = []
-            for velocidad in arregloProcesadores:
-                velovidadSeparada = velocidad.split()
-                cont = 0
-                for x in velovidadSeparada:
-                    cont = cont + 1
-                    if cont == 1:
-                        intVelocidad = float(x)
-                        velocidadesProcesadores.append(intVelocidad)
-                
-            contador = 0
-            for vel in velocidadesProcesadores:
-                contador = contador + 1
-                if contador == 1:
-                    procesadorMayor = vel
-                elif contador > 1:
-                    if vel > procesadorMayor:
+                if "Windows 10 64 bit" in arregloSistemasOperativos:
+                    soBasico = "Windows 10 64 bits"
+                    soRecomendado = "Windows 10 64 bits"
+                    
+                if "1 GB" in arregloMemoriasRAM:
+                    memoriaBasico = "1 GB"
+                    memoriaRecomendada = "2 GB"  
+                       
+                if "2 GB" in arregloMemoriasRAM:
+                    memoriaBasico = "2 GB"
+                    memoriaRecomendada = "4 GB" 
+                       
+                if "4 GB" in arregloMemoriasRAM:
+                    memoriaBasico = "4 GB"
+                    memoriaRecomendada = "8 GB"
+                    
+                if "8 GB" in arregloMemoriasRAM:
+                    memoriaBasico = "8 GB"
+                    memoriaRecomendada = "16 GB"
+                    
+                if "12 GB" in arregloMemoriasRAM:
+                    memoriaBasico = "12 GB"
+                    memoriaRecomendada = "16 GB"
+                    
+                if "16 GB" in arregloMemoriasRAM:
+                    memoriaBasico = "16 GB"
+                    memoriaRecomendada = "32 GB"
+                    
+                if "32 GB" in arregloMemoriasRAM:
+                    memoriaBasico = "32 GB"
+                    memoriaRecomendada = "64 GB"
+                    
+                procesadorMayor = 0
+                velocidadesProcesadores = []
+                for velocidad in arregloProcesadores:
+                    velovidadSeparada = velocidad.split()
+                    cont = 0
+                    for x in velovidadSeparada:
+                        cont = cont + 1
+                        if cont == 1:
+                            intVelocidad = float(x)
+                            velocidadesProcesadores.append(intVelocidad)
+                    
+                contador = 0
+                for vel in velocidadesProcesadores:
+                    contador = contador + 1
+                    if contador == 1:
                         procesadorMayor = vel
-                      
-            intVel = float(procesadorMayor)
-            velovidadRecomendada = intVel + .4   
+                    elif contador > 1:
+                        if vel > procesadorMayor:
+                            procesadorMayor = vel
+                        
+                intVel = float(procesadorMayor)
+                velovidadRecomendada = intVel + .4   
+                
             
-        
-            datosCompu = []
-            datosCompu.append([soBasico, soRecomendado, memoriaBasico, memoriaRecomendada, str(procesadorMayor), str(velovidadRecomendada)])
+                datosCompu = []
+                datosCompu.append([soBasico, soRecomendado, memoriaBasico, memoriaRecomendada, str(procesadorMayor), str(velovidadRecomendada)])
+                        
+                    
                     
                 
                 
-                
-                
-            return render(request, "Programas/tablaProgArea.html",{"estaEnverProgramasPorArea": estaEnverProgramasPorArea, "id_admin":id_admin,"nombreArea":nombreArea, "nombreCompleto":nombreCompleto, "correo":correo, "idArea":idArea, "arregloDatosProgramas":arregloDatosProgramas, 
+                return render(request, "Programas/tablaProgArea.html",{"estaEnverProgramasPorArea": estaEnverProgramasPorArea, "id_admin":id_admin,"nombreArea":nombreArea, "nombreCompleto":nombreCompleto, "correo":correo, "idArea":idArea, "arregloDatosProgramas":arregloDatosProgramas, 
                                                                    "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto, "datosCompu":datosCompu})
-
+            else:
+                estaEnverProgramasPorArea = True
+                return render(request, "Programas/tablaProgArea.html",{"estaEnverProgramasPorArea": estaEnverProgramasPorArea, "id_admin":id_admin,"nombreArea":nombreArea, "nombreCompleto":nombreCompleto, "correo":correo, "idArea":idArea, 
+                                                                   "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
     else:
         return redirect('/login/') #redirecciona a url de inicio
 
@@ -3382,74 +3406,73 @@ def editarImpresora(request):
     
 def firmarCarta(request):
     
-    if "idSesion" in request.session:
     
-        if "imagenGuardada" in request.session:
+    
+    if "imagenGuardada" in request.session:
             
-            numeroFirmas = Carta.objects.count() #1
+        numeroFirmas = Carta.objects.count() #1
             
-            registroFirma = Carta.objects.get(id_carta=numeroFirmas)
+        registroFirma = Carta.objects.get(id_carta=numeroFirmas)
             
             
-            idEquipo = registroFirma.id_equipo_id
-            idEmpleado = registroFirma.id_empleado_id
-            imagen = registroFirma.firma
-            imagen2 = True
+        idEquipo = registroFirma.id_equipo_id
+        idEmpleado = registroFirma.id_empleado_id
+        imagen = registroFirma.firma
+        imagen2 = True
             
-            fecha=datetime.now()
+        fecha=datetime.now()
                 
                 
-            datosEquipo = Equipos.objects.filter(id_equipo = idEquipo)
-            datosEmpleado = Empleados.objects.filter(id_empleado = idEmpleado)
+        datosEquipo = Equipos.objects.filter(id_equipo = idEquipo)
+        datosEmpleado = Empleados.objects.filter(id_empleado = idEmpleado)
                 
-            for dato in datosEmpleado:
-                idArea = dato.id_area_id
+        for dato in datosEmpleado:
+            idArea = dato.id_area_id
                     
-            datos_area = Areas.objects.filter(id_area = idArea)
+        datos_area = Areas.objects.filter(id_area = idArea)
                 
-            for datoArea in datos_area:
-                nombre = datoArea.nombre
-                color = datoArea.color
+        for datoArea in datos_area:
+            nombre = datoArea.nombre
+            color = datoArea.color
             
             
 
                 #Hacer consulta al ultimo registro de la tabla de cartas, para ver la ultima carta preguardada.
             
-            del request.session["imagenGuardada"]
-            return render(request, "cartaCompromiso/firmarCarta.html", {"datosEquipo":datosEquipo, "datosEmpleado":datosEmpleado, "nombre":nombre, "color":color, "fecha":fecha, "imagen":imagen, "imagen2":imagen2}) 
+        del request.session["imagenGuardada"]
+        return render(request, "cartaCompromiso/firmarCarta.html", {"datosEquipo":datosEquipo, "datosEmpleado":datosEmpleado, "nombre":nombre, "color":color, "fecha":fecha, "imagen":imagen, "imagen2":imagen2}) 
         
-        else: 
+    else: 
             
-            numeroFirmas = Carta.objects.count() #1
+        numeroFirmas = Carta.objects.count() #1
                 
-            registroFirma = Carta.objects.get(id_carta=numeroFirmas)
+        registroFirma = Carta.objects.get(id_carta=numeroFirmas)
             
             
-            idEquipo = registroFirma.id_equipo_id
-            idEmpleado = registroFirma.id_empleado_id
+        idEquipo = registroFirma.id_equipo_id
+        idEmpleado = registroFirma.id_empleado_id
             
-            fecha=datetime.now()
+        fecha=datetime.now()
                 
                 
-            datosEquipo = Equipos.objects.filter(id_equipo = idEquipo)
-            datosEmpleado = Empleados.objects.filter(id_empleado = idEmpleado)
+        datosEquipo = Equipos.objects.filter(id_equipo = idEquipo)
+        datosEmpleado = Empleados.objects.filter(id_empleado = idEmpleado)
                 
-            for dato in datosEmpleado:
-                idArea = dato.id_area_id
+        for dato in datosEmpleado:
+            idArea = dato.id_area_id
                     
-            datos_area = Areas.objects.filter(id_area = idArea)
+        datos_area = Areas.objects.filter(id_area = idArea)
                 
-            for datoArea in datos_area:
-                nombre = datoArea.nombre
-                color = datoArea.color
+        for datoArea in datos_area:
+            nombre = datoArea.nombre
+            color = datoArea.color
             
 
                 #Hacer consulta al ultimo registro de la tabla de cartas, para ver la ultima carta preguardada.
             
 
-            return render(request, "cartaCompromiso/firmarCarta.html", {"datosEquipo":datosEquipo, "datosEmpleado":datosEmpleado, "nombre":nombre, "color":color, "fecha":fecha}) 
-    else:
-        return redirect('/login/') #redirecciona a url de inicio
+        return render(request, "cartaCompromiso/firmarCarta.html", {"datosEquipo":datosEquipo, "datosEmpleado":datosEmpleado, "nombre":nombre, "color":color, "fecha":fecha}) 
+    
 
 def reporteDepartamentos(request):
     
@@ -4590,7 +4613,7 @@ def reporteEquiposActivos(request):
         #QUITAR ESTO PARA OTRA HOJA
         #crear el http response con pdf
         respuesta = HttpResponse(content_type='application/pdf')
-        respuesta['Content-Disposition'] = 'attachment; filename=Reporte Equipos'+str(datetime.today().strftime('%Y-%m-%d'))+'.xls'
+        respuesta['Content-Disposition'] = 'attachment; filename=Reporte Equipos'+str(datetime.today().strftime('%Y-%m-%d'))+'.pdf'
         #Crear objeto PDF 
         buffer =BytesIO()
         c = canvas.Canvas(buffer, pagesize=letter)
@@ -7024,7 +7047,7 @@ def xlEquipos(request):
         id_emp = equipo.id_empleado_id
         mcargador = equipo.modelocargador
         
-        if id_emp == "" and mcargador == "":
+        if id_emp == None and mcargador == "":
             nombreEmpleado = "Sin propietario"
             departamento = "Sin departamento"
             cargador = "Sin cargador"
@@ -7033,7 +7056,7 @@ def xlEquipos(request):
             departamentos.append(departamento)
             cargadores.append(cargador)
         
-        elif id_emp == "":
+        elif id_emp == None:
             nombreEmpleado = "Sin propietario"
             departamento = "Sin departamento"
             cargador = equipo.modelocargador
@@ -7137,7 +7160,7 @@ def xlRenovacionEquipos(request):
             color = dato.color
             propietario = dato.id_empleado_id
             
-            if propietario == "":
+            if propietario == None:
                 propietarioEq = "Sin propietario"
                 departamento = "Sin departamento"
             else:

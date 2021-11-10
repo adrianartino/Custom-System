@@ -70,9 +70,9 @@
             <div class="navbar-header">
                 <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
                 <a href="javascript:void(0);" class="bars"></a>
-                <img class="navbar-brand" src={% static 'images/rayocustom.png' %} height="20%" alt="User">
+                
                 <a class="navbar-brand" href="/inicio/"><span class="login100-form-title-1" style="font-family: 'ground_controlregular', cursive; font-size: 25px;">
-                    Custom System
+                    <img  src={% static 'images/rayocustom.png' %} width="15px" alt="User"> Custom System
                 </span></a>
                 
             </div>
@@ -143,7 +143,7 @@
             <!-- User Info -->
             <div class="user-info">
                 <div >
-                        <img src="{{foto.url}}"width="65" height="65"  alt="User" style="border-radius: 120px;"/>
+                        <img src="{{foto.url}}"width="60" height="55"  alt="User" style="border-radius: 120px;"/>
                 </div>
                 <div class="info-container">
                     <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{nombreCompleto}}</div>
@@ -154,19 +154,32 @@
                             <li role="separator" class="divider"></li>
                             <form id="form_validation" action="/editarEmpleado/" enctype="multipart/form-data"  method="POST" >{% csrf_token %}
                                 
-                                <li>
-                                    <center>
-                                        <button type="submit" style="color: gray; border: none; background-color: white;">
-                                            Editar perfil</button>
-                                    </center>
+                                <li style="padding-left: 10px;">
+                                        <button type="submit" class="btn bg-teal waves-effect">
+                                            <i class="material-icons">face</i>
+                                            <span>Editar perfil</span>
+                                        </button>
                                     
                                 </li>
                                 <li><input type="hidden" id="x" value="{{id_admin}}" name="idEmpleadoEditar"></li>
 
                             </form>
                             
+                            
                             <li role="separator" class="divider"></li>
-                            <li><a href="{% url 'salir' %}"><i class="material-icons">input</i>Salir</a></li>
+                            <form id="form_validation" action="/salir/" enctype="multipart/form-data"  method="POST" >{% csrf_token %}
+                                
+                                <li style="padding-left: 10px;">
+                                        <button type="submit" class="btn bg-red waves-effect" >
+                                            <i class="material-icons">input</i>
+                                            <span>Salir</span>
+                                        </button>
+                                    
+                                </li>
+                                <li><input type="hidden" id="x" value="{{id_admin}}" name="idEmpleadoEditar"></li>
+
+                            </form>
+                            
                         </ul>
                     </div>
                 </div>
@@ -175,7 +188,7 @@
             <!-- Menu -->
             <div class="menu">
                 <ul class="list">
-                    <li class="header">MENÚ DE NAVEGACIÓN</li>
+                    <li class="header" style="background-color: #FFC107;">MENÚ DE NAVEGACIÓN</li>
                     {% if estaEnInicio %}
                     <li class="active" >
                     {% else %}
@@ -802,6 +815,12 @@
             <!-- #Menu -->
             <!-- Footer -->
             <div class="legal">
+                <div class="version">
+                    <a href="https://www.customco.com.mx/" style="color: #009688;"><b>Ir a página web Custom & Co.</b></a>
+                </div>
+                <div class="version">
+                    <a href="https://erp.evidencetech.app/access" style="color: #DCB60E;"><b>Ir a ERP Evidence.</b></a>
+                </div>
                 <div class="copyright">
                     &copy; 2021 <a href="javascript:void(0);">Administrador Custom System</a>.
                 </div>
