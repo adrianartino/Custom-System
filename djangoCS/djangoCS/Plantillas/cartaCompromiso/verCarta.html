@@ -10,7 +10,8 @@ Cartas | Custom System
 <link rel="icon" href={% static 'images/icons/ra.ico' %} type="image/x-icon">
 
 <!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
+    type="text/css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
 
 <!-- Bootstrap Core Css -->
@@ -42,20 +43,20 @@ Cartas | Custom System
                     CARTA COMPROMISO
                     <small style="color: #790C05;">Vista de listado de cartas compromiso realizadas.</small>
                 </h2>
-                
+
             </div>
             <div class="body">
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                         <thead>
-                            <tr  style="background-color: #fad60e; color:black">
-                             
+                            <tr style="background-color: #fad60e; color:black">
+
                                 <th>Empleado</th>
                                 <th>Equipo</th>
                                 <th>Fecha</th>
                                 <th>Firma</th>
                                 <th>Ver Carta</th>
-                                
+
                             </tr>
                         </thead>
                         <tfoot>
@@ -70,7 +71,7 @@ Cartas | Custom System
                         <tbody class="animate__animated animate__backInDown">
                             {% for registros, empleados, equipos in lista1 %}
                             <tr>
-                 
+
                                 <td>{{empleados.0}} {{empleados.1}}</td>
                                 <td>{{equipos.0}} {{equipos.1}}</td>
                                 <td>{{registros.fecha}}</td>
@@ -83,18 +84,19 @@ Cartas | Custom System
                                     <th>
                                         <input type="hidden" name="idCarta" value="{{registros.id_carta}}">
                                         <center>
-                                            <button type="submit" class="btn bg-deep-purple waves-effect"> <i class="material-icons">visibility</i></button>
+                                            <button type="submit" class="btn bg-deep-purple waves-effect"> <i
+                                                    class="material-icons">visibility</i></button>
                                         </center>
-                                        
+
                                     </th>
                                 </form>
-                                
+
                             </tr>
                             {% endfor %}
-                        
-                     
-                            
-                            
+
+
+
+
                         </tbody>
                     </table>
                 </div>

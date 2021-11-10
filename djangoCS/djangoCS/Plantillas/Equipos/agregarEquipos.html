@@ -10,7 +10,8 @@ Agregar Equipos | Custom System
 <link rel="icon" href={% static 'images/icons/ra.ico' %} type="image/x-icon">
 
 <!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
+    type="text/css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
 
 <!-- Bootstrap Core Css -->
@@ -23,7 +24,8 @@ Agregar Equipos | Custom System
 <link href={% static 'panel/plugins/animate-css/animate.css' %} rel="stylesheet" />
 
 <!-- Bootstrap Material Datetime Picker Css -->
-<link href={% static 'panel/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css' %}  rel="stylesheet" />
+<link href={% static 'panel/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css' %}
+    rel="stylesheet" />
 
 <!-- Bootstrap DatePicker Css -->
 <link href={% static 'panel/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css' %} rel="stylesheet" />
@@ -54,10 +56,10 @@ Agregar Equipos | Custom System
                     AGREGAR EQUIPOS
                     <small style="color: #790C05;">Formulario para agregar un equipo al sistema.</small>
                 </h2>
-                
+
             </div>
             <div class="body">
-                <form  action="/agregarEquipos/"  enctype="multipart/form-data" method="POST">{% csrf_token %}
+                <form action="/agregarEquipos/" enctype="multipart/form-data" method="POST">{% csrf_token %}
                     <div class="row clearfix">
                         <div class="col-md-3">
                             <label for="email_address"><span style="color: #078F68;">* </span>Tipo:</label>
@@ -65,32 +67,33 @@ Agregar Equipos | Custom System
                                 <span class="input-group-addon">
                                     <i class="material-icons">computer</i>
                                 </span>
-                                    <select class="form-control show-tick" name="tipo">
-                                        <option value="Laptop">Laptop</option>
-                                        <option value="Escritorio">Escritorio</option>
-                                    </select>
+                                <select class="form-control show-tick" name="tipo">
+                                    <option value="Laptop">Laptop</option>
+                                    <option value="Escritorio">Escritorio</option>
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <label for="email_address"><span style="color: #078F68;">* </span>Marca:</label>
-                            
+
                             <div class="input-group">
                                 <span class="input-group-addon">
-                                <img id = "marcaslap" src="{% static 'images/HP.png' %}" alt="mar">
+                                    <img id="marcaslap" src="{% static 'images/HP.png' %}" alt="mar">
                                 </span>
-                                    <select class="form-control show-tick" id="marcas" name="marca" onChange="cambiarImagen()" >
-                                        <option value="HP" selected> HP  </option>
-                                        <option value="DELL">DELL</option>
-                                        <option value="Lenovo">Lenovo</option>
-                                        <option value="Acer">Acer</option>
-                                        <option value="ASUS">ASUS</option>
-                                        <option value="BENQ">BENQ</option>
-                                        <option value="MAC">MAC</option>
-                                        <option value="Toshiba">Toshiba</option>
-                                    </select>
+                                <select class="form-control show-tick" id="marcas" name="marca"
+                                    onChange="cambiarImagen()">
+                                    <option value="HP" selected> HP </option>
+                                    <option value="DELL">DELL</option>
+                                    <option value="Lenovo">Lenovo</option>
+                                    <option value="Acer">Acer</option>
+                                    <option value="ASUS">ASUS</option>
+                                    <option value="BENQ">BENQ</option>
+                                    <option value="MAC">MAC</option>
+                                    <option value="Toshiba">Toshiba</option>
+                                </select>
                             </div>
                         </div>
-                        
+
                         <div class="col-md-3">
                             <label for="email_address"><span style="color: #078F68;">* </span>Modelo:</label>
                             <div class="input-group">
@@ -98,7 +101,8 @@ Agregar Equipos | Custom System
                                     <i class="material-icons">branding_watermark</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar Modelo"  maxlength="50" name="modelo" required>
+                                    <input type="text" class="form-control date" placeholder="Ingresar Modelo"
+                                        maxlength="50" name="modelo" required>
                                 </div>
                             </div>
                         </div>
@@ -108,19 +112,19 @@ Agregar Equipos | Custom System
                                 <span class="input-group-addon">
                                     <i class="material-icons">palette</i>
                                 </span>
-                                    <select class="form-control show-tick" name="color">
-                                        <option value="Negro">Negro</option>
-                                        <option value="Gris">Gris</option>
-                                        <option value="Azul">Azul</option>
-                                    </select>
+                                <select class="form-control show-tick" name="color">
+                                    <option value="Negro">Negro</option>
+                                    <option value="Gris">Gris</option>
+                                    <option value="Azul">Azul</option>
+                                </select>
                             </div>
-                        </div>  
-                        
-                        
+                        </div>
+
+
                     </div>
 
-                    
-                    
+
+
 
                     <div class="row clearfix">
                         <div class="col-md-3">
@@ -129,17 +133,17 @@ Agregar Equipos | Custom System
                                 <span class="input-group-addon">
                                     <i class="material-icons">trending_up</i>
                                 </span>
-                                    <select class="form-control show-tick" name="memram">
-                                        <option value="1 GB">1 GB</option>
-                                        <option value="2 GB">2 GB</option>
-                                        <option value="4 GB">4 GB</option>
-                                        <option value="8 GB">8 GB</option>
-                                        <option value="12 GB">12 GB</option>
-                                        <option value="16 GB">16 GB</option>
-                                        <option value="32 GB">32 GB</option>
-                                    </select>
+                                <select class="form-control show-tick" name="memram">
+                                    <option value="1 GB">1 GB</option>
+                                    <option value="2 GB">2 GB</option>
+                                    <option value="4 GB">4 GB</option>
+                                    <option value="8 GB">8 GB</option>
+                                    <option value="12 GB">12 GB</option>
+                                    <option value="16 GB">16 GB</option>
+                                    <option value="32 GB">32 GB</option>
+                                </select>
                             </div>
-                        </div> 
+                        </div>
                         <div class="col-md-3">
                             <label for="email_address"><span style="color: #078F68;">* </span>Procesador:</label>
                             <div class="input-group">
@@ -147,43 +151,44 @@ Agregar Equipos | Custom System
                                     <i class="material-icons">memory</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar procesador"  maxlength="30" name="procesador" required>
+                                    <input type="text" class="form-control date" placeholder="Ingresar procesador"
+                                        maxlength="30" name="procesador" required>
                                 </div>
                             </div>
-                        </div> 
+                        </div>
                         <div class="col-md-3">
                             <label for="email_address"><span style="color: #078F68;">* </span>Sistema Operativo:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">verified_user</i>
                                 </span>
-                                    <select class="form-control show-tick" name="sisteop">
-                                        <option value="Windows XP">Windows XP</option>
-                                        <option value="Windows Vista">Windows Vista</option>
-                                        <option value="Windows 7">Windows 7</option>
-                                        <option value="Windows 8">Windows 8</option>
-                                        <option value="Windows 10">Windows 10</option>
-                                        
-                                    </select>
+                                <select class="form-control show-tick" name="sisteop">
+                                    <option value="Windows XP">Windows XP</option>
+                                    <option value="Windows Vista">Windows Vista</option>
+                                    <option value="Windows 7">Windows 7</option>
+                                    <option value="Windows 8">Windows 8</option>
+                                    <option value="Windows 10">Windows 10</option>
+
+                                </select>
                             </div>
-                        </div> 
+                        </div>
                         <div class="col-md-3">
                             <label for="email_address"><span style="color: #078F68;">* </span>Estado:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">build</i>
                                 </span>
-                                    <select class="form-control show-tick" name="estado">
-                                        <option value="Funcional">Funcional</option>
-                                        <option value="Reparación">Reparación</option>
-                                        <option value="Basura">Basura</option>
-                                    </select>
+                                <select class="form-control show-tick" name="estado">
+                                    <option value="Funcional">Funcional</option>
+                                    <option value="Reparación">Reparación</option>
+                                    <option value="Basura">Basura</option>
+                                </select>
                             </div>
                         </div>
-                       
+
                     </div>
 
-                    
+
 
                     <div class="row clearfix">
                         <div class="col-md-4">
@@ -193,7 +198,8 @@ Agregar Equipos | Custom System
                                     <i class="material-icons">battery_charging_full</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar Cargador"  maxlength="50" name="cargador">
+                                    <input type="text" class="form-control date" placeholder="Ingresar Cargador"
+                                        maxlength="50" name="cargador">
                                 </div>
                             </div>
                         </div>
@@ -204,28 +210,30 @@ Agregar Equipos | Custom System
                                     <i class="material-icons">date_range</i>
                                 </span>
                                 <div class="form-line" id="bs_datepicker_container">
-                                    <input type="text" class="form-control" name="fecha_compra" placeholder="Seleccionar fecha" required>
+                                    <input type="text" class="form-control" name="fecha_compra"
+                                        placeholder="Seleccionar fecha" required>
                                 </div>
                             </div>
                         </div>
-                      
+
                         <div class="col-md-4">
                             <label for="email_address"><span style="color: #078F68;">* </span>Propietario:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">badge</i>
                                 </span>
-                                    <select class="form-control show-tick" name="propietario">
-                                        <option value="nopropietario">Sin propietario</option>
-                                        {% for propietario in info_empleados %}
-                                        <option value="{{propietario.id_empleado}}">{{propietario.nombre}} {{propietario.apellidos}}</option>
-                                    
-                                        {% endfor %}
-                                    </select>
+                                <select class="form-control show-tick" name="propietario">
+                                    <option value="nopropietario">Sin propietario</option>
+                                    {% for propietario in info_empleados %}
+                                    <option value="{{propietario.id_empleado}}">{{propietario.nombre}}
+                                        {{propietario.apellidos}}</option>
+
+                                    {% endfor %}
+                                </select>
                             </div>
-                        </div>  
-                          
-                       
+                        </div>
+
+
                     </div>
                     <div class="row clearfix">
                         <div class="col-md-5">
@@ -249,43 +257,45 @@ Agregar Equipos | Custom System
                                     <input type="file" name="pdf" id="txtimagen">
                                 </div>
                             </div>
-                        </div> 
+                        </div>
                     </div>
 
-                    
-                    
 
-                    
+
+
+
                     <br>
-                    <button type="submit" class="btn btn-warning m-t-15 waves-effect animate__animated animate__flipInX"><i class="material-icons">laptop_mac</i> Guardar Equipo</button>
+                    <button type="submit"
+                        class="btn btn-warning m-t-15 waves-effect animate__animated animate__flipInX"><i
+                            class="material-icons">laptop_mac</i> Guardar Equipo</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    {% if compuSin %}
-    <script type="text/javascript">
-        swal({
-            icon: 'success',
-            title: 'Wujuu..',
-            text: ' {{textoCompu}}',
-            footer: '<span style="color: green!important"> Sigue navegando por Custom System! </span>',
-            width: '40%'
-        });
-    </script>
-    {% endif %}
-    {% if compuCon %}
-    <script type="text/javascript">
-        swal({
-            icon: 'success',
-            title: 'Wujuu..',
-            text: ' {{textoCompu}}',
-            footer: '<span style="color: green!important"> Sigue navegando por Custom System! </span>',
-            width: '40%'
-        });
-    </script>
-    {% endif %}
+{% if compuSin %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Wujuu..',
+        text: ' {{textoCompu}}',
+        footer: '<span style="color: green!important"> Sigue navegando por Custom System! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
+{% if compuCon %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Wujuu..',
+        text: ' {{textoCompu}}',
+        footer: '<span style="color: green!important"> Sigue navegando por Custom System! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
 {% endblock %}
 
 {% block estilosJs %}
@@ -317,16 +327,16 @@ Agregar Equipos | Custom System
         return false;
     }
 
-    function cambiarImagen(){
-        var selection= document.getElementById('marcas');
-        var marca= selection.options[selection.selectedIndex].value;
-        var primeraparte="/static/images/"
+    function cambiarImagen() {
+        var selection = document.getElementById('marcas');
+        var marca = selection.options[selection.selectedIndex].value;
+        var primeraparte = "/static/images/"
         var segundaparte = ".png"
-        var todo = primeraparte+marca+segundaparte
-        document.getElementById('marcaslap').src= todo
-        document.getElementById('valorSelect').value=todo;
+        var todo = primeraparte + marca + segundaparte
+        document.getElementById('marcaslap').src = todo
+        document.getElementById('valorSelect').value = todo;
     }
-</script>                        
+</script>
 <!-- Jquery Core Js -->
 <script src={% static 'panel/plugins/jquery/jquery.min.js' %}></script>
 
@@ -370,7 +380,8 @@ Agregar Equipos | Custom System
 <script src={% static 'panel/plugins/momentjs/moment.js' %}></script>
 
 <!-- Bootstrap Material Datetime Picker Plugin Js -->
-<script src={% static 'panel/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js' %}></script>
+<script src={% static 'panel/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js' %}>
+</script>
 
 <!-- Bootstrap Datepicker Plugin Js -->
 <script src={% static 'panel/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js' %}></script>

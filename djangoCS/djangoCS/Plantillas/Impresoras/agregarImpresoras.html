@@ -10,7 +10,8 @@ Agregar Impresoras | Custom System
 <link rel="icon" href={% static 'images/icons/ra.ico' %} type="image/x-icon">
 
 <!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
+    type="text/css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
 
 <!-- Bootstrap Core Css -->
@@ -23,7 +24,8 @@ Agregar Impresoras | Custom System
 <link href={% static 'panel/plugins/animate-css/animate.css' %} rel="stylesheet" />
 
 <!-- Bootstrap Material Datetime Picker Css -->
-<link href={% static 'panel/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css' %}  rel="stylesheet" />
+<link href={% static 'panel/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css' %}
+    rel="stylesheet" />
 
 <!-- Bootstrap DatePicker Css -->
 <link href={% static 'panel/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css' %} rel="stylesheet" />
@@ -51,10 +53,11 @@ Agregar Impresoras | Custom System
                     AGREGAR IMPRESORAS
                     <small style="color: #790C05;">Formulario para agregar una impresora al sistema.</small>
                 </h2>
-                
+
             </div>
             <div class="body">
-                <form action="/agregarImpresoras/" id="form_validation" enctype="multipart/form-data" method="POST">{% csrf_token %}
+                <form action="/agregarImpresoras/" id="form_validation" enctype="multipart/form-data" method="POST">
+                    {% csrf_token %}
                     <div class="row clearfix">
                         <div class="col-md-4">
                             <label for="email_address"><span style="color: #078F68;">* </span>Marca:</label>
@@ -62,16 +65,16 @@ Agregar Impresoras | Custom System
                                 <span class="input-group-addon">
                                     <i class="material-icons">copyright</i>
                                 </span>
-                                    <select class="form-control show-tick" name="marcas">
-                                        <option value="HP">HP</option>
-                                        <option value="XEROX ">XEROX</option>
-                                        <option value="SAMSUNG">SAMSUNG</option>
-                                        <option value="EPSON">EPSON</option>
-                                    </select>
+                                <select class="form-control show-tick" name="marcas">
+                                    <option value="HP">HP</option>
+                                    <option value="XEROX ">XEROX</option>
+                                    <option value="SAMSUNG">SAMSUNG</option>
+                                    <option value="EPSON">EPSON</option>
+                                </select>
                             </div>
                         </div>
-                     
-                        
+
+
                         <div class="col-md-4">
                             <label for="email_address"><span style="color: #078F68;">* </span>Modelo:</label>
                             <div class="input-group">
@@ -79,7 +82,8 @@ Agregar Impresoras | Custom System
                                     <i class="material-icons">branding_watermark</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar Modelo"  maxlength="50"  name="modelos" required>
+                                    <input type="text" class="form-control date" placeholder="Ingresar Modelo"
+                                        maxlength="50" name="modelos" required>
                                 </div>
                             </div>
                         </div>
@@ -90,57 +94,60 @@ Agregar Impresoras | Custom System
                                     <i class="material-icons">pin</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar número de serie"  maxlength="50" name="nserie" required>
+                                    <input type="text" class="form-control date" placeholder="Ingresar número de serie"
+                                        maxlength="50" name="nserie" required>
                                 </div>
                             </div>
                         </div>
-                 
-                    </div>
-                <div class="row clearfix">
 
-                    <div class="col-md-4">
-                        <label for="email_address"><span style="color: #078F68;">* </span>Imagen de impresora:</label>
-                        <div class="input-group">
-                            <span class="input-group-addon">
-                                <i class="material-icons">add_photo_alternate</i>
-                            </span>
-                            <div class="form-line">
-                                <input type="file" name="imgeimpresora" id="txtimagen">
+                    </div>
+                    <div class="row clearfix">
+
+                        <div class="col-md-4">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Imagen de
+                                impresora:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">add_photo_alternate</i>
+                                </span>
+                                <div class="form-line">
+                                    <input type="file" name="imgeimpresora" id="txtimagen">
+                                </div>
                             </div>
                         </div>
-                    </div>  
-                    
 
-                    
+
+
                         <div class="col-md-4">
                             <label for="email_address"><span style="color: #078F68;">* </span>Tipo:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">print</i>
                                 </span>
-                                    <select class="form-control show-tick" name="tipos">
-                                        <option value="Laser Blanco-Negro">Laser Blanco-Negro</option>
-                                        <option value="Inyección de tinta Color/Blanco-Negro">Inyección de tinta Color/Blanco-Negro</option>
-                                        
-                                    </select>
+                                <select class="form-control show-tick" name="tipos">
+                                    <option value="Laser Blanco-Negro">Laser Blanco-Negro</option>
+                                    <option value="Inyección de tinta Color/Blanco-Negro">Inyección de tinta
+                                        Color/Blanco-Negro</option>
+
+                                </select>
                             </div>
-                        </div> 
+                        </div>
                         <div class="col-md-4">
                             <label for="email_address"><span style="color: #078F68;">* </span>Área:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">work</i>
                                 </span>
-                                    <select class="form-control show-tick" name="areas">
-                                        {% for area in info_areas %}
-                                        <option value="{{area.id_area}}" class="{{area.color}}">{{area.nombre}}</option>
-                                        {% endfor %}
-                                    </select>
+                                <select class="form-control show-tick" name="areas">
+                                    {% for area in info_areas %}
+                                    <option value="{{area.id_area}}" class="{{area.color}}">{{area.nombre}}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
                         </div>
-                        
 
-                       
+
+
                     </div>
                     <div class="row clearfix">
                         <div class="col-md-4">
@@ -149,28 +156,30 @@ Agregar Impresoras | Custom System
                                 <span class="input-group-addon">
                                     <i class="material-icons">build</i>
                                 </span>
-                                    <select class="form-control show-tick" name="estados">
-                                        <option value="Funcional">Funcional</option>
-                                        <option value="Reparación">Reparación</option>
-                                        <option value="Basura">Basura</option>
-                                    </select>
+                                <select class="form-control show-tick" name="estados">
+                                    <option value="Funcional">Funcional</option>
+                                    <option value="Reparación">Reparación</option>
+                                    <option value="Basura">Basura</option>
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <input type="checkbox" id="md_checkbox_28" class="filled-in chk-col-cyan" checked name="red" onchange="comprobar(this)"/>
+                            <input type="checkbox" id="md_checkbox_28" class="filled-in chk-col-cyan" checked name="red"
+                                onchange="comprobar(this)" />
                             <label for="md_checkbox_28">Por conexión en red</label>
                             <div class="input-group" id="divIP">
                                 <span class="input-group-addon">
                                     <i class="material-icons">rss_feed</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar IP"  maxlength="15" name="ip">
+                                    <input type="text" class="form-control date" placeholder="Ingresar IP"
+                                        maxlength="15" name="ip">
                                 </div>
                             </div>
-                          
-                            
+
+
                         </div>
-                        
+
 
                     </div>
                     <div class="row clearfix">
@@ -181,31 +190,34 @@ Agregar Impresoras | Custom System
                                     <i class="material-icons">date_range</i>
                                 </span>
                                 <div class="form-line" id="bs_datepicker_container">
-                                    <input type="text" class="form-control" name="fecha_compra" placeholder="Seleccionar fecha" required>
+                                    <input type="text" class="form-control" name="fecha_compra"
+                                        placeholder="Seleccionar fecha" required>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
-                    
-                    <button type="submit" class="btn btn-warning m-t-15 waves-effect animate__animated animate__flipInX"><i class="material-icons">print</i> Guardar Impresora</button>
+
+
+                    <button type="submit"
+                        class="btn btn-warning m-t-15 waves-effect animate__animated animate__flipInX"><i
+                            class="material-icons">print</i> Guardar Impresora</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    {% if impresoraAgregada %}
-    <script type="text/javascript">
-        swal({
-            icon: 'success',
-            title: 'Wuu...!',
-            text: ' {{impresoraExito}}',
-            footer: '<span style="color: green!important"> Sigue navegando por Custom System! </span>',
-            width: '40%'
-        });
-    </script>
-    {% endif %}
+{% if impresoraAgregada %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Wuu...!',
+        text: ' {{impresoraExito}}',
+        footer: '<span style="color: green!important"> Sigue navegando por Custom System! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
 {% endblock %}
 
 {% block estilosJs %}
@@ -236,11 +248,10 @@ Agregar Impresoras | Custom System
         return false;
     }
 
-    function comprobar(obj){
-        if (obj.checked){
+    function comprobar(obj) {
+        if (obj.checked) {
             document.getElementById('divIP').style.display = "";
-        }
-        else{
+        } else {
             document.getElementById('divIP').style.display = "none";
         }
     }
@@ -289,7 +300,8 @@ Agregar Impresoras | Custom System
 <script src={% static 'panel/plugins/momentjs/moment.js' %}></script>
 
 <!-- Bootstrap Material Datetime Picker Plugin Js -->
-<script src={% static 'panel/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js' %}></script>
+<script src={% static 'panel/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js' %}>
+</script>
 
 <!-- Bootstrap Datepicker Plugin Js -->
 <script src={% static 'panel/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js' %}></script>

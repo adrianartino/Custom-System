@@ -10,7 +10,8 @@ Agregar Insumos | Custom System
 <link rel="icon" href={% static 'images/icons/ra.ico' %} type="image/x-icon">
 
 <!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
+    type="text/css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
 
 <!-- Bootstrap Core Css -->
@@ -42,10 +43,11 @@ Agregar Insumos | Custom System
                     AGREGAR INSUMOS
                     <small style="color: #790C05;">Formulario para agregar un insumo de impresora al sistema.</small>
                 </h2>
-                
+
             </div>
             <div class="body">
-                <form id="form_validation" action="/agregarInsumos/" enctype="multipart/form-data"  method="POST" >{% csrf_token %}
+                <form id="form_validation" action="/agregarInsumos/" enctype="multipart/form-data" method="POST">
+                    {% csrf_token %}
                     <div class="row clearfix">
                         <div class="col-md-2">
                             <label for="email_address"><span style="color: #078F68;">* </span>Marca:</label>
@@ -53,17 +55,17 @@ Agregar Insumos | Custom System
                                 <span class="input-group-addon">
                                     <i class="material-icons">copyright</i>
                                 </span>
-                                    <select class="form-control show-tick" name="marcas">
-                                        <option value="HP">HP</option>
-                                        <option value="XEROX">XEROX</option>
-                                        <option value="SAMSUNG">SAMSUNG</option>
-                                        <option value="EPSON">EPSON</option>
-                                        <option value="LEÓN">LEÓN</option>
-                                    </select>
+                                <select class="form-control show-tick" name="marcas">
+                                    <option value="HP">HP</option>
+                                    <option value="XEROX">XEROX</option>
+                                    <option value="SAMSUNG">SAMSUNG</option>
+                                    <option value="EPSON">EPSON</option>
+                                    <option value="LEÓN">LEÓN</option>
+                                </select>
                             </div>
                         </div>
-                     
-                        
+
+
                         <div class="col-md-4">
                             <label for="email_address"><span style="color: #078F68;">* </span>Modelo:</label>
                             <div class="input-group">
@@ -71,7 +73,8 @@ Agregar Insumos | Custom System
                                     <i class="material-icons">branding_watermark</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar Modelo" name="modelo" maxlength="50" required>
+                                    <input type="text" class="form-control date" placeholder="Ingresar Modelo"
+                                        name="modelo" maxlength="50" required>
                                 </div>
                             </div>
                         </div>
@@ -81,12 +84,12 @@ Agregar Insumos | Custom System
                                 <span class="input-group-addon">
                                     <i class="material-icons">format_list_numbered</i>
                                 </span>
-                                    <select class="form-control show-tick" name="cantidad">
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                    </select>
+                                <select class="form-control show-tick" name="cantidad">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -96,81 +99,90 @@ Agregar Insumos | Custom System
                                     <i class="material-icons">pin</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar número de serie" name="serie">
+                                    <input type="text" class="form-control date" placeholder="Ingresar número de serie"
+                                        name="serie">
                                 </div>
                             </div>
                         </div>
-                 
-                    </div>
-                <div class="row clearfix">
 
-                    <div class="col-md-2">
-                        <label for="email_address"><span style="color: #078F68;">* </span>Color:</label>
-                        <div class="input-group">
-                            <span class="input-group-addon">
-                                <i class="material-icons">palette</i>
-                            </span>
+                    </div>
+                    <div class="row clearfix">
+
+                        <div class="col-md-2">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Color:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">palette</i>
+                                </span>
                                 <select class="form-control show-tick" name="colores">
                                     <option value="Negro" style="background-color: black; color: white;">Negro</option>
-                                    <option value="Tricolor" style="background-color: rgb(247, 162, 6); color: black;">Tricolor</option>
-                                    <option value="Amarillo" style="background-color: rgb(251, 255, 9); color: black;">Amarillo</option>
-                                    <option value="Cyan" style="background-color: rgb(6, 179, 247); color: black;">Cyan</option>
-                                    <option value="Magenta" style="background-color: rgb(247, 6, 187); color: black;">Magenta</option>
+                                    <option value="Tricolor" style="background-color: rgb(247, 162, 6); color: black;">
+                                        Tricolor</option>
+                                    <option value="Amarillo" style="background-color: rgb(251, 255, 9); color: black;">
+                                        Amarillo</option>
+                                    <option value="Cyan" style="background-color: rgb(6, 179, 247); color: black;">Cyan
+                                    </option>
+                                    <option value="Magenta" style="background-color: rgb(247, 6, 187); color: black;">
+                                        Magenta</option>
                                 </select>
-                        </div>
-                    </div>
-                    
-
-                    
-                    <div class="col-md-4">
-                        <label for="email_address"><span style="color: #078F68;">* </span>Imagen de cartucho:</label>
-                        <div class="input-group">
-                            <span class="input-group-addon">
-                                <i class="material-icons">add_photo_alternate</i>
-                            </span>
-                            <div class="form-line">
-                                <input type="file" name="imagenCartucho" id="txtimagen">
                             </div>
                         </div>
-                    </div>  
+
+
+
+                        <div class="col-md-4">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Imagen de
+                                cartucho:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">add_photo_alternate</i>
+                                </span>
+                                <div class="form-line">
+                                    <input type="file" name="imagenCartucho" id="txtimagen">
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-md-6">
                             <label for="email_address"><span style="color: #078F68;">* </span>Impresora:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">printer</i>
                                 </span>
-                                    <select class="form-control show-tick" name="impresora">
-                                        {% for impresoras in datosImpresoras %}
-                                        <option value="{{impresoras.id_impresora}}">{{impresoras.marca}} {{impresoras.modelo}}</option>
-                                        {% endfor %}
-                                    </select>
+                                <select class="form-control show-tick" name="impresora">
+                                    {% for impresoras in datosImpresoras %}
+                                    <option value="{{impresoras.id_impresora}}">{{impresoras.marca}}
+                                        {{impresoras.modelo}}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
                         </div>
-                        
-                        
 
-                       
+
+
+
                     </div>
-                    
-                    
-                    <button type="submit" class="btn btn-warning m-t-15 waves-effect animate__animated animate__flipInX"><i class="material-icons">opacity</i> Guardar Insumo</button>
+
+
+                    <button type="submit"
+                        class="btn btn-warning m-t-15 waves-effect animate__animated animate__flipInX"><i
+                            class="material-icons">opacity</i> Guardar Insumo</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    {% if insumoAgregado %}
-    <script type="text/javascript">
-        swal({
-            icon: 'success',
-            title: 'Wuu...!',
-            text: ' {{insumoExito}}',
-            footer: '<span style="color: green!important"> Sigue navegando por Custom System! </span>',
-            width: '40%'
-        });
-    </script>
-    {% endif %}
+{% if insumoAgregado %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Wuu...!',
+        text: ' {{insumoExito}}',
+        footer: '<span style="color: green!important"> Sigue navegando por Custom System! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
 {% endblock %}
 
 {% block estilosJs %}

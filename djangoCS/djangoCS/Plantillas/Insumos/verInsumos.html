@@ -10,7 +10,8 @@ Insumos | Custom System
 <link rel="icon" href={% static 'images/icons/ra.ico' %} type="image/x-icon">
 
 <!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
+    type="text/css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
 
 <!-- Bootstrap Core Css -->
@@ -48,7 +49,9 @@ Insumos | Custom System
                 <div class="row clear-fix">
                     <div class="col-xs-12 col-sm-1">
                         <form action="/reporteInsumos/" method="POST">{% csrf_token %}
-                            <button type="submit" class="btn bg-red waves-effect animate__animated animate__flipInX" data-toggle="tooltip" data-placement="bottom" title="Descargar reporte de insumos en PDF.">
+                            <button type="submit" class="btn bg-red waves-effect animate__animated animate__flipInX"
+                                data-toggle="tooltip" data-placement="bottom"
+                                title="Descargar reporte de insumos en PDF.">
                                 <i class="material-icons">picture_as_pdf</i>
                                 <span>PDF</span>
                             </button>
@@ -57,24 +60,27 @@ Insumos | Custom System
                     <div class="col-xs-12 col-sm-1">
                         <form action="/xlInsumos/" method="POST">{% csrf_token %}
                             <input type="hidden" name="activo" value="I">
-                            <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"  data-toggle="tooltip" data-placement="bottom" title="Descargar reporte de insumos en Excel.">
+                            <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
+                                data-toggle="tooltip" data-placement="bottom"
+                                title="Descargar reporte de insumos en Excel.">
                                 <i class="material-icons">grid_on</i>
                                 <span>Excel</span>
                             </button>
                         </form>
                     </div>
                     <div class="col-xs-12 col-sm-4">
-                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarInsumos/" >Agregar Insumos</a>
+                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarInsumos/">Agregar
+                            Insumos</a>
                     </div>
-                    
+
                 </div>
             </div>
-             
+
             <div class="body">
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                         <thead>
-                            <tr  style="background-color: #fad60e; color:black">
+                            <tr style="background-color: #fad60e; color:black">
                                 <th>ID Cartucho</th>
                                 <th>Marca</th>
                                 <th>Modelo</th>
@@ -103,8 +109,10 @@ Insumos | Custom System
                                 <th>{{cartuchos.id_cartucho}}</th>
                                 <th>{{cartuchos.marca}}</th>
                                 <th>{{cartuchos.modelo}}</th>
-                                <th>{{cartuchos.cantidad}} 
-                                    <button type="button" class="btn bg-red btn-circle waves-effect waves-circle waves-float" data-toggle="modal" data-target="#{{cartuchos.id_cartucho}}">
+                                <th>{{cartuchos.cantidad}}
+                                    <button type="button"
+                                        class="btn bg-red btn-circle waves-effect waves-circle waves-float"
+                                        data-toggle="modal" data-target="#{{cartuchos.id_cartucho}}">
                                         <i class="material-icons">opacity</i>
                                 </th>
                                 <th>{{cartuchos.nuserie}}</th>
@@ -117,26 +125,26 @@ Insumos | Custom System
                                 {% elif cartuchos.color == "Cyan" %}
                                 <th><span class="label bg-cyan">{{cartuchos.color}}</span></th>
                                 {% elif cartuchos.color == "Magenta" %}
-                                <th>  <span class="label bg-pink">{{cartuchos.color}}</span></th>
+                                <th> <span class="label bg-pink">{{cartuchos.color}}</span></th>
                                 {% endif %}
                                 <th>
                                     <center>
                                         <img src="{{cartuchos.imagenCartucho.url}}" width="150" height="200" alt="lap">
                                     </center>
                                 </th>
-                            
+
                                 <th>{{impresora.0}} {{impresora.1}} </th>
-                              
+
                             </tr>
                             {% endfor %}
-                            
-                            
-                            
+
+
+
                         </tbody>
                     </table>
-                    
+
                 </div>
-                
+
             </div>
         </div>
     </div>
@@ -149,7 +157,8 @@ Insumos | Custom System
         <div class="modal-content">
             <div class="modal-header">
                 <center>
-                    <h1 style="color: #EAA72A; font-family: 'Oswald', sans-serif;">Actualizar Stock Insumo <i class="material-icons" style="color:black; font-size:100%">invert_colors</i></h1>
+                    <h1 style="color: #EAA72A; font-family: 'Oswald', sans-serif;">Actualizar Stock Insumo <i
+                            class="material-icons" style="color:black; font-size:100%">invert_colors</i></h1>
                     <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
 
                 </center>
@@ -168,7 +177,8 @@ Insumos | Custom System
                             </thead>
                             <tbody>
                                 <tr>
-                                    <th> <img src="{{cartucho.imagenCartucho.url}}" width="150" height="200" alt="lap"></th>
+                                    <th> <img src="{{cartucho.imagenCartucho.url}}" width="150" height="200" alt="lap">
+                                    </th>
                                     <td>{{cartucho.marca}}</td>
                                     <td>{{cartucho.modelo}}</td>
                                     {% if cartucho.color == "Negro" %}
@@ -180,21 +190,24 @@ Insumos | Custom System
                                     {% elif cartucho.color == "Cyan" %}
                                     <th><span class="label bg-cyan">{{cartucho.color}}</span></th>
                                     {% elif cartucho.color == "Magenta" %}
-                                    <th>  <span class="label bg-pink">{{cartucho.color}}</span></th>
+                                    <th> <span class="label bg-pink">{{cartucho.color}}</span></th>
                                     {% endif %}
                                 </tr>
                                 <tr>
                                     <td></td>
-                                    <td><h3><span class="label bg-blue-grey">Stock Disponible:</span></h3></td>
-                                    <td><br><input type="number" value="{{cartucho.cantidad}}" min="0" max="20" step="1" name="cantidadCartucho"/></td>
+                                    <td>
+                                        <h3><span class="label bg-blue-grey">Stock Disponible:</span></h3>
+                                    </td>
+                                    <td><br><input type="number" value="{{cartucho.cantidad}}" min="0" max="20" step="1"
+                                            name="cantidadCartucho" /></td>
                                     <td><br>Unidades</td>
                                 </tr>
-                               
+
                             </tbody>
                         </table>
-                        
-                    
-                        
+
+
+
                     </div>
                     <center>
                         <input type="hidden" value="{{cartucho.id_cartucho}}" name="idCartucho">
@@ -209,18 +222,18 @@ Insumos | Custom System
     </div>
 </div>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    
-    {% if insumoActualizado %}
-    <script type="text/javascript">
-        swal({
-            icon: 'success',
-            title: 'Wuu..!',
-            text: ' {{textoActualizado}}',
-            footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
-            width: '40%'
-        });
-    </script>
-    {% endif %}
+
+{% if insumoActualizado %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Wuu..!',
+        text: ' {{textoActualizado}}',
+        footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
 {% endfor %}
 
 {% endblock %}
@@ -242,8 +255,8 @@ Insumos | Custom System
 <script src={% static 'panel/plugins/jquery-spinner/js/jquery.spinner.js' %}></script>
 
 
- <!-- Bootstrap Notify Plugin Js -->
- <script src={% static 'panel/plugins/bootstrap-notify/bootstrap-notify.js' %}></script>
+<!-- Bootstrap Notify Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-notify/bootstrap-notify.js' %}></script>
 
 <!-- Waves Effect Plugin Js -->
 <script src={% static 'panel/plugins/node-waves/waves.js' %}></script>

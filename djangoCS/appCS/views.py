@@ -7395,6 +7395,4 @@ def xlInsumos(request):
     libro.save(response)
     return response    
 
-
-    
 #Fin, todooo tiene un fiiiiiin

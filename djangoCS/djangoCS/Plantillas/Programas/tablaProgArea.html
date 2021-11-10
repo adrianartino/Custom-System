@@ -10,7 +10,8 @@ Ver Areas
 <link rel="icon" href={% static 'images/icons/ra.ico' %} type="image/x-icon">
 
 <!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
+    type="text/css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
 
 
@@ -39,72 +40,73 @@ Ver Areas
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <div class="card">
             <div class="header">
-                <h2 style="font-family: 'Oswald', sans-serif;" >
+                <h2 style="font-family: 'Oswald', sans-serif;">
                     PROGRAMAS del área {{nombreArea}} - ID: {{idArea}}
                 </h2>
-                
+
             </div>
-            <div class="body" >
+            <div class="body">
                 <form action="/verProgramas/" method="POST">{% csrf_token %}
-                <div class="table-responsive">
-                    <input type="hidden" name="idArea" value="{{idArea}}">
-                    <table class="table table-bordered table-striped table-hover dataTable js-exportable">
-                        <thead>
-                            <tr  style="background-color: #fad60e; color:black">
-                                <th>ID Programa</th>
-                                <th>Nombre_Versión</th>
-                                <th>Imagen</th>
-                                <th>Tipo</th>
-                                <th>Licencia</th>
-                                <th>Idioma</th>
-                                <th>SistemaOpeativo_Arquitectura</th>
-                                <th>Memoria RAM</th>
-                                <th>Procesador</th>
-                                
-                            </tr>
-                        </thead>
-                        <tfoot>
-                            <tr>
-                                <th>ID Programa</th>
-                                <th>Nombre_Versión</th>
-                                <th>Imagen</th>
-                                <th>Tipo</th>
-                                <th>Licencia</th>
-                                <th>Idioma</th>
-                                <th>SistemaOpeativo_Arquitectura</th>
-                                <th>Memoria RAM</th>
-                                <th>Procesador</th>
-                                
-                            </tr>
-                        </tfoot>
-                        <tbody>
-                            {% for programa in arregloDatosProgramas %}
-                            <tr>
-                                <td>{{programa.0}}</td>
-                                <td>{{programa.1}}</td>
-                                <th>
-                                    <center>
-                                        <img src="{{programa.8.url}}" width="75" height="75" alt="lap">
-                                    </center>
-                                </th>
-                                <td>{{programa.2}}</td>
-                                <td>{{programa.3}}</td>
-                                <td>{{programa.4}}</td>
-                                <td>{{programa.5}}</td>
-                                <td>{{programa.6}}</td>
-                                <td>{{programa.7}} o más</td>
-                                
-                            </tr>
-                            {% endfor %}
-                            
-                       
-                            
-                            
-                        </tbody>
-                    </table>
-                </div>
-                <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i class="material-icons">upgrade</i> Asignar Programa</button>
-            </form>
+                    <div class="table-responsive">
+                        <input type="hidden" name="idArea" value="{{idArea}}">
+                        <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                            <thead>
+                                <tr style="background-color: #fad60e; color:black">
+                                    <th>ID Programa</th>
+                                    <th>Nombre_Versión</th>
+                                    <th>Imagen</th>
+                                    <th>Tipo</th>
+                                    <th>Licencia</th>
+                                    <th>Idioma</th>
+                                    <th>SistemaOpeativo_Arquitectura</th>
+                                    <th>Memoria RAM</th>
+                                    <th>Procesador</th>
+
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>ID Programa</th>
+                                    <th>Nombre_Versión</th>
+                                    <th>Imagen</th>
+                                    <th>Tipo</th>
+                                    <th>Licencia</th>
+                                    <th>Idioma</th>
+                                    <th>SistemaOpeativo_Arquitectura</th>
+                                    <th>Memoria RAM</th>
+                                    <th>Procesador</th>
+
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                {% for programa in arregloDatosProgramas %}
+                                <tr>
+                                    <td>{{programa.0}}</td>
+                                    <td>{{programa.1}}</td>
+                                    <th>
+                                        <center>
+                                            <img src="{{programa.8.url}}" width="75" height="75" alt="lap">
+                                        </center>
+                                    </th>
+                                    <td>{{programa.2}}</td>
+                                    <td>{{programa.3}}</td>
+                                    <td>{{programa.4}}</td>
+                                    <td>{{programa.5}}</td>
+                                    <td>{{programa.6}}</td>
+                                    <td>{{programa.7}} o más</td>
+
+                                </tr>
+                                {% endfor %}
+
+
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i
+                            class="material-icons">upgrade</i> Asignar Programa</button>
+                </form>
                 <br>
                 <h2 style="font-family: 'Oswald', sans-serif;">
                     Especificaciones de Equipo.
@@ -114,7 +116,7 @@ Ver Areas
                     <input type="hidden" name="idArea" value="{{idArea}}">
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                         <thead>
-                            <tr  style="background-color: #fad60e; color:black">
+                            <tr style="background-color: #fad60e; color:black">
                                 <th>Concepto</th>
                                 <th>Básico/mínimo</th>
                                 <th>Recomendado</th>

@@ -10,7 +10,8 @@ Editar Impresoras
 <link rel="icon" href={% static 'images/icons/ra.ico' %} type="image/x-icon">
 
 <!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
+    type="text/css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
 
 <!-- Bootstrap Core Css -->
@@ -43,7 +44,8 @@ Editar Impresoras
                 </h2>
                 <ul class="header-dropdown m-r--5">
                     <li class="dropdown">
-                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                            aria-haspopup="true" aria-expanded="false">
                             <i class="material-icons">more_vert</i>
                         </a>
                         <ul class="dropdown-menu pull-right">
@@ -69,13 +71,15 @@ Editar Impresoras
                                 <div class="col-md-6">
                                     <label for="email_address">Marca:</label>
                                     <div class="input-group">
-                                        <input type="text" class="form-control date"  value="{{impresora.marca}}" readonly>
+                                        <input type="text" class="form-control date" value="{{impresora.marca}}"
+                                            readonly>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="email_address">Modelo:</label>
                                     <div class="input-group">
-                                        <input type="text" class="form-control date"  value="{{impresora.modelo}}" readonly>
+                                        <input type="text" class="form-control date" value="{{impresora.modelo}}"
+                                            readonly>
                                     </div>
                                 </div>
                             </div>
@@ -83,13 +87,15 @@ Editar Impresoras
                                 <div class="col-md-6">
                                     <label for="email_address">Tipo:</label>
                                     <div class="input-group">
-                                        <input type="text" class="form-control date"  value="{{impresora.tipo}}" readonly>
+                                        <input type="text" class="form-control date" value="{{impresora.tipo}}"
+                                            readonly>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="email_address">Número de serie:</label>
                                     <div class="input-group">
-                                        <input type="text" class="form-control date"  value="{{impresora.numserie}}" readonly>
+                                        <input type="text" class="form-control date" value="{{impresora.numserie}}"
+                                            readonly>
                                     </div>
                                 </div>
                             </div>
@@ -97,19 +103,19 @@ Editar Impresoras
                         </div>
                     </div>
                     <div class="row clearfix">
-                        
+
                         <div class="col-md-3">
                             <label for="email_address">Área:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">work</i>
                                 </span>
-                                    <select class="form-control show-tick" name="areaEditar">
-                                        <option selected value="{{impresora.id_area_id}}">{{nombreArea}}</option>
-                                        {% for areaNo in areasNuevas %}
-                                        <option value="{{areaNo.0}}">{{areaNo.1}}</option>
-                                        {% endfor %}
-                                    </select>
+                                <select class="form-control show-tick" name="areaEditar">
+                                    <option selected value="{{impresora.id_area_id}}">{{nombreArea}}</option>
+                                    {% for areaNo in areasNuevas %}
+                                    <option value="{{areaNo.0}}">{{areaNo.1}}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -118,22 +124,22 @@ Editar Impresoras
                                 <span class="input-group-addon">
                                     <i class="material-icons">build</i>
                                 </span>
-                                    
-                                    <select class="form-control show-tick" name="estadoEditar">
-                                        {% if impresora.estado == "Funcional" %}
-                                        <option selected value="Funcional">Funcional</option>
-                                        <option value="Reparación">Reparación</option>
-                                        <option value="Basura">Basura</option>
-                                        {% elif impresora.estado == "Reparación" %}
-                                        <option value="Funcional">Funcional</option>
-                                        <option value="Reparación" selected >Reparación</option>
-                                        <option value="Basura">Basura</option>
-                                        {% elif impresora.estado == "Basura" %}
-                                        <option value="Funcional">Funcional</option>
-                                        <option value="Reparación">Reparación</option>
-                                        <option selected value="Basura">Basura</option>
-                                        {% endif %}
-                                    </select>
+
+                                <select class="form-control show-tick" name="estadoEditar">
+                                    {% if impresora.estado == "Funcional" %}
+                                    <option selected value="Funcional">Funcional</option>
+                                    <option value="Reparación">Reparación</option>
+                                    <option value="Basura">Basura</option>
+                                    {% elif impresora.estado == "Reparación" %}
+                                    <option value="Funcional">Funcional</option>
+                                    <option value="Reparación" selected>Reparación</option>
+                                    <option value="Basura">Basura</option>
+                                    {% elif impresora.estado == "Basura" %}
+                                    <option value="Funcional">Funcional</option>
+                                    <option value="Reparación">Reparación</option>
+                                    <option selected value="Basura">Basura</option>
+                                    {% endif %}
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -144,11 +150,12 @@ Editar Impresoras
                                     <i class="material-icons">rss_feed</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control date"  value="{{impresora.ip}}" maxlength="15" name="ipEditar" >
+                                    <input type="text" class="form-control date" value="{{impresora.ip}}" maxlength="15"
+                                        name="ipEditar">
                                 </div>
 
                             </div>
-                                    
+
                             {% elif impresora.enred == "N" %}
                             <label for="email_address">Conexión por red (IP):</label>
                             <div class="input-group">
@@ -156,23 +163,24 @@ Editar Impresoras
                                     <i class="material-icons">rss_feed</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control date" maxlength="15" name="ipEditar" >
+                                    <input type="text" class="form-control date" maxlength="15" name="ipEditar">
                                 </div>
 
                             </div>
                             {% endif%}
-                            
-                            
-                            
-                        </div>
-                       
-                        
 
-                       
+
+
+                        </div>
+
+
+
+
                     </div>
-                    
+
                     <input type="hidden" name="idImpresora" value="{{impresora.id_impresora}}">
-                    <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i class="material-icons">print</i> Actualizar Impresora</button>
+                    <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i
+                            class="material-icons">print</i> Actualizar Impresora</button>
                     {% endfor %}
                 </form>
             </div>
@@ -180,17 +188,17 @@ Editar Impresoras
     </div>
 </div>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    {% if editado %}
-    <script type="text/javascript">
-        swal({
-            icon: 'success',
-            title: 'Wujuu..!',
-            text: ' {{textoEditado}}',
-            footer: '<span style="color: green!important"> Puedes ver los datos actualizados! </span>',
-            width: '40%'
-        });
-    </script>
-    {% endif %}
+{% if editado %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Wujuu..!',
+        text: ' {{textoEditado}}',
+        footer: '<span style="color: green!important"> Puedes ver los datos actualizados! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
 {% endblock %}
 
 {% block estilosJs %}
@@ -221,15 +229,13 @@ Editar Impresoras
         return false;
     }
 
-    function comprobar(obj){
-        if (obj.checked){
+    function comprobar(obj) {
+        if (obj.checked) {
             document.getElementById('divActPdf').style.display = "";
-        }
-        else{
+        } else {
             document.getElementById('divActPdf').style.display = "none";
         }
     }
-    
 </script>
 <!-- Jquery Core Js -->
 <script src={% static 'panel/plugins/jquery/jquery.min.js' %}></script>

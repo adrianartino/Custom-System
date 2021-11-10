@@ -10,7 +10,8 @@ Programas | Custom System
 <link rel="icon" href={% static 'images/icons/ra.ico' %} type="image/x-icon">
 
 <!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
+    type="text/css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
 
 <!-- Bootstrap Core Css -->
@@ -43,19 +44,20 @@ Programas | Custom System
                     Asignar programas al area de <span class="{{colorArea}}"> {{nombreArea}}</span>
                     {% else %}
                     PROGRAMAS/SOFTWARE PARA USO LABORAL
-                    <small style="color: #790C05;">Vista de listado de programas utilizados por los equipos de la empresa.</small>
+                    <small style="color: #790C05;">Vista de listado de programas utilizados por los equipos de la
+                        empresa.</small>
                     {% endif %}
 
                 </h2>
-                
+
             </div>
             <div class="body">
                 <div class="table-responsive">
                     {% if nombreArea %}
-                        <form action="/actualizarProgramasArea/"  method="POST" >{% csrf_token %}
+                    <form action="/actualizarProgramasArea/" method="POST">{% csrf_token %}
                         <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
-                                <tr  style="background-color: #fad60e; color:black">
+                                <tr style="background-color: #fad60e; color:black">
                                     <th>ID Programa</th>
                                     <th>Nombre_Versión</th>
                                     <th>Imagen</th>
@@ -66,9 +68,9 @@ Programas | Custom System
                                     <th>Memoria RAM</th>
                                     <th>Procesador</th>
                                     <th>
-                                    Asignar
+                                        Asignar
                                     </th>
-                                    
+
                                 </tr>
                             </thead>
                             <tfoot>
@@ -83,52 +85,60 @@ Programas | Custom System
                                     <th>Memoria RAM</th>
                                     <th>Procesador</th>
                                     <th>
-                                    Asignar
+                                        Asignar
                                     </th>
-                                    
+
                                 </tr>
                             </tfoot>
                             <tbody class="animate__animated animate__backInDown">
-                                    {% for programa, check in lista %}
-                                    <tr>
-                                        <td>{{programa.id_programa}}</td>
-                                        <td>{{programa.nombre_version}}</td>
-                                        <th>
-                                            <center>
-                                                <img src="{{programa.imagenPrograma.url}}" width="75" height="60" alt="prog">
-                                            </center>
-                                        </th>
-                                        <td>{{programa.tipo}}</td>
-                                        <td>{{programa.licencia}}</td>
-                                        <td>{{programa.idioma}}</td>
-                                        <td>{{programa.sistemaoperativo_arq}} o superior </td>
-                                        <td>{{programa.memoria_ram}} o más</td>
-                                        <td>{{programa.procesador}} o más</td>
-                                        <td>
-                                            {% if check.1 == "1" %}
-                                            <input type="checkbox" id="md_checkbox_{{programa.id_programa}}{{id_area_recibido}}" class="filled-in chk-col-cyan"  checked name="area{{id_area_recibido}}programa{{programa.id_programa}}" />
-                                            <label for="md_checkbox_{{programa.id_programa}}{{id_area_recibido}}"></label>
-                                            {% elif check.1 == "0" %}
-                                            <input type="checkbox" id="md_checkbox_{{programa.id_programa}}{{id_area_recibido}}" class="filled-in chk-col-cyan"   name="area{{id_area_recibido}}programa{{programa.id_programa}}" />
-                                            <label for="md_checkbox_{{programa.id_programa}}{{id_area_recibido}}"></label>
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                    
-                                    {% endfor %}
+                                {% for programa, check in lista %}
+                                <tr>
+                                    <td>{{programa.id_programa}}</td>
+                                    <td>{{programa.nombre_version}}</td>
+                                    <th>
+                                        <center>
+                                            <img src="{{programa.imagenPrograma.url}}" width="75" height="60"
+                                                alt="prog">
+                                        </center>
+                                    </th>
+                                    <td>{{programa.tipo}}</td>
+                                    <td>{{programa.licencia}}</td>
+                                    <td>{{programa.idioma}}</td>
+                                    <td>{{programa.sistemaoperativo_arq}} o superior </td>
+                                    <td>{{programa.memoria_ram}} o más</td>
+                                    <td>{{programa.procesador}} o más</td>
+                                    <td>
+                                        {% if check.1 == "1" %}
+                                        <input type="checkbox"
+                                            id="md_checkbox_{{programa.id_programa}}{{id_area_recibido}}"
+                                            class="filled-in chk-col-cyan" checked
+                                            name="area{{id_area_recibido}}programa{{programa.id_programa}}" />
+                                        <label for="md_checkbox_{{programa.id_programa}}{{id_area_recibido}}"></label>
+                                        {% elif check.1 == "0" %}
+                                        <input type="checkbox"
+                                            id="md_checkbox_{{programa.id_programa}}{{id_area_recibido}}"
+                                            class="filled-in chk-col-cyan"
+                                            name="area{{id_area_recibido}}programa{{programa.id_programa}}" />
+                                        <label for="md_checkbox_{{programa.id_programa}}{{id_area_recibido}}"></label>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+
+                                {% endfor %}
                             </tbody>
                         </table>
                         <input type="hidden" name="idArea" value="{{id_area_recibido}}">
-                        <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i class="material-icons">update</i> Actualizar lista</button>
+                        <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i
+                                class="material-icons">update</i> Actualizar lista</button>
                     </form>
                     {% else %}
 
 
-                    
+
 
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                         <thead>
-                            <tr  style="background-color: #fad60e; color:black">
+                            <tr style="background-color: #fad60e; color:black">
                                 <th>ID Programa</th>
                                 <th>Nombre_Versión</th>
                                 <th>Imagen</th>
@@ -138,7 +148,7 @@ Programas | Custom System
                                 <th>SistemaOpeativo_Arquitectura</th>
                                 <th>Memoria RAM</th>
                                 <th>Procesador</th>
-                                
+
                             </tr>
                         </thead>
                         <tfoot>
@@ -155,32 +165,32 @@ Programas | Custom System
                             </tr>
                         </tfoot>
                         <tbody class="animate__animated animate__backInDown">
-                            
-                                {% for programa in registrosProgramas %}
-                                <tr>
-                                    <td>{{programa.id_programa}}</td>
-                                    <td>{{programa.nombre_version}}</td>
-                                    <th>
-                                        <center>
-                                            <img src="{{programa.imagenPrograma.url}}" width="75" height="60" alt="prog">
-                                        </center>
-                                    </th>
-                                    <td>{{programa.tipo}}</td>
-                                    <td>{{programa.licencia}}</td>
-                                    <td>{{programa.idioma}}</td>
-                                    <td>{{programa.sistemaoperativo_arq}} o superior </td>
-                                    <td>{{programa.memoria_ram}} o más</td>
-                                    <td>{{programa.procesador}} o más</td>
-                                
-                                </tr>
-                                {% endfor %}
 
-                            
-                            
-                            
-                       
-                            
-                            
+                            {% for programa in registrosProgramas %}
+                            <tr>
+                                <td>{{programa.id_programa}}</td>
+                                <td>{{programa.nombre_version}}</td>
+                                <th>
+                                    <center>
+                                        <img src="{{programa.imagenPrograma.url}}" width="75" height="60" alt="prog">
+                                    </center>
+                                </th>
+                                <td>{{programa.tipo}}</td>
+                                <td>{{programa.licencia}}</td>
+                                <td>{{programa.idioma}}</td>
+                                <td>{{programa.sistemaoperativo_arq}} o superior </td>
+                                <td>{{programa.memoria_ram}} o más</td>
+                                <td>{{programa.procesador}} o más</td>
+
+                            </tr>
+                            {% endfor %}
+
+
+
+
+
+
+
                         </tbody>
                     </table>
                     {% endif %}

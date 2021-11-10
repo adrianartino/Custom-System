@@ -10,7 +10,8 @@ Ver Programas por area
 <link rel="icon" href={% static 'images/icons/ra.ico' %} type="image/x-icon">
 
 <!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
+    type="text/css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
 
 <!-- Bootstrap Core Css -->
@@ -69,7 +70,7 @@ Ver Programas por area
                 </div>
                 <div class="content">
                     <div class="text">
-                        <input type="text" style="border: 0; color: black;"  value="{{area.nombre}}" name="nombreArea">
+                        <input type="text" style="border: 0; color: black;" value="{{area.nombre}}" name="nombreArea">
                     </div>
                     <div class="number">{{programas}} Programas</div>
                 </div>
@@ -78,21 +79,21 @@ Ver Programas por area
 
     </div>
     {% endfor %}
-    
+
 </div>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    {% if siNoti %}
-    <script type="text/javascript">
-        swal({
-            icon: 'success',
-            title: 'Wuu..!',
-            text: ' {{noti}}',
-            footer: '<span style="color: green!important"> Puedes ver los programas accediendo de nuevo al área! </span>',
-            width: '40%'
-           
-        });
-    </script>
-    {% endif %}
+{% if siNoti %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Wuu..!',
+        text: ' {{noti}}',
+        footer: '<span style="color: green!important"> Puedes ver los programas accediendo de nuevo al área! </span>',
+        width: '40%'
+
+    });
+</script>
+{% endif %}
 {% endblock %}
 
 {% block estilosJs %}

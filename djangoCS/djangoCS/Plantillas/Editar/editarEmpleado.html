@@ -10,7 +10,8 @@ Editar Empleado
 <link rel="icon" href={% static 'images/icons/ra.ico' %} type="image/x-icon">
 
 <!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
+    type="text/css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
 
 <!-- Bootstrap Core Css -->
@@ -46,9 +47,10 @@ Editar Empleado
                 <div class="content-area">
                     <h4>{{empleado.nombre}} {{empleado.apellidos}}</h4>
                     {% for e in datosEquipos %}
-                    <p style="color: black; font-weight: bold;">Equipo: <span style="color: seagreen;">{{e.0}}</span></p>
+                    <p style="color: black; font-weight: bold;">Equipo: <span style="color: seagreen;">{{e.0}}</span>
+                    </p>
                     <img src="{{e.1.url}}" width="35%">
-                    {% endfor %} 
+                    {% endfor %}
                 </div>
             </div>
             <div class="profile-footer">
@@ -83,110 +85,119 @@ Editar Empleado
             </div>
             <div class="body">
                 <form id="form_validation" action="/editarEmpleadoBd/" method="POST">{% csrf_token %}
-                    
-                    
 
-                            <div class="row clearfix">
-                                <div class="col-md-6">
-                                    <label for="email_address">Nombre(s):</label>
-                                    <div class="input-group">
-                                        <span class="input-group-addon">
-                                            <i class="material-icons">person</i>
-                                        </span>
-                                        <div class="form-line">
-                                            <input onkeypress='return soloLetras(event)' type="text" class="form-control date" placeholder="Ingresar nombre" 
-                                            pattern="[A-Za-z ]{3,80}" title="No se permiten caracteres especiales." value="{{empleado.nombre}}" name="nombreEditar" required>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="password">Apellidos:</label>
-                                    <div class="form-group">
-                                        <div class="form-line">
-                                            <input onkeypress='return soloLetras(event)'type="text" class="form-control date" placeholder="Ingresar apellidos"
-                                            pattern="[A-Za-z ]{3,80}" title="No se permiten caracteres especiales." value="{{empleado.apellidos}}" name="apellidoEditar" required>
-                                        </div>
-                                    </div>
+
+
+                    <div class="row clearfix">
+                        <div class="col-md-6">
+                            <label for="email_address">Nombre(s):</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">person</i>
+                                </span>
+                                <div class="form-line">
+                                    <input onkeypress='return soloLetras(event)' type="text" class="form-control date"
+                                        placeholder="Ingresar nombre" pattern="[A-Za-z ]{3,80}"
+                                        title="No se permiten caracteres especiales." value="{{empleado.nombre}}"
+                                        name="nombreEditar" required>
                                 </div>
                             </div>
-
-                            <div class="row clearfix">
-                                <div class="col-md-6">
-                                    <label for="email_address">Departamento:</label>
-                                    <div class="input-group">
-                                        <span class="input-group-addon">
-                                            <i class="material-icons">work</i>
-                                        </span>
-                                    
-                                            <select class="form-control show-tick" name="areaEditar">
-                                                <option value="{{empleado.id_area_id}}">{{nombreArea}}</option>
-                                                {% for areaNueva in areasNuevas %}
-                                                <option value="{{areaNueva.0}}">{{areaNueva.1}}</option>
-                                                {% endfor %}
-                                            </select>
-                                    
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="password">Puesto:</label>
-                                    <div class="form-group">
-                                        <div class="form-line">
-                                            <input onkeypress='return soloLetras(event)'type="text" class="form-control date" placeholder="Ingresar puesto"
-                                            pattern="[A-Za-z ]{3,80}" title="No se permiten caracteres especiales." value="{{empleado.puesto}}" name="puestoEditar" required>
-                                        </div>
-                                    </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="password">Apellidos:</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <input onkeypress='return soloLetras(event)' type="text" class="form-control date"
+                                        placeholder="Ingresar apellidos" pattern="[A-Za-z ]{3,80}"
+                                        title="No se permiten caracteres especiales." value="{{empleado.apellidos}}"
+                                        name="apellidoEditar" required>
                                 </div>
                             </div>
+                        </div>
+                    </div>
 
+                    <div class="row clearfix">
+                        <div class="col-md-6">
+                            <label for="email_address">Departamento:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">work</i>
+                                </span>
 
-                            <div class="row clearfix">
-                                <div class="col-md-6">
-                                    <label for="email_address">Correo:</label>
-                                    <div class="input-group">
-                                        <span class="input-group-addon">
-                                            <i class="material-icons">email</i>
-                                        </span>
-                                        <div class="form-line">
-                                            <input type="email" class="form-control date" placeholder="Ingresar Correo"
-                                            title="Ingrese un correo electrónico válido." value="{{empleado.correo}}" name="correoEditar" required>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="password">Contraseña:</label>
-                                    <div class="form-group">
-                                        <div class="form-line">
-                                            <input type="password" class="form-control date" placeholder="Ingresar Contraseña"
-                                            pattern="{3,40}"title="Ingrese la contraseña." value="{{empleado.contraseña}}" name="contraseñaEditar" required>
-                                        </div>
-                                    </div>
+                                <select class="form-control show-tick" name="areaEditar">
+                                    <option value="{{empleado.id_area_id}}">{{nombreArea}}</option>
+                                    {% for areaNueva in areasNuevas %}
+                                    <option value="{{areaNueva.0}}">{{areaNueva.1}}</option>
+                                    {% endfor %}
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="password">Puesto:</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <input onkeypress='return soloLetras(event)' type="text" class="form-control date"
+                                        placeholder="Ingresar puesto" pattern="[A-Za-z ]{3,80}"
+                                        title="No se permiten caracteres especiales." value="{{empleado.puesto}}"
+                                        name="puestoEditar" required>
                                 </div>
                             </div>
-                        
-                    
-                    <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i class="material-icons">loop</i> Actualizar Empleado</button>
-                    
+                        </div>
+                    </div>
+
+
+                    <div class="row clearfix">
+                        <div class="col-md-6">
+                            <label for="email_address">Correo:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">email</i>
+                                </span>
+                                <div class="form-line">
+                                    <input type="email" class="form-control date" placeholder="Ingresar Correo"
+                                        title="Ingrese un correo electrónico válido." value="{{empleado.correo}}"
+                                        name="correoEditar" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="password">Contraseña:</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <input type="password" class="form-control date" placeholder="Ingresar Contraseña"
+                                        pattern="{3,40}" title="Ingrese la contraseña." value="{{empleado.contraseña}}"
+                                        name="contraseñaEditar" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i class="material-icons">loop</i>
+                        Actualizar Empleado</button>
+
                 </form>
             </div>
         </div>
     </div>
     {% endfor %}
 
-        
-    
+
+
 </div>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    {% if editado %}
-    <script type="text/javascript">
-        swal({
-            icon: 'success',
-            title: 'Wujuu..!',
-            text: ' {{textoEdicion}}',
-            footer: '<span style="color: green!important"> Puedes ver los datos actualizados! </span>',
-            width: '40%'
-        });
-    </script>
-    {% endif %}
+{% if editado %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Wujuu..!',
+        text: ' {{textoEdicion}}',
+        footer: '<span style="color: green!important"> Puedes ver los datos actualizados! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
 
 
 

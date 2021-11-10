@@ -10,7 +10,8 @@ Editar Equipos
 <link rel="icon" href={% static 'images/icons/ra.ico' %} type="image/x-icon">
 
 <!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
+    type="text/css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
 
 <!-- Bootstrap Core Css -->
@@ -45,16 +46,16 @@ Editar Equipos
                 </div>
                 <div class="content-area">
                     <h4>{{equipos.tipo}} {{equipos.marca}} {{equipos.modelo}}</h4>
-                    
+
                 </div>
             </div>
             <div class="profile-footer">
                 <ul>
                     <li>
                         <span>N° de Equipo</span>
-                        <span><label >{{equipos.id_equipo}}</label></span>
+                        <span><label>{{equipos.id_equipo}}</label></span>
                     </li>
-                    
+
                 </ul>
                 <center>
                     <div>
@@ -64,9 +65,9 @@ Editar Equipos
                     <div>
                         <span>{{dato.nombre}} {{dato.apellidos}}</span>
                         <img src="{{dato.imagen_empleado.url}}" width="50%">
-                    
+
                     </div>
-                {% endfor %}
+                    {% endfor %}
                 </center>
             </div>
         </div>
@@ -78,109 +79,111 @@ Editar Equipos
                 <h2 style="font-family: 'Oswald', sans-serif;">
                     EDITAR EQUIPO
                 </h2>
-                
+
             </div>
             <div class="body">
-                
-                <form id="form_validation" action="/editarEquipoBd/" method="POST">{% csrf_token %}
-                            
-                            <div class="row clearfix">
-                                
-                                <div class="col-md-3">
-                                    <label for="email_address">Memoria RAM:</label>
-                                    <div class="input-group">
-                                        <span class="input-group-addon">
-                                            <i class="material-icons">trending_up</i>
-                                        </span>
-                                       
-                                            <select class="form-control show-tick" name="ram">
-                                                <option value="{{equipos.memoriaram}}">{{equipos.memoriaram}}</option>
-                                                {% for ramNuevas in ram %}
-                                                <option value="{{ramNuevas}}">{{ramNuevas}}</option>
-                                                {% endfor %}
-                                            </select>
-                                        
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="email_address">Procesador:</label>
-                                    <div class="input-group">
-                                        <span class="input-group-addon">
-                                            <i class="material-icons">memory</i>
-                                        </span>
-                                        <div class="form-line">
-                                            <input type="text" value="{{equipos.procesador}}" class="form-control date" placeholder="Ingresar procesador" readonly>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-5">
-                                    <label for="email_address">Cargador:</label>
-                                    <div class="input-group">
-                                        <span class="input-group-addon">
-                                            <i class="material-icons">battery_charging_full</i>
-                                        </span>
-                                        <div class="form-line">
-                                            <input type="text" value="{{equipos.modelocargador}}" class="form-control date" placeholder="Ingresar cargador" name="cargador">
-                                        </div>
-                                    </div>
-                                </div>  
-                            </div>
-                            
 
-                    
-                    
+                <form id="form_validation" action="/editarEquipoBd/" method="POST">{% csrf_token %}
 
                     <div class="row clearfix">
-                         
-                        
-                        
+
+                        <div class="col-md-3">
+                            <label for="email_address">Memoria RAM:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">trending_up</i>
+                                </span>
+
+                                <select class="form-control show-tick" name="ram">
+                                    <option value="{{equipos.memoriaram}}">{{equipos.memoriaram}}</option>
+                                    {% for ramNuevas in ram %}
+                                    <option value="{{ramNuevas}}">{{ramNuevas}}</option>
+                                    {% endfor %}
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="email_address">Procesador:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">memory</i>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" value="{{equipos.procesador}}" class="form-control date"
+                                        placeholder="Ingresar procesador" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <label for="email_address">Cargador:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">battery_charging_full</i>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" value="{{equipos.modelocargador}}" class="form-control date"
+                                        placeholder="Ingresar cargador" name="cargador">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+                    <div class="row clearfix">
+
+
+
                         <div class="col-md-5">
                             <label for="email_address">Sistema Operativo:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">verified_user</i>
                                 </span>
-                                
-                                    <select class="form-control show-tick" name="sistema">
-                                        <option value="{{equipos.sistemaoperativo}}">{{equipos.sistemaoperativo}}</option>
-                                        {% for sistemasDisponibles in sistemasOperativos %}
-                                        <option value="{{sistemasDisponibles}}">{{sistemasDisponibles}}</option>
-                                        
-                                        {% endfor %}
-                                    </select>
-                              
+
+                                <select class="form-control show-tick" name="sistema">
+                                    <option value="{{equipos.sistemaoperativo}}">{{equipos.sistemaoperativo}}</option>
+                                    {% for sistemasDisponibles in sistemasOperativos %}
+                                    <option value="{{sistemasDisponibles}}">{{sistemasDisponibles}}</option>
+
+                                    {% endfor %}
+                                </select>
+
                             </div>
-                        </div> 
+                        </div>
                         <div class="col-md-7">
                             <label for="email_address">Nombre Propietario:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">badge</i>
                                 </span>
-                                
-                                    <select class="form-control show-tick" name="propietario">
-                                        {% if sinPropietario %}
-                                            <option value="sinPropietario">Sin propietario</option>
-                                            {% for em in empleadosTotales %}
-                                            <option value="{{em.id_empleado}}">{{em.nombre}} {{em.apellidos}}</option>
-                                            {% endfor %}
-                                        {% else %}
-                                            {% for dato in empleado %}
-                                                <option value="{{dato.id_empleado}}">{{dato.nombre}} {{dato.apellidos}}</option>
-                                            {% endfor %}
-                                            <option value="sinPropietario">Sin propietario</option>
-                                            {% for empleado in datos_empleados %}
-                                                <option value="{{empleado.0}}">{{empleado.1}} {{empleado.2}}</option>
-                                            {% endfor %}
-                                        {% endif %}
 
-                                       
-                                    </select>
-                               
+                                <select class="form-control show-tick" name="propietario">
+                                    {% if sinPropietario %}
+                                    <option value="sinPropietario">Sin propietario</option>
+                                    {% for em in empleadosTotales %}
+                                    <option value="{{em.id_empleado}}">{{em.nombre}} {{em.apellidos}}</option>
+                                    {% endfor %}
+                                    {% else %}
+                                    {% for dato in empleado %}
+                                    <option value="{{dato.id_empleado}}">{{dato.nombre}} {{dato.apellidos}}</option>
+                                    {% endfor %}
+                                    <option value="sinPropietario">Sin propietario</option>
+                                    {% for empleado in datos_empleados %}
+                                    <option value="{{empleado.0}}">{{empleado.1}} {{empleado.2}}</option>
+                                    {% endfor %}
+                                    {% endif %}
+
+
+                                </select>
+
                             </div>
                         </div>
-                        
-                       
+
+
                     </div>
                     <div class="row clearfix">
                         <div class="col-md-3">
@@ -189,49 +192,50 @@ Editar Equipos
                                 <span class="input-group-addon">
                                     <i class="material-icons">build</i>
                                 </span>
-                             
-                                    <select class="form-control show-tick" name="estado">
-                                        {% if equipos.estado == "Funcional" %}
-                                        <option value="Funcional" selected>Funcional</option>
-                                        <option value="Reparación">Reparación</option>
-                                        <option value="Basura">Basura</option>
-                                        {% elif equipos.estado == "Reparación" %}
-                                        <option value="Funcional" >Funcional</option>
-                                        <option value="Reparación" selected>Reparación</option>
-                                        <option value="Basura">Basura</option>
-                                        {% elif equipos.estado == "Basura" %}
-                                        <option value="Funcional" >Funcional</option>
-                                        <option value="Reparación" >Reparación</option>
-                                        <option value="Basura" selected>Basura</option>
-                                        {% endif %}
 
-                                    </select>
-                               
+                                <select class="form-control show-tick" name="estado">
+                                    {% if equipos.estado == "Funcional" %}
+                                    <option value="Funcional" selected>Funcional</option>
+                                    <option value="Reparación">Reparación</option>
+                                    <option value="Basura">Basura</option>
+                                    {% elif equipos.estado == "Reparación" %}
+                                    <option value="Funcional">Funcional</option>
+                                    <option value="Reparación" selected>Reparación</option>
+                                    <option value="Basura">Basura</option>
+                                    {% elif equipos.estado == "Basura" %}
+                                    <option value="Funcional">Funcional</option>
+                                    <option value="Reparación">Reparación</option>
+                                    <option value="Basura" selected>Basura</option>
+                                    {% endif %}
+
+                                </select>
+
                             </div>
                         </div>
                     </div>
                     <input type="hidden" name="idEquipo" value="{{equipos.id_equipo}}">
-                    <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i class="material-icons">loop</i> Actualizar equipo</button>
+                    <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i class="material-icons">loop</i>
+                        Actualizar equipo</button>
                 </form>
-                
+
             </div>
         </div>
     </div>
-        
+
     {% endfor %}
 </div>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    {% if editado %}
-    <script type="text/javascript">
-        swal({
-            icon: 'success',
-            title: 'Wujuu..!',
-            text: ' {{textoEdicion}}',
-            footer: '<span style="color: green!important"> Puedes ver los datos actualizados! </span>',
-            width: '40%'
-        });
-    </script>
-    {% endif %}
+{% if editado %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Wujuu..!',
+        text: ' {{textoEdicion}}',
+        footer: '<span style="color: green!important"> Puedes ver los datos actualizados! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
 {% endblock %}
 
 {% block estilosJs %}
@@ -262,16 +266,15 @@ Editar Equipos
         return false;
     }
 
-    function comprobar(obj){
-        if (obj.checked){
+    function comprobar(obj) {
+        if (obj.checked) {
             document.getElementById('divActPdf').style.display = "";
-        }
-        else{
+        } else {
             document.getElementById('divActPdf').style.display = "none";
         }
     }
 
-    window.onload=function() {
+    window.onload = function () {
         document.getElementById('divActPdf').style.display = "none";
     }
 </script>

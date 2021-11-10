@@ -46,33 +46,34 @@ Buscar Info Equipo
         <h1 style="font-family: 'Oswald', sans-serif;">Ingresar Número de Impresora:</h1>
         <div class="row clearfix">
             <div class="col-md-4">
-                
+
             </div>
             <div class="col-md-4">
-                <img src={% static 'images/custom-png.png' %} width="200"  alt="User" />
+                <img src={% static 'images/custom-png.png' %} width="200" alt="User" />
             </div>
             <div class="col-md-4">
-                
+
             </div>
         </div>
         <br>
         <form action="/infoImpresora/" method="POST">{% csrf_token %}
             <div class="row clearfix">
                 <div class="col-md-4">
-                    
+
                 </div>
                 <div class="col-md-4">
                     <div class="input-group">
-                        <span class="input-group-addon" >
+                        <span class="input-group-addon">
                             <i class="material-icons" style="font-size: 200%;">print</i>
                         </span>
                         <div class="form-line">
-                            <input type="text" class="form-control date" placeholder="# Impresora" name="idImpresora" required>
+                            <input type="text" class="form-control date" placeholder="# Impresora" name="idImpresora"
+                                required>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    
+
                 </div>
             </div>
             <button type="submit" class="btn bg-red waves-effect">
@@ -82,23 +83,23 @@ Buscar Info Equipo
             <br>
             <br>
         </form>
-        
+
     </center>
 </div>
 
 
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 {% if noEncontro %}
-    <script type="text/javascript">
-        swal({
-            icon: 'error',
-            title: 'Algo salio mal..',
-            text: ' {{textoError}}',
-            footer: '<span style="color: red!important"> Ingresa un # de impresora valida! </span>',
-            width: '40%'
-        });
-    </script>
-    {% endif %}
+<script type="text/javascript">
+    swal({
+        icon: 'error',
+        title: 'Algo salio mal..',
+        text: ' {{textoError}}',
+        footer: '<span style="color: red!important"> Ingresa un # de impresora valida! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
 
 {% endblock %}
 

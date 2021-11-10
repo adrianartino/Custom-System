@@ -10,7 +10,8 @@ asignar programas por area
 <link rel="icon" href={% static 'images/icons/ra.ico' %} type="image/x-icon">
 
 <!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
+    type="text/css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
 
 <!-- Bootstrap Core Css -->
@@ -43,7 +44,8 @@ asignar programas por area
                 </h2>
                 <ul class="header-dropdown m-r--5">
                     <li class="dropdown">
-                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                            aria-haspopup="true" aria-expanded="false">
                             <i class="material-icons">more_vert</i>
                         </a>
                         <ul class="dropdown-menu pull-right">
@@ -64,68 +66,80 @@ asignar programas por area
                                 {% for areas in registrosAreas %}
                                 <th> <label for="area" class="{{areas.color}}">{{areas.nombre}} </label></th>
                                 {% endfor %}
-                               
-                           
-                                
-                    
-                                
+
+
+
+
+
                             </tr>
                         </thead>
-                       
+
                         <tbody>
                             {% for programas in registrosProgramas%}
                             <tr>
                                 <form action="/asignarProgramas/" method="POST">{% csrf_token %}
                                     <th>
-                                        <input type="text" name="idPrograma" style="border: none; background: none;" value="{{programas.id_programa}}" readonly size="1">
+                                        <input type="text" name="idPrograma" style="border: none; background: none;"
+                                            value="{{programas.id_programa}}" readonly size="1">
                                         <div>
                                             <center>
-                                                <button type="submit" class="btn btn-success waves-effect"><i class="material-icons ">save</i></button>
+                                                <button type="submit" class="btn btn-success waves-effect"><i
+                                                        class="material-icons ">save</i></button>
                                             </center>
                                         </div>
-                                        
+
                                     </th>
-                               
-                                <th>{{programas.nombre_version}}</th>
-                                {% for areas in registrosAreas %}
+
+                                    <th>{{programas.nombre_version}}</th>
+                                    {% for areas in registrosAreas %}
                                     {% if registrosProgramasEnAreas %}
-                                        
-                                        
 
-                                        {% if areas.id_area in arregloAreas %}
-                                        <th>
-                                            <input type="checkbox" id="md_checkbox_{{programas.id_programa}}{{areas.id_area}}" class="filled-in chk-col-cyan"  checked name="area{{areas.id_area}}" />
-                                            <label for="md_checkbox_{{programas.id_programa}}{{areas.id_area}}">{{areas.nombre}}Coincide con {{registroPrograma.id_area_id}}</label>
-                                        </th>
-                                        {% endif %}
 
-                                        {% if areas.id_area not in arregloAreas %}
-                                        <th>
-                                            <input type="checkbox" id="md_checkbox_{{programas.id_programa}}{{areas.id_area}}" class="filled-in chk-col-cyan"   name="area{{areas.id_area}}" />
-                                            <label for="md_checkbox_{{programas.id_programa}}{{areas.id_area}}">{{areas.nombre}}Coincide con {{registroPrograma.id_area_id}}</label>
-                                        </th>
-                                        {% endif %}
+
+                                    {% if areas.id_area in arregloAreas %}
+                                    <th>
+                                        <input type="checkbox"
+                                            id="md_checkbox_{{programas.id_programa}}{{areas.id_area}}"
+                                            class="filled-in chk-col-cyan" checked name="area{{areas.id_area}}" />
+                                        <label
+                                            for="md_checkbox_{{programas.id_programa}}{{areas.id_area}}">{{areas.nombre}}Coincide
+                                            con {{registroPrograma.id_area_id}}</label>
+                                    </th>
+                                    {% endif %}
+
+                                    {% if areas.id_area not in arregloAreas %}
+                                    <th>
+                                        <input type="checkbox"
+                                            id="md_checkbox_{{programas.id_programa}}{{areas.id_area}}"
+                                            class="filled-in chk-col-cyan" name="area{{areas.id_area}}" />
+                                        <label
+                                            for="md_checkbox_{{programas.id_programa}}{{areas.id_area}}">{{areas.nombre}}Coincide
+                                            con {{registroPrograma.id_area_id}}</label>
+                                    </th>
+                                    {% endif %}
 
                                     {% else %}
-                                        <th>
-                                            <input type="checkbox" id="md_checkbox_{{programas.id_programa}}{{areas.id_area}}" class="filled-in chk-col-cyan"   name="area{{areas.id_area}}" />
-                                            <label for="md_checkbox_{{programas.id_programa}}{{areas.id_area}}"></label>
-                                        </th>
-                                    {% endif %}   
-                                {% endfor %}
-                                
+                                    <th>
+                                        <input type="checkbox"
+                                            id="md_checkbox_{{programas.id_programa}}{{areas.id_area}}"
+                                            class="filled-in chk-col-cyan" name="area{{areas.id_area}}" />
+                                        <label for="md_checkbox_{{programas.id_programa}}{{areas.id_area}}"></label>
+                                    </th>
+                                    {% endif %}
+                                    {% endfor %}
+
                                 </form>
-                                    
-                                
-                                
+
+
+
                             </tr>
                             {% endfor %}
-                            
-                            
-                     
-                            
-                            
-                            
+
+
+
+
+
+
                         </tbody>
                     </table>
                 </div>
@@ -134,17 +148,17 @@ asignar programas por area
     </div>
 </div>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    {% if programaAreasGuardado %}
-    <script type="text/javascript">
-        swal({
-            icon: 'success',
-            title: 'Wujuuu..',
-            text: ' {{texto}}',
-            footer: '<span style="color: green!important"> Sigue navegando en Custom System! </span>',
-            width: '40%'
-        });
-    </script>
-    {% endif %}
+{% if programaAreasGuardado %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Wujuuu..',
+        text: ' {{texto}}',
+        footer: '<span style="color: green!important"> Sigue navegando en Custom System! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
 {% endblock %}
 
 {% block estilosJs %}

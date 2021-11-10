@@ -11,7 +11,7 @@
 
         {% endblock %}
     </title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tourney:wght@800;900&display=swap" rel="stylesheet">
@@ -28,7 +28,7 @@
 
     {% endblock %}
 
-    
+
 </head>
 
 
@@ -68,13 +68,15 @@
     <nav class="navbar" style="background-color: #28868F;!important">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
+                <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#navbar-collapse" aria-expanded="false"></a>
                 <a href="javascript:void(0);" class="bars"></a>
-                
-                <a class="navbar-brand" href="/inicio/"><span class="login100-form-title-1" style="font-family: 'ground_controlregular', cursive; font-size: 25px;">
-                    <img  src={% static 'images/rayocustom.png' %} width="15px" alt="User"> Custom System
-                </span></a>
-                
+
+                <a class="navbar-brand" href="/inicio/"><span class="login100-form-title-1"
+                        style="font-family: 'ground_controlregular', cursive; font-size: 25px;">
+                        <img src={% static 'images/rayocustom.png' %} width="15px" alt="User"> Custom System
+                    </span></a>
+
             </div>
             <div class="collapse navbar-collapse" id="navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
@@ -95,7 +97,7 @@
                                         <a href="javascript:void(0);">
                                             <div class="icon-circle bg-deep-orange">
                                                 <i class="material-icons">cleaning_services</i>
-                                               
+
                                             </div>
                                             <div class="menu-info">
                                                 <h4>{{computadora.0}}</h4>
@@ -121,17 +123,17 @@
                                         </a>
                                     </li>
                                     {% endfor %}
-                                    
-                                   
-                                    
+
+
+
                                 </ul>
                             </li>
-                            
+
                         </ul>
                     </li>
                     <!-- #END# Notifications -->
-                    
-                    
+
+
                 </ul>
             </div>
         </div>
@@ -142,44 +144,48 @@
         <aside id="leftsidebar" class="sidebar">
             <!-- User Info -->
             <div class="user-info">
-                <div >
-                        <img src="{{foto.url}}"width="60" height="55"  alt="User" style="border-radius: 120px;"/>
+                <div>
+                    <img src="{{foto.url}}" width="60" height="55" alt="User" style="border-radius: 120px;" />
                 </div>
                 <div class="info-container">
-                    <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{nombreCompleto}}</div>
+                    <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{nombreCompleto}}</div>
                     <div class="email">{{correo}}</div>
                     <div class="btn-group user-helper-dropdown">
-                        <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
+                        <i class="material-icons" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="true">keyboard_arrow_down</i>
                         <ul class="dropdown-menu pull-right">
                             <li role="separator" class="divider"></li>
-                            <form id="form_validation" action="/editarEmpleado/" enctype="multipart/form-data"  method="POST" >{% csrf_token %}
-                                
+                            <form id="form_validation" action="/editarEmpleado/" enctype="multipart/form-data"
+                                method="POST">{% csrf_token %}
+
                                 <li style="padding-left: 10px;">
-                                        <button type="submit" class="btn bg-teal waves-effect">
-                                            <i class="material-icons">face</i>
-                                            <span>Editar perfil</span>
-                                        </button>
-                                    
+                                    <button type="submit" class="btn bg-teal waves-effect">
+                                        <i class="material-icons">face</i>
+                                        <span>Editar perfil</span>
+                                    </button>
+
                                 </li>
                                 <li><input type="hidden" id="x" value="{{id_admin}}" name="idEmpleadoEditar"></li>
 
                             </form>
-                            
-                            
+
+
                             <li role="separator" class="divider"></li>
-                            <form id="form_validation" action="/salir/" enctype="multipart/form-data"  method="POST" >{% csrf_token %}
-                                
+                            <form id="form_validation" action="/salir/" enctype="multipart/form-data" method="POST">
+                                {% csrf_token %}
+
                                 <li style="padding-left: 10px;">
-                                        <button type="submit" class="btn bg-red waves-effect" >
-                                            <i class="material-icons">input</i>
-                                            <span>Salir</span>
-                                        </button>
-                                    
+                                    <button type="submit" class="btn bg-red waves-effect">
+                                        <i class="material-icons">input</i>
+                                        <span>Salir</span>
+                                    </button>
+
                                 </li>
                                 <li><input type="hidden" id="x" value="{{id_admin}}" name="idEmpleadoEditar"></li>
 
                             </form>
-                            
+
                         </ul>
                     </div>
                 </div>
@@ -190,10 +196,10 @@
                 <ul class="list">
                     <li class="header" style="background-color: #FFC107;">MENÚ DE NAVEGACIÓN</li>
                     {% if estaEnInicio %}
-                    <li class="active" >
-                    {% else %}
+                    <li class="active">
+                        {% else %}
                     <li>
-                    {% endif %}
+                        {% endif %}
                         {% if estaEnInicio %}
                         <a href="/inicio/">
                             <i class="material-icons" style="color: #00917C;!important">home</i>
@@ -206,18 +212,18 @@
                         </a>
                         {% endif %}
                     </li>
-                   
-                    
+
+
                     {% if estaEnVerAreas %}
                     <li class="active">
-                    {% else %}
-                    <li >
-                    {% if estaEnAgregarAreas %}
+                        {% else %}
+                    <li>
+                        {% if estaEnAgregarAreas %}
                     <li class="active">
-                    {% else %}
-                    <li >
-                    {% endif %}
-                    {% endif %}
+                        {% else %}
+                    <li>
+                        {% endif %}
+                        {% endif %}
                         <a href="javascript:void(0);" class="menu-toggle">
                             {% if estaEnVerAreas %}
                             <i class="material-icons" style="color: #00917C;!important">work</i>
@@ -227,49 +233,49 @@
                             <i class="material-icons" style="color: #00917C;!important">work</i>
                             <span style="color: #00917C;!important">Departamentos</span>
                             {% else %}
-                            <i class="material-icons" >work</i>
-                            <span >Departamentos</span>
+                            <i class="material-icons">work</i>
+                            <span>Departamentos</span>
                             {% endif %}
                             {% endif %}
                         </a>
                         <ul class="ml-menu">
                             {% if estaEnVerAreas %}
                             <li class="active">
-                            {% else %}
-                            <li>
-                            {% endif %}
-                                {% if estaEnVerAreas %}
-                                <a  href="/verAreas/" style="color: #E40017;!important">Ver departamentos</a>
                                 {% else %}
-                                <a  href="/verAreas/">Ver departamentos</a>
+                            <li>
                                 {% endif %}
-                                
+                                {% if estaEnVerAreas %}
+                                <a href="/verAreas/" style="color: #E40017;!important">Ver departamentos</a>
+                                {% else %}
+                                <a href="/verAreas/">Ver departamentos</a>
+                                {% endif %}
+
                             </li>
                             {% if estaEnAgregarAreas %}
                             <li class="active">
-                            {% else %}
+                                {% else %}
                             <li>
-                            {% endif %}
+                                {% endif %}
                                 {% if estaEnAgregarAreas %}
                                 <a href="/agregarAreas/" style="color: #E40017;!important">Agregar departamento</a>
                                 {% else %}
                                 <a href="/agregarAreas/">Agregar departamento</a>
                                 {% endif %}
                             </li>
-                            
-                            
+
+
                         </ul>
                     </li>
                     {% if estaEnVerEmpleados %}
                     <li class="active">
-                    {% else %}
-                    <li >
-                    {% if estaEnAgregarEmpleados %}
+                        {% else %}
+                    <li>
+                        {% if estaEnAgregarEmpleados %}
                     <li class="active">
-                    {% else %}
-                    <li >
-                    {% endif %}
-                    {% endif %}
+                        {% else %}
+                    <li>
+                        {% endif %}
+                        {% endif %}
                         <a href="javascript:void(0);" class="menu-toggle">
                             {% if estaEnVerEmpleados %}
                             <i class="material-icons" style="color: #00917C;!important">groups</i>
@@ -279,18 +285,18 @@
                             <i class="material-icons" style="color: #00917C;!important">groups</i>
                             <span style="color: #00917C;!important">Empleados</span>
                             {% else %}
-                            <i class="material-icons" >groups</i>
-                            <span >Empleados</span>
+                            <i class="material-icons">groups</i>
+                            <span>Empleados</span>
                             {% endif %}
                             {% endif %}
-                            
+
                         </a>
                         <ul class="ml-menu">
                             {% if estaEnVerEmpleados %}
                             <li class="active">
-                            {% else %}
+                                {% else %}
                             <li>
-                            {% endif %}
+                                {% endif %}
                                 {% if estaEnVerEmpleados %}
                                 <a href="/verEmpleados/" style="color: #E40017;!important">Ver empleados</a>
                                 {% else %}
@@ -299,73 +305,73 @@
                             </li>
                             {% if estaEnAgregarEmpleados %}
                             <li class="active">
-                            {% else %}
+                                {% else %}
                             <li>
-                            {% endif %}
+                                {% endif %}
                                 {% if estaEnAgregarEmpleados %}
                                 <a href="/agregarEmpleados/" style="color: #E40017;!important">Agregar empleados</a>
                                 {% else %}
                                 <a href="/agregarEmpleados/">Agregar empleados</a>
                                 {% endif %}
                             </li>
-                            
+
                         </ul>
                     </li>
                     {% if estaEnVerEquipos %}
                     <li class="active">
-                    {% else %}
-                    <li >
-                    {% if estaEnAgregarEquipos %}
+                        {% else %}
+                    <li>
+                        {% if estaEnAgregarEquipos %}
                     <li class="active">
-                    {% else %}
-                    <li >
-                    {% if estaEnRenovacionEquipos %}
+                        {% else %}
+                    <li>
+                        {% if estaEnRenovacionEquipos %}
                     <li class="active">
-                    {% else %}
-                    <li >   
-                    {% endif %}
-                    {% endif %}
-                    {% endif %}
+                        {% else %}
+                    <li>
+                        {% endif %}
+                        {% endif %}
+                        {% endif %}
                         <a href="javascript:void(0);" class="menu-toggle">
                             {% if estaEnVerEquipos %}
-                            <i class="material-icons"  style="color: #00917C;!important">computer</i>
-                            <span  style="color: #00917C;!important">Equipos de Cómputo</span>
+                            <i class="material-icons" style="color: #00917C;!important">computer</i>
+                            <span style="color: #00917C;!important">Equipos de Cómputo</span>
                             {% else %}
                             {% if estaEnAgregarEquipos %}
-                            <i class="material-icons"  style="color: #00917C;!important">computer</i>
-                            <span  style="color: #00917C;!important">Equipos de Cómputo</span>
+                            <i class="material-icons" style="color: #00917C;!important">computer</i>
+                            <span style="color: #00917C;!important">Equipos de Cómputo</span>
                             {% else %}
                             {% if estaEnRenovacionEquipos %}
-                            <i class="material-icons"  style="color: #00917C;!important">computer</i>
-                            <span  style="color: #00917C;!important">Equipos de Cómputo</span>
+                            <i class="material-icons" style="color: #00917C;!important">computer</i>
+                            <span style="color: #00917C;!important">Equipos de Cómputo</span>
                             {% else %}
-                            <i class="material-icons"  >computer</i>
-                            <span  >Equipos de Cómputo</span>
+                            <i class="material-icons">computer</i>
+                            <span>Equipos de Cómputo</span>
                             {% endif %}
                             {% endif %}
                             {% endif %}
-                           
+
 
                         </a>
                         <ul class="ml-menu">
                             {% if estaEnVerEquipos %}
                             <li class="active">
-                            {% else %}
+                                {% else %}
                             <li>
-                            {% endif %}
-                            {% if estaEnVerEquipos %}
+                                {% endif %}
+                                {% if estaEnVerEquipos %}
                                 <a href="/verEquipos/" style="color: #E40017;!important">Ver equipos</a>
                                 {% else %}
                                 <a href="/verEquipos/">Ver equipos</a>
-                                <li>
-                                    {% endif %}
+                            <li>
+                                {% endif %}
 
                             </li>
                             {% if estaEnAgregarEquipos %}
                             <li class="active">
-                            {% else %}
+                                {% else %}
                             <li>
-                            {% endif %}
+                                {% endif %}
                                 {% if estaEnAgregarEquipos %}
                                 <a href="/agregarEquipos/" style="color: #E40017;!important">Agregar equipos</a>
                                 {% else %}
@@ -376,39 +382,40 @@
                             {% if estaEnRenovacionEquipos %}
                             <li class="active">
                                 {% else %}
-                                <li>
+                            <li>
                                 {% endif %}
-                                    {% if estaEnRenovacionEquipos %}
-                                    <a href="/renovacionEquipos/" style="color: #E40017;!important">Renovación de equipos</a>
-                                    {% else %}
-                                    <a href="/renovacionEquipos/">Renovación de equipos</a>
-                                    {% endif %}
-    
-                                </li>
-                          
+                                {% if estaEnRenovacionEquipos %}
+                                <a href="/renovacionEquipos/" style="color: #E40017;!important">Renovación de
+                                    equipos</a>
+                                {% else %}
+                                <a href="/renovacionEquipos/">Renovación de equipos</a>
+                                {% endif %}
+
+                            </li>
+
                         </ul>
                     </li>
                     {% if estaEnVerImpresoras %}
                     <li class="active">
-                    {% else %}
-                    <li >
-                    {% if estaEnAgregarImpresoras %}
+                        {% else %}
+                    <li>
+                        {% if estaEnAgregarImpresoras %}
                     <li class="active">
-                    {% else %}
-                    <li >
-                    {% if estaEnRenovacionImpresoras %}
+                        {% else %}
+                    <li>
+                        {% if estaEnRenovacionImpresoras %}
                     <li class="active">
-                    {% else %}
-                    <li >
-                    {% if Insumos %}
+                        {% else %}
+                    <li>
+                        {% if Insumos %}
                     <li class="active">
-                    {% else %}
-                    <li >
-                    
-                    {% endif %}
-                    {% endif %}
-                    {% endif %}
-                    {% endif %}
+                        {% else %}
+                    <li>
+
+                        {% endif %}
+                        {% endif %}
+                        {% endif %}
+                        {% endif %}
                         <a href="javascript:void(0);" class="menu-toggle">
                             {% if estaEnVerImpresoras %}
                             <i class="material-icons" style="color: #00917C;!important">local_printshop</i>
@@ -426,7 +433,7 @@
                             <i class="material-icons" style="color: #00917C;!important">local_printshop</i>
                             <span style="color: #00917C;!important"> Impresoras</span>
                             {% else %}
-                            <i class="material-icons" >local_printshop</i>
+                            <i class="material-icons">local_printshop</i>
                             <span> Impresoras</span>
                             {% endif %}
                             {% endif %}
@@ -435,13 +442,13 @@
 
                         </a>
                         <ul class="ml-menu">
-                           
+
                             {% if estaEnVerImpresoras %}
                             <li class="active">
-                            {% else %}
+                                {% else %}
                             <li>
-                            {% endif %}
-                            {% if estaEnVerImpresoras %}
+                                {% endif %}
+                                {% if estaEnVerImpresoras %}
                                 <a href="/verImpresoras/" style="color: #E40017;!important">Ver impresoras</a>
                                 {% else %}
                                 <a href="/verImpresoras/">Ver impresoras</a>
@@ -449,9 +456,9 @@
                             </li>
                             {% if estaEnAgregarImpresoras %}
                             <li class="active">
-                            {% else %}
+                                {% else %}
                             <li>
-                            {% endif %}
+                                {% endif %}
                                 {% if estaEnAgregarImpresoras %}
                                 <a href="/agregarImpresoras/" style="color: #E40017;!important">Agregar impresoras</a>
                                 {% else %}
@@ -460,90 +467,91 @@
                             </li>
                             {% if estaEnRenovacionImpresoras %}
                             <li class="active">
-                            {% else %}
+                                {% else %}
                             <li>
-                            {% endif %}
+                                {% endif %}
                                 {% if estaEnRenovacionImpresoras %}
-                                <a href="/renovacionImpresoras/" style="color: #E40017;!important">Renovación impresoras</a>
+                                <a href="/renovacionImpresoras/" style="color: #E40017;!important">Renovación
+                                    impresoras</a>
                                 {% else %}
                                 <a href="/renovacionImpresoras/">Renovación impresoras</a>
                                 {% endif %}
                             </li>
                             {% if Insumos %}
                             <li class="active">
-                            {% else %}
+                                {% else %}
                             <li>
-                            {% if estaEnAgregarInsumos %}
+                                {% if estaEnAgregarInsumos %}
                             <li class="active">
-                            {% else %}
+                                {% else %}
                             <li>
-                            {% endif %}
-                            {% endif %}
-                                
+                                {% endif %}
+                                {% endif %}
+
                                 <a href="javascript:void(0);" class="menu-toggle">
                                     {% if estaEnAgregarInsumos %}
-                                    <i class="material-icons"  style="color: #00917C;!important">opacity</i>
+                                    <i class="material-icons" style="color: #00917C;!important">opacity</i>
                                     <span style="color: #E40017;!important">Insumos</span>
                                     {% else %}
                                     {% if estaEnVerInsumos %}
-                                    <i class="material-icons"  style="color: #00917C;!important">opacity</i>
+                                    <i class="material-icons" style="color: #00917C;!important">opacity</i>
                                     <span style="color: #E40017;!important">Insumos</span>
                                     {% else %}
-                                    <i class="material-icons" >opacity</i>
+                                    <i class="material-icons">opacity</i>
                                     <span>Insumos</span>
                                     {% endif %}
                                     {% endif %}
                                 </a>
                                 <ul class="ml-menu">
                                     {% if estaEnVerInsumos %}
-                                     <li class="active">
-                                      {% else %}
-                                     <li>
-                                    {% endif %}
+                                    <li class="active">
+                                        {% else %}
+                                    <li>
+                                        {% endif %}
                                         {% if estaEnVerInsumos %}
                                         <a href="/verInsumos/" style="color: #d49e0a;!important">Ver insumos</a>
                                         {% else %}
-                                        
-                                        <a href="/verInsumos/" >Ver insumos</a>
+
+                                        <a href="/verInsumos/">Ver insumos</a>
                                         {% endif %}
 
                                     </li>
                                     {% if estaEnAgregarInsumos %}
-                                     <li class="active">
-                                      {% else %}
-                                     <li>
-                                    {% endif %}
-                                    {% if estaEnAgregarInsumos %}
+                                    <li class="active">
+                                        {% else %}
+                                    <li>
+                                        {% endif %}
+                                        {% if estaEnAgregarInsumos %}
                                         <a href="/agregarInsumos/" style="color: #d49e0a;!important">Agregar insumos</a>
                                         {% else %}
                                         <a href="/agregarInsumos/">Agregar insumos</a>
                                         {% endif %}
                                     </li>
-                                    
+
                                 </ul>
                             </li>
                         </ul>
                     </li>
                     {% if estaEnVerProgramas %}
                     <li class="active">
-                    {% else %}
-                    <li >
-                    {% if estaEnAgregarProgramas %}
+                        {% else %}
+                    <li>
+                        {% if estaEnAgregarProgramas %}
                     <li class="active">
-                    {% else %}
-                    <li >
-                    {% if estaEnAsignarProgramas %}
+                        {% else %}
+                    <li>
+                        {% if estaEnAsignarProgramas %}
                     <li class="active">
-                    {% else %}
-                    <li >
-                    {% if estaEnverProgramasPorArea %}
+                        {% else %}
+                    <li>
+                        {% if estaEnverProgramasPorArea %}
                     <li class="active">
-                    {% else %}
-                     <li>
-                    {% endif %}
-                    {% endif %}
-                    {% endif %}
-                    {% endif %}
+                        {% else %}
+                    <li>
+                        {% endif %}
+                        {% endif %}
+                        {% endif %}
+                        {% endif %}
                         <a href="javascript:void(0);" class="menu-toggle">
                             {% if estaEnVerProgramas %}
                             <i class="material-icons" style="color: #00917C;!important">apps</i>
@@ -553,65 +561,66 @@
                             <i class="material-icons" style="color: #00917C;!important">apps</i>
                             <span style="color: #00917C;!important">Programas</span>
                             {% else %}
-                            
+
                             {% if estaEnverProgramasPorArea %}
                             <i class="material-icons" style="color: #00917C;!important">apps</i>
                             <span style="color: #00917C;!important">Programas</span>
                             {% else %}
-                            <i class="material-icons" >apps</i>
-                            <span >Programas</span>
+                            <i class="material-icons">apps</i>
+                            <span>Programas</span>
                             {% endif %}
                             {% endif %}
                             {% endif %}
-                            
+
                         </a>
                         <ul class="ml-menu">
                             {% if estaEnVerProgramas %}
                             <li class="active">
-                             {% else %}
-                             <li>
-                            {% endif %}
+                                {% else %}
+                            <li>
+                                {% endif %}
                                 {% if estaEnVerProgramas %}
                                 <a href="/verProgramas/" style="color: #E40017;!important">Ver programas</a>
                                 {% else %}
-                                <a href="/verProgramas/" >Ver programas</a>
+                                <a href="/verProgramas/">Ver programas</a>
                                 {% endif %}
                             </li>
                             {% if estaEnAgregarProgramas %}
                             <li class="active">
-                            {% else %}
+                                {% else %}
                             <li>
-                            {% endif %}
+                                {% endif %}
                                 {% if estaEnAgregarProgramas %}
                                 <a href="/agregarProgramas/" style="color: #E40017;!important">Agregar programas</a>
                                 {% else %}
-                                <a href="/agregarProgramas/" >Agregar programas</a>
+                                <a href="/agregarProgramas/">Agregar programas</a>
                                 {% endif %}
                             </li>
-                            
+
                             {% if estaEnverProgramasPorArea %}
                             <li class="active">
-                            {% else %}
+                                {% else %}
                             <li>
-                            {% endif %}
-                                    {% if estaEnverProgramasPorArea %}
-                                    <a href="/ProgramaPorArea/" style="color: #E40017;!important">Ver programas por departamento</a>
-                                    {% else %}
-                                    <a href="/ProgramaPorArea/" >Ver programas por departamento</a>
-                                    {% endif %}
-                                </li>
+                                {% endif %}
+                                {% if estaEnverProgramasPorArea %}
+                                <a href="/ProgramaPorArea/" style="color: #E40017;!important">Ver programas por
+                                    departamento</a>
+                                {% else %}
+                                <a href="/ProgramaPorArea/">Ver programas por departamento</a>
+                                {% endif %}
+                            </li>
                         </ul>
                     </li>
                     {% if estaEnCalendario %}
                     <li class="active">
-                    {% else %}
-                    <li >
-                    {% if estaEnFormulario %}
+                        {% else %}
+                    <li>
+                        {% if estaEnFormulario %}
                     <li class="active">
-                    {% else %}
-                    <li >
-                    {% endif %}
-                    {% endif %}
+                        {% else %}
+                    <li>
+                        {% endif %}
+                        {% endif %}
                         <a href="javascript:void(0);" class="menu-toggle">
                             {% if estaEnCalendario %}
                             <i class="material-icons" style="color: #00917C;!important">cleaning_services</i>
@@ -621,48 +630,50 @@
                             <i class="material-icons" style="color: #00917C;!important">cleaning_services</i>
                             <span style="color: #00917C;!important">Mantenimiento</span>
                             {% else %}
-                            <i class="material-icons" >cleaning_services</i>
-                            <span >Mantenimiento</span>
+                            <i class="material-icons">cleaning_services</i>
+                            <span>Mantenimiento</span>
                             {% endif %}
                             {% endif %}
                         </a>
                         <ul class="ml-menu">
                             {% if estaEnCalendario %}
                             <li class="active">
-                             {% else %}
-                             <li>
-                            {% endif %}
-                                {% if estaEnCalendario %}
-                                <a href="/calendarioMant/" style="color: #E40017;!important">Calendario de mantenimiento</a>
                                 {% else %}
-                                
+                            <li>
+                                {% endif %}
+                                {% if estaEnCalendario %}
+                                <a href="/calendarioMant/" style="color: #E40017;!important">Calendario de
+                                    mantenimiento</a>
+                                {% else %}
+
                                 <a href="/calendarioMant/">Calendario de mantenimiento</a>
                                 {% endif %}
                             </li>
                             {% if estaEnFormulario %}
                             <li class="active">
-                             {% else %}
-                             <li>
-                            {% endif %}
-                                {% if estaEnFormulario %} 
-                                <a href="/formularioMant/" style="color: #E40017;!important">Formulario de mantenimiento</a>
+                                {% else %}
+                            <li>
+                                {% endif %}
+                                {% if estaEnFormulario %}
+                                <a href="/formularioMant/" style="color: #E40017;!important">Formulario de
+                                    mantenimiento</a>
                                 {% else %}
                                 <a href="/formularioMant/">Formulario de mantenimiento</a>
                                 {% endif %}
                             </li>
-                          
+
                         </ul>
                     </li>
                     {% if estaEnVerCarta %}
                     <li class="active">
-                    {% else %}
-                    <li >
-                    {% if estaEnAgregarCarta %}
+                        {% else %}
+                    <li>
+                        {% if estaEnAgregarCarta %}
                     <li class="active">
-                    {% else %}
-                    <li >
-                    {% endif %}
-                    {% endif %}
+                        {% else %}
+                    <li>
+                        {% endif %}
+                        {% endif %}
                         <a href="javascript:void(0);" class="menu-toggle">
                             {% if estaEnVerCarta %}
                             <i class="material-icons" style="color: #00917C;!important">assignment</i>
@@ -672,17 +683,17 @@
                             <i class="material-icons" style="color: #00917C;!important">assignment</i>
                             <span style="color: #00917C;!important">Carta Compromiso</span>
                             {% else %}
-                            <i class="material-icons" >assignment</i>
-                            <span >Carta Compromiso</span>
+                            <i class="material-icons">assignment</i>
+                            <span>Carta Compromiso</span>
                             {% endif %}
                             {% endif %}
                         </a>
                         <ul class="ml-menu">
                             {% if estaEnVerCarta %}
                             <li class="active">
-                             {% else %}
-                             <li>
-                            {% endif %}
+                                {% else %}
+                            <li>
+                                {% endif %}
                                 {% if estaEnVerCarta %}
                                 <a href="/verCarta/" style="color: #E40017;!important">Ver cartas</a>
                                 {% else %}
@@ -691,80 +702,80 @@
                             </li>
                             {% if estaEnAgregarCarta %}
                             <li class="active">
-                             {% else %}
-                             <li>
-                            {% endif %}
+                                {% else %}
+                            <li>
+                                {% endif %}
                                 {% if estaEnAgregarCarta %}
                                 <a href="/agregarCarta/" style="color: #E40017;!important">Realizar carta</a>
                                 {% else %}
                                 <a href="/agregarCarta/">Realizar carta</a>
                                 {% endif %}
                             </li>
-                            
+
                         </ul>
                     </li>
                     {% if estaEnEquiposBitacora %}
                     <li class="active">
-                    {% else %}
-                    <li >
-                    {% if estaEnImpresorasBitacora %}
+                        {% else %}
+                    <li>
+                        {% if estaEnImpresorasBitacora %}
                     <li class="active">
-                    {% else %}
-                    <li >
-                    {% if estaEnEmpleadosBitacora %}
+                        {% else %}
+                    <li>
+                        {% if estaEnEmpleadosBitacora %}
                     <li class="active">
-                    {% else %}
-                    <li >
-                    
-                    {% if estaEnCartuchosBitacora %}
+                        {% else %}
+                    <li>
+
+                        {% if estaEnCartuchosBitacora %}
                     <li class="active">
-                    {% else %}
-                    <li >
-                    
-                        
-                
-                
-                    {% endif %}
-                    {% endif %}
-                    {% endif %}  
-                    {% endif %}
+                        {% else %}
+                    <li>
+
+
+
+
+                        {% endif %}
+                        {% endif %}
+                        {% endif %}
+                        {% endif %}
                         <a href="javascript:void(0);" class="menu-toggle">
                             {% if estaEnEquiposBitacora %}
                             <i class="material-icons" style="color: #00917C;!important">import_contacts</i>
                             <span style="color: #00917C;!important">Bitacora</span>
-                             {% else %}
-                             {% if estaEnImpresorasBitacora %}
-                             <i class="material-icons" style="color: #00917C;!important">import_contacts</i>
+                            {% else %}
+                            {% if estaEnImpresorasBitacora %}
+                            <i class="material-icons" style="color: #00917C;!important">import_contacts</i>
                             <span style="color: #00917C;!important">Bitacora</span>
-                             {% else %}
-                             {% if estaEnEmpleadosBitacora %}
-                             <i class="material-icons" style="color: #00917C;!important">import_contacts</i>
-                             <span style="color: #00917C;!important">Bitacora</span>
-                             {% else %}
-                            
-                             {% if estaEnCartuchosBitacora %}
-                             <i class="material-icons" style="color: #00917C;!important">import_contacts</i>
+                            {% else %}
+                            {% if estaEnEmpleadosBitacora %}
+                            <i class="material-icons" style="color: #00917C;!important">import_contacts</i>
                             <span style="color: #00917C;!important">Bitacora</span>
-                             {% else %}
+                            {% else %}
 
-                              
-                              <i class="material-icons" >import_contacts</i>
-                              <span >Bitacora</span>
-                             
-                        
-                              {% endif %}
-                              {% endif %}
-                              {% endif %}  
-                              {% endif %}
-                    
-                            
+                            {% if estaEnCartuchosBitacora %}
+                            <i class="material-icons" style="color: #00917C;!important">import_contacts</i>
+                            <span style="color: #00917C;!important">Bitacora</span>
+                            {% else %}
+
+
+                            <i class="material-icons">import_contacts</i>
+                            <span>Bitacora</span>
+
+
+                            {% endif %}
+                            {% endif %}
+                            {% endif %}
+                            {% endif %}
+
+
                         </a>
                         <ul class="ml-menu">
                             {% if estaEnEquiposBitacora %}
                             <li class="active">
-                             {% else %}
-                             <li>
-                            {% endif %}
+                                {% else %}
+                            <li>
+                                {% endif %}
                                 {% if estaEnEquiposBitacora %}
                                 <a href="/BitacorasEquipos/" style="color: #E40017;!important">Equipos</a>
                                 {% else %}
@@ -773,9 +784,9 @@
                             </li>
                             {% if estaEnImpresorasBitacora %}
                             <li class="active">
-                             {% else %}
-                             <li>
-                            {% endif %}
+                                {% else %}
+                            <li>
+                                {% endif %}
                                 {% if estaEnImpresorasBitacora %}
                                 <a href="/BitacorasImpresoras/" style="color: #E40017;!important">Impresoras</a>
                                 {% else %}
@@ -784,9 +795,9 @@
                             </li>
                             {% if estaEnEmpleadosBitacora %}
                             <li class="active">
-                             {% else %}
-                             <li>
-                            {% endif %}
+                                {% else %}
+                            <li>
+                                {% endif %}
                                 {% if estaEnEmpleadosBitacora %}
                                 <a href="/BitacorasEmpleados/" style="color: #E40017;!important">Empleados</a>
                                 {% else %}
@@ -795,28 +806,29 @@
 
 
                             </li>
-                            
+
                             {% if estaEnCartuchosBitacora %}
                             <li class="active">
-                             {% else %}
-                             <li>
-                            {% endif %}
+                                {% else %}
+                            <li>
+                                {% endif %}
                                 {% if estaEnCartuchosBitacora %}
                                 <a href="/BitacorasCartuchos/" style="color: #E40017;!important">Cartuchos</a>
                                 {% else %}
-                                <a href="/BitacorasCartuchos/" >Cartuchos</a>
-                                {% endif %} 
+                                <a href="/BitacorasCartuchos/">Cartuchos</a>
+                                {% endif %}
                             </li>
-                           
+
                         </ul>
                     </li>
-                    
+
             </div>
             <!-- #Menu -->
             <!-- Footer -->
             <div class="legal">
                 <div class="version">
-                    <a href="https://www.customco.com.mx/" style="color: #009688;"><b>Ir a página web Custom & Co.</b></a>
+                    <a href="https://www.customco.com.mx/" style="color: #009688;"><b>Ir a página web Custom &
+                            Co.</b></a>
                 </div>
                 <div class="version">
                     <a href="https://erp.evidencetech.app/access" style="color: #DCB60E;"><b>Ir a ERP Evidence.</b></a>
@@ -980,23 +992,23 @@
             {% block contenido %}
 
             {% endblock %}
-                <!-- #END# Browser Usage -->
-            </div>
+            <!-- #END# Browser Usage -->
+        </div>
         </div>
     </section>
-    
-    
 
-    
-    
+
+
+
+
 
     {% block estilosJs %}
 
     {% endblock %}
-    
-   
 
-   
+
+
+
 
     <!-- Light Gallery Plugin Js -->
     <script src={% static 'panel/plugins/light-gallery/js/lightgallery-all.js' %}></script>
@@ -1004,7 +1016,7 @@
     <!-- Custom Js -->
     <script src={% static 'panel/js/pages/medias/image-gallery.js' %}></script>
 
-    
+
 </body>
 
 </html>

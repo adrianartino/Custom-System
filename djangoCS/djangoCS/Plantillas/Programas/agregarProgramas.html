@@ -10,7 +10,8 @@ Agregar Programa | Custom System
 <link rel="icon" href={% static 'images/icons/ra.ico' %} type="image/x-icon">
 
 <!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
+    type="text/css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
 
 <!-- Bootstrap Core Css -->
@@ -42,12 +43,13 @@ Agregar Programa | Custom System
                     AGREGAR PROGRAMA
                     <small style="color: #790C05;">Formulario para agregar un programa al sistema.</small>
                 </h2>
-                
+
             </div>
             <div class="body">
-                <form id="form_validation"  action="/agregarProgramas/" enctype="multipart/form-data" method="POST">{% csrf_token %}
+                <form id="form_validation" action="/agregarProgramas/" enctype="multipart/form-data" method="POST">
+                    {% csrf_token %}
                     <div class="row clearfix">
-                        
+
                         <div class="col-md-3">
                             <label for="email_address"><span style="color: #078F68;">* </span>Nombre y versión:</label>
                             <div class="input-group">
@@ -55,7 +57,8 @@ Agregar Programa | Custom System
                                     <i class="material-icons">app_registration</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar nombre y versión" maxlength="50" name="nombre" required>
+                                    <input type="text" class="form-control date" placeholder="Ingresar nombre y versión"
+                                        maxlength="50" name="nombre" required>
                                 </div>
                             </div>
                         </div>
@@ -66,7 +69,8 @@ Agregar Programa | Custom System
                                     <i class="material-icons">format_list_bulleted</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar tipo de programa" maxlength="50" name="tipo" required>
+                                    <input type="text" class="form-control date" placeholder="Ingresar tipo de programa"
+                                        maxlength="50" name="tipo" required>
                                 </div>
                             </div>
                         </div>
@@ -76,85 +80,89 @@ Agregar Programa | Custom System
                                 <span class="input-group-addon">
                                     <i class="material-icons">copyright</i>
                                 </span>
-                                    <select class="form-control show-tick" name="licencia">
-                                        <option>Privada</option>
-                                        <option>Libre</option>
-                                      
-                                    </select>
+                                <select class="form-control show-tick" name="licencia">
+                                    <option>Privada</option>
+                                    <option>Libre</option>
+
+                                </select>
                             </div>
                         </div>
-                        
-                        
+
+
                         <div class="col-md-3">
                             <label for="email_address"><span style="color: #078F68;">* </span>Idioma:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">translate</i>
                                 </span>
-                                    <select class="form-control show-tick" name="idioma">
-                                        <option>Multilenguaje</option>
-                                        <option>Español</option>
-                                        <option>Inglés</option>
-                                    </select>
+                                <select class="form-control show-tick" name="idioma">
+                                    <option>Multilenguaje</option>
+                                    <option>Español</option>
+                                    <option>Inglés</option>
+                                </select>
                             </div>
-                        </div>  
-                        
-                        
-                        
+                        </div>
+
+
+
                     </div>
 
-                    
+
 
                     <div class="row clearfix">
                         <div class="col-md-3">
-                            <label for="email_address"><span style="color: #078F68;">* </span>Sistema Opeativo Arquitectura:</label>
+                            <label for="email_address"><span style="color: #078F68;">* </span>Sistema Opeativo
+                                Arquitectura:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">desktop_windows</i>
                                 </span>
-                                    <select class="form-control show-tick" name="sistemaOp">
-                                        <option>Windows 7 64 bit</option>
-                                        <option>Windows 7 32 bit</option>
-                                        <option>Windows 8 64 bit</option>
-                                        <option>Windows 8 32 bit</option>
-                                        <option>Windows 10 64 bit</option>
-                                        <option>Windows 10 32 bit</option>
-                                        
-                                    </select>
+                                <select class="form-control show-tick" name="sistemaOp">
+                                    <option>Windows 7 64 bit</option>
+                                    <option>Windows 7 32 bit</option>
+                                    <option>Windows 8 64 bit</option>
+                                    <option>Windows 8 32 bit</option>
+                                    <option>Windows 10 64 bit</option>
+                                    <option>Windows 10 32 bit</option>
+
+                                </select>
                             </div>
-                        </div>  
+                        </div>
                         <div class="col-md-3">
                             <label for="email_address"><span style="color: #078F68;">* </span>Memoria RAM:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">trending_up</i>
                                 </span>
-                                    <select class="form-control show-tick" name="ram">
-                                        <option>1 GB</option>
-                                        <option>2 GB</option>
-                                        <option>4 GB</option>
-                                        <option>8 GB</option>
-                                        <option>12 GB</option>
-                                        <option>16 GB</option>
-                                        <option>32 GB</option>
-                                    </select>
+                                <select class="form-control show-tick" name="ram">
+                                    <option>1 GB</option>
+                                    <option>2 GB</option>
+                                    <option>4 GB</option>
+                                    <option>8 GB</option>
+                                    <option>12 GB</option>
+                                    <option>16 GB</option>
+                                    <option>32 GB</option>
+                                </select>
                             </div>
-                        </div> 
+                        </div>
                         <div class="col-md-3">
-                            <label for="email_address"><span style="color: #078F68;">* </span>Velocidad de Procesador:</label>
+                            <label for="email_address"><span style="color: #078F68;">* </span>Velocidad de
+                                Procesador:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">memory</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar velocidad de procesador" maxlength="30" name="procesador" required>
+                                    <input type="text" class="form-control date"
+                                        placeholder="Ingresar velocidad de procesador" maxlength="30" name="procesador"
+                                        required>
                                 </div>
                             </div>
-                        </div> 
-                         
-                       
-                        
-                       
+                        </div>
+
+
+
+
                     </div>
                     <div class="row clearfix">
                         <div class="col-md-3">
@@ -164,32 +172,33 @@ Agregar Programa | Custom System
                                     <i class="material-icons">add_photo_alternate</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="file"  id="txtimagen" name="logo">
+                                    <input type="file" id="txtimagen" name="logo">
                                 </div>
                             </div>
-                        </div> 
+                        </div>
                     </div>
-                    <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i class="material-icons">save</i> Guardar Programa</button>
+                    <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i class="material-icons">save</i>
+                        Guardar Programa</button>
 
-                
-                     
+
+
                 </form>
             </div>
         </div>
     </div>
 </div>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    {% if registroExito %}
-    <script type="text/javascript">
-        swal({
-            icon: 'success',
-            title: 'Wujuu..',
-            text: ' {{mensajeExito}}',
-            footer: '<span style="color: green!important"> Sigue navegando por Custom System! </span>',
-            width: '40%'
-        });
-    </script>
-    {% endif %}
+{% if registroExito %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Wujuu..',
+        text: ' {{mensajeExito}}',
+        footer: '<span style="color: green!important"> Sigue navegando por Custom System! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
 {% endblock %}
 
 {% block estilosJs %}

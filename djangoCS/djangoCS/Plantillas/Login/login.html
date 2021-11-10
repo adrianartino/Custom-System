@@ -40,8 +40,9 @@ background-size: cover; ">
     <div class="login-box">
         <div class="logo">
             <center>
-                
-                <h1 style="font-family: 'ground_controlregular', cursive; font-size: 30px; color: whitesmoke;"><img src={% static 'images/rayocustom.png' %} width="8%" alt="User" /> Custom System</h1>
+
+                <h1 style="font-family: 'ground_controlregular', cursive; font-size: 30px; color: whitesmoke;"><img
+                        src={% static 'images/rayocustom.png' %} width="8%" alt="User" /> Custom System</h1>
 
             </center>
         </div>
@@ -56,11 +57,11 @@ background-size: cover; ">
                             </span>
                             <div class="form-line">
                                 {% if usuarioEncontrado %}
-                                <input type="text" class="form-control" name="username" id="usuario" maxlength="35" placeholder="Correo electrónico" required
-                                    autofocus value="{{correo}}">
+                                <input type="text" class="form-control" name="username" id="usuario" maxlength="35"
+                                    placeholder="Correo electrónico" required autofocus value="{{correo}}">
                                 {% else %}
-                                <input type="text" class="form-control" name="username" id="usuario" maxlength="35" placeholder="Correo electrónico" maxlength="5" required
-                                    autofocus>
+                                <input type="text" class="form-control" name="username" id="usuario" maxlength="35"
+                                    placeholder="Correo electrónico" maxlength="5" required autofocus>
                                 {% endif %}
                             </div>
                         </div>
@@ -69,7 +70,8 @@ background-size: cover; ">
                                 <i class="material-icons">lock</i>
                             </span>
                             <div class="form-line">
-                                <input type="password" class="form-control" name="pass" id="pwd" placeholder="Contraseña" maxlength="35" required>
+                                <input type="password" class="form-control" name="pass" id="pwd"
+                                    placeholder="Contraseña" maxlength="35" required>
                             </div>
                         </div>
                         <div class="row">
@@ -98,9 +100,10 @@ background-size: cover; ">
     <script>
         document.getElementById("usuario").addEventListener('keyup', borrarEspacios)
         document.getElementById("pwd").addEventListener('keyup', borrarEspacios)
-        function borrarEspacios(e){
-            let contenido=e.target.value;
-            e.target.value=contenido.replace(" ", "");
+
+        function borrarEspacios(e) {
+            let contenido = e.target.value;
+            e.target.value = contenido.replace(" ", "");
         }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>

@@ -10,7 +10,8 @@ Departamentos | Custom System
 <link rel="icon" href={% static 'images/icons/ra.ico' %} type="image/x-icon">
 
 <!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
+    type="text/css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
 
 
@@ -44,12 +45,13 @@ Departamentos | Custom System
                     <small style="color: #790C05;">Vista de listado de departamentos de la empresa.</small>
                 </h2>
                 <br>
-                
-                <div class="row clear-fix" >
+
+                <div class="row clear-fix">
                     <div class="col-xs-12 col-sm-1">
                         <form action="/reporteDepartamentos/" method="POST">{% csrf_token %}
                             <button type="submit" class="btn bg-red waves-effect animate__animated animate__flipInX"
-                            data-toggle="tooltip" data-placement="bottom" title="Descargar reporte Departamentos en PDF.">
+                                data-toggle="tooltip" data-placement="bottom"
+                                title="Descargar reporte Departamentos en PDF.">
                                 <i class="material-icons">picture_as_pdf</i>
                                 <span>PDF</span>
                             </button>
@@ -58,19 +60,21 @@ Departamentos | Custom System
                     <div class="col-xs-12 col-sm-1">
                         <form action="/xlDepartamentos/" method="POST">{% csrf_token %}
                             <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
-                            data-toggle="tooltip" data-placement="bottom" title="Descargar reporte Departamentos en Excel.">
+                                data-toggle="tooltip" data-placement="bottom"
+                                title="Descargar reporte Departamentos en Excel.">
                                 <i class="material-icons">grid_on</i>
                                 <span>Excel</span>
                             </button>
                         </form>
                     </div>
                     <div class="col-xs-12 col-sm-4">
-                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarAreas/">Agregar Departamento</a>
+                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarAreas/">Agregar
+                            Departamento</a>
                     </div>
-                    
+
                 </div>
-                
-                
+
+
             </div>
             <div class="body">
                 <div class="table-responsive">
@@ -84,7 +88,7 @@ Departamentos | Custom System
                             </tr>
                         </thead>
                         <tfoot>
-                            <tr >
+                            <tr>
                                 <th>ID Departamento</th>
                                 <th>Nombre</th>
                                 <th>Color</th>
@@ -100,13 +104,13 @@ Departamentos | Custom System
                                 <td>{{empleado}} Empleados</td>
                             </tr>
                             {% endfor %}
-                            
-                            
-                            
+
+
+
                         </tbody>
                     </table>
                 </div>
-                
+
             </div>
         </div>
     </div>

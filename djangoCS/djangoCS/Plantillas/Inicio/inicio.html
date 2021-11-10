@@ -52,7 +52,7 @@ Inicio | Custom System
     </ol>
 
     <!-- Wrapper for slides -->
-    <div class="carousel-inner" >
+    <div class="carousel-inner">
         <div class="item active">
             <img src="{% static 'images/carru1a.jpg' %}" alt="" width="100%">
         </div>
@@ -77,26 +77,30 @@ Inicio | Custom System
 {% for cantidad in cantidades %}
 <div class="row clearfix">
     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-        <div class="info-box bg-deep-purple hover-zoom-effect hover-expand-effect animate__animated animate__backInUp" >
-            <div class="icon" data-toggle="tooltip" data-placement="bottom" title="Se han realizado {{cantidad.0}} limpiezas a equipos de cómputo.">
+        <div class="info-box bg-deep-purple hover-zoom-effect hover-expand-effect animate__animated animate__backInUp">
+            <div class="icon" data-toggle="tooltip" data-placement="bottom"
+                title="Se han realizado {{cantidad.0}} limpiezas a equipos de cómputo.">
                 <a href="/calendarioMant/"><i class="material-icons">cleaning_services</i></a>
 
             </div>
             <div class="content">
 
                 <div class="text">Limpiezas</div>
-                <div class="number count-to" data-from="0" data-to="{{cantidad.0}}" data-speed="15" data-fresh-interval="20"></div>
+                <div class="number count-to" data-from="0" data-to="{{cantidad.0}}" data-speed="15"
+                    data-fresh-interval="20"></div>
             </div>
         </div>
     </div>
     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
         <div class="info-box bg-cyan hover-zoom-effect hover-expand-effect animate__animated animate__backInUp">
-            <div class="icon" data-toggle="tooltip" data-placement="bottom" title="Existen {{cantidad.1}} equipos de cómputo en la empresa.">
+            <div class="icon" data-toggle="tooltip" data-placement="bottom"
+                title="Existen {{cantidad.1}} equipos de cómputo en la empresa.">
                 <a href="/verEquipos/"><i class="material-icons">laptop</i></a>
             </div>
             <div class="content">
                 <div class="text">Equipos</div>
-                <div class="number count-to" data-from="0" data-to="{{cantidad.1}}" data-speed="1000" data-fresh-interval="20">
+                <div class="number count-to" data-from="0" data-to="{{cantidad.1}}" data-speed="1000"
+                    data-fresh-interval="20">
                 </div>
             </div>
         </div>
@@ -104,19 +108,22 @@ Inicio | Custom System
     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
         <div class="info-box bg-red hover-zoom-effect hover-expand-effect animate__animated animate__backInUp">
             <div class="icon">
-                <a href="/verImpresoras/" data-toggle="tooltip" data-placement="bottom" title="Existen {{cantidad.2}} impresoras en la empresa.">
+                <a href="/verImpresoras/" data-toggle="tooltip" data-placement="bottom"
+                    title="Existen {{cantidad.2}} impresoras en la empresa.">
                     <i class="material-icons">print</i></a>
             </div>
             <div class="content">
                 <div class="text">Impresoras</div>
-                <div class="number count-to" data-from="0" data-to="{{cantidad.2}}" data-speed="1000" data-fresh-interval="20">
+                <div class="number count-to" data-from="0" data-to="{{cantidad.2}}" data-speed="1000"
+                    data-fresh-interval="20">
                 </div>
             </div>
         </div>
     </div>
     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
         <div class="info-box bg-blue hover-expand-effect hover-zoom-effect animate__animated animate__backInUp">
-            <div class="icon" data-toggle="tooltip" data-placement="bottom" title="Existen {{cantidad.3}} empleados en la empresa.">
+            <div class="icon" data-toggle="tooltip" data-placement="bottom"
+                title="Existen {{cantidad.3}} empleados en la empresa.">
                 <a href="/verEmpleados/">
                     <i class="material-icons">groups</i>
                 </a>
@@ -124,7 +131,8 @@ Inicio | Custom System
             </div>
             <div class="content">
                 <div class="text">Empleados</div>
-                <div class="number count-to" data-from="0" data-to="{{cantidad.3}}" data-speed="1000" data-fresh-interval="20">
+                <div class="number count-to" data-from="0" data-to="{{cantidad.3}}" data-speed="1000"
+                    data-fresh-interval="20">
                 </div>
             </div>
         </div>
@@ -138,9 +146,10 @@ Inicio | Custom System
         <div class="card">
             <div class="header">
                 <h2 style="font-family: 'Oswald', sans-serif;">Próximas Limpiezas.
-                    <small style="color: crimson;">Del {{dia}} al {{resta_dias}} de {{mes_texto}} del {{año}}.</small></h2>
-               
-                
+                    <small style="color: crimson;">Del {{dia}} al {{resta_dias}} de {{mes_texto}} del {{año}}.</small>
+                </h2>
+
+
             </div>
             <div class="body">
                 <div class="table-responsive">
@@ -156,7 +165,8 @@ Inicio | Custom System
                             {% for limpieza in datosLimpiezas %}
                             <tr>
                                 <td>{{limpieza.0}} {{limpieza.1}}</td>
-                                <td><span class="label bg-green">{{limpieza.2}} {{limpieza.3}} {{limpieza.4}}</span></td>
+                                <td><span class="label bg-green">{{limpieza.2}} {{limpieza.3}} {{limpieza.4}}</span>
+                                </td>
                                 <td><span class="label bg-orange">{{limpieza.5}}</span></td>
 
                             </tr>
@@ -202,7 +212,7 @@ Inicio | Custom System
                                 {% elif cartucho.color == "Cyan" %}
                                 <td><span class="label bg-cyan">{{cartucho.color}}</span></td>
                                 {% elif cartucho.color == "Magenta" %}
-                                <td>  <span class="label bg-pink">{{cartucho.color}}</span></td>
+                                <td> <span class="label bg-pink">{{cartucho.color}}</span></td>
                                 {% endif %}
 
                                 <td><span class="label bg-red">{{cartucho.cantidad}}</span></td>
@@ -236,13 +246,13 @@ Inicio | Custom System
                             </tr>
                         </thead>
                         <tbody>
-                            
+
                             <tr>
                                 {% for equipo in equipos_año %}
-                                    <th>{{equipo.0}}</th>
-                                    <th>{{equipo.1}}</th>
-                                    <th>{{equipo.2}}</th>
-                                    <th>{{equipo.3}}</th>
+                                <th>{{equipo.0}}</th>
+                                <th>{{equipo.1}}</th>
+                                <th>{{equipo.2}}</th>
+                                <th>{{equipo.3}}</th>
                                 {% endfor %}
 
                             </tr>
@@ -272,13 +282,13 @@ Inicio | Custom System
                             </tr>
                         </thead>
                         <tbody>
-                            
+
                             <tr>
                                 {% for imp in impresoras_año %}
-                                    <th>{{imp.0}}</th>
-                                    <th><label class="{{imp.2}}">{{imp.1}}</label></th>
-                                    <th>{{imp.3}}</th>
-                                    <th>{{imp.4}}</th>
+                                <th>{{imp.0}}</th>
+                                <th><label class="{{imp.2}}">{{imp.1}}</label></th>
+                                <th>{{imp.3}}</th>
+                                <th>{{imp.4}}</th>
                                 {% endfor %}
 
                             </tr>
@@ -293,13 +303,11 @@ Inicio | Custom System
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 {% if recienIniciado %}
 <script type="text/javascript">
-    swal(
-        {
-            title: "Bienvenido!",
-            text: "Hola {{nombreCompleto}}! Navega por Custom System",
-            icon: "success"
-        }
-    );
+    swal({
+        title: "Bienvenido!",
+        text: "Hola {{nombreCompleto}}! Navega por Custom System",
+        icon: "success"
+    });
 </script>
 {% endif %}
 

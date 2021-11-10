@@ -10,7 +10,8 @@ Agregar Empleados | Custom System
 <link rel="icon" href={% static 'images/icons/ra.ico' %} type="image/x-icon">
 
 <!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
+    type="text/css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
 
 <!-- Bootstrap Core Css -->
@@ -42,7 +43,7 @@ Agregar Empleados | Custom System
                     AGREGAR EMPLEADOS
                     <small style="color: #790C05;">Formulario para agregar un nuevo empleado al sistema.</small>
                 </h2>
-                
+
             </div>
             <div class="body">
                 <form id="form_validation" enctype="multipart/form-data" method="POST">{% csrf_token %}
@@ -54,8 +55,9 @@ Agregar Empleados | Custom System
                                     <i class="material-icons">person</i>
                                 </span>
                                 <div class="form-line">
-                                    <input onkeypress='return soloLetras(event)' type="text" class="form-control date" placeholder="Ingresar nombre" 
-                                    maxlength="50" title="No se permiten caracteres especiales." name="nombreEm" required>
+                                    <input onkeypress='return soloLetras(event)' type="text" class="form-control date"
+                                        placeholder="Ingresar nombre" maxlength="50"
+                                        title="No se permiten caracteres especiales." name="nombreEm" required>
                                 </div>
                             </div>
                         </div>
@@ -63,20 +65,21 @@ Agregar Empleados | Custom System
                             <label for="password"><span style="color: #078F68;">* </span>Apellidos:</label>
                             <div class="form-group">
                                 <div class="form-line">
-                                    <input onkeypress='return soloLetras(event)'type="text" class="form-control date" placeholder="Ingresar apellidos"
-                                    maxlength="60" title="No se permiten caracteres especiales." name="apellidoEm" required>
+                                    <input onkeypress='return soloLetras(event)' type="text" class="form-control date"
+                                        placeholder="Ingresar apellidos" maxlength="60"
+                                        title="No se permiten caracteres especiales." name="apellidoEm" required>
                                 </div>
                             </div>
-                        </div>    
+                        </div>
                         <div class="col-md-4">
                             <label for="email_address"><span style="color: #078F68;">* </span>Departamento:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">work</i>
                                 </span>
-                                <select class="form-control show-tick" name="areaEm" >
+                                <select class="form-control show-tick" name="areaEm">
                                     {% for area in infoAreas %}
-                                        <option value="{{area.id_area}}" class="{{area.color}}">{{area.nombre}}</option>
+                                    <option value="{{area.id_area}}" class="{{area.color}}">{{area.nombre}}</option>
                                     {% endfor %}
                                 </select>
                             </div>
@@ -84,16 +87,17 @@ Agregar Empleados | Custom System
                     </div>
 
                     <div class="row clearfix">
-                        
+
                         <div class="col-md-4">
                             <label for="password"><span style="color: #078F68;">* </span>Puesto:</label>
                             <div class="form-group">
                                 <div class="form-line">
-                                    <input onkeypress='return soloLetras(event)'type="text" class="form-control date" placeholder="Ingresar puesto"
-                                    maxlength="40" title="No se permiten caracteres especiales." name="puestoEm" required>
+                                    <input onkeypress='return soloLetras(event)' type="text" class="form-control date"
+                                        placeholder="Ingresar puesto" maxlength="40"
+                                        title="No se permiten caracteres especiales." name="puestoEm" required>
                                 </div>
                             </div>
-                        </div> 
+                        </div>
                         <div class="col-md-4">
                             <label for="email_address"><span style="color: #078F68;">* </span>Correo:</label>
                             <div class="input-group">
@@ -101,31 +105,36 @@ Agregar Empleados | Custom System
                                     <i class="material-icons">email</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="email" id="correo" class="form-control date" placeholder="Ingresar Correo"
-                                    maxlength="50" title="Ingrese un correo electrónico válido." name="correoEm" required >
+                                    <input type="email" id="correo" class="form-control date"
+                                        placeholder="Ingresar Correo" maxlength="50"
+                                        title="Ingrese un correo electrónico válido." name="correoEm" required>
                                 </div>
                             </div>
-                        </div>   
+                        </div>
                         <div class="col-md-4">
                             <label for="password"><span style="color: #078F68;">* </span>Contraseña:</label>
                             <div class="input-group">
-                                
+
                                 <div class="form-line">
-                                    <input type="password" class="form-control date" id="password" placeholder="Ingresar Contraseña"
-                                    maxlength="50" title="Ingrese la contraseña." name="contraEm" required>
+                                    <input type="password" class="form-control date" id="password"
+                                        placeholder="Ingresar Contraseña" maxlength="50" title="Ingrese la contraseña."
+                                        name="contraEm" required>
                                 </div>
-                                <span style="cursor: pointer;" class="input-group-addon" onclick="mostrar_contraseña();">
+                                <span style="cursor: pointer;" class="input-group-addon"
+                                    onclick="mostrar_contraseña();">
                                     <i class="material-icons" id="ojo">visibility_off</i>
                                 </span>
-                                <span style="cursor: pointer;" class="input-group-addon" onclick="mostrar_contraseña();">
+                                <span style="cursor: pointer;" class="input-group-addon"
+                                    onclick="mostrar_contraseña();">
                                     <i class="material-icons" id="ojoAbierto">visibility</i>
                                 </span>
                             </div>
-                        </div>    
+                        </div>
                     </div>
                     <div class="row clearfix">
                         <div class="col-md-5">
-                            <label for="email_address"><span style="color: #078F68;">* </span>Imagen de empleado:</label>
+                            <label for="email_address"><span style="color: #078F68;">* </span>Imagen de
+                                empleado:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">add_photo_alternate</i>
@@ -137,9 +146,11 @@ Agregar Empleados | Custom System
                         </div>
                     </div>
 
-                    
-     
-                    <button type="submit" class="btn btn-warning m-t-15 waves-effect animate__animated animate__flipInX"><i class="material-icons">person_add</i> Guardar Empleado</button>
+
+
+                    <button type="submit"
+                        class="btn btn-warning m-t-15 waves-effect animate__animated animate__flipInX"><i
+                            class="material-icons">person_add</i> Guardar Empleado</button>
                 </form>
             </div>
         </div>
@@ -147,53 +158,55 @@ Agregar Empleados | Custom System
 </div>
 <script>
     var ojito = document.getElementById("ojoAbierto");
-    ojito.style.display="none"
-    function mostrar_contraseña(){
-        var x=document.getElementById("password");
-        var y=document.getElementById("ojo");
-        var z=document.getElementById("ojoAbierto");
-        if (x.type==="password"){
-            x.type="text";
-            y.style.display="none";
-            z.style.display="";
-            z.style.color ="red";
-        }else {
-            x.type="password";
-            z.style.display="none"
-            z.style.color ="gray"
-            y.style.display="";
+    ojito.style.display = "none"
+
+    function mostrar_contraseña() {
+        var x = document.getElementById("password");
+        var y = document.getElementById("ojo");
+        var z = document.getElementById("ojoAbierto");
+        if (x.type === "password") {
+            x.type = "text";
+            y.style.display = "none";
+            z.style.display = "";
+            z.style.color = "red";
+        } else {
+            x.type = "password";
+            z.style.display = "none"
+            z.style.color = "gray"
+            y.style.display = "";
         }
     }
     document.getElementById("correo").addEventListener('keyup', borrarEspacios)
     document.getElementById("pwd").addEventListener('keyup', borrarEspacios)
-    function borrarEspacios(e){
-        let contenido=e.target.value;
-        e.target.value=contenido.replace(" ", "");
+
+    function borrarEspacios(e) {
+        let contenido = e.target.value;
+        e.target.value = contenido.replace(" ", "");
     }
 </script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    {% if yaExiste %}
-    <script type="text/javascript">
-        swal({
-            icon: 'error',
-            title: 'Algo salio mal..',
-            text: ' {{textoError}}',
-            footer: '<span style="color: red!important"> Corrige los datos a ingresar! </span>',
-            width: '40%'
-        });
-    </script>
-    {% endif %}
-    {% if noExiste %}
-    <script type="text/javascript">
-        swal({
-            icon: 'success',
-            title: 'Wujuu..',
-            text: ' {{textoExiste}}',
-            footer: '<span style="color: green!important"> Sigue navegando por Custom System! </span>',
-            width: '40%'
-        });
-    </script>
-    {% endif %}
+{% if yaExiste %}
+<script type="text/javascript">
+    swal({
+        icon: 'error',
+        title: 'Algo salio mal..',
+        text: ' {{textoError}}',
+        footer: '<span style="color: red!important"> Corrige los datos a ingresar! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
+{% if noExiste %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Wujuu..',
+        text: ' {{textoExiste}}',
+        footer: '<span style="color: green!important"> Sigue navegando por Custom System! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
 {% endblock %}
 
 {% block estilosJs %}

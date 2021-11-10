@@ -10,7 +10,8 @@ Equipos | Custom System
 <link rel="icon" href={% static 'images/icons/ra.ico' %} type="image/x-icon">
 
 <!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
+    type="text/css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
 
 <!-- Bootstrap Core Css -->
@@ -45,17 +46,17 @@ Equipos | Custom System
                 </h2>
                 <br>
                 <label for="email_address">Filtro de estatus de equipos:</label>
-                    <div class="input-group">
-                        <span class="input-group-addon">
-                            <i class="material-icons">build</i>
-                        </span>
-                            <select class="form-control show-tick" id="filtroEquipo" onchange="cambioFiltro();">
-                                <option>En uso</option>
-                                <option>De baja</option>
-                                
-                            </select>
-                    </div>
-                    
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="material-icons">build</i>
+                    </span>
+                    <select class="form-control show-tick" id="filtroEquipo" onchange="cambioFiltro();">
+                        <option>En uso</option>
+                        <option>De baja</option>
+
+                    </select>
+                </div>
+
             </div>
             <div class="body" id="divActivos">
                 <div class="row clear-fix">
@@ -63,7 +64,8 @@ Equipos | Custom System
                         <form action="/reporteEquiposActivos/" method="POST">{% csrf_token %}
                             <input type="hidden" name="activo" value="A">
                             <button type="submit" class="btn bg-red waves-effect animate__animated animate__flipInX"
-                            data-toggle="tooltip" data-placement="bottom" title="Descargar reporte Equipos Activos en PDF.">
+                                data-toggle="tooltip" data-placement="bottom"
+                                title="Descargar reporte Equipos Activos en PDF.">
                                 <i class="material-icons">picture_as_pdf</i>
                                 <span>PDF</span>
                             </button>
@@ -73,22 +75,24 @@ Equipos | Custom System
                         <form action="/xlEquipos/" method="POST">{% csrf_token %}
                             <input type="hidden" name="activo" value="A">
                             <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
-                            data-toggle="tooltip" data-placement="bottom" title="Descargar reporte Equipos Activos en Excel.">
+                                data-toggle="tooltip" data-placement="bottom"
+                                title="Descargar reporte Equipos Activos en Excel.">
                                 <i class="material-icons">grid_on</i>
                                 <span>Excel</span>
                             </button>
                         </form>
                     </div>
                     <div class="col-xs-12 col-sm-4">
-                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarEquipos/">Agregar Equipo</a>
+                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarEquipos/">Agregar
+                            Equipo</a>
                     </div>
-                    
+
                 </div>
-                
+
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                         <thead>
-                            <tr  style="background-color: #fad60e; color:black">
+                            <tr style="background-color: #fad60e; color:black">
                                 <th>ID Equipo</th>
                                 <th>Tipo</th>
                                 <th>Marca</th>
@@ -104,9 +108,9 @@ Equipos | Custom System
                                 <th>Estado</th>
                                 <th>Editar</th>
                                 <th>Baja</th>
-                                
-                    
-                                
+
+
+
                             </tr>
                         </thead>
                         <tfoot>
@@ -128,7 +132,7 @@ Equipos | Custom System
                                 <th>Editar</th>
                                 <th>Baja</th>
 
-                                
+
                             </tr>
                         </tfoot>
                         <tbody class="animate__animated animate__backInDown">
@@ -136,11 +140,13 @@ Equipos | Custom System
                             <tr>
                                 <th>
                                     <form action="/infoEquipo/" method="POST">{% csrf_token %}
-                                        
-                                        
+
+
                                         <center>
-                                            <input type="text" style="border: none; background: none;"  name="idEquipo" value="{{equipo.id_equipo}}" readonly size="1">
-                                            <button type="submit" class="btn  waves-effect" style="background-color: #0A77F9;">
+                                            <input type="text" style="border: none; background: none;" name="idEquipo"
+                                                value="{{equipo.id_equipo}}" readonly size="1">
+                                            <button type="submit" class="btn  waves-effect"
+                                                style="background-color: #0A77F9;">
                                                 <i class="material-icons" style="color: white;">visibility</i>
                                             </button>
                                         </center>
@@ -163,48 +169,49 @@ Equipos | Custom System
                                 <th>{{empleado.0}} {{empleado.1}}</th>
                                 <th><label class="{{empleado.3}}">{{empleado.2}}</label></th>
                                 <th>{{equipo.estado}}</th>
-                                
-                                    <th>
-                                        <form action="/editarEquipo/" method="POST">{% csrf_token %}
-                                            <input type="hidden" name="idEquipo" value="{{equipo.id_equipo}}">
-                                            
-                                            <center>
-                                                <button type="submit" class="btn btn-warning waves-effect">
-                                                    <i class="material-icons">edit</i>
-                                                </button>
-                                            </center>
-                                            <br>
-                                        </form>
-                                        <form action="/DescargarPDF/" method="POST">{% csrf_token %}
-                                            
-                                                <input type="hidden" name="idEquipopdf" value="{{equipo.id_equipo}}">
-                                                
-                                                <center>
-                                                    <button type="submit" class="btn bg-red waves-effect">
-                                                        <i class="material-icons">picture_as_pdf</i>
-                                                    </button>
-                                                </center>
-                                             
-                                        </form>
-                                    
-                                    </th>
-                               
-                                
-                                    <th>
+
+                                <th>
+                                    <form action="/editarEquipo/" method="POST">{% csrf_token %}
+                                        <input type="hidden" name="idEquipo" value="{{equipo.id_equipo}}">
+
                                         <center>
-                                            <button type="button" class="btn bg-red waves-effect" data-toggle="modal" data-target="#{{equipo.id_equipo}}">
-                                                <i class="material-icons">cancel</i>
+                                            <button type="submit" class="btn btn-warning waves-effect">
+                                                <i class="material-icons">edit</i>
                                             </button>
                                         </center>
-                                        
-                                    </th>
+                                        <br>
+                                    </form>
+                                    <form action="/DescargarPDF/" method="POST">{% csrf_token %}
+
+                                        <input type="hidden" name="idEquipopdf" value="{{equipo.id_equipo}}">
+
+                                        <center>
+                                            <button type="submit" class="btn bg-red waves-effect">
+                                                <i class="material-icons">picture_as_pdf</i>
+                                            </button>
+                                        </center>
+
+                                    </form>
+
+                                </th>
+
+
+                                <th>
+                                    <center>
+                                        <button type="button" class="btn bg-red waves-effect" data-toggle="modal"
+                                            data-target="#{{equipo.id_equipo}}">
+                                            <i class="material-icons">cancel</i>
+                                        </button>
+                                    </center>
+
+                                </th>
                             </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
                 <br>
-                
+
             </div>
             <div class="body" id="divInactivos">
                 <div class="row clear-fix">
@@ -212,7 +219,8 @@ Equipos | Custom System
                         <form action="/reporteEquiposActivos/" method="POST">{% csrf_token %}
                             <input type="hidden" name="activo" value="I">
                             <button type="submit" class="btn bg-red waves-effect animate__animated animate__flipInX"
-                            data-toggle="tooltip" data-placement="bottom" title="Descargar reporte Equipos de baja en PDF.">
+                                data-toggle="tooltip" data-placement="bottom"
+                                title="Descargar reporte Equipos de baja en PDF.">
                                 <i class="material-icons">picture_as_pdf</i>
                                 <span>PDF</span>
                             </button>
@@ -222,21 +230,23 @@ Equipos | Custom System
                         <form action="/xlEquipos/" method="POST">{% csrf_token %}
                             <input type="hidden" name="activo" value="I">
                             <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
-                            data-toggle="tooltip" data-placement="bottom" title="Descargar reporte Equipos de baja en Excel.">
+                                data-toggle="tooltip" data-placement="bottom"
+                                title="Descargar reporte Equipos de baja en Excel.">
                                 <i class="material-icons">grid_on</i>
                                 <span>Excel</span>
                             </button>
                         </form>
                     </div>
                     <div class="col-xs-12 col-sm-4">
-                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarEquipos/">Agregar Equipo</a>
+                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarEquipos/">Agregar
+                            Equipo</a>
                     </div>
-                    
+
                 </div>
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable ">
                         <thead>
-                            <tr  style="background-color: #E05D5D; color:black">
+                            <tr style="background-color: #E05D5D; color:black">
                                 <th>ID Equipo</th>
                                 <th>Tipo</th>
                                 <th>Marca</th>
@@ -249,9 +259,9 @@ Equipos | Custom System
                                 <th>Cargador</th>
                                 <th>Estado</th>
                                 <th>Alta</th>
-                                
-                    
-                                
+
+
+
                             </tr>
                         </thead>
                         <tfoot>
@@ -270,7 +280,7 @@ Equipos | Custom System
 
                                 <th>Alta</th>
 
-                                
+
                             </tr>
                         </tfoot>
                         <tbody>
@@ -278,63 +288,65 @@ Equipos | Custom System
                             <tr>
                                 <form action="/DescargarPDF/" method="POST">{% csrf_token %}
                                     <th>
-                                        <input type="text" style="border: none; background: none;"  name="idEquipopdf" value="{{equipoIna.id_equipo}}" readonly size="1">
-                                        
+                                        <input type="text" style="border: none; background: none;" name="idEquipopdf"
+                                            value="{{equipoIna.id_equipo}}" readonly size="1">
+
                                         <center>
                                             <button type="submit" class="btn bg-red waves-effect">
                                                 <i class="material-icons">picture_as_pdf</i>
                                             </button>
                                         </center>
-                                     
+
                                     </th>
                                 </form>
-                                    <th>{{equipoIna.tipo}}</th>
-                                    <th>{{equipoIna.marca}}</th>
-                                    <th>{{equipoIna.modelo}}</th>
-                                    <th>{{equipoIna.color}}</th>
-                                    <th>
-                                        <center>
-                                            <img src="{{equipoIna.imagen.url}}" width="60%" alt="lap">
-                                        </center>
-                                    </th>
-                                    <th>{{equipoIna.memoriaram}}</th>
-                                    <th>{{equipoIna.procesador}}  </th>
-                                    <th>{{equipoIna.sistemaoperativo}}</th>
-                                    <th>{{equipoIna.modelocargador}}</th>
-                                    
-                                    <th>{{equipoIna.estado}}</th>
-                                    
-                                        <th>
-                                           
-                                            
-                                            <center>
-                                                <button type="button" class="btn bg-green waves-effect" data-toggle="modal" data-target="#{{equipoIna.id_equipo}}">
-                                                    <i class="material-icons">upgrade</i>
-                                                </button>
-                                            </center>
-                                        
-                                        </th>
-                                    
-                                
-                                
-                                
+                                <th>{{equipoIna.tipo}}</th>
+                                <th>{{equipoIna.marca}}</th>
+                                <th>{{equipoIna.modelo}}</th>
+                                <th>{{equipoIna.color}}</th>
+                                <th>
+                                    <center>
+                                        <img src="{{equipoIna.imagen.url}}" width="60%" alt="lap">
+                                    </center>
+                                </th>
+                                <th>{{equipoIna.memoriaram}}</th>
+                                <th>{{equipoIna.procesador}} </th>
+                                <th>{{equipoIna.sistemaoperativo}}</th>
+                                <th>{{equipoIna.modelocargador}}</th>
+
+                                <th>{{equipoIna.estado}}</th>
+
+                                <th>
+
+
+                                    <center>
+                                        <button type="button" class="btn bg-green waves-effect" data-toggle="modal"
+                                            data-target="#{{equipoIna.id_equipo}}">
+                                            <i class="material-icons">upgrade</i>
+                                        </button>
+                                    </center>
+
+                                </th>
+
+
+
+
                             </tr>
-                           {% endfor %}
-                            
-                            
-                            
+                            {% endfor %}
+
+
+
                         </tbody>
                     </table>
-                    
+
                 </div>
                 <br>
-                
+
             </div>
-           
-            </div>
+
         </div>
     </div>
-    
+</div>
+
 </div>
 
 {% for equipo, empleado in lista2 %}
@@ -344,7 +356,8 @@ Equipos | Custom System
         <div class="modal-content" style="border-radius: 16px;">
             <div class="modal-header">
                 <center>
-                    <h1 style="color: crimson; font-family: 'Oswald', sans-serif;">DAR DE BAJA EQUIPO <i class="material-icons" style="color:black; font-size:100%">get_app</i></h1>
+                    <h1 style="color: crimson; font-family: 'Oswald', sans-serif;">DAR DE BAJA EQUIPO <i
+                            class="material-icons" style="color:black; font-size:100%">get_app</i></h1>
                     <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
 
                 </center>
@@ -352,7 +365,7 @@ Equipos | Custom System
             <div class="modal-body">
                 <form action="/bajaEquipo/" method="POST">{% csrf_token %}
                     <div class="body table-responsive">
-                        <table class="table" >
+                        <table class="table">
                             <thead>
                                 <tr class="bg-teal">
                                     <th>Imagen</th>
@@ -362,19 +375,19 @@ Equipos | Custom System
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr >
+                                <tr>
                                     <th> <img src="{{equipo.imagen.url}}" width="150" height="200" alt="lap"></th>
                                     <td style="color: black;">{{equipo.marca}}</td>
                                     <td style="color: black;">{{equipo.modelo}}</td>
                                     <th style="color: black;">{{empleado.0}} {{empleado.1}}</th>
                                 </tr>
-                                
-                               
+
+
                             </tbody>
                         </table>
-                        
-                    
-                        
+
+
+
                     </div>
                     <center>
                         <input type="hidden" value="{{equipo.id_equipo}}" name="idEquipoBaja">
@@ -399,7 +412,8 @@ Equipos | Custom System
         <div class="modal-content" style="border-radius: 16px;">
             <div class="modal-header">
                 <center>
-                    <h1 style="color: green; font-family: 'Oswald', sans-serif;">DAR DE ALTA EQUIPO <i class="material-icons" style="color:black; font-size:100%">upgrade</i></h1>
+                    <h1 style="color: green; font-family: 'Oswald', sans-serif;">DAR DE ALTA EQUIPO <i
+                            class="material-icons" style="color:black; font-size:100%">upgrade</i></h1>
                     <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
 
                 </center>
@@ -407,29 +421,29 @@ Equipos | Custom System
             <div class="modal-body">
                 <form action="/altaEquipo/" method="POST">{% csrf_token %}
                     <div class="body table-responsive">
-                        <table class="table" >
+                        <table class="table">
                             <thead>
                                 <tr class="bg-teal">
                                     <th>Imagen</th>
                                     <th>Marca</th>
                                     <th>Modelo</th>
-                                    
+
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr >
+                                <tr>
                                     <th> <img src="{{equipoIna.imagen.url}}" width="150" height="200" alt="lap"></th>
                                     <td style="color: black;">{{equipoIna.marca}}</td>
                                     <td style="color: black;">{{equipoIna.modelo}}</td>
-                                   
+
                                 </tr>
-                                
-                               
+
+
                             </tbody>
                         </table>
-                        
-                    
-                        
+
+
+
                     </div>
                     <center>
                         <input type="hidden" value="{{equipoIna.id_equipo}}" name="idEquipoAlta">
@@ -448,48 +462,49 @@ Equipos | Custom System
 
 {% endfor %}
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    {% if bajaEquipo %}
-    <script type="text/javascript">
-        swal({
-            icon: 'error',
-            title: 'Wuu..!',
-            text: ' {{bajaExito}}',
-            footer: '<span style="color: red!important"> Vuelve a navegar por Custom System! </span>',
-            width: '40%'
-           
-        });
-    </script>
-    {% endif %}
-    {% if altaEquipo %}
-    <script type="text/javascript">
-        swal({
-            icon: 'success',
-            title: 'Wuu..!',
-            text: ' {{altaExito}}',
-            footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
-            width: '40%'
-        });
-    </script>
-    {% endif %}
+{% if bajaEquipo %}
 <script type="text/javascript">
-    function inicio(){
+    swal({
+        icon: 'error',
+        title: 'Wuu..!',
+        text: ' {{bajaExito}}',
+        footer: '<span style="color: red!important"> Vuelve a navegar por Custom System! </span>',
+        width: '40%'
+
+    });
+</script>
+{% endif %}
+{% if altaEquipo %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Wuu..!',
+        text: ' {{altaExito}}',
+        footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
+<script type="text/javascript">
+    function inicio() {
         var div1 = document.getElementById("divInactivos");
-        div1.style.display = "none";/* bloquear u ocultar la tabla..*/
+        div1.style.display = "none"; /* bloquear u ocultar la tabla..*/
     }
     window.onload = inicio;
-    function cambioFiltro(){
+
+    function cambioFiltro() {
         var div = document.getElementById("divActivos");
         var div1 = document.getElementById("divInactivos");
         /* Si la tabla de Empleados Activos está activa..*/
-        if(div.style.display === "none"){
+        if (div.style.display === "none") {
             //Bloquear la tabla de empleados Activos.. 
             div.style.display = "block";
             div1.style.display = "none";
-        }else { //Si la tabla de empleados Activos está inactiva
+        } else { //Si la tabla de empleados Activos está inactiva
             div.style.display = "none"; //Desbloquear la tabla de empleados Activos
             div1.style.display = "block";
         }
-        
+
     }
 </script>
 {% endblock %}

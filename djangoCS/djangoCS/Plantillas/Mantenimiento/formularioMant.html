@@ -10,7 +10,8 @@ Agregar Mantenimiento | Custom System
 <link rel="icon" href={% static 'images/icons/ra.ico' %} type="image/x-icon">
 
 <!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
+    type="text/css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
 
 <!-- Bootstrap Core Css -->
@@ -40,9 +41,10 @@ Agregar Mantenimiento | Custom System
             <div class="header">
                 <h2 style="font-family: 'Oswald', sans-serif;">
                     MANTENIMINETO A EQUIPOS
-                    <small style="color: #790C05;">Formulario para registrar un mantenimiento realizado en el sistema.</small>
+                    <small style="color: #790C05;">Formulario para registrar un mantenimiento realizado en el
+                        sistema.</small>
                 </h2>
-                
+
             </div>
             <div class="body">
                 <form id="form_validation" action="/formularioMant/" method="POST">{% csrf_token %}
@@ -53,12 +55,13 @@ Agregar Mantenimiento | Custom System
                                 <span class="input-group-addon">
                                     <i class="material-icons">computer</i>
                                 </span>
-                                    <select class="form-control show-tick" name="equipoProp">
-                                        {% for equipoP, empleado in lista %}
-                                        <option value="{{equipoP.id_equipo}}">{{equipoP.marca}} {{equipoP.modelo}}- {{empleado.0}} {{empleado.1}}</option>
-                                        {% endfor %}
-                        
-                                    </select>
+                                <select class="form-control show-tick" name="equipoProp">
+                                    {% for equipoP, empleado in lista %}
+                                    <option value="{{equipoP.id_equipo}}">{{equipoP.marca}} {{equipoP.modelo}}-
+                                        {{empleado.0}} {{empleado.1}}</option>
+                                    {% endfor %}
+
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -67,31 +70,34 @@ Agregar Mantenimiento | Custom System
                                 <span class="input-group-addon">
                                     <i class="material-icons">copyright</i>
                                 </span>
-                                    <select class="form-control show-tick" name="operacion"  multiple>
-                                        <option value="Limpieza externa" selected>Limpieza externa</option>
-                                        <option value="Limpieza interna">Limpieza interna</option>
-                                        <option value="Instalación de software">Instalación de software</option>
-                                        <option value="Activación de software">Activación de software</option>
-                                        <option value="Respaldo de información">Respaldo de información</option>
-                                        <option value="Reemplazo e instalación de componente">Reemplazo e instalación de componente</option>
-                                        <option value="Reparación de componente">Reparación de componente</option>
-                                        <option value="Reparación estética">Reparación estética</option>
-                                        <option value="Reinicio/ Restauración / Reconfiguración">Reinicio/ Restauración / Reconfiguración</option>
-                                        <option value="Formateo/ Instalación de sistema">Formateo/ Instalación de sistema</option>
-                                        <option value="Problemas de conectividad">Problemas de conectividad</option>
-                                        <option value="Asesoria técnica">Asesoria técnica</option>
-                                        <option value="Otros">Otros</option>
-                                    </select>
+                                <select class="form-control show-tick" name="operacion" multiple>
+                                    <option value="Limpieza externa" selected>Limpieza externa</option>
+                                    <option value="Limpieza interna">Limpieza interna</option>
+                                    <option value="Instalación de software">Instalación de software</option>
+                                    <option value="Activación de software">Activación de software</option>
+                                    <option value="Respaldo de información">Respaldo de información</option>
+                                    <option value="Reemplazo e instalación de componente">Reemplazo e instalación de
+                                        componente</option>
+                                    <option value="Reparación de componente">Reparación de componente</option>
+                                    <option value="Reparación estética">Reparación estética</option>
+                                    <option value="Reinicio/ Restauración / Reconfiguración">Reinicio/ Restauración /
+                                        Reconfiguración</option>
+                                    <option value="Formateo/ Instalación de sistema">Formateo/ Instalación de sistema
+                                    </option>
+                                    <option value="Problemas de conectividad">Problemas de conectividad</option>
+                                    <option value="Asesoria técnica">Asesoria técnica</option>
+                                    <option value="Otros">Otros</option>
+                                </select>
                             </div>
                         </div>
-                        
-                        
-                        
-                        
+
+
+
+
                     </div>
 
-                    
-                    
+
+
 
                     <div class="row clearfix">
                         <div class="col-md-6">
@@ -100,24 +106,26 @@ Agregar Mantenimiento | Custom System
                                 <span class="input-group-addon">
                                     <i class="material-icons">rate_review</i>
                                 </span>
-                               
+
                                 <div class="form-group form-float">
                                     <div class="form-line">
-                                        <textarea style="border: 1px;" name="descripcion" cols="30" rows="5" maxlength="400" class="form-control no-resize" required></textarea>
-                                     
+                                        <textarea style="border: 1px;" name="descripcion" cols="30" rows="5"
+                                            maxlength="400" class="form-control no-resize" required></textarea>
+
                                     </div>
                                 </div>
-                               
-                                
+
+
                             </div>
-                        </div> 
-                       
-                       
+                        </div>
+
+
                     </div>
 
 
 
-                    <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i class="material-icons">card_travel</i> Guardar Mantenimiento</button>
+                    <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i
+                            class="material-icons">card_travel</i> Guardar Mantenimiento</button>
                     {% for dato in  operacionEquipoExistente %}
                     <label for="sd">{{dato.operacion}}</label>
                     {% endfor %}
@@ -127,17 +135,17 @@ Agregar Mantenimiento | Custom System
     </div>
 </div>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    {% if mantExito %}
-    <script type="text/javascript">
-        swal({
-            icon: 'success',
-            title: 'Wuujuu..',
-            text: ' {{mensajeMant}}',
-            footer: '<span style="color: green!important"> Sigue navegando por Custom System! </span>',
-            width: '40%'
-        });
-    </script>
-    {% endif %}
+{% if mantExito %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Wuujuu..',
+        text: ' {{mensajeMant}}',
+        footer: '<span style="color: green!important"> Sigue navegando por Custom System! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
 {% endblock %}
 
 {% block estilosJs %}

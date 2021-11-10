@@ -10,7 +10,8 @@ Renovación Impresoras
 <link rel="icon" href={% static 'images/icons/ra.ico' %} type="image/x-icon">
 
 <!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
+    type="text/css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
 
 <!-- Bootstrap Core Css -->
@@ -48,7 +49,8 @@ Renovación Impresoras
                     <div class="col-xs-12 col-sm-1">
                         <form action="/reporteRenovacionImp/" method="POST">{% csrf_token %}
                             <button type="submit" class="btn bg-red waves-effect animate__animated animate__flipInX"
-                            data-toggle="tooltip" data-placement="bottom" title="Descargar reporte de Renovación de impresoras en PDF.">
+                                data-toggle="tooltip" data-placement="bottom"
+                                title="Descargar reporte de Renovación de impresoras en PDF.">
                                 <i class="material-icons">picture_as_pdf</i>
                                 <span>PDF</span>
                             </button>
@@ -57,21 +59,22 @@ Renovación Impresoras
                     <div class="col-xs-12 col-sm-1">
                         <form action="/xlRenovacionImpresoras/" method="POST">{% csrf_token %}
                             <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
-                            data-toggle="tooltip" data-placement="right" title="Descargar reporte de Renovación de impresoras en Excel.">
+                                data-toggle="tooltip" data-placement="right"
+                                title="Descargar reporte de Renovación de impresoras en Excel.">
                                 <i class="material-icons">grid_on</i>
                                 <span>Excel</span>
                             </button>
                         </form>
                     </div>
-                    
+
                 </div>
-                    
+
             </div>
             <div class="body" id="divActivos">
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                         <thead>
-                            <tr  style="background-color: #fad60e; color:black">
+                            <tr style="background-color: #fad60e; color:black">
                                 <th>ID Impresora</th>
                                 <th>Modelo</th>
                                 <th>Imagen</th>
@@ -93,12 +96,12 @@ Renovación Impresoras
                         <tbody>
                             {% for impresoraRen in datosTabla %}
                             <tr>
-                                
+
                                 <th>{{impresoraRen.0}}</th>
                                 <th>{{impresoraRen.1}}</th>
                                 <th>
                                     <center>
-                                    <img src="{{impresoraRen.2.url}}" width="60%" alt="lap">
+                                        <img src="{{impresoraRen.2.url}}" width="60%" alt="lap">
                                     </center>
                                 </th>
                                 <th><label class="{{impresoraRen.4}}">{{impresoraRen.3}}</label></th>
@@ -114,65 +117,66 @@ Renovación Impresoras
                                         <span>{{impresoraRen.6}}</span>
                                     </button>
                                 </th>
-                               
-                                
+
+
                             </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
-                
+
             </div>
-            
-           
-            </div>
+
+
         </div>
     </div>
-    
+</div>
+
 </div>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    {% if bajaEquipo %}
-    <script type="text/javascript">
-        swal({
-            icon: 'error',
-            title: 'Wuu..!',
-            text: ' {{bajaExito}}',
-            footer: '<span style="color: red!important"> Vuelve a navegar por Custom System! </span>',
-            width: '40%'
-           
-        });
-    </script>
-    {% endif %}
-    {% if altaEquipo %}
-    <script type="text/javascript">
-        swal({
-            icon: 'success',
-            title: 'Wuu..!',
-            text: ' {{altaExito}}',
-            footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
-            width: '40%'
-        });
-    </script>
-    {% endif %}
+{% if bajaEquipo %}
 <script type="text/javascript">
-    function inicio(){
+    swal({
+        icon: 'error',
+        title: 'Wuu..!',
+        text: ' {{bajaExito}}',
+        footer: '<span style="color: red!important"> Vuelve a navegar por Custom System! </span>',
+        width: '40%'
+
+    });
+</script>
+{% endif %}
+{% if altaEquipo %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Wuu..!',
+        text: ' {{altaExito}}',
+        footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
+<script type="text/javascript">
+    function inicio() {
         var div1 = document.getElementById("divInactivos");
-        div1.style.display = "none";/* bloquear u ocultar la tabla..*/
+        div1.style.display = "none"; /* bloquear u ocultar la tabla..*/
     }
     window.onload = inicio;
-    function cambioFiltro(){
+
+    function cambioFiltro() {
         var div = document.getElementById("divActivos");
         var div1 = document.getElementById("divInactivos");
         /* Si la tabla de Empleados Activos está activa..*/
-        if(div.style.display === "none"){
+        if (div.style.display === "none") {
             //Bloquear la tabla de empleados Activos.. 
             div.style.display = "block";
             div1.style.display = "none";
-        }else { //Si la tabla de empleados Activos está inactiva
+        } else { //Si la tabla de empleados Activos está inactiva
             div.style.display = "none"; //Desbloquear la tabla de empleados Activos
             div1.style.display = "block";
         }
-        
+
     }
 </script>
 {% endblock %}

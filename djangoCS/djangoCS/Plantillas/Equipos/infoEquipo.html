@@ -10,7 +10,8 @@ Información de Equipo
 <link rel="icon" href={% static 'images/icons/ra.ico' %} type="image/x-icon">
 
 <!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
+    type="text/css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
 
 <!-- Bootstrap Core Css -->
@@ -45,7 +46,8 @@ Información de Equipo
                 </h2>
                 <ul class="header-dropdown m-r--5">
                     <li class="dropdown">
-                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                            aria-haspopup="true" aria-expanded="false">
                             <i class="material-icons">more_vert</i>
                         </a>
                         <ul class="dropdown-menu pull-right">
@@ -55,17 +57,17 @@ Información de Equipo
                         </ul>
                     </li>
                 </ul>
-                    
+
             </div>
             <div class="body" id="divActivos">
                 {% for datoEquipo in datosEquipo %}
                 <center>
                     <h1 style="color: black;"> <span style="font-size: 120%;">
-                    
-                        <i class="material-icons" style="color: rgb(158, 154, 154); font-size: 120%;" ">computer</i>
+
+                            <i class="material-icons" style="color: rgb(158, 154, 154); font-size: 120%;" ">computer</i>
 
                    </span> #1</h1>
-                    <h1 style="color: black;">{{datoEquipo.tipo}} {{datoEquipo.marca}} {{datoEquipo.modelo}}</h1>
+                    <h1 style=" color: black;">{{datoEquipo.tipo}} {{datoEquipo.marca}} {{datoEquipo.modelo}}</h1>
                     <img src="{{datoEquipo.imagen.url}}" width="30%" alt="lap">
 
                     {% if sinPropietario %}
@@ -77,9 +79,10 @@ Información de Equipo
                 <div class="row clearfix">
                     <div class="col-md-6">
                         <center>
-                            <h2 style="color: black;" >Fecha de compra</h2>
+                            <h2 style="color: black;">Fecha de compra</h2>
                             <span style="font-size: 200%;">
-                                <i class="material-icons" style="color: rgb(42, 141, 17); font-size: 200%;"  >shopping_cart</i>
+                                <i class="material-icons"
+                                    style="color: rgb(42, 141, 17); font-size: 200%;">shopping_cart</i>
 
                             </span>
                             <h3 style="color: black;">{{compra}}</h3>
@@ -89,19 +92,20 @@ Información de Equipo
                         <center>
                             <h2 style="color: black;">Fecha de renovación</h2>
                             <span style="font-size: 200%;">
-                                <i class="material-icons" style="color: rgb(41, 57, 201);  font-size: 200%;" >add_shopping_cart</i>
+                                <i class="material-icons"
+                                    style="color: rgb(41, 57, 201);  font-size: 200%;">add_shopping_cart</i>
                             </span>
                             <h3 style="color: black;">{{renovar}}</h3>
                         </center>
                     </div>
                 </div>
-                
+
                 <h1 style="color: black;">Características</h1>
-                
+
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                         <thead>
-                            <tr  style="background-color: #fad60e; color:black">
+                            <tr style="background-color: #fad60e; color:black">
                                 <th>ID Equipo</th>
                                 <th>Tipo</th>
                                 <th>Marca</th>
@@ -113,9 +117,9 @@ Información de Equipo
                                 <th>Cargador</th>
                                 <th>Departamento</th>
                                 <th>Estado</th>
-                                
-                    
-                                
+
+
+
                             </tr>
                         </thead>
                         <tfoot>
@@ -134,15 +138,17 @@ Información de Equipo
                             </tr>
                         </tfoot>
                         <tbody>
-                           
+
                             <tr>
                                 <th>
                                     <form action="/infoEquipo/" method="POST">{% csrf_token %}
-                                        
-                                        
+
+
                                         <center>
-                                            <input type="text" style="border: none; background: none;"  name="idEquipo" value="{{datoEquipo.id_equipo}}" readonly size="1">
-                                            <button type="submit" class="btn  waves-effect" style="background-color: #0A77F9;">
+                                            <input type="text" style="border: none; background: none;" name="idEquipo"
+                                                value="{{datoEquipo.id_equipo}}" readonly size="1">
+                                            <button type="submit" class="btn  waves-effect"
+                                                style="background-color: #0A77F9;">
                                                 <i class="material-icons" style="color: white;">visibility</i>
                                             </button>
                                         </center>
@@ -153,31 +159,31 @@ Información de Equipo
                                 <th>{{datoEquipo.marca}}</th>
                                 <th>{{datoEquipo.modelo}}</th>
                                 <th>{{datoEquipo.color}}</th>
-                            
+
                                 <th>{{datoEquipo.memoriaram}}</th>
                                 <th>{{datoEquipo.procesador}}</th>
                                 <th>{{datoEquipo.sistemaoperativo}}</th>
                                 <th>{{datoEquipo.modelocargador}}</th>
                                 <th><label class="{{colorArea}}">{{nombreArea}}</label></th>
                                 <th>{{datoEquipo.estado}}</th>
-                                
-                                    
+
+
                             </tr>
-                          
+
                         </tbody>
                     </table>
                 </div>
                 <h1 style="color: black;">Mantenimientos</h1>
-                
+
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                         <thead>
-                            <tr  style="background-color: #fad60e; color:black">
+                            <tr style="background-color: #fad60e; color:black">
                                 <th>ID Operación</th>
                                 <th>Operación</th>
                                 <th>Fecha</th>
                                 <th>Observaciones</th>
-                     
+
                             </tr>
                         </thead>
                         <tfoot>
@@ -191,11 +197,11 @@ Información de Equipo
                         <tbody>
                             {% for dato in mantenimientos %}
                             <tr>
-                             
+
                                 <th>{{dato.id_calmantenimiento}}</th>
                                 <th>{{dato.operacion}}</th>
                                 <th>{{dato.fecha}}</th>
-                                <th>{{dato.observaciones}}</th>   
+                                <th>{{dato.observaciones}}</th>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -203,7 +209,7 @@ Información de Equipo
                 </div>
                 <br>
                 <form action="/pdfInfoEquipo/" method="POST">{% csrf_token %}
-                    <label >Descargar PDF </label>
+                    <label>Descargar PDF </label>
                     <input type="hidden" value="{{datoEquipo.id_equipo}}" name="idequipo">
                     <button type="submit" class="btn bg-red waves-effect">
                         <i class="material-icons">get_app</i>
@@ -211,57 +217,58 @@ Información de Equipo
                     </button>
                 </form>
                 {% endfor %}
-                
+
             </div>
-           
-            </div>
+
         </div>
     </div>
-    
+</div>
+
 </div>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    {% if bajaEquipo %}
-    <script type="text/javascript">
-        swal({
-            icon: 'error',
-            title: 'Wuu..!',
-            text: ' {{bajaExito}}',
-            footer: '<span style="color: red!important"> Vuelve a navegar por Custom System! </span>',
-            width: '40%'
-           
-        });
-    </script>
-    {% endif %}
-    {% if altaEquipo %}
-    <script type="text/javascript">
-        swal({
-            icon: 'success',
-            title: 'Wuu..!',
-            text: ' {{altaExito}}',
-            footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
-            width: '40%'
-        });
-    </script>
-    {% endif %}
+{% if bajaEquipo %}
 <script type="text/javascript">
-    function inicio(){
+    swal({
+        icon: 'error',
+        title: 'Wuu..!',
+        text: ' {{bajaExito}}',
+        footer: '<span style="color: red!important"> Vuelve a navegar por Custom System! </span>',
+        width: '40%'
+
+    });
+</script>
+{% endif %}
+{% if altaEquipo %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Wuu..!',
+        text: ' {{altaExito}}',
+        footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
+<script type="text/javascript">
+    function inicio() {
         var div1 = document.getElementById("divInactivos");
-        div1.style.display = "none";/* bloquear u ocultar la tabla..*/
+        div1.style.display = "none"; /* bloquear u ocultar la tabla..*/
     }
     window.onload = inicio;
-    function cambioFiltro(){
+
+    function cambioFiltro() {
         var div = document.getElementById("divActivos");
         var div1 = document.getElementById("divInactivos");
         /* Si la tabla de Empleados Activos está activa..*/
-        if(div.style.display === "none"){
+        if (div.style.display === "none") {
             //Bloquear la tabla de empleados Activos.. 
             div.style.display = "block";
             div1.style.display = "none";
-        }else { //Si la tabla de empleados Activos está inactiva
+        } else { //Si la tabla de empleados Activos está inactiva
             div.style.display = "none"; //Desbloquear la tabla de empleados Activos
             div1.style.display = "block";
         }
-        
+
     }
 </script>
 {% endblock %}

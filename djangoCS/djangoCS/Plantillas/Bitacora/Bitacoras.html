@@ -10,7 +10,8 @@ Bitacora
 <link rel="icon" href={% static 'images/icons/ra.ico' %} type="image/x-icon">
 
 <!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
+    type="text/css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
 
 <!-- Bootstrap Core Css -->
@@ -38,17 +39,17 @@ Bitacora
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <div class="card">
             <div class="header">
-                <h2  style="font-family: 'Oswald', sans-serif;">
+                <h2 style="font-family: 'Oswald', sans-serif;">
                     {{texto}} de Custom & Co
                     <small style="color: #790C05;">Vista de bitácora.</small>
                 </h2>
-                
+
             </div>
             <div class="body">
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                         <thead>
-                            <tr  style="background-color: #fad60e; color:black">
+                            <tr style="background-color: #fad60e; color:black">
                                 <th>Usuario</th>
                                 <th>Id Entidad</th>
                                 <th>Entidad</th>
@@ -68,65 +69,73 @@ Bitacora
                         <tbody>
                             {% for bitacora, usuario, equipo in lista %}
                             <tr>
-                                
+
                                 <th>{{usuario}}</th>
                                 {% if texto == "Bitácora de Equipos" %}
                                 <form action="/infoEquipo/" method="POST">{% csrf_token %}
                                     <th>
-                                        <input type="text" name="idEquipo" value="{{bitacora.id_objeto}}" readonly size="1" style="border: 0; background: none;">
-                                        
-                                            <center>
-                                                <button type="submit" class="btn bg-teal waves-effect"><i class="material-icons">visibility</i></button>
-                                            </center>
-                                        
+                                        <input type="text" name="idEquipo" value="{{bitacora.id_objeto}}" readonly
+                                            size="1" style="border: 0; background: none;">
+
+                                        <center>
+                                            <button type="submit" class="btn bg-teal waves-effect"><i
+                                                    class="material-icons">visibility</i></button>
+                                        </center>
+
                                     </th>
                                 </form>
                                 {% elif texto == "Bitácora de Impresoras" %}
                                 <form action="/infoImpresora/" method="POST">{% csrf_token %}
                                     <th>
-                                        <input type="text" name="idImpresora" value="{{bitacora.id_objeto}}" readonly size="1" style="border: 0; background: none;">
-                                        
-                                            <center>
-                                                <button type="submit" class="btn bg-teal waves-effect"><i class="material-icons">visibility</i></button>
-                                            </center>
-                                        
+                                        <input type="text" name="idImpresora" value="{{bitacora.id_objeto}}" readonly
+                                            size="1" style="border: 0; background: none;">
+
+                                        <center>
+                                            <button type="submit" class="btn bg-teal waves-effect"><i
+                                                    class="material-icons">visibility</i></button>
+                                        </center>
+
                                     </th>
                                 </form>
                                 {% elif texto == "Bitácora de Empleados" %}
                                 <form action="/verEmpleados/" method="POST">{% csrf_token %}
                                     <th>
-                                        <input type="text"  value="{{bitacora.id_objeto}}" readonly size="1" style="border: 0; background: none;">
-                                        
-                                            <center>
-                                                <button type="submit" class="btn bg-teal waves-effect"><i class="material-icons">visibility</i></button>
-                                            </center>
-                                        
+                                        <input type="text" value="{{bitacora.id_objeto}}" readonly size="1"
+                                            style="border: 0; background: none;">
+
+                                        <center>
+                                            <button type="submit" class="btn bg-teal waves-effect"><i
+                                                    class="material-icons">visibility</i></button>
+                                        </center>
+
                                     </th>
                                 </form>
                                 {% elif texto == "Bitácora de Insumos" %}
                                 <form action="/verInsumos/" method="POST">{% csrf_token %}
                                     <th>
-                                        <input type="text"  value="{{bitacora.id_objeto}}" readonly size="1" style="border: 0; background: none;">
-                                        
-                                            <center>
-                                                <button type="submit" class="btn bg-teal waves-effect"><i class="material-icons">visibility</i></button>
-                                            </center>
-                                        
+                                        <input type="text" value="{{bitacora.id_objeto}}" readonly size="1"
+                                            style="border: 0; background: none;">
+
+                                        <center>
+                                            <button type="submit" class="btn bg-teal waves-effect"><i
+                                                    class="material-icons">visibility</i></button>
+                                        </center>
+
                                     </th>
                                 </form>
 
                                 {% endif %}
-                                    <th>{{equipo}}</th>
-                                    <th>{{bitacora.operacion}}</th>
-                                    <th>{{bitacora.fecha_hora}}</th>
-                                
-                                
+                                <th>{{equipo}}</th>
+                                <th>{{bitacora.operacion}}</th>
+                                <th>{{bitacora.fecha_hora}}</th>
+
+
                             </tr>
                             {% endfor %}
-                           
-                            
-                            
-                            
+
+
+
+
                         </tbody>
                     </table>
                 </div>

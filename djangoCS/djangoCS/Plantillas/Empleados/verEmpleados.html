@@ -10,7 +10,8 @@ Empleados | Custom System
 <link rel="icon" href={% static 'images/icons/ra.ico' %} type="image/x-icon">
 
 <!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
+    type="text/css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
 
 <!-- Bootstrap Core Css -->
@@ -44,30 +45,31 @@ Empleados | Custom System
                     EMPLEADOS DE CUSTOM & CO
                     <small style="color: #790C05;">Vista de listado de empleados dados de alta en el sistema.</small>
                 </h2>
-                
+
                 <br>
-                    <label for="email_address">Filtro Estatus de Empleados:</label>
-                    <div class="input-group">
-                        <span class="input-group-addon">
-                            <i class="material-icons">build</i>
-                        </span>
-                            <select class="form-control show-tick" id="filtroEmpleados" onchange="cambioFiltro();">
-                                <option>Activos</option>
-                                <option>De baja</option>
-                                
-                            </select>
-                    </div>
-                    
-            
+                <label for="email_address">Filtro Estatus de Empleados:</label>
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="material-icons">build</i>
+                    </span>
+                    <select class="form-control show-tick" id="filtroEmpleados" onchange="cambioFiltro();">
+                        <option>Activos</option>
+                        <option>De baja</option>
+
+                    </select>
+                </div>
+
+
             </div>
-          
+
             <div class="body" id="divActivos">
                 <div class="row clear-fix">
                     <div class="col-xs-12 col-sm-1">
                         <form action="/reporteEmpleadosActivos/" method="POST">{% csrf_token %}
                             <input type="hidden" name="activo" value="A">
                             <button type="submit" class="btn bg-red waves-effect animate__animated animate__flipInX"
-                            data-toggle="tooltip" data-placement="bottom" title="Descargar reporte Empleados Activos en PDF.">
+                                data-toggle="tooltip" data-placement="bottom"
+                                title="Descargar reporte Empleados Activos en PDF.">
                                 <i class="material-icons">picture_as_pdf</i>
                                 <span>PDF</span>
                             </button>
@@ -77,18 +79,20 @@ Empleados | Custom System
                         <form action="/xlEmpleados/" method="POST">{% csrf_token %}
                             <input type="hidden" name="activo" value="A">
                             <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
-                            data-toggle="tooltip" data-placement="bottom" title="Descargar reporte Empleados Activos en Excel.">
+                                data-toggle="tooltip" data-placement="bottom"
+                                title="Descargar reporte Empleados Activos en Excel.">
                                 <i class="material-icons">grid_on</i>
                                 <span>Excel</span>
                             </button>
                         </form>
                     </div>
                     <div class="col-xs-12 col-sm-4">
-                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarEmpleados/">Agregar Empleado</a>
+                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarEmpleados/">Agregar
+                            Empleado</a>
                     </div>
-                    
+
                 </div>
-                
+
                 <div class="table-responsive">
 
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable">
@@ -134,7 +138,8 @@ Empleados | Custom System
                                 <td> <label class="{{area.1}}">{{area.0}}</label> </td>
                                 <td>{{empleado.puesto}}</td>
                                 <td>{{empleado.correo}}</td>
-                                <td><input type="password"  value="{{empleado.contraseña}}" readonly style="background: none; border:none;"></td>
+                                <td><input type="password" value="{{empleado.contraseña}}" readonly
+                                        style="background: none; border:none;"></td>
                                 <form action="/editarEmpleado/" method="POST">{% csrf_token %}
                                     <th>
                                         <input type="hidden" name="idEmpleadoEditar" value="{{empleado.id_empleado}}">
@@ -143,29 +148,30 @@ Empleados | Custom System
                                                 <i class="material-icons">edit</i>
                                             </button>
                                         </center>
-                                        
+
                                     </th>
                                 </form>
-                                
-                                    <th>
-                                        <center>
-                                            <button type="button" class="btn bg-red waves-effect" data-toggle="modal" data-target="#{{empleado.id_empleado}}">
-                                                <i class="material-icons">cancel</i>
-                                            </button>
-                                        </center>
-                                    </th>
+
+                                <th>
+                                    <center>
+                                        <button type="button" class="btn bg-red waves-effect" data-toggle="modal"
+                                            data-target="#{{empleado.id_empleado}}">
+                                            <i class="material-icons">cancel</i>
+                                        </button>
+                                    </center>
+                                </th>
                             </tr>
                             {% endfor %}
-                            
-                            
-                            
-                            
+
+
+
+
                         </tbody>
                     </table>
                 </div>
                 <br>
-                
-                
+
+
             </div>
             <div class="body" id="divInactivos">
                 <div class="row clear-fix">
@@ -173,7 +179,8 @@ Empleados | Custom System
                         <form action="/reporteEmpleadosActivos/" method="POST">{% csrf_token %}
                             <input type="hidden" name="activo" value="I">
                             <button type="submit" class="btn bg-red waves-effect animate__animated animate__flipInX"
-                            data-toggle="tooltip" data-placement="bottom" title="Descargar reporte Empleados de baja en PDF.">
+                                data-toggle="tooltip" data-placement="bottom"
+                                title="Descargar reporte Empleados de baja en PDF.">
                                 <i class="material-icons">picture_as_pdf</i>
                                 <span>PDF</span>
                             </button>
@@ -182,17 +189,19 @@ Empleados | Custom System
                     <div class="col-xs-12 col-sm-1">
                         <form action="/xlEmpleados/" method="POST">{% csrf_token %}
                             <input type="hidden" name="activo" value="I">
-                            <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX" 
-                            data-toggle="tooltip" data-placement="bottom" title="Descargar reporte Empleados de baja en Excel.">
+                            <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
+                                data-toggle="tooltip" data-placement="bottom"
+                                title="Descargar reporte Empleados de baja en Excel.">
                                 <i class="material-icons">grid_on</i>
                                 <span>Excel</span>
                             </button>
                         </form>
                     </div>
                     <div class="col-xs-12 col-sm-4">
-                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarEmpleados/">Agregar Empleado</a>
+                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarEmpleados/">Agregar
+                            Empleado</a>
                     </div>
-                    
+
                 </div>
                 <div class="table-responsive">
 
@@ -238,20 +247,21 @@ Empleados | Custom System
                                 <td>{{empleado.puesto}}</td>
                                 <td>{{empleado.correo}}</td>
                                 <td>{{empleado.contraseña}}</td>
-                                    <th>
-                                            <center>
-                                                <button type="button" class="btn bg-green waves-effect"  data-toggle="modal" data-target="#{{empleado.id_empleado}}">
-                                                    <i class="material-icons">upgrade</i>
-                                                </button>
-                                            </center>
-                                    </th>
+                                <th>
+                                    <center>
+                                        <button type="button" class="btn bg-green waves-effect" data-toggle="modal"
+                                            data-target="#{{empleado.id_empleado}}">
+                                            <i class="material-icons">upgrade</i>
+                                        </button>
+                                    </center>
+                                </th>
                             </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
                 <br>
-                
+
             </div>
         </div>
     </div>
@@ -265,7 +275,8 @@ Empleados | Custom System
         <div class="modal-content" style="border-radius: 16px;">
             <div class="modal-header">
                 <center>
-                    <h1 style="color: crimson; font-family: 'Oswald', sans-serif;">DAR DE BAJA EMPLEADO <i class="material-icons" style="color:black; font-size:100%">get_app</i></h1>
+                    <h1 style="color: crimson; font-family: 'Oswald', sans-serif;">DAR DE BAJA EMPLEADO <i
+                            class="material-icons" style="color:black; font-size:100%">get_app</i></h1>
                     <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
 
                 </center>
@@ -273,7 +284,7 @@ Empleados | Custom System
             <div class="modal-body">
                 <form action="/bajaEmpleado/" method="POST">{% csrf_token %}
                     <div class="body table-responsive">
-                        <table class="table" >
+                        <table class="table">
                             <thead>
                                 <tr class="bg-teal">
                                     <th>Nombre</th>
@@ -286,16 +297,17 @@ Empleados | Custom System
                                 <tr>
                                     <td style="color: black;">{{empleado.nombre}}</td>
                                     <td style="color: black;">{{empleado.apellidos}}</td>
-                                    <th> <img src="{{empleado.imagen_empleado.url}}" width="120" height="150" alt="lap"></th>
+                                    <th> <img src="{{empleado.imagen_empleado.url}}" width="120" height="150" alt="lap">
+                                    </th>
                                     <td> <label class="{{area.1}}">{{area.0}}</label> </td>
                                 </tr>
-                                
-                               
+
+
                             </tbody>
                         </table>
-                        
-                    
-                        
+
+
+
                     </div>
                     <center>
                         <input type="hidden" value="{{empleado.id_empleado}}" name="idEmpleadoBaja">
@@ -320,7 +332,8 @@ Empleados | Custom System
         <div class="modal-content" style="border-radius: 16px;">
             <div class="modal-header">
                 <center>
-                    <h1 style="color: green; font-family: 'Oswald', sans-serif;">DAR DE ALTA EMPLEADO <i class="material-icons" style="color:black; font-size:100%">upgrade</i></h1>
+                    <h1 style="color: green; font-family: 'Oswald', sans-serif;">DAR DE ALTA EMPLEADO <i
+                            class="material-icons" style="color:black; font-size:100%">upgrade</i></h1>
                     <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
 
                 </center>
@@ -328,7 +341,7 @@ Empleados | Custom System
             <div class="modal-body">
                 <form action="/altaEmpleado/" method="POST">{% csrf_token %}
                     <div class="body table-responsive">
-                        <table class="table" >
+                        <table class="table">
                             <thead>
                                 <tr class="bg-teal">
                                     <th>Nombre</th>
@@ -341,16 +354,17 @@ Empleados | Custom System
                                 <tr>
                                     <td style="color: black;">{{empleado.nombre}}</td>
                                     <td style="color: black;">{{empleado.apellidos}}</td>
-                                    <th> <img src="{{empleado.imagen_empleado.url}}" width="120" height="150" alt="lap"></th>
+                                    <th> <img src="{{empleado.imagen_empleado.url}}" width="120" height="150" alt="lap">
+                                    </th>
                                     <td> <label class="{{area.1}}">{{area.0}}</label> </td>
                                 </tr>
-                                
-                               
+
+
                             </tbody>
                         </table>
-                        
-                    
-                        
+
+
+
                     </div>
                     <center>
                         <input type="hidden" value="{{empleado.id_empleado}}" name="idEmpleadoAlta">
@@ -370,49 +384,50 @@ Empleados | Custom System
 
 
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    {% if alta %}
-    <script type="text/javascript">
-        swal({
-            icon: 'success',
-            title: 'Wuu..!',
-            text: ' {{mensaje}}',
-            footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
-            width: '40%'
-        });
-    </script>
-    {% endif %}
+{% if alta %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Wuu..!',
+        text: ' {{mensaje}}',
+        footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
 
-    {% if baja %}
-    <script type="text/javascript">
-        swal({
-            icon: 'error',
-            title: 'Wuu..!',
-            text: ' {{mensaje}}',
-            footer: '<span style="color: red!important"> Vuelve a navegar por Custom System! </span>',
-            width: '40%'
-        });
-    </script>
-    {% endif %}
+{% if baja %}
+<script type="text/javascript">
+    swal({
+        icon: 'error',
+        title: 'Wuu..!',
+        text: ' {{mensaje}}',
+        footer: '<span style="color: red!important"> Vuelve a navegar por Custom System! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
 
 <script type="text/javascript">
-    function inicio(){
+    function inicio() {
         var div1 = document.getElementById("divInactivos");
-        div1.style.display = "none";/* bloquear u ocultar la tabla..*/
+        div1.style.display = "none"; /* bloquear u ocultar la tabla..*/
     }
     window.onload = inicio;
-    function cambioFiltro(){
+
+    function cambioFiltro() {
         var div = document.getElementById("divActivos");
         var div1 = document.getElementById("divInactivos");
         /* Si la tabla de Empleados Activos está activa..*/
-        if(div.style.display === "none"){
+        if (div.style.display === "none") {
             //Bloquear la tabla de empleados Activos.. 
             div.style.display = "block";
             div1.style.display = "none";
-        }else { //Si la tabla de empleados Activos está inactiva
+        } else { //Si la tabla de empleados Activos está inactiva
             div.style.display = "none"; //Desbloquear la tabla de empleados Activos
             div1.style.display = "block";
         }
-        
+
     }
 </script>
 {% endblock %}
