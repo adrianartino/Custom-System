@@ -7402,14 +7402,13 @@ def xlInsumos(request):
 def correoContra(request):
     
     correo = "sistemas@customco.com.mx"
-    
     email_remitente = settings.EMAIL_HOST_USER
     email_destino = [correo]
-    asunto = "Esta es una prueba"
-    mensaje = "Hola este es el mensaje."
+         
+    asunto = "Recuperación de contraseña - Bustop"
+    mensaje = "Hola esta es una prueba"
 
-    email = EmailMessage('Subject', 'Body', to=['sistemas@customco.com.mx'])
-    email.send()
+    send_mail(asunto, mensaje, email_remitente, email_destino)
     
     return redirect('/verEmpleados/')
 
