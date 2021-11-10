@@ -138,8 +138,17 @@ Empleados | Custom System
                                 <td> <label class="{{area.1}}">{{area.0}}</label> </td>
                                 <td>{{empleado.puesto}}</td>
                                 <td>{{empleado.correo}}</td>
-                                <td><input type="password" value="{{empleado.contraseña}}" readonly
-                                        style="background: none; border:none;"></td>
+                                <td>
+                                    <form action="/correoContra/" method="POST">{% csrf_token %}
+                                        <input type="hidden" name="idEmpleadoContra" value="{{empleado.id_empleado}}">
+                                        <center>
+                                            <button type="submit" class="btn bg-indigo waves-effect " data-toggle="tooltip" data-placement="bottom"
+                                            title="Se enviará un correo electrónico con la contraseña solicitada.">
+                                                <i class="material-icons">contact_mail</i> Solicitar Contraseña
+                                            </button>
+                                        </center>
+                                    </form>
+                                </td>
                                 <form action="/editarEmpleado/" method="POST">{% csrf_token %}
                                     <th>
                                         <input type="hidden" name="idEmpleadoEditar" value="{{empleado.id_empleado}}">

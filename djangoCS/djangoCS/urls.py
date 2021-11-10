@@ -92,7 +92,9 @@ urlpatterns = [
     path("xlRenovacionEquipos/", views.xlRenovacionEquipos),
     path("xlImpresoras/",views.xlImpresoras),
     path("xlRenovacionImpresoras/", views.xlRenovacionImpresoras),
-    path("xlInsumos/", views.xlInsumos)
+    path("xlInsumos/", views.xlInsumos),
+    
+    path("correoContra/", views.correoContra)
     
     
 ]

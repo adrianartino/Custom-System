@@ -129,6 +129,13 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
+#Correo electrónico.
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp-mail.outlook.com'
+EMAIL_HOST_USER = 'customsistemas@outlook.com'
+EMAIL_HOST_PASSWORD = 'claveforaneaNull22$'
+EMAIL_PORT = 25
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 

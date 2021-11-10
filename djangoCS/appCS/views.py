@@ -25,6 +25,10 @@ from dateutil.relativedelta import relativedelta
 #Archivo configuración Django
 from django.conf import settings
 
+#Correo
+from django.core.mail import send_mail
+from django.core.mail import EmailMessage
+
 #Librerias reportes pdf
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
@@ -7393,6 +7397,20 @@ def xlInsumos(request):
             hoja.write(numero_fila, columna, str(ins[columna]), estilo_fuente)
         
     libro.save(response)
-    return response    
+    return response
+
+def correoContra(request):
+    
+    correo = "sistemas@customco.com.mx"
+    
+    email_remitente = settings.EMAIL_HOST_USER
+    email_destino = [correo]
+    asunto = "Esta es una prueba"
+    mensaje = "Hola este es el mensaje."
+
+    email = EmailMessage('Subject', 'Body', to=['sistemas@customco.com.mx'])
+    email.send()
+    
+    return redirect('/verEmpleados/')
 
 #Fin, todooo tiene un fiiiiiin
