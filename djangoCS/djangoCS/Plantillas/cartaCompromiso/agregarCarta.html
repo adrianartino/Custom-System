@@ -168,13 +168,18 @@ Realizar carta
                                     <span class="input-group-addon">
                                         <i class="material-icons">computer</i>
                                     </span>
-                                    {% for equipo in compusInactivas %}
+                                    
                                     <select class="form-control show-tick" name="compuSeleccionada">
-                                        <option value="{{equipo.id_equipo}}">ID: {{equipo.id_equipo}} - {{equipo.marca}}
-                                            {{equipo.modelo}}</option>
-
+                                        {% if compusInactivas %}
+                                            {% for equipo in compusInactivas %}
+                                            <option value="{{equipo.id_equipo}}">ID: {{equipo.id_equipo}} - {{equipo.marca}}
+                                                {{equipo.modelo}}</option>
+                                            {% endfor %}
+                                        {% else %}
+                                            <option value="Ninguno">No hay computadoras para asignar</option>
+                                        {% endif %}
                                     </select>
-                                    {% endfor %}
+                                    
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -206,8 +211,14 @@ Realizar carta
                             </div>
                         </div>
                         <center>
+                            {% if compusInactivas %}
                             <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i
-                                    class="material-icons">save</i> Preguardar Carta</button>
+                                class="material-icons">save</i> Preguardar Carta</button>
+                                         
+                            {% else %}
+                                <h1>No se puede realizar carta porque no hay equipos inactivos.</h1>
+                            {% endif %}
+                            
                         </center>
 
                     </form>
@@ -467,6 +478,18 @@ Realizar carta
         </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+{% if hayError %}
+<script type="text/javascript">
+    Swal.fire({
+        icon: 'error',
+        title: 'Algo salio mal..',
+        text: ' {{textoError}}',
+        footer: '<span style="color: red!important"> Corrige los datos para realizar carta! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
 <script>
     function save() {
         var canvas = document.getElementById('pizarra');

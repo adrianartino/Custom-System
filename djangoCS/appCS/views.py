@@ -2197,6 +2197,11 @@ def agregarCarta(request):
 
         if request.method == "POST":
             
+            if request.POST['compuSeleccionada'] == "Ninguno":
+                hayError = True
+                error = "No hay computadora seleccionada disponible"
+                return render(request, "cartaCompromiso/agregarCarta.html", {"hayError": hayError, "textoError":error})
+            
             compuS = request.POST['compuSeleccionada']
             empleSeleccionado = request.POST['empleadoSeleccionado']
             fechita = datetime.now()
@@ -2208,6 +2213,9 @@ def agregarCarta(request):
             preregistro.save()
             
             actualizar_equipo = Equipos.objects.filter(id_equipo = compuS).update(id_empleado = Empleados.objects.get(id_empleado = empleSeleccionado),activo = "A")
+    
+               
+            
             
             #crear variables de sesión.
             
@@ -2235,7 +2243,10 @@ def agregarCarta(request):
 
         estaEnAgregarCarta = True
         return render(request, "cartaCompromiso/agregarCarta.html",{"estaEnAgregarCarta": estaEnAgregarCarta, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "equipos":equipos, "empleados": empledos, "lista":lista, "fecha":fecha,
-                                                                    "compusInactivas": compusInactivas, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+                                                                 "compusInactivas": compusInactivas, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+        
+    
+
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -3995,9 +4006,8 @@ def reporteEmpleadosActivos(request):
             departamento = Paragraph('''Dpto.''', styleBH)
             puesto = Paragraph('''Puesto''', styleBH)
             correo = Paragraph('''correo''', styleBH)
-            pwd = Paragraph('''Contraseña''', styleBH)
             filasTabla=[]
-            filasTabla.append([id_empleado, nombre, apellido, imagen, departamento, puesto, correo, pwd])
+            filasTabla.append([id_empleado, nombre, apellido, imagen, departamento, puesto, correo])
             #Tabla
             styleN = styles["BodyText"]
             styleN.alignment = TA_CENTER
@@ -4014,14 +4024,14 @@ def reporteEmpleadosActivos(request):
                 campo_contraseña = Paragraph(contra, styleN)
                 
                 fila = [campo_empleado, campo_nombre, campo_apellidos, imagenes, campo_area, campo_puesto, campo_correo, 
-                        campo_contraseña]
+                        ]
                 filasTabla.append(fila)
                 
                 high= high - 18 
                 
             #escribir tabla
             width, height = letter
-            tabla = Table(filasTabla, colWidths=[1 * cm, 2 * cm, 3 * cm, 2.25 * cm, 2 * cm, 2 * cm, 4 * cm, 4 * cm])
+            tabla = Table(filasTabla, colWidths=[1 * cm, 2 * cm, 3 * cm, 2.25 * cm, 2 * cm, 4 * cm, 4 * cm])
             tabla.setStyle(TableStyle([
                 ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
                 ('BACKGROUND', (0, 0), (-1, 0), '#F5CD04'),
@@ -4126,7 +4136,7 @@ def reporteEmpleadosActivos(request):
                         
             
             tabla.wrapOn(c, width, height)
-            tabla.drawOn(c, 20, high)
+            tabla.drawOn(c, 40, high)
             
             #linea guinda
             color_guinda="#B03A2E"
@@ -4153,6 +4163,10 @@ def reporteEmpleadosActivos(request):
         pdf = buffer.getvalue()
         buffer.close()
         respuesta.write(pdf)
+        
+        
+        
+        
         return respuesta
     else:
         return redirect('/login/') #redirecciona a url de inicio
@@ -6989,7 +7003,7 @@ def xlEmpleados(request):
     estilo_fuente = xlwt.XFStyle()
     estilo_fuente.font.bold = True
     
-    columnas = ['Id','Nombre', 'Apellidos', 'Departamento', 'Puesto', 'Correo', 'Contraseña']
+    columnas = ['Id','Nombre', 'Apellidos', 'Departamento', 'Puesto', 'Correo']
     for columna in range(len(columnas)):
         hoja.write(numero_fila, columna, columnas[columna], estilo_fuente)
         
@@ -7015,7 +7029,7 @@ def xlEmpleados(request):
     for x in empleados:
         cont+=1
         datosEmpleados.append([x.id_empleado, x.nombre, x.apellidos, departamentos[cont-1], 
-                               x.puesto, x.correo, x.contraseña])
+                               x.puesto, x.correo])
             
         
     estilo_fuente = xlwt.XFStyle()
