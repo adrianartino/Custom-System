@@ -28,6 +28,9 @@ from django.conf import settings
 #Correo
 from django.core.mail import send_mail
 from django.core.mail import EmailMessage
+from django.core import mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 #Librerias reportes pdf
 from reportlab.pdfgen import canvas
@@ -649,6 +652,13 @@ def verEmpleados(request):
             mensaje = "Se dio de baja al empleado " + request.session['idEmpleadoBaja']
             del request.session["idEmpleadoBaja"]
             return render(request,"Empleados/verEmpleados.html", {"estaEnVerEmpleados": estaEnVerEmpleados, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"lista1":lista1, "baja":baja, "mensaje":mensaje, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "listaModal1":listaModal1, "listaModal2":listaModal2
+                                                                  , "foto":foto})
+        
+        if "textoCorreo" in request.session:
+            correoEnviado = True
+            mensaje = request.session['textoCorreo']
+            del request.session["textoCorreo"]
+            return render(request,"Empleados/verEmpleados.html", {"estaEnVerEmpleados": estaEnVerEmpleados, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"lista1":lista1, "correoEnviado":correoEnviado, "mensaje":mensaje, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "listaModal1":listaModal1, "listaModal2":listaModal2
                                                                   , "foto":foto})
         
         return render(request,"Empleados/verEmpleados.html", {"estaEnVerEmpleados": estaEnVerEmpleados, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"lista1":lista1, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "listaModal1":listaModal1, "listaModal2":listaModal2, "foto":foto})
@@ -7401,15 +7411,29 @@ def xlInsumos(request):
 
 def correoContra(request):
     
-    correo = "sistemas@customco.com.mx"
-    email_remitente = settings.EMAIL_HOST_USER
-    email_destino = [correo]
-         
-    asunto = "Recuperación de contraseña - Bustop"
-    mensaje = "Hola esta es una prueba"
-
-    send_mail(asunto, mensaje, email_remitente, email_destino)
-    
-    return redirect('/verEmpleados/')
+     if request.method == "POST":
+        
+        idEmpleado= request.POST['idEmpleadoContra'] #A o I
+        empleadoDatos = Empleados.objects.filter(id_empleado=idEmpleado)
+        
+        for empleado in empleadoDatos:
+            nombre= empleado.nombre
+            apellidos=empleado.apellidos
+            correo=empleado.correo
+            contraseña=empleado.contraseña
+            
+        asunto = "CS | Solicitud de contraseña de " + nombre + " " + apellidos
+        plantilla = "Empleados/correo.html"
+        html_mensaje = render_to_string(plantilla, {"nombre": nombre, "apellidos": apellidos, "correo": correo, "contraseña": contraseña})
+        email_remitente = settings.EMAIL_HOST_USER
+        email_destino = ['sistemas@customco.com.mx']
+        mensaje = EmailMessage(asunto, html_mensaje, email_remitente, email_destino)
+        mensaje.content_subtype = 'html'
+        mensaje.send()
+        
+        textoCorreo = "Se ha enviado un correo con la información solicitada."
+        request.session['textoCorreo'] = textoCorreo
+        return redirect('/verEmpleados/')
+        #return redirect('/verEmpleados/')
 
 #Fin, todooo tiene un fiiiiiin
