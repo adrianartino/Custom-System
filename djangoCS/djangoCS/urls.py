@@ -80,6 +80,7 @@ urlpatterns = [
     path("reporteEquiposActivos/",views.reporteEquiposActivos),
     path("reporteImpresoras/", views.reporteImpresoras),
     path("reporteInsumos/", views.reporteInsumos),
+    path("reporteInsumosRequisicion/", views.reporteInsumosRequisicion),
     path("reporteRenovacionEq/", views.reporteRenovacionEq),
     path("reporteRenovacionImp/", views.reporteRenovacionImp),
     
@@ -94,7 +95,11 @@ urlpatterns = [
     path("xlRenovacionImpresoras/", views.xlRenovacionImpresoras),
     path("xlInsumos/", views.xlInsumos),
     
-    path("correoContra/", views.correoContra)
+    path("correoContra/", views.correoContra),
+    
+    #Equipos de sistemas
+    path("verMouses/", views.verMouses),
+    path("agregarMouses/", views.agregarMouses)
     
     
 ]

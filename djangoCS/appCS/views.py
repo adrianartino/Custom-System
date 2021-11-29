@@ -5615,6 +5615,375 @@ def reporteRenovacionImp(request):
         return redirect('/login/') #redirecciona a url de inicio
 
 
+def reporteInsumosRequisicion(request):
+    
+    
+    
+    if "idSesion" in request.session:    
+        
+    
+        insumos = Cartuchos.objects.filter(cantidad__in=[0,1])
+        
+        numero_insumos = 0
+        for insumo in insumos:
+            numero_insumos +=1
+            
+        if numero_insumos == 0:
+            numero_insumos =1
+        
+        division = numero_insumos // 9 #Resultado 1, sin residuo
+        residuo = numero_insumos%9 #residuo hay 2
+        
+        if residuo == 0:
+            #hojas iguales a division.
+            hojasIguales = True
+            
+        if residuo != 0:
+            division = division + 1   #Número de hojas total. 2
+            
+        #QUITAR ESTO PARA OTRA HOJA
+        #crear el http response con pdf
+        respuesta = HttpResponse(content_type='application/pdf')
+        respuesta['Content-Disposition'] = 'attachment; filename=Requisicion Insumos'+str(datetime.today().strftime('%Y-%m-%d'))+'.pdf'
+        #Crear objeto PDF 
+        buffer =BytesIO()
+        c = canvas.Canvas(buffer, pagesize=letter)
+        #HASTA AQUI
+            
+    
+        contadorHojas = 1
+        for hoja2 in range(division):
+            
+            #HASTA AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+            insumos= Cartuchos.objects.filter(cantidad__in=[0,1]) #Dolo los insumos que tengan en su cantidad 1 o 0.
+            
+            
+            ids =[]
+            marcas = []
+            modelos = []
+            cantidades = []
+            numseries = []
+            colores = []
+            urls_imagenes = []
+            impresoras = []
+            cantidades_compras = []
+            base_dir = str(settings.BASE_DIR)
+ 
+            if contadorHojas == 4:
+                contadorInsumos = 0
+                contadorInsumosXHoja = 0
+                for insumo in insumos:
+                    
+                    contadorInsumos += 1 #10
+                    if contadorInsumos > 27 and contadorInsumos <= 36:
+                        imagen = insumo.imagenCartucho
+                        urlimagen = base_dir + '/media/' + str(imagen)
+                        img = Image(urlimagen,width=50, height=50)
+                        urls_imagenes.append(img)
+                        
+                        idimpresora = insumo.id_impresora_id
+                        
+                        datosImpresora= Impresoras.objects.filter(id_impresora=idimpresora)
+                        for dato in datosImpresora:
+                            marca= dato.marca
+                            modelo=dato.modelo
+                        textoImpresora= marca + " " + modelo
+                        impresoras.append(textoImpresora)
+                        ids.append(insumo.id_cartucho)
+                        marcas.append(insumo.marca)
+                        modelos.append(insumo.modelo)
+                        cantidades.append(insumo.cantidad)
+                        if insumo.cantidad == 0:
+                            compra_req = "2 cartuchos"
+                        if insumo.cantidad == 1:
+                            compra_req = "1 cartucho"
+                        cantidades_compras.append(compra_req)
+                        numseries.append(insumo.nuserie)
+                        colores.append(insumo.color)
+                    
+                        contadorInsumosXHoja +=1
+                        
+                    
+                #solo 9 empleados
+                listaInsumos = zip(ids, marcas, modelos, cantidades, numseries, colores, urls_imagenes, impresoras)
+                
+                contadorHojas = 5
+                if contadorInsumosXHoja == 9:
+                    high = 600 - ((contadorInsumosXHoja+1) * 33)
+                else:
+                    high = 600 - (contadorInsumosXHoja * 33)        
+            
+            if contadorHojas == 3:
+                contadorInsumos = 0
+                contadorInsumosXHoja = 0
+                for insumo in insumos:
+                    
+                    contadorInsumos += 1 #10
+                    if contadorInsumos > 18 and contadorInsumos <= 27:
+                        imagen = insumo.imagenCartucho
+                        urlimagen = base_dir + '/media/' + str(imagen)
+                        img = Image(urlimagen,width=50, height=50)
+                        urls_imagenes.append(img)
+                        
+                        idimpresora = insumo.id_impresora_id
+                        
+                        datosImpresora= Impresoras.objects.filter(id_impresora=idimpresora)
+                        for dato in datosImpresora:
+                            marca= dato.marca
+                            modelo=dato.modelo
+                        textoImpresora= marca + " " + modelo
+                        impresoras.append(textoImpresora)
+                        ids.append(insumo.id_cartucho)
+                        marcas.append(insumo.marca)
+                        modelos.append(insumo.modelo)
+                        cantidades.append(insumo.cantidad)
+                        if insumo.cantidad == 0:
+                            compra_req = "2 cartuchos"
+                        if insumo.cantidad == 1:
+                            compra_req = "1 cartucho"
+                        cantidades_compras.append(compra_req)
+                        numseries.append(insumo.nuserie)
+                        colores.append(insumo.color)
+                        
+                        contadorInsumosXHoja +=1
+                        
+                    
+                #solo 9 empleados
+                listaInsumos = zip(ids, marcas, modelos, cantidades, numseries, colores, urls_imagenes, impresoras)
+                
+                contadorHojas = 4
+                if contadorInsumosXHoja == 9:
+                    high = 600 - ((contadorInsumosXHoja+1) * 33)
+                else:
+                    high = 600 - (contadorInsumosXHoja * 33)
+                    
+            if contadorHojas == 2:
+                contadorInsumos = 0
+                contadorInsumosXHoja = 0
+                for insumo in insumos:
+                    
+                    contadorInsumos += 1 #10
+                    if contadorInsumos > 9 and contadorInsumos <= 18:
+                        imagen = insumo.imagenCartucho
+                        urlimagen = base_dir + '/media/' + str(imagen)
+                        img = Image(urlimagen,width=50, height=50)
+                        urls_imagenes.append(img)
+                        
+                        idimpresora = insumo.id_impresora_id
+                        
+                        datosImpresora= Impresoras.objects.filter(id_impresora=idimpresora)
+                        for dato in datosImpresora:
+                            marca= dato.marca
+                            modelo=dato.modelo
+                        textoImpresora= marca + " " + modelo
+                        impresoras.append(textoImpresora)
+                        ids.append(insumo.id_cartucho)
+                        marcas.append(insumo.marca)
+                        modelos.append(insumo.modelo)
+                        cantidades.append(insumo.cantidad)
+                        if insumo.cantidad == 0:
+                            compra_req = "2 cartuchos"
+                        if insumo.cantidad == 1:
+                            compra_req = "1 cartucho"
+                        cantidades_compras.append(compra_req)
+                        numseries.append(insumo.nuserie)
+                        colores.append(insumo.color)
+                    
+                        contadorInsumosXHoja +=1
+                        
+                    
+                #solo 9 empleados
+                listaInsumos = zip(ids, marcas, modelos, cantidades, numseries, colores, urls_imagenes, impresoras)
+                
+                contadorHojas = 3
+                if contadorInsumosXHoja == 9:
+                    high = 600 - ((contadorInsumosXHoja+1) * 33)
+                else:
+                    high = 600 - (contadorInsumosXHoja * 33)
+                    
+                        
+            if contadorHojas == 1:
+                contadorInsumos = 0
+                contadorInsumosXHoja = 0
+                for insumo in insumos:
+                    
+                    contadorInsumos += 1 #10
+                    if contadorInsumos <= 9:
+                        imagen = insumo.imagenCartucho
+                        urlimagen = base_dir + '/media/' + str(imagen)
+                        img = Image(urlimagen,width=50, height=50)
+                        urls_imagenes.append(img)
+                        
+                        idimpresora = insumo.id_impresora_id
+                        
+                        datosImpresora= Impresoras.objects.filter(id_impresora=idimpresora)
+                        for dato in datosImpresora:
+                            marca= dato.marca
+                            modelo=dato.modelo
+                        textoImpresora= marca + " " + modelo
+                        impresoras.append(textoImpresora)
+                        ids.append(insumo.id_cartucho)
+                        marcas.append(insumo.marca)
+                        modelos.append(insumo.modelo)
+                        cantidades.append(insumo.cantidad)
+                        if insumo.cantidad == 0:
+                            compra_req = "2 cartuchos"
+                        if insumo.cantidad == 1:
+                            compra_req = "1 cartucho"
+                        cantidades_compras.append(compra_req)
+                        numseries.append(insumo.nuserie)
+                        colores.append(insumo.color)
+                        
+                        contadorInsumosXHoja +=1
+                        
+                    
+                #solo 9 empleados
+                listaInsumos = zip(ids, marcas, modelos, cantidades, numseries, colores, urls_imagenes, impresoras, cantidades_compras)
+                
+                contadorHojas = 2
+                if contadorInsumosXHoja == 9:
+                    high = 600 - ((contadorInsumosXHoja+1) * 33)
+                else:
+                    high = 600 - (contadorInsumosXHoja * 33)
+            
+            base_dir = str(settings.BASE_DIR)
+            #nombre de empresa
+            logo = base_dir+'/static/images/logoCustom.PNG'   
+            c.drawImage(logo, 40,700,120,70, preserveAspectRatio=True)
+            
+            c.setFont('Helvetica-Bold', 14)
+            c.drawString(150,750, 'Custom & Co S.A. de C.V.')
+            
+            c.setFont('Helvetica', 8)
+            c.drawString(150,735, 'Allende #646 Sur Colonia Centro, Durango, CP: 35000')
+            
+            c.setFont('Helvetica', 8)
+            c.drawString(150,720, 'RFC: CAC070116IS9')
+            
+            c.setFont('Helvetica', 8)
+            c.drawString(150,705, 'Tel: 8717147716')
+            #fecha
+            hoy=datetime.now()
+            fecha = str(hoy.date())
+            color_guinda="#B03A2E"
+            c.setFillColor(color_guinda)
+            
+            c.setFont('Helvetica-Bold', 12)
+            c.drawString(400,750, "REQUISICIÓN DE INSUMOS")
+            color_negro="#030305"
+            c.setFillColor(color_negro)
+            c.setFont('Helvetica-Bold', 10)
+            c.drawString(405,730, "Fecha de impresión: " +fecha)
+            #linea guinda
+            
+            c.setFillColor(color_guinda)
+            c.setStrokeColor(color_guinda)
+            c.line(40,695,560,695)
+            #nombre departamento
+            color_negro="#030305"
+            c.setFillColor(color_negro)
+            c.setFont('Helvetica', 12)
+            c.drawString(405,710, 'Departamento de Sistemas')
+            #titulo
+            c.setFont('Helvetica-Bold', 22)
+            
+            c.drawString(200,660, 'Requisición de Insumos.')
+ 
+            #header de tabla
+            styles = getSampleStyleSheet()
+            styleBH =styles["Normal"]
+            styleBH.alignment = TA_CENTER
+            styleBH.fontSize = 9
+            
+            
+            id_insumo = Paragraph('''ID''', styleBH)
+            marca = Paragraph('''Marca''', styleBH)
+            modelo = Paragraph('''Modelo''', styleBH)
+            cantidad= Paragraph('''Stock''', styleBH)
+            nserie = Paragraph('''N° Serie''', styleBH)
+            color = Paragraph('''Tinta''', styleBH)
+            imagen = Paragraph('''Imagen.''', styleBH)
+            impresora = Paragraph('''Impresora''', styleBH)
+            cantidad_compra = Paragraph('''Cantidad Compra''', styleBH)
+        
+            filasTabla=[]
+            filasTabla.append([id_insumo, marca, modelo, cantidad,nserie, color, imagen,impresora,cantidad_compra])
+            #Tabla
+            styleN = styles["BodyText"]
+            styleN.alignment = TA_CENTER
+            styleN.fontSize = 7
+            
+                
+            cont = 0
+            for id, marca, modelo, cantidad,nserie,  color,  imagenes, impresora, cantidad_compra in listaInsumos:
+                campo_insumo = Paragraph(str(id), styleN)
+                campo_marca = Paragraph(marca, styleN)
+                campo_modelo = Paragraph(modelo, styleN)
+                campo_cantidad = Paragraph(str(cantidad), styleN)
+                campo_nserie = Paragraph(nserie, styleN)
+                campo_color = Paragraph(color, styleN)
+                campo_impresora = Paragraph(impresora, styleN)
+                campo_cantidadcompra = Paragraph(cantidad_compra, styleN)
+                
+                fila = [campo_insumo, campo_marca, campo_modelo, campo_cantidad,  campo_nserie, campo_color, imagenes, campo_impresora, campo_cantidadcompra]
+                filasTabla.append(fila)
+                
+                high= high - 18 
+                
+                
+            #escribir tabla
+            width, height = letter
+            tabla = Table(filasTabla, colWidths=[.9 * cm, 1.5 * cm, 3* cm, 1.3 * cm, 2 * cm, 1.5 * cm, 2.3 * cm, 4 * cm, 3 * cm])
+            tabla.setStyle(TableStyle([
+                ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+                ('BACKGROUND', (0, 0), (-1, 0), '#F5CD04'),
+                ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+            ]))
+            
+            contador = 0
+            for fila in filasTabla:
+                contador = contador + 1
+                if contador == 1:
+                    tabla.setStyle(([
+                    ('BACKGROUND', (0, 0), (10,0), colors.crimson),
+                    ('TEXTCOLOR',(0,0), (1, 1), colors.whitesmoke)
+                    ]))
+                
+                if contador > 1:
+                    tabla.setStyle(([
+                    ('BACKGROUND', (8, 1), (10,contador), colors.lightcoral),
+                    ]))
+                
+            
+            tabla.wrapOn(c, width, height)
+            tabla.drawOn(c, 30, high)
+            
+            #linea guinda
+            color_guinda="#B03A2E"
+            c.setFillColor(color_guinda)
+            c.setStrokeColor(color_guinda)
+            c.line(40,60,560,60)
+            
+            color_negro="#030305"
+            c.setFillColor(color_negro)
+            c.setFont('Helvetica-Bold', 11)
+            c.drawString(170,48, '2021 - Administrador de Custom System. - Versión: 1.0.0 ')
+            
+            #guardar la pagina, y se crea otra en caso de ser necesario
+            c.showPage()
+        
+        #guardar pdf
+        c.save()
+        #obtener valores de bytesIO y esribirlos en la respuesta
+        pdf = buffer.getvalue()
+        buffer.close()
+        respuesta.write(pdf)
+        return respuesta
+
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+
+
 def reporteInsumos(request):
     
     
@@ -7451,3 +7820,51 @@ def correoContra(request):
         #return redirect('/verEmpleados/')
 
 #Fin, todooo tiene un fiiiiiin
+
+def verMouses(request):
+    
+    if "idSesion" in request.session:
+
+        estaEnVerMouses = True
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        
+        nombreCompleto = nombre + " " + apellidos
+        
+        foto = fotoAdmin(request)
+        
+        
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+
+        return render(request, "Sistemas/Mouses/verMouses.html", {"estaEnVerMouses":estaEnVerMouses,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+    
+def agregarMouses(request):
+    
+    if "idSesion" in request.session:
+
+        estaEnAgregarMouses = True
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        
+        nombreCompleto = nombre + " " + apellidos
+        
+        foto = fotoAdmin(request)
+        
+        
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+
+        return render(request, "Sistemas/Mouses/agregarMouses.html", {"estaEnAgregarMouses":estaEnAgregarMouses,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+    else:
+        return redirect('/login/') #redirecciona a url de inicio

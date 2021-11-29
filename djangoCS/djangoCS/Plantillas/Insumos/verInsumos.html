@@ -47,6 +47,24 @@ Insumos | Custom System
                 </h2>
                 <br>
                 <div class="row clear-fix">
+                    <div class="col-xs-12 col-sm-4">
+                        <form action="/reporteInsumosRequisicion/" method="POST">{% csrf_token %}
+                            <button type="submit" class="btn bg-red waves-effect animate__animated animate__flipInX"
+                                data-toggle="tooltip" data-placement="right"
+                                title="Descargar requisición de insumos de impresora.">
+                                <i class="material-icons">picture_as_pdf</i>
+                                <span>PDF insumos requeridos a compra</span>
+                            </button>
+                        </form>
+                    </div>
+                    
+
+                </div>
+                <div class="row clear-fix">
+                    <br>
+                </div>
+                <div class="row clear-fix">
+                    
                     <div class="col-xs-12 col-sm-1">
                         <form action="/reporteInsumos/" method="POST">{% csrf_token %}
                             <button type="submit" class="btn bg-red waves-effect animate__animated animate__flipInX"

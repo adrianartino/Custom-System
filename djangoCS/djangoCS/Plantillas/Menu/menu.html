@@ -490,11 +490,11 @@
 
                                 <a href="javascript:void(0);" class="menu-toggle">
                                     {% if estaEnAgregarInsumos %}
-                                    <i class="material-icons" style="color: #00917C;!important">opacity</i>
+                                    <i class="material-icons" style="color: #336BFF;!important">opacity</i>
                                     <span style="color: #E40017;!important">Insumos</span>
                                     {% else %}
                                     {% if estaEnVerInsumos %}
-                                    <i class="material-icons" style="color: #00917C;!important">opacity</i>
+                                    <i class="material-icons" style="color: #336BFF;!important">opacity</i>
                                     <span style="color: #E40017;!important">Insumos</span>
                                     {% else %}
                                     <i class="material-icons">opacity</i>
@@ -525,6 +525,95 @@
                                         <a href="/agregarInsumos/" style="color: #d49e0a;!important">Agregar insumos</a>
                                         {% else %}
                                         <a href="/agregarInsumos/">Agregar insumos</a>
+                                        {% endif %}
+                                    </li>
+
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                        {% if estaEnVerMouses %}
+                    <li class="active">
+                        {% else %}
+                    <li>
+                        {% if estaEnAgregarMouses %}
+                    <li class="active">
+                        {% else %}
+                    <li>
+                        {% endif %}
+                        {% endif %}
+
+
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            
+                            {% if estaEnVerMouses %}
+                            <i class="material-icons" style="color: #00917C;!important">settings_input_component</i>
+                            <span style="color: #00917C;!important"> Equipos de sistemas</span>
+                            {% else %}
+                            {% if estaEnAgregarMouses %}
+                            <i class="material-icons" style="color: #00917C;!important">settings_input_component</i>
+                            <span style="color: #00917C;!important"> Equipos de sistemas</span>
+                            {% else %}
+                            <i class="material-icons">settings_input_component</i>
+                            <span> Equipos de sistemas</span>
+                            {% endif %}
+                            {% endif %}
+
+                        </a>
+                        <ul class="ml-menu">
+
+                            
+                            {% if estaEnVerMouses %}
+                            <li class="active">
+                            {% else %}
+                            <li>
+                            {% if estaEnAgregarMouses %}
+                            <li class="active">
+                            {% else %}
+                            <li>
+                            {% endif %}
+                            {% endif %}
+
+
+
+                                <a href="javascript:void(0);" class="menu-toggle">
+                                    {% if estaEnVerMouses %}
+                                    <i class="material-icons" style="color: #336BFF;!important">mouse</i>
+                                    <span style="color: #E40017;!important">Mouses</span>
+                                    {% else %}
+                                    {% if estaEnAgregarMouses %}
+                                    <i class="material-icons" style="color: #336BFF;!important">mouse</i>
+                                    <span style="color: #E40017;!important">Mouses</span>
+                                    {% else %}
+                                    
+                                    <i class="material-icons">mouse</i>
+                                    <span>Mouses</span>
+                                    {% endif %}
+                                    {% endif %}
+                                </a>
+                                <ul class="ml-menu">
+                                        {% if estaEnVerMouses %}
+                                        <li class="active">
+                                            {% else %}
+                                        <li>
+                                        {% endif %}
+                                        {% if estaEnVerMouses %}
+                                        <a href="/verMouses/" style="color: #d49e0a;!important">Ver mouses</a>
+                                        {% else %}
+
+                                        <a href="/verMouses/">Ver mouses</a>
+                                        {% endif %}
+
+                                    </li>
+                                        {% if estaEnAgregarMouses %}
+                                        <li class="active">
+                                            {% else %}
+                                        <li>
+                                        {% endif %}
+                                        {% if estaEnAgregarMouses %}
+                                        <a href="/agregarMouses/" style="color: #d49e0a;!important">Agregar mouses</a>
+                                        {% else %}
+                                        <a href="/agregarMouses/">Agregar mouses</a>
                                         {% endif %}
                                     </li>
 
