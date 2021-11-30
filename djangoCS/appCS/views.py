@@ -7868,3 +7868,206 @@ def agregarMouses(request):
         return render(request, "Sistemas/Mouses/agregarMouses.html", {"estaEnAgregarMouses":estaEnAgregarMouses,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
     else:
         return redirect('/login/') #redirecciona a url de inicio
+    
+    
+def correoContra(request):
+    
+     if request.method == "POST":
+        
+        idEmpleado= request.POST['idEmpleadoContra'] #A o I
+        empleadoDatos = Empleados.objects.filter(id_empleado=idEmpleado)
+        
+        for empleado in empleadoDatos:
+            nombre= empleado.nombre
+            apellidos=empleado.apellidos
+            correo=empleado.correo
+            contraseña=empleado.contraseña
+            
+        asunto = "CS | Solicitud de contraseña de " + nombre + " " + apellidos
+        plantilla = "Empleados/correo.html"
+        html_mensaje = render_to_string(plantilla, {"nombre": nombre, "apellidos": apellidos, "correo": correo, "contraseña": contraseña})
+        email_remitente = settings.EMAIL_HOST_USER
+        email_destino = ['sistemas@customco.com.mx']
+        mensaje = EmailMessage(asunto, html_mensaje, email_remitente, email_destino)
+        mensaje.content_subtype = 'html'
+        mensaje.send()
+        
+        textoCorreo = "Se ha enviado un correo con la información solicitada."
+        request.session['textoCorreo'] = textoCorreo
+        return redirect('/verEmpleados/')
+        #return redirect('/verEmpleados/')
+
+#Fin, todooo tiene un fiiiiiin
+
+def verTeclados(request):
+    
+    if "idSesion" in request.session:
+
+        estaEnVerTeclados = True
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        
+        nombreCompleto = nombre + " " + apellidos
+        
+        foto = fotoAdmin(request)
+        
+        
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+
+        return render(request, "Sistemas/Teclados/verTeclados.html", {"estaEnVerTeclados":estaEnVerTeclados,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+    
+def agregarTeclados(request):
+    
+    if "idSesion" in request.session:
+
+        estaEnAgregarTeclados = True
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        
+        nombreCompleto = nombre + " " + apellidos
+        
+        foto = fotoAdmin(request)
+        
+        
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+
+        return render(request, "Sistemas/Teclados/agregarTeclados.html", {"estaEnAgregarTeclados":estaEnAgregarTeclados,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+    
+    
+    
+def verMonitores(request):
+    
+    if "idSesion" in request.session:
+
+        estaEnVerMonitores = True
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        
+        nombreCompleto = nombre + " " + apellidos
+        
+        foto = fotoAdmin(request)
+        
+        
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+
+        return render(request, "Sistemas/Monitores/verMonitores.html", {"estaEnVerMonitores":estaEnVerMonitores,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+    
+def agregarMonitores(request):
+    
+    if "idSesion" in request.session:
+
+        estaEnAgregarMonitores = True
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        
+        nombreCompleto = nombre + " " + apellidos
+        
+        foto = fotoAdmin(request)
+        
+        
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+
+        return render(request, "Sistemas/Monitores/agregarMonitores.html", {"estaEnAgregarMonitores":estaEnAgregarMonitores,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+    
+    
+    
+    
+def verTelefonos(request):
+    
+    if "idSesion" in request.session:
+
+        estaEnVerTelefonos = True
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        
+        nombreCompleto = nombre + " " + apellidos
+        
+        foto = fotoAdmin(request)
+        
+        
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+
+        return render(request, "Sistemas/Telefonos/verTelefonos.html", {"estaEnVerTelefonos":estaEnVerTelefonos,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+    
+def agregarTelefonos(request):
+    
+    if "idSesion" in request.session:
+
+        estaEnAgregarTelefonos = True
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        
+        nombreCompleto = nombre + " " + apellidos
+        
+        foto = fotoAdmin(request)
+        
+        
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+
+        return render(request, "Sistemas/Telefonos/agregarTelefonos.html", {"estaEnAgregarTelefonos":estaEnAgregarTelefonos,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+    
+def extensionesTel(request):
+    
+    if "idSesion" in request.session:
+
+        estaEnExtensionesTelefonos = True
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        
+        nombreCompleto = nombre + " " + apellidos
+        
+        foto = fotoAdmin(request)
+        
+        
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+
+        return render(request, "Sistemas/Telefonos/extensiones.html", {"estaEnExtensionesTelefonos":estaEnExtensionesTelefonos,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+    else:
+        return redirect('/login/') #redirecciona a url de inicio

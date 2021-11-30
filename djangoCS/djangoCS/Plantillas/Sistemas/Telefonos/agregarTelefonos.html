@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block titulo %}
-Agregar Mouses | Custom System
+Agregar Teléfonos | Custom System
 {% endblock %}
 
 {% block estilos %}
@@ -42,8 +42,8 @@ Agregar Mouses | Custom System
         <div class="card">
             <div class="header">
                 <h2 style="font-family: 'Oswald', sans-serif;">
-                    AGREGAR NUEVO MOUSE
-                    <small style="color: #790C05;">Formulario para agregar un nuevo mouse al sistema.</small>
+                    AGREGAR NUEVO TELÉFONO
+                    <small style="color: #790C05;">Formulario para agregar un nuevo teléfono al sistema.</small>
                 </h2>
             </div>
             <div class="body">
@@ -51,53 +51,61 @@ Agregar Mouses | Custom System
                     {% csrf_token %}
                     <div class="row clearfix">
                         <div class="col-md-4">
-                            <label for="email_address"><span style="color: #078F68;">* </span>Marca:</label>
+                            <label for="email_address"><span style="color: #078F68;">* </span>Ubicación/Departamento:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">copyright</i>
                                 </span>
                                 <select class="form-control show-tick" name="marcas">
-                                    <option value="Acteck">Acteck</option>
-                                    <option value="Logitech">Logitech</option>
-                                    <option value="Steren">Steren</option>
+                                    <option value="HP">HP</option>
+                                    <option value="XEROX">XEROX</option>
+                                    <option value="SAMSUNG">SAMSUNG</option>
+                                    <option value="EPSON">EPSON</option>
+                                    <option value="LEÓN">LEÓN</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Encargado:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">copyright</i>
+                                </span>
+                                <select class="form-control show-tick" name="marcas">
+                                    <option value="HP">HP</option>
+                                    <option value="XEROX">XEROX</option>
+                                    <option value="SAMSUNG">SAMSUNG</option>
+                                    <option value="EPSON">EPSON</option>
+                                    <option value="LEÓN">LEÓN</option>
                                 </select>
                             </div>
                         </div>
 
 
-                        <div class="col-md-4">
-                            <label for="email_address"><span style="color: #078F68;">* </span>Modelo:</label>
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="material-icons">branding_watermark</i>
-                                </span>
-                                <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar Modelo"
-                                        name="modelo" maxlength="50" required>
-                                </div>
-                            </div>
-                        </div>
-                        
                         <div class="col-md-4">
                             <label for="email_address"><span style="color: #078F68;">* </span>Tipo de conexión:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
-                                    <i class="material-icons">network_wifi</i>
+                                    <i class="material-icons">copyright</i>
                                 </span>
-                                <select class="form-control show-tick" name="impresora">
-                                    
-                                    <option value="alambrico">Alámbrico</option>
-                                    <option value="inalambrico">Inalámbrico</option>
+                                <select class="form-control show-tick" name="marcas">
+                                    <option value="HP">HP</option>
+                                    <option value="XEROX">XEROX</option>
+                                    <option value="SAMSUNG">SAMSUNG</option>
+                                    <option value="EPSON">EPSON</option>
+                                    <option value="LEÓN">LEÓN</option>
                                 </select>
                             </div>
                         </div>
+                        
+                        
                         
 
                     </div>
                     <div class="row clearfix">
 
                         <div class="col-md-3">
-                            <label for="email_address"><span style="color: #078F68;">* </span>Estado:</label>
+                            <label for="email_address"><span style="color: #078F68;">* </span>Marca:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">build</i>
@@ -112,11 +120,24 @@ Agregar Mouses | Custom System
                             </div>
                         </div>
 
+                        <div class="col-md-4">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Modelo:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">branding_watermark</i>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" class="form-control date" placeholder="Ingresar Modelo"
+                                        name="modelo" maxlength="50" required>
+                                </div>
+                            </div>
+                        </div>
+
 
 
                         <div class="col-md-4">
                             <label for="email_address"><span style="color: #078F68;">* </span>Imagen de
-                                mouse:</label>
+                                teléfono:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">add_photo_alternate</i>
@@ -126,8 +147,11 @@ Agregar Mouses | Custom System
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <label for="email_address"><span style="color: #078F68;">* </span>Equipo al que pertenece:</label>
+                        
+                    </div>
+                    <div class="row clearfix">
+                        <div class="col-md-3">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Extensión:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">computer</i>
@@ -141,16 +165,24 @@ Agregar Mouses | Custom System
                                 </select>
                             </div>
                         </div>
-
-
-
-
+                        <div class="col-md-4">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Nodo:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">branding_watermark</i>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" class="form-control date" placeholder="Ingresar Modelo"
+                                        name="modelo" maxlength="50" required>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
 
                     <button type="submit"
                         class="btn btn-warning m-t-15 waves-effect animate__animated animate__flipInX"><i
-                            class="material-icons">opacity</i> Guardar Mouse</button>
+                            class="material-icons">opacity</i> Guardar Teléfono</button>
                 </form>
             </div>
         </div>

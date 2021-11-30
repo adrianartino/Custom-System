@@ -99,7 +99,14 @@ urlpatterns = [
     
     #Equipos de sistemas
     path("verMouses/", views.verMouses),
-    path("agregarMouses/", views.agregarMouses)
+    path("agregarMouses/", views.agregarMouses),
+    path("verTeclados/", views.verTeclados),
+    path("agregarTeclados/", views.agregarTeclados),
+    path("verMonitores/", views.verMonitores),
+    path("agregarMonitores/",views.agregarMonitores),
+    path("verTelefonos/", views.verTelefonos),
+    path("agregarTelefonos/", views.agregarTelefonos),
+    path("extensionesTel/", views.extensionesTel)
     
     
 ]

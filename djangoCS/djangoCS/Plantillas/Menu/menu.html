@@ -540,6 +540,41 @@
                     <li class="active">
                         {% else %}
                     <li>
+                        {% if estaEnVerTeclados %}
+                    <li class="active">
+                        {% else %}
+                    <li>
+                        {% if estaEnAgregarTeclados %}
+                    <li class="active">
+                        {% else %}
+                    <li>
+                        {% if estaEnVerMonitores %}
+                    <li class="active">
+                        {% else %}
+                    <li>
+                        {% if estaEnAgregarMonitores %}
+                    <li class="active">
+                        {% else %}
+                    <li>
+                        {% if estaEnAgregarTelefonos %}
+                    <li class="active">
+                        {% else %}
+                    <li>
+                        {% if estaEnVerTelefonos %}
+                    <li class="active">
+                        {% else %}
+                    <li>
+                        {% if estaEnExtensionesTelefonos %}
+                    <li class="active">
+                        {% else %}
+                    <li>
+                        {% endif %}
+                        {% endif %}
+                        {% endif %}
+                        {% endif %}
+                        {% endif %}
+                        {% endif %}
+                        {% endif %}
                         {% endif %}
                         {% endif %}
 
@@ -554,8 +589,43 @@
                             <i class="material-icons" style="color: #00917C !important;">settings_input_component</i>
                             <span style="color: #00917C !important;"> Equipos de sistemas</span>
                             {% else %}
+                            {% if estaEnVerTeclados %}
+                            <i class="material-icons" style="color: #00917C !important;">settings_input_component</i>
+                            <span style="color: #00917C !important;"> Equipos de sistemas</span>
+                            {% else %}
+                            {% if estaEnAgregarTeclados %}
+                            <i class="material-icons" style="color: #00917C !important;">settings_input_component</i>
+                            <span style="color: #00917C !important;"> Equipos de sistemas</span>
+                            {% else %}
+                            {% if estaEnVerMonitores %}
+                            <i class="material-icons" style="color: #00917C !important;">settings_input_component</i>
+                            <span style="color: #00917C !important;"> Equipos de sistemas</span>
+                            {% else %}
+                            {% if estaEnAgregarMonitores %}
+                            <i class="material-icons" style="color: #00917C !important;">settings_input_component</i>
+                            <span style="color: #00917C !important;"> Equipos de sistemas</span>
+                            {% else %}
+                            {% if estaEnVerTelefonos %}
+                            <i class="material-icons" style="color: #00917C !important;">settings_input_component</i>
+                            <span style="color: #00917C !important;"> Equipos de sistemas</span>
+                            {% else %}
+                            {% if estaEnAgregarTelefonos %}
+                            <i class="material-icons" style="color: #00917C !important;">settings_input_component</i>
+                            <span style="color: #00917C !important;"> Equipos de sistemas</span>
+                            {% else %}
+                            {% if estaEnExtensionesTelefonos %}
+                            <i class="material-icons" style="color: #00917C !important;">settings_input_component</i>
+                            <span style="color: #00917C !important;"> Equipos de sistemas</span>
+                            {% else %}
                             <i class="material-icons">settings_input_component</i>
                             <span> Equipos de sistemas</span>
+                            {% endif %}
+                            {% endif %}
+                            {% endif %}
+                            {% endif %}
+                            {% endif %}
+                            {% endif %}
+                            {% endif %}
                             {% endif %}
                             {% endif %}
 
@@ -571,6 +641,7 @@
                             <li class="active">
                             {% else %}
                             <li>
+                            
                             {% endif %}
                             {% endif %}
 
@@ -618,7 +689,206 @@
                                     </li>
 
                                 </ul>
+
+
+
+                            <!--Aqui es otro menusitooooooooooooooooooooooooooooooooooooooooooo-->
+                            {% if estaEnVerTeclados %}
+                            <li class="active">
+                            {% else %}
+                            <li>
+                            {% if estaEnAgregarTeclados %}
+                            <li class="active">
+                            {% else %}
+                            <li>
+                            {% endif %}
+                            {% endif %}
+
+                                
+                                <a href="javascript:void(0);" class="menu-toggle">
+                                    {% if estaEnVerTeclados %}
+                                    <i class="material-icons" style="color: #336BFF !important;">keyboard</i>
+                                    <span style="color: #E40017 !important;">Teclados</span>
+                                    {% else %}
+                                    {% if estaEnAgregarTeclados %}
+                                    <i class="material-icons" style="color: #336BFF !important;">keyboard</i>
+                                    <span style="color: #E40017 !important;">Teclados</span>
+                                    {% else %}
+                                    
+                                    <i class="material-icons">keyboard</i>
+                                    <span>Teclados</span>
+                                    {% endif %}
+                                    {% endif %}
+                                </a>
+                                <ul class="ml-menu">
+                                        {% if estaEnVerTeclados %}
+                                        <li class="active">
+                                            {% else %}
+                                        <li>
+                                        {% endif %}
+                                        {% if estaEnVerTeclados %}
+                                        <a href="/verTeclados/" style="color: #d49e0a !important;">Ver teclados</a>
+                                        {% else %}
+
+                                        <a href="/verTeclados/">Ver teclados</a>
+                                        {% endif %}
+
+                                    </li>
+                                        {% if estaEnAgregarTeclados %}
+                                        <li class="active">
+                                            {% else %}
+                                        <li>
+                                        {% endif %}
+                                        {% if estaEnAgregarTeclados %}
+                                        <a href="/agregarTeclados/" style="color: #d49e0a !important;">Agregar teclados</a>
+                                        {% else %}
+                                        <a href="/agregarTeclados/">Agregar teclados</a>
+                                        {% endif %}
+                                    </li>
+
+                                </ul>
                             </li>
+                            <!-- Aqui terminaaa -->
+
+
+                            <!--Aqui es otro menusitooooooooooooooooooooooooooooooooooooooooooo-->
+                            {% if estaEnVerMonitores %}
+                            <li class="active">
+                            {% else %}
+                            <li>
+                            {% if estaEnAgregarMonitores %}
+                            <li class="active">
+                            {% else %}
+                            <li>
+                            {% endif %}
+                            {% endif %}
+
+                                
+                                <a href="javascript:void(0);" class="menu-toggle">
+                                    {% if estaEnVerMonitores %}
+                                    <i class="material-icons" style="color: #336BFF !important;">desktop_windows</i>
+                                    <span style="color: #E40017 !important;">Monitores</span>
+                                    {% else %}
+                                    {% if estaEnAgregarMonitores %}
+                                    <i class="material-icons" style="color: #336BFF !important;">desktop_windows</i>
+                                    <span style="color: #E40017 !important;">Monitores</span>
+                                    {% else %}
+                                    
+                                    <i class="material-icons">desktop_windows</i>
+                                    <span>Monitores</span>
+                                    {% endif %}
+                                    {% endif %}
+                                </a>
+                                <ul class="ml-menu">
+                                        {% if estaEnVerMonitores %}
+                                        <li class="active">
+                                            {% else %}
+                                        <li>
+                                        {% endif %}
+                                        {% if estaEnVerMonitores %}
+                                        <a href="/verMonitores/" style="color: #d49e0a !important;">Ver monitores</a>
+                                        {% else %}
+
+                                        <a href="/verMonitores/">Ver monitores</a>
+                                        {% endif %}
+
+                                    </li>
+                                        {% if estaEnAgregarMonitores %}
+                                        <li class="active">
+                                            {% else %}
+                                        <li>
+                                        {% endif %}
+                                        {% if estaEnAgregarMonitores %}
+                                        <a href="/agregarMonitores/" style="color: #d49e0a !important;">Agregar monitores</a>
+                                        {% else %}
+                                        <a href="/agregarMonitores/">Agregar monitores</a>
+                                        {% endif %}
+                                    </li>
+
+                                </ul>
+                            </li>
+                            <!-- Aqui terminaaa -->
+
+
+
+                            <!--Aqui es otro menusitooooooooooooooooooooooooooooooooooooooooooo-->
+                            {% if estaEnVerTelefonos %}
+                            <li class="active">
+                            {% else %}
+                            <li>
+                            {% if estaEnAgregarTelefonos %}
+                            <li class="active">
+                            {% else %}
+                            <li>
+                            {% if estaEnExtensionesTelefonos %}
+                            <li class="active">
+                            {% else %}
+                            <li>
+                            {% endif %}
+                            {% endif %}
+                            {% endif %}
+
+                                
+                                <a href="javascript:void(0);" class="menu-toggle">
+                                    {% if estaEnVerTelefonos %}
+                                    <i class="material-icons" style="color: #336BFF !important;">phone</i>
+                                    <span style="color: #E40017 !important;">Teléfonos</span>
+                                    {% else %}
+                                    {% if estaEnAgregarTelefonos %}
+                                    <i class="material-icons" style="color: #336BFF !important;">phone</i>
+                                    <span style="color: #E40017 !important;">Teléfonos</span>
+                                    {% else %}
+                                    {% if estaEnExtensionesTelefonos %}
+                                    <i class="material-icons" style="color: #336BFF !important;">phone</i>
+                                    <span style="color: #E40017 !important;">Teléfonos</span>
+                                    {% else %}
+                                    
+                                    <i class="material-icons">phone</i>
+                                    <span>Teléfonos</span>
+                                    {% endif %}
+                                    {% endif %}
+                                    {% endif %}
+                                </a>
+                                <ul class="ml-menu">
+                                        {% if estaEnVerTelefonos %}
+                                        <li class="active">
+                                            {% else %}
+                                        <li>
+                                        {% endif %}
+                                        {% if estaEnVerTelefonos %}
+                                        <a href="/verTelefonos/" style="color: #d49e0a !important;">Ver teléfonos</a>
+                                        {% else %}
+
+                                        <a href="/verTelefonos/">Ver teléfonos</a>
+                                        {% endif %}
+
+                                    </li>
+                                        {% if estaEnAgregarTelefonos %}
+                                        <li class="active">
+                                            {% else %}
+                                        <li>
+                                        {% endif %}
+                                        {% if estaEnAgregarTelefonos %}
+                                        <a href="/agregarTelefonos/" style="color: #d49e0a !important;">Agregar teléfonos</a>
+                                        {% else %}
+                                        <a href="/agregarTelefonos/">Agregar teléfonos</a>
+                                        {% endif %}
+                                    </li>
+                                        {% if estaEnExtensionesTelefonos %}
+                                        <li class="active">
+                                            {% else %}
+                                        <li>
+                                        {% endif %}
+                                        {% if estaEnExtensionesTelefonos %}
+                                        <a href="/extensionesTel/" style="color: #d49e0a !important;">Extensiones</a>
+                                        {% else %}
+                                        <a href="/extensionesTel/">Extensiones</a>
+                                        {% endif %}
+                                    </li>
+
+                                </ul>
+                            </li>
+                            <!-- Aqui terminaaa -->
                         </ul>
                     </li>
                     {% if estaEnVerProgramas %}

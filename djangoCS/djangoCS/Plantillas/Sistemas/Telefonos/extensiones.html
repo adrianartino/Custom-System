@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block titulo %}
-Mouses | Custom System
+Extensiones | Custom System
 {% endblock %}
 
 {% block estilos %}
@@ -42,22 +42,10 @@ Mouses | Custom System
         <div class="card">
             <div class="header">
                 <h2 style="font-family: 'Oswald', sans-serif;">
-                    MOUSES DE CUSTOM & CO
-                    <small style="color: #790C05;">Vista de los mouses dados de alta en el sistema.</small>
+                    EXTENSIONES DE TELÉFONOS DE CUSTOM & CO
+                    <small style="color: #790C05;">Vista de las extensiones de teléfono de la empresa.</small>
                 </h2>
 
-                <br>
-                <label for="email_address">Filtro Estatus de Mouse:</label>
-                <div class="input-group">
-                    <span class="input-group-addon">
-                        <i class="material-icons">build</i>
-                    </span>
-                    <select class="form-control show-tick" id="filtroEmpleados" onchange="cambioFiltro();">
-                        <option>Activos</option>
-                        <option>En Stock</option>
-
-                    </select>
-                </div>
 
 
             </div>
@@ -69,7 +57,7 @@ Mouses | Custom System
                             <input type="hidden" name="activo" value="A">
                             <button type="submit" class="btn bg-red waves-effect animate__animated animate__flipInX"
                                 data-toggle="tooltip" data-placement="bottom"
-                                title="Descargar reporte Mouses Activos en PDF.">
+                                title="Descargar reporte de extensiones de teléfono en PDF.">
                                 <i class="material-icons">picture_as_pdf</i>
                                 <span>PDF</span>
                             </button>
@@ -80,191 +68,73 @@ Mouses | Custom System
                             <input type="hidden" name="activo" value="A">
                             <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
                                 data-toggle="tooltip" data-placement="bottom"
-                                title="Descargar reporte Mouses Activos en Excel.">
+                                title="Descargar reporte de extensiones de teléfono en Excel.">
                                 <i class="material-icons">grid_on</i>
                                 <span>Excel</span>
                             </button>
                         </form>
                     </div>
                     <div class="col-xs-12 col-sm-4">
-                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarMouses/">Agregar
-                            Mouse</a>
+                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarTelefonos/">Agregar
+                            Teléfono</a>
                     </div>
 
                 </div>
-
-                <div class="table-responsive">
-
-                    <table class="table table-bordered table-striped table-hover dataTable js-exportable">
-                        <thead>
-                            <tr style="background-color: #fad60e; color: black;">
-                                <th>ID</th>
-                                <th>Tipo de conexión</th>
-                                <th>Marca</th>
-                                <th>Modelo</th>
-                                <th>Estado</th>
-                                <th>Fotografía</th>
-                                <th>Equipo al que pertenece</th>
-                                <th>Editar</th>
-                                <th>Baja</th>
-                            </tr>
-                        </thead>
-                        <tfoot>
-                            <tr>
-                                <th>ID</th>
-                                <th>Tipo de conexión</th>
-                                <th>Marca</th>
-                                <th>Modelo</th>
-                                <th>Estado</th>
-                                <th>Fotografía</th>
-                                <th>Equipo al que pertenece</th>
-                                <th>Editar</th>
-                                <th>Baja</th>
-                            </tr>
-                        </tfoot>
-                        <tbody class="animate__animated animate__backInDown">
-                            {% for empleado, area in lista %}
-                            <tr>
-                                <td>{{empleado.id_empleado}}</td>
-                                <td>{{empleado.nombre}}</td>
-                                <td>{{empleado.apellidos}}</td>
-                                <td>
-                                    <center>
-                                        <img src="{{empleado.imagen_empleado.url}}" width="60%" alt="empleado">
-                                    </center>
-                                </td>
-                                <td> <label class="{{area.1}}">{{area.0}}</label> </td>
-                                <td>{{empleado.puesto}}</td>
-                                <td>{{empleado.correo}}</td>
-                                <td>
-                                    <form action="/correoContra/" method="POST">{% csrf_token %}
-                                        <input type="hidden" name="idEmpleadoContra" value="{{empleado.id_empleado}}">
-                                        <center>
-                                            <button type="submit" class="btn bg-indigo waves-effect " data-toggle="tooltip" data-placement="bottom"
-                                            title="Se enviará un correo electrónico con la contraseña solicitada.">
-                                                <i class="material-icons">contact_mail</i> Solicitar Contraseña
-                                            </button>
-                                        </center>
-                                    </form>
-                                </td>
-                                <form action="/editarEmpleado/" method="POST">{% csrf_token %}
-                                    <th>
-                                        <input type="hidden" name="idEmpleadoEditar" value="{{empleado.id_empleado}}">
-                                        <center>
-                                            <button type="submit" class="btn btn-warning waves-effect">
-                                                <i class="material-icons">edit</i>
-                                            </button>
-                                        </center>
-
-                                    </th>
-                                </form>
-
-                                <th>
-                                    <center>
-                                        <button type="button" class="btn bg-red waves-effect" data-toggle="modal"
-                                            data-target="#{{empleado.id_empleado}}">
-                                            <i class="material-icons">cancel</i>
-                                        </button>
-                                    </center>
-                                </th>
-                            </tr>
-                            {% endfor %}
-
-
-
-
-                        </tbody>
-                    </table>
+                <div class="row">
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <div class="info-box bg-pink hover-zoom-effect">
+                            <div class="icon">
+                                <i class="material-icons">email</i>
+                            </div>
+                            <div class="content">
+                                <div class="text">Calidad <span>Guadalupe Perez</span></div>
+                                <div class="number">#101</div>
+                            </div>
+                        </div>
+    
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <div class="info-box bg-blue hover-zoom-effect">
+                            <div class="icon">
+                                <i class="material-icons">devices</i>
+                            </div>
+                            <div class="content">
+                                <div class="text">CPU USAGE</div>
+                                <div class="number">92%</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <div class="info-box bg-light-blue hover-zoom-effect">
+                            <div class="icon">
+                                <i class="material-icons">access_alarm</i>
+                            </div>
+                            <div class="content">
+                                <div class="text">ALARM</div>
+                                <div class="number">07:00 AM</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <div class="info-box bg-cyan hover-zoom-effect">
+                            <div class="icon">
+                                <i class="material-icons">gps_fixed</i>
+                            </div>
+                            <div class="content">
+                                <div class="text">LOCATION</div>
+                                <div class="number">Turkey</div>
+                            </div>
+                        </div>
+                    </div>
+                    
                 </div>
-                <br>
+
+
 
 
             </div>
-            <div class="body" id="divInactivos">
-                <div class="row clear-fix">
-                    <div class="col-xs-12 col-sm-1">
-                        <form action="/reporteEmpleadosActivos/" method="POST">{% csrf_token %}
-                            <input type="hidden" name="activo" value="I">
-                            <button type="submit" class="btn bg-red waves-effect animate__animated animate__flipInX"
-                                data-toggle="tooltip" data-placement="bottom"
-                                title="Descargar reporte Mouses inactivos en PDF.">
-                                <i class="material-icons">picture_as_pdf</i>
-                                <span>PDF</span>
-                            </button>
-                        </form>
-                    </div>
-                    <div class="col-xs-12 col-sm-1">
-                        <form action="/xlEmpleados/" method="POST">{% csrf_token %}
-                            <input type="hidden" name="activo" value="I">
-                            <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
-                                data-toggle="tooltip" data-placement="bottom"
-                                title="Descargar reporte Mouses inactivos en Excel.">
-                                <i class="material-icons">grid_on</i>
-                                <span>Excel</span>
-                            </button>
-                        </form>
-                    </div>
-                    <div class="col-xs-12 col-sm-4">
-                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarEmpleados/">Agregar
-                            Mouse</a>
-                    </div>
-
-                </div>
-                <div class="table-responsive">
-
-                    <table class="table table-bordered table-striped table-hover dataTable js-exportable ">
-                        <thead>
-                            <tr style="background-color: #E05D5D; color: whitesmoke;">
-                                <th>ID</th>
-                                <th>Tipo de conexión</th>
-                                <th>Marca</th>
-                                <th>Modelo</th>
-                                <th>Estado</th>
-                                <th>Fotografía</th>
-                                <th>Alta</th>
-                            </tr>
-                        </thead>
-                        <tfoot>
-                            <tr>
-                                <th>ID</th>
-                                <th>Tipo de conexión</th>
-                                <th>Marca</th>
-                                <th>Modelo</th>
-                                <th>Estado</th>
-                                <th>Fotografía</th>
-                                <th>Alta</th>
-                            </tr>
-                        </tfoot>
-                        <tbody>
-                            {% for empleado, area in lista1 %}
-                            <tr>
-                                <td>{{empleado.id_empleado}}</td>
-                                <td>{{empleado.nombre}}</td>
-                                <td>{{empleado.apellidos}}</td>
-                                <td>
-                                    <center>
-                                        <img src="{{empleado.imagen_empleado.url}}" width="60%" alt="empleado">
-                                    </center>
-                                </td>
-                                <td> <label class="{{area.1}}">{{area.0}}</label> </td>
-                                <td>{{empleado.puesto}}</td>
-                                <td>{{empleado.correo}}</td>
-                                <th>
-                                    <center>
-                                        <button type="button" class="btn bg-green waves-effect" data-toggle="modal"
-                                            data-target="#{{empleado.id_empleado}}">
-                                            <i class="material-icons">upgrade</i>
-                                        </button>
-                                    </center>
-                                </th>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                <br>
-
-            </div>
+            
+                
         </div>
     </div>
 </div>

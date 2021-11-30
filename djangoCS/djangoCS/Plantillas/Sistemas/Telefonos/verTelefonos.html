@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block titulo %}
-Mouses | Custom System
+Teléfonos | Custom System
 {% endblock %}
 
 {% block estilos %}
@@ -42,12 +42,12 @@ Mouses | Custom System
         <div class="card">
             <div class="header">
                 <h2 style="font-family: 'Oswald', sans-serif;">
-                    MOUSES DE CUSTOM & CO
-                    <small style="color: #790C05;">Vista de los mouses dados de alta en el sistema.</small>
+                    TELÉFONOS DE CUSTOM & CO
+                    <small style="color: #790C05;">Vista de los telefonos dados de alta en el sistema.</small>
                 </h2>
 
                 <br>
-                <label for="email_address">Filtro Estatus de Mouse:</label>
+                <label for="email_address">Filtro Estatus de Teléfono:</label>
                 <div class="input-group">
                     <span class="input-group-addon">
                         <i class="material-icons">build</i>
@@ -69,7 +69,7 @@ Mouses | Custom System
                             <input type="hidden" name="activo" value="A">
                             <button type="submit" class="btn bg-red waves-effect animate__animated animate__flipInX"
                                 data-toggle="tooltip" data-placement="bottom"
-                                title="Descargar reporte Mouses Activos en PDF.">
+                                title="Descargar reporte Teléfonos Activos en PDF.">
                                 <i class="material-icons">picture_as_pdf</i>
                                 <span>PDF</span>
                             </button>
@@ -80,15 +80,15 @@ Mouses | Custom System
                             <input type="hidden" name="activo" value="A">
                             <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
                                 data-toggle="tooltip" data-placement="bottom"
-                                title="Descargar reporte Mouses Activos en Excel.">
+                                title="Descargar reporte Teléfonos Activos en Excel.">
                                 <i class="material-icons">grid_on</i>
                                 <span>Excel</span>
                             </button>
                         </form>
                     </div>
                     <div class="col-xs-12 col-sm-4">
-                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarMouses/">Agregar
-                            Mouse</a>
+                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarTelefonos/">Agregar
+                            Teléfono</a>
                     </div>
 
                 </div>
@@ -99,12 +99,14 @@ Mouses | Custom System
                         <thead>
                             <tr style="background-color: #fad60e; color: black;">
                                 <th>ID</th>
-                                <th>Tipo de conexión</th>
+                                <th>Ubicación/Departamento</th>
+                                <th>Encargado</th>
+                                <th>Tipo de Conexión</th>
                                 <th>Marca</th>
                                 <th>Modelo</th>
-                                <th>Estado</th>
                                 <th>Fotografía</th>
-                                <th>Equipo al que pertenece</th>
+                                <th>Extensión</th>
+                                <th>Nodo</th>
                                 <th>Editar</th>
                                 <th>Baja</th>
                             </tr>
@@ -112,12 +114,14 @@ Mouses | Custom System
                         <tfoot>
                             <tr>
                                 <th>ID</th>
-                                <th>Tipo de conexión</th>
+                                <th>Ubicación/Departamento</th>
+                                <th>Encargado</th>
+                                <th>Tipo de Conexión</th>
                                 <th>Marca</th>
                                 <th>Modelo</th>
-                                <th>Estado</th>
                                 <th>Fotografía</th>
-                                <th>Equipo al que pertenece</th>
+                                <th>Extensión</th>
+                                <th>Nodo</th>
                                 <th>Editar</th>
                                 <th>Baja</th>
                             </tr>
@@ -187,7 +191,7 @@ Mouses | Custom System
                             <input type="hidden" name="activo" value="I">
                             <button type="submit" class="btn bg-red waves-effect animate__animated animate__flipInX"
                                 data-toggle="tooltip" data-placement="bottom"
-                                title="Descargar reporte Mouses inactivos en PDF.">
+                                title="Descargar reporte Teléfonos inactivos en PDF.">
                                 <i class="material-icons">picture_as_pdf</i>
                                 <span>PDF</span>
                             </button>
@@ -198,7 +202,7 @@ Mouses | Custom System
                             <input type="hidden" name="activo" value="I">
                             <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
                                 data-toggle="tooltip" data-placement="bottom"
-                                title="Descargar reporte Mouses inactivos en Excel.">
+                                title="Descargar reporte Teléfonos inactivos en Excel.">
                                 <i class="material-icons">grid_on</i>
                                 <span>Excel</span>
                             </button>
@@ -206,7 +210,7 @@ Mouses | Custom System
                     </div>
                     <div class="col-xs-12 col-sm-4">
                         <a class="label bg-blue-grey" style="font-size:small; " href="/agregarEmpleados/">Agregar
-                            Mouse</a>
+                            Teclado</a>
                     </div>
 
                 </div>
@@ -216,10 +220,9 @@ Mouses | Custom System
                         <thead>
                             <tr style="background-color: #E05D5D; color: whitesmoke;">
                                 <th>ID</th>
-                                <th>Tipo de conexión</th>
+                                <th>Tipo de Conexión</th>
                                 <th>Marca</th>
                                 <th>Modelo</th>
-                                <th>Estado</th>
                                 <th>Fotografía</th>
                                 <th>Alta</th>
                             </tr>
@@ -227,10 +230,9 @@ Mouses | Custom System
                         <tfoot>
                             <tr>
                                 <th>ID</th>
-                                <th>Tipo de conexión</th>
+                                <th>Tipo de Conexión</th>
                                 <th>Marca</th>
                                 <th>Modelo</th>
-                                <th>Estado</th>
                                 <th>Fotografía</th>
                                 <th>Alta</th>
                             </tr>
