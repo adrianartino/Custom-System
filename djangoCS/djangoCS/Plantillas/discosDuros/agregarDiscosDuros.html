@@ -23,6 +23,12 @@ Agregar Discos Duros | Custom System
 <!-- Animation Css -->
 <link href={% static 'panel/plugins/animate-css/animate.css' %} rel="stylesheet" />
 
+<!-- Bootstrap Material Datetime Picker Css -->
+<link href={% static 'panel/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css' %} rel="stylesheet" />
+
+<!-- Bootstrap DatePicker Css -->
+<link href={% static 'panel/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css' %} rel="stylesheet" />
+
 <!-- Bootstrap Select Css -->
 <link href={% static 'panel/plugins/bootstrap-select/css/bootstrap-select.css' %} rel="stylesheet" />
 
@@ -50,44 +56,63 @@ Agregar Discos Duros | Custom System
                 <form id="form_validation" action="/agregarInsumos/" enctype="multipart/form-data" method="POST">
                     {% csrf_token %}
                     <div class="row clearfix">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Tipo:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">merge_type</i>
+                                </span>
+                                <select class="form-control show-tick" name="marcas">
+                                    <option value="HDD">HDD</option>
+                                    <option value="SSD">SSD</option>
+                                </select>
+                            </div>
+                        </div>
+
+
+                        
+                        
+                        <div class="col-md-3">
                             <label for="email_address"><span style="color: #078F68;">* </span>Marca:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">copyright</i>
                                 </span>
                                 <select class="form-control show-tick" name="marcas">
+                                    <option value="Seagate">Seagate</option>
+                                    <option value="Toshiba">Toshiba</option>
+                                    <option value="Western Digital">Western Digital</option>
+                                    <option value="Hitachi">Hitachi</option>
+                                    <option value="Kingston">Kingston</option>
                                     <option value="Acteck">Acteck</option>
-                                    <option value="Logitech">Logitech</option>
-                                    <option value="Steren">Steren</option>
+                                    <option value="Adata">Adata</option>
                                 </select>
                             </div>
                         </div>
 
-
-                        <div class="col-md-4">
-                            <label for="email_address"><span style="color: #078F68;">* </span>Modelo:</label>
+                        <div class="col-md-3">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Capacidad de almacenamiento:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
-                                    <i class="material-icons">branding_watermark</i>
+                                    <i class="material-icons">memory</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar Modelo"
+                                    <input type="text" class="form-control date" placeholder="Ingresar GB"
                                         name="modelo" maxlength="50" required>
                                 </div>
                             </div>
                         </div>
-                        
-                        <div class="col-md-4">
-                            <label for="email_address"><span style="color: #078F68;">* </span>Tipo de conexión:</label>
+
+                        <div class="col-md-3">
+                            <label for="email_address"><span style="color: #bcc0bf;">* </span>Estado:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
-                                    <i class="material-icons">network_wifi</i>
+                                    <i class="material-icons">check</i>
                                 </span>
-                                <select class="form-control show-tick" name="impresora">
-                                    
-                                    <option value="alambrico">Alámbrico</option>
-                                    <option value="inalambrico">Inalámbrico</option>
+                                <select class="form-control show-tick" name="marcas">
+                                    <option value="Usado Funcional">Usado Funcional</option>
+                                    <option value="Nuevo">Nuevo</option>
+                                    <option value="Mal estado/basura">Mal estado/basura</option>
                                 </select>
                             </div>
                         </div>
@@ -97,55 +122,56 @@ Agregar Discos Duros | Custom System
                     <div class="row clearfix">
 
                         <div class="col-md-3">
-                            <label for="email_address"><span style="color: #078F68;">* </span>Estado:</label>
+                            <label for="email_address"><span style="color: #bcc0bf;">* </span>Dimensiones:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
-                                    <i class="material-icons">build</i>
+                                    <i class="material-icons">format_size</i>
                                 </span>
-                                <select class="form-control show-tick" name="colores">
-                                    <option value="activoFuncional">Activo Funcional</option>
-                                    <option value="stockUsado">En Stock Usado</option>
-                                    <option value="stockNuevo">En Stock Nuevo</option>
-                                    <option value="basura">Basura</option>
-                                    
+                                <select class="form-control show-tick" name="marcas">
+                                    <option value="M 2.2">M 2.2</option>
+                                    <option value="M2 de 2 pines">M2 de 2 pines</option>
+                                    <option value="M2 de 3 pines">M2 de 3 pines</option>
+                                    <option value="2.5 pulgadas">2.5"</option>
+                                    <option value="3.5 pulgadas">3.5"</option>
                                 </select>
                             </div>
                         </div>
+                        
 
-
-
-                        <div class="col-md-4">
-                            <label for="email_address"><span style="color: #078F68;">* </span>Imagen de
-                                mouse:</label>
+                        <div class="col-md-3">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Almacenamiento en uso:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
-                                    <i class="material-icons">add_photo_alternate</i>
+                                    <i class="material-icons">memory</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="file" name="imagenCartucho" id="txtimagen">
+                                    <input type="text" class="form-control date" placeholder="Ingresar GB"
+                                        name="modelo" maxlength="50" required>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <label for="email_address"><span style="color: #078F68;">* </span>Equipo al que pertenece:</label>
+
+                        <div class="col-md-6">
+                            <label for="email_address"><span style="color: #bcc0bf;">* </span>Empleados con datos en disco:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
-                                    <i class="material-icons">computer</i>
+                                    <i class="material-icons">person</i>
                                 </span>
-                                <select class="form-control show-tick" name="impresora">
-                                    <option value="Sin equipo">Sin equipo</option>
-                                    {% for impresoras in datosImpresoras %}
-                                    <option value="{{impresoras.id_impresora}}">{{impresoras.marca}}
-                                        {{impresoras.modelo}}</option>
-                                    {% endfor %}
+                                <select id="empleadosDiscos" class="form-control show-tick" name="empleados" onchange="mostrarSeleccion()">
+                                    <option value="0" selected disabled>Seleccione empleado</option>
+                                    <option value="1">Marcos Adrian Guerrero Artiño</option>
+                                    <option value="2">Blanca Gaeta Talamantes</option>
                                 </select>
                             </div>
                         </div>
 
-
-
-
                     </div>
+
+                    <div id="listaEmpleados">
+                        
+                    </div>
+                    
+
 
 
                     <button type="submit"
@@ -186,6 +212,24 @@ Agregar Discos Duros | Custom System
 
 {% block estilosJs %}
 <script>
+    function mostrarSeleccion()
+    {
+        /* Para obtener el valor */
+        var valor = document.getElementById("empleadosDiscos").value;
+        //alert(cod);
+
+        //document.getElementById('cont1').innerHTML='Párrafo de texto';
+        /* Para obtener el texto */
+        var combo = document.getElementById("empleadosDiscos");
+        var selected = combo.options[combo.selectedIndex].text; 
+        alert(selected);
+        
+        document.getElementById('listaEmpleados').innerHTML='<h1 class="sdasd">Hola</h1>';
+    }
+
+
+
+
     function soloLetras(e) {
         key = e.keyCode || e.which;
         tecla = String.fromCharCode(key).toLowerCase();
@@ -251,6 +295,13 @@ Agregar Discos Duros | Custom System
 
 <!-- Waves Effect Plugin Js -->
 <script src={% static 'panel/plugins/node-waves/waves.js' %}></script>
+
+<!-- Bootstrap Material Datetime Picker Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js' %}>
+</script>
+
+<!-- Bootstrap Datepicker Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js' %}></script>
 
 <!-- Jquery DataTable Plugin Js -->
 <script src={% static 'panel/plugins/jquery-datatable/jquery.dataTables.js' %}></script>
