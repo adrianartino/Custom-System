@@ -8071,3 +8071,154 @@ def extensionesTel(request):
         return render(request, "Sistemas/Telefonos/extensiones.html", {"estaEnExtensionesTelefonos":estaEnExtensionesTelefonos,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
     else:
         return redirect('/login/') #redirecciona a url de inicio
+    
+    
+def agregarDiscosDuros(request):
+        
+    if "idSesion" in request.session:
+    
+        estaEnAgregarDiscosDuros = True
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        
+        nombreCompleto = nombre + " " + apellidos
+        
+        foto = fotoAdmin(request)
+        
+        
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+
+        return render(request, "discosDuros/agregarDiscosDuros.html", {"estaEnAgregarDiscosDuros":estaEnAgregarDiscosDuros,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+    else:
+        return redirect ('/login/')
+
+def verDiscosDuros(request):
+    
+    if "idSesion" in request.session:
+        
+        estaEnVerDiscosDuros = True
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        
+        nombreCompleto = nombre + " " + apellidos
+        
+        foto = fotoAdmin(request)
+        
+        
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+
+        return render(request, "discosDuros/verDiscosDuros.html", {"estaEnVerDiscosDuros":estaEnVerDiscosDuros,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+    else:
+    
+        return redirect ('/login/')
+    
+    
+    
+def agregarUSB(request):
+        
+    if "idSesion" in request.session:
+    
+        estaEnAgregarUSB= True
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        
+        nombreCompleto = nombre + " " + apellidos
+        
+        foto = fotoAdmin(request)
+        
+        
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+
+        return render(request, "memoriasUSB/agregarUSB.html", {"estaEnAgregarUSB":estaEnAgregarUSB,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+    else:
+        return redirect ('/login/')
+
+def verUSB(request):
+    
+    if "idSesion" in request.session:
+        
+        estaEnVerUSB = True
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        
+        nombreCompleto = nombre + " " + apellidos
+        
+        foto = fotoAdmin(request)
+        
+        
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+
+        return render(request, "memoriasUSB/verUSB.html", {"estaEnVerUSB":estaEnVerUSB,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+    else:
+    
+        return redirect ('/login/')
+    
+    
+def agregarPrestamos(request):
+        
+    if "idSesion" in request.session:
+    
+        estaEnAgregarPrestamo= True
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        
+        nombreCompleto = nombre + " " + apellidos
+        
+        foto = fotoAdmin(request)
+        
+        
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+
+        return render(request, "prestamos/agregarPrestamo.html", {"estaEnAgregarPrestamo":estaEnAgregarPrestamo,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+    else:
+        return redirect ('/login/')
+
+def verPrestamos(request):
+    
+    if "idSesion" in request.session:
+        
+        estaEnVerPrestamos = True
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        
+        nombreCompleto = nombre + " " + apellidos
+        
+        foto = fotoAdmin(request)
+        
+        
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+
+        return render(request, "prestamos/verPrestamo.html", {"estaEnVerPrestamos":estaEnVerPrestamos,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+    else:
+    
+        return redirect ('/login/')

@@ -1,0 +1,275 @@
+{% extends "Menu/menu.html" %}
+{% load static %}
+
+{% block titulo %}
+Agregar Discos Duros | Custom System
+{% endblock %}
+
+{% block estilos %}
+<!-- Favicon-->
+<link rel="icon" href={% static 'images/icons/ra.ico' %} type="image/x-icon">
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
+    type="text/css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+
+<!-- Bootstrap Core Css -->
+<link href={% static 'panel/plugins/bootstrap/css/bootstrap.css' %} rel="stylesheet">
+
+<!-- Waves Effect Css -->
+<link href={% static 'panel/plugins/node-waves/waves.css' %} rel="stylesheet" />
+
+<!-- Animation Css -->
+<link href={% static 'panel/plugins/animate-css/animate.css' %} rel="stylesheet" />
+
+<!-- Bootstrap Select Css -->
+<link href={% static 'panel/plugins/bootstrap-select/css/bootstrap-select.css' %} rel="stylesheet" />
+
+<!-- Sweet Alert Css -->
+<link href={% static 'panel/plugins/sweetalert/sweetalert.css' %}rel="stylesheet" />
+
+<!-- Custom Css -->
+<link href={% static 'panel/css/style.css' %} rel="stylesheet">
+
+<!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+<link href={% static 'panel/css/themes/all-themes.css' %} rel="stylesheet" />
+{% endblock %}
+
+{% block contenido %}
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h2 style="font-family: 'Oswald', sans-serif;">
+                    AGREGAR NUEVO DISCO DURO
+                    <small style="color: #790C05;">Formulario para agregar un nuevo disco duro al sistema.</small>
+                </h2>
+            </div>
+            <div class="body">
+                <form id="form_validation" action="/agregarInsumos/" enctype="multipart/form-data" method="POST">
+                    {% csrf_token %}
+                    <div class="row clearfix">
+                        <div class="col-md-4">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Marca:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">copyright</i>
+                                </span>
+                                <select class="form-control show-tick" name="marcas">
+                                    <option value="Acteck">Acteck</option>
+                                    <option value="Logitech">Logitech</option>
+                                    <option value="Steren">Steren</option>
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-4">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Modelo:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">branding_watermark</i>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" class="form-control date" placeholder="Ingresar Modelo"
+                                        name="modelo" maxlength="50" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Tipo de conexión:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">network_wifi</i>
+                                </span>
+                                <select class="form-control show-tick" name="impresora">
+                                    
+                                    <option value="alambrico">Alámbrico</option>
+                                    <option value="inalambrico">Inalámbrico</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+
+                    </div>
+                    <div class="row clearfix">
+
+                        <div class="col-md-3">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Estado:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">build</i>
+                                </span>
+                                <select class="form-control show-tick" name="colores">
+                                    <option value="activoFuncional">Activo Funcional</option>
+                                    <option value="stockUsado">En Stock Usado</option>
+                                    <option value="stockNuevo">En Stock Nuevo</option>
+                                    <option value="basura">Basura</option>
+                                    
+                                </select>
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-md-4">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Imagen de
+                                mouse:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">add_photo_alternate</i>
+                                </span>
+                                <div class="form-line">
+                                    <input type="file" name="imagenCartucho" id="txtimagen">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Equipo al que pertenece:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">computer</i>
+                                </span>
+                                <select class="form-control show-tick" name="impresora">
+                                    <option value="Sin equipo">Sin equipo</option>
+                                    {% for impresoras in datosImpresoras %}
+                                    <option value="{{impresoras.id_impresora}}">{{impresoras.marca}}
+                                        {{impresoras.modelo}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+
+
+                    <button type="submit"
+                        class="btn btn-warning m-t-15 waves-effect animate__animated animate__flipInX"><i
+                            class="material-icons">opacity</i> Guardar Mouse</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+{% if error %}
+<script type="text/javascript">
+    swal({
+        icon: 'error',
+        title: 'Algo salio mal..',
+        text: ' {{mensaje}}',
+        footer: '<span style="color: red!important"> Corrige los datos a ingresar! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
+
+{% if guardado %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Wuu..!',
+        text: ' {{mensaje}}',
+        footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
+
+
+{% endblock %}
+
+{% block estilosJs %}
+<script>
+    function soloLetras(e) {
+        key = e.keyCode || e.which;
+        tecla = String.fromCharCode(key).toLowerCase();
+        letras = " áéíóúabcdefghijklmnñopqrstuvwxyz";
+        especiales = "8-37-39-46";
+
+        tecla_especial = false
+        for (var i in especiales) {
+            if (key == especiales[i]) {
+                tecla_especial = true;
+                break;
+            }
+        }
+
+        if (letras.indexOf(tecla) == -1 && !tecla_especial) {
+            return false;
+        }
+    }
+
+    function validaNumericos(event) {
+        if (event.charCode >= 48 && event.charCode <= 57) {
+            return true;
+        }
+        return false;
+    }
+</script>
+
+<!-- Jquery Core Js -->
+<script src={% static 'panel/plugins/jquery/jquery.min.js' %}></script>
+
+<!-- Bootstrap Core Js -->
+<script src={% static 'panel/plugins/bootstrap/js/bootstrap.js' %}></script>
+
+<!-- Select Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-select/js/bootstrap-select.js' %}></script>
+
+<!-- Slimscroll Plugin Js -->
+<script src={% static 'panel/plugins/jquery-slimscroll/jquery.slimscroll.js' %}></script>
+
+<!-- Bootstrap Colorpicker Js -->
+<script src={% static 'panel/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js' %}></script>
+
+<!-- Dropzone Plugin Js -->
+<script src={% static 'panel/plugins/dropzone/dropzone.js' %}></script>
+
+<!-- Input Mask Plugin Js -->
+<script src={% static 'panel/plugins/jquery-inputmask/jquery.inputmask.bundle.js' %}></script>
+
+<!-- Multi Select Plugin Js -->
+<script src={% static 'panel/plugins/multi-select/js/jquery.multi-select.js' %}></script>
+
+<!-- Jquery Spinner Plugin Js -->
+<script src={% static 'panel/plugins/jquery-spinner/js/jquery.spinner.js' %}></script>
+
+<!-- Bootstrap Tags Input Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js' %}></script>
+
+<!-- noUISlider Plugin Js -->
+<script src={% static 'panel/plugins/nouislider/nouislider.js' %}></script>
+
+<!-- Sweet Alert Plugin Js -->
+<script src={% static 'panel/plugins/sweetalert/sweetalert.min.js' %}></script>
+
+<!-- Waves Effect Plugin Js -->
+<script src={% static 'panel/plugins/node-waves/waves.js' %}></script>
+
+<!-- Jquery DataTable Plugin Js -->
+<script src={% static 'panel/plugins/jquery-datatable/jquery.dataTables.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.flash.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/jszip.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/pdfmake.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/vfs_fonts.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.html5.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.print.min.js' %}></script>
+
+
+<!-- Custom Js -->
+<script src={% static 'panel/js/admin.js' %}></script>
+<script src={% static 'panel/js/pages/tables/jquery-datatable.js' %}></script>
+<script src={% static 'panel/js/pages/forms/advanced-form-elements.js' %}></script>
+
+
+<script src={% static 'panel/js/demo.js' %}></script>
+
+{% endblock %}

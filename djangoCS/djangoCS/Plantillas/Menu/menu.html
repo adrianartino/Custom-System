@@ -891,6 +891,177 @@
                             <!-- Aqui terminaaa -->
                         </ul>
                     </li>
+
+                    <!--modulo discos duros-->
+
+                    {% if estaEnVerDiscosDuros %}
+                    <li class="active">
+                        {% else %}
+                    <li>
+                        {% if estaEnAgregarDiscosDuros %}
+                    <li class="active">
+                        {% else %}
+                    <li>
+                        {% endif %}
+                        {% endif %}
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            {% if estaEnVerDiscosDuros %}
+                            <i class="material-icons" style="color: #00917C !important;">save</i>
+                            <span style="color: #00917C !important;"> Discos Duros</span>
+                            {% else %}
+                            {% if estaEnAgregarDiscosDuros %}
+                            <i class="material-icons" style="color: #00917C !important;">save</i>
+                            <span style="color: #00917C !important;">Discos Duros</span>
+                            {% else %}
+                            <i class="material-icons">save</i>
+                            <span>Discos Duros</span>
+                            {% endif %}
+                            {% endif %}
+                        </a>
+                        <ul class="ml-menu">
+                            {% if estaEnVerDiscosDuros %}
+                            <li class="active">
+                                {% else %}
+                            <li>
+                                {% endif %}
+                                {% if estaEnVerDiscosDuros %}
+                                <a href="/verDiscosDuros/" style="color: #E40017 !important;">Ver discos duros</a>
+                                {% else %}
+                                <a href="/verDiscosDuros/">Ver discos duros</a>
+                                {% endif %}
+                            </li>
+                            {% if estaEnAgregarDiscosDuros %}
+                            <li class="active">
+                                {% else %}
+                            <li>
+                                {% endif %}
+                                {% if estaEnAgregarDiscosDuros %}
+                                <a href="/agregarDiscosDuros/" style="color: #E40017 !important;">Agregar disco duro</a>
+                                {% else %}
+                                <a href="/agregarDiscosDuros/">Agregar disco duro</a>
+                                {% endif %}
+                            </li>
+
+                        </ul>
+                    </li>
+
+
+                    <!---termina modulo de discos duros-->
+
+                    <!--modulo USB-->
+
+                    {% if estaEnVerUSB %}
+                    <li class="active">
+                        {% else %}
+                    <li>
+                        {% if estaEnAgregarUSB %}
+                    <li class="active">
+                        {% else %}
+                    <li>
+                        {% endif %}
+                        {% endif %}
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            {% if estaEnVerUSB %}
+                            <i class="material-icons" style="color: #00917C !important;">usb</i>
+                            <span style="color: #00917C !important;"> Memorias USB</span>
+                            {% else %}
+                            {% if estaEnAgregarUSB %}
+                            <i class="material-icons" style="color: #00917C !important;">save</i>
+                            <span style="color: #00917C !important;">Memorias USB</span>
+                            {% else %}
+                            <i class="material-icons">usb</i>
+                            <span>Memorias USB</span>
+                            {% endif %}
+                            {% endif %}
+                        </a>
+                        <ul class="ml-menu">
+                            {% if estaEnVerUSB %}
+                            <li class="active">
+                                {% else %}
+                            <li>
+                                {% endif %}
+                                {% if estaEnVerUSB %}
+                                <a href="/verUSB/" style="color: #E40017 !important;">Ver memorias USB</a>
+                                {% else %}
+                                <a href="/verUSB/">Ver memorias USB</a>
+                                {% endif %}
+                            </li>
+                            {% if estaEnAgregarUSB %}
+                            <li class="active">
+                                {% else %}
+                            <li>
+                                {% endif %}
+                                {% if estaEnAgregarUSB %}
+                                <a href="/agregarUSB/" style="color: #E40017 !important;">Agregar memorias USB</a>
+                                {% else %}
+                                <a href="/agregarUSB/">Agregar memorias USB</a>
+                                {% endif %}
+                            </li>
+
+                        </ul>
+                    </li>
+
+
+                    <!---termina modulo USB-->
+
+
+
+                    <!--modulo prestamos-->
+
+                    {% if estaEnVerPrestamos %}
+                    <li class="active">
+                        {% else %}
+                    <li>
+                        {% if estaEnAgregarPrestamo %}
+                    <li class="active">
+                        {% else %}
+                    <li>
+                        {% endif %}
+                        {% endif %}
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            {% if estaEnVerPrestamos %}
+                            <i class="material-icons" style="color: #00917C !important;">credit_score</i>
+                            <span style="color: #00917C !important;"> Prestamos</span>
+                            {% else %}
+                            {% if estaEnAgregarPrestamo %}
+                            <i class="material-icons" style="color: #00917C !important;">credit_score</i>
+                            <span style="color: #00917C !important;">Prestamos</span>
+                            {% else %}
+                            <i class="material-icons">credit_score</i>
+                            <span>Prestamos</span>
+                            {% endif %}
+                            {% endif %}
+                        </a>
+                        <ul class="ml-menu">
+                            {% if estaEnVerPrestamos %}
+                            <li class="active">
+                                {% else %}
+                            <li>
+                                {% endif %}
+                                {% if estaEnVerPrestamos %}
+                                <a href="/verPrestamo/" style="color: #E40017 !important;">Ver prestamos</a>
+                                {% else %}
+                                <a href="/verPrestamo/">Ver prestamos</a>
+                                {% endif %}
+                            </li>
+                            {% if estaEnAgregarPrestamo %}
+                            <li class="active">
+                                {% else %}
+                            <li>
+                                {% endif %}
+                                {% if estaEnAgregarPrestamo %}
+                                <a href="/agregarPrestamo/" style="color: #E40017 !important;">Agregar prestamo</a>
+                                {% else %}
+                                <a href="/agregarPrestamo/">Agregar prestamo</a>
+                                {% endif %}
+                            </li>
+
+                        </ul>
+                    </li>
+
+
+                    <!---termina modulo prestamos-->
+
                     {% if estaEnVerProgramas %}
                     <li class="active">
                         {% else %}

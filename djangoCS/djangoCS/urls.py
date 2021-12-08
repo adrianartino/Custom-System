@@ -20,6 +20,8 @@ from appCS import views
 from django.conf import settings
 from django.conf.urls.static import static
 
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.login),
@@ -106,8 +108,16 @@ urlpatterns = [
     path("agregarMonitores/",views.agregarMonitores),
     path("verTelefonos/", views.verTelefonos),
     path("agregarTelefonos/", views.agregarTelefonos),
-    path("extensionesTel/", views.extensionesTel)
+    path("extensionesTel/", views.extensionesTel),
     
+    path("agregarDiscosDuros/", views.agregarDiscosDuros),
+    path("verDiscosDuros/", views.verDiscosDuros),
+    
+    path("agregarUSB/", views.agregarUSB),
+    path("verUSB/", views.verUSB),
+    
+    path("agregarPrestamos/", views.agregarPrestamos),
+    path("verPrestamos/", views.verPrestamos)
     
 ]
 
