@@ -5696,7 +5696,7 @@ def reporteInsumosRequisicion(request):
                         if insumo.cantidad == 0:
                             compra_req = "2 cartuchos"
                         if insumo.cantidad == 1:
-                            compra_req = "1 cartucho"
+                            compra_req = "1 cartuchos"
                         cantidades_compras.append(compra_req)
                         numseries.append(insumo.nuserie)
                         colores.append(insumo.color)
@@ -5740,7 +5740,7 @@ def reporteInsumosRequisicion(request):
                         if insumo.cantidad == 0:
                             compra_req = "2 cartuchos"
                         if insumo.cantidad == 1:
-                            compra_req = "1 cartucho"
+                            compra_req = "1 cartuchos"
                         cantidades_compras.append(compra_req)
                         numseries.append(insumo.nuserie)
                         colores.append(insumo.color)
@@ -5784,7 +5784,7 @@ def reporteInsumosRequisicion(request):
                         if insumo.cantidad == 0:
                             compra_req = "2 cartuchos"
                         if insumo.cantidad == 1:
-                            compra_req = "1 cartucho"
+                            compra_req = "1 cartuchos"
                         cantidades_compras.append(compra_req)
                         numseries.append(insumo.nuserie)
                         colores.append(insumo.color)
