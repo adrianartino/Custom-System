@@ -1,0 +1,367 @@
+{% extends "empleadosCustom/menu/menu.html" %}
+{% load static %}
+
+{% block titulo %}
+Inicio | Custom System
+{% endblock %}
+
+{% block estilos %}
+<!-- Favicon-->
+<link rel="icon" href={% static 'images/icons/ra.ico' %} type="image/x-icon">
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
+    type="text/css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+<!-- Bootstrap Core Css -->
+<link href={% static 'panel/plugins/bootstrap/css/bootstrap.css' %} rel="stylesheet">
+
+<!-- Waves Effect Css -->
+<link href={% static 'panel/plugins/node-waves/waves.css' %} rel="stylesheet" />
+
+<!-- Animation Css -->
+<link href={% static 'panel/plugins/animate-css/animate.css' %} rel="stylesheet" />
+
+<!-- Morris Chart Css-->
+<link href={% static 'panel/plugins/morrisjs/morris.css' %} rel="stylesheet" />
+
+<!-- Custom Css -->
+<link href={% static 'panel/css/style.css' %} rel="stylesheet">
+
+<!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+<link href={% static 'panel/css/themes/all-themes.css' %} rel="stylesheet" />
+
+
+{% endblock %}
+
+{% block contenido %}
+
+<div class="block-header">
+</div>
+
+<!-- Widgets -->
+
+<br>
+<!-- #END# Widgets -->
+<div id="myCarousel" class="carousel slide" data-ride="carousel">
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#myCarousel" data-slide-to="1"></li>
+
+    </ol>
+
+    <!-- Wrapper for slides -->
+    <div class="carousel-inner">
+        <div class="item active">
+            <img src="{% static 'images/CarruselEmpleado1.jpg' %}" alt="" width="100%">
+        </div>
+        <div class="item">
+            <img src="{% static 'images/carru3.jpg' %}" alt="" width="100%">
+        </div>
+
+    </div>
+
+    <!-- Controls -->
+    <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="#myCarousel" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right"></span>
+        <span class="sr-only">Next</span>
+    </a>
+</div>
+<br>
+
+{% for cantidad in cantidades %}
+<div class="row clearfix">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box bg-deep-purple hover-zoom-effect hover-expand-effect animate__animated animate__backInUp">
+            <div class="icon" data-toggle="tooltip" data-placement="bottom"
+                title="Se han realizado {{cantidad.0}} limpiezas a equipos de cómputo.">
+                <a href="/calendarioMant/"><i class="material-icons">cleaning_services</i></a>
+
+            </div>
+            <div class="content">
+
+                <div class="text">Limpiezas</div>
+                <div class="number count-to" data-from="0" data-to="{{cantidad.0}}" data-speed="15"
+                    data-fresh-interval="20"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box bg-cyan hover-zoom-effect hover-expand-effect animate__animated animate__backInUp">
+            <div class="icon" data-toggle="tooltip" data-placement="bottom"
+                title="Existen {{cantidad.1}} equipos de cómputo en la empresa.">
+                <a href="/verEquipos/"><i class="material-icons">laptop</i></a>
+            </div>
+            <div class="content">
+                <div class="text">Equipos</div>
+                <div class="number count-to" data-from="0" data-to="{{cantidad.1}}" data-speed="1000"
+                    data-fresh-interval="20">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box bg-red hover-zoom-effect hover-expand-effect animate__animated animate__backInUp">
+            <div class="icon">
+                <a href="/verImpresoras/" data-toggle="tooltip" data-placement="bottom"
+                    title="Existen {{cantidad.2}} impresoras en la empresa.">
+                    <i class="material-icons">print</i></a>
+            </div>
+            <div class="content">
+                <div class="text">Impresoras</div>
+                <div class="number count-to" data-from="0" data-to="{{cantidad.2}}" data-speed="1000"
+                    data-fresh-interval="20">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box bg-blue hover-expand-effect hover-zoom-effect animate__animated animate__backInUp">
+            <div class="icon" data-toggle="tooltip" data-placement="bottom"
+                title="Existen {{cantidad.3}} empleados en la empresa.">
+                <a href="/verEmpleados/">
+                    <i class="material-icons">groups</i>
+                </a>
+
+            </div>
+            <div class="content">
+                <div class="text">Empleados</div>
+                <div class="number count-to" data-from="0" data-to="{{cantidad.3}}" data-speed="1000"
+                    data-fresh-interval="20">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<div class="row clearfix">
+    <!-- Task Info -->
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 animate__animated animate__fadeInUp">
+        <div class="card">
+            <div class="header">
+                <h2 style="font-family: 'Oswald', sans-serif;">Próximas Limpiezas.
+                    <small style="color: crimson;">Del {{dia}} al {{resta_dias}} de {{mes_texto}} del {{año}}.</small>
+                </h2>
+
+
+            </div>
+            <div class="body">
+                <div class="table-responsive">
+                    <table class="table table-hover dashboard-task-infos">
+                        <thead>
+                            <tr>
+                                <th>Propietario</th>
+                                <th>Equipo</th>
+                                <th>Fecha</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for limpieza in datosLimpiezas %}
+                            <tr>
+                                <td>{{limpieza.0}} {{limpieza.1}}</td>
+                                <td><span class="label bg-green">{{limpieza.2}} {{limpieza.3}} {{limpieza.4}}</span>
+                                </td>
+                                <td><span class="label bg-orange">{{limpieza.5}}</span></td>
+
+                            </tr>
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #END# Task Info -->
+    <!-- Browser Usage -->
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 animate__animated animate__fadeInUp">
+        <div class="card">
+            <div class="header">
+                <h2 style="font-family: 'Oswald', sans-serif;">Cartuchos.
+                    <small style="color: crimson;">Cartuchos para requisición de compra.</small></h2>
+            </div>
+            <div class="body">
+                <div class="table-responsive">
+                    <table class="table table-hover dashboard-task-infos">
+                        <thead>
+                            <tr>
+                                <th>Cartucho</th>
+                                <th>Impresora</th>
+                                <th>Color</th>
+                                <th>Cantidad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cartucho, impresora in lista%}
+                            <tr>
+                                <td>{{cartucho.marca}} {{cartucho.modelo}}</td>
+                                <td><span class="label bg-cyan">{{impresora}}</span></td>
+
+                                {% if cartucho.color == "Negro" %}
+                                <td> <span class="label bg-black">{{cartucho.color}}</span> </td>
+                                {% elif cartucho.color == "Tricolor" %}
+                                <td><span class="label bg-orange">{{cartucho.color}}</span></td>
+                                {% elif cartucho.color == "Amarillo" %}
+                                <td><span class="label bg-yellow">{{cartucho.color}}</span></td>
+                                {% elif cartucho.color == "Cyan" %}
+                                <td><span class="label bg-cyan">{{cartucho.color}}</span></td>
+                                {% elif cartucho.color == "Magenta" %}
+                                <td> <span class="label bg-pink">{{cartucho.color}}</span></td>
+                                {% endif %}
+
+                                <td><span class="label bg-red">{{cartucho.cantidad}}</span></td>
+
+                            </tr>
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Browser Usage -->
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="card">
+            <div class="header">
+                <h2 style="font-family: 'Oswald', sans-serif;">Próximas Renovaciones de Equipos de cómputo.
+                    <small style="color: crimson;">Atención para comprar y renovar equipo de cómputo.</small></h2>
+            </div>
+            <div class="body">
+                <div class="table-responsive">
+                    <table class="table table-hover dashboard-task-infos">
+                        <thead>
+                            <tr>
+                                <th>Equipo</th>
+                                <th>Propietario</th>
+                                <th>Fecha de Compra</th>
+                                <th>Fecha de Renovación</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr>
+                                {% for equipo in equipos_año %}
+                                <th>{{equipo.0}}</th>
+                                <th>{{equipo.1}}</th>
+                                <th>{{equipo.2}}</th>
+                                <th>{{equipo.3}}</th>
+                                {% endfor %}
+
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="card">
+            <div class="header">
+                <h2 style="font-family: 'Oswald', sans-serif;">Próximas Renovaciones de Impresoras
+                    <small style="color: crimson;">Atención para comprar y renovar impresoras.</small></h2>
+            </div>
+            <div class="body">
+                <div class="table-responsive">
+                    <table class="table table-hover dashboard-task-infos">
+                        <thead>
+                            <tr>
+                                <th>Impresora</th>
+                                <th>Departamento</th>
+                                <th>Fecha de Compra</th>
+                                <th>Fecha de Renovación</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr>
+                                {% for imp in impresoras_año %}
+                                <th>{{imp.0}}</th>
+                                <th><label class="{{imp.2}}">{{imp.1}}</label></th>
+                                <th>{{imp.3}}</th>
+                                <th>{{imp.4}}</th>
+                                {% endfor %}
+
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+{% if recienIniciado %}
+<script type="text/javascript">
+    swal({
+        title: "Bienvenido!",
+        text: "Hola {{nombreCompleto}}! Navega por Custom System",
+        icon: "success"
+    });
+</script>
+{% endif %}
+
+{% endblock %}
+
+{% block estilosJs %}
+
+
+
+
+<!-- Jquery Core Js -->
+<script src={% static 'panel/plugins/jquery/jquery.min.js' %}></script>
+
+<!-- Bootstrap Core Js -->
+<script src={% static 'panel/plugins/bootstrap/js/bootstrap.js' %}></script>
+
+<!-- Select Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-select/js/bootstrap-select.js' %}></script>
+
+<!-- Slimscroll Plugin Js -->
+<script src={% static 'panel/plugins/jquery-slimscroll/jquery.slimscroll.js' %}></script>
+
+
+<!-- Waves Effect Plugin Js -->
+<script src={% static 'panel/plugins/node-waves/waves.js' %}></script>
+
+<!-- Jquery CountTo Plugin Js -->
+<script src={% static 'panel/plugins/jquery-countto/jquery.countTo.js' %}></script>
+
+<!-- Morris Plugin Js -->
+<script src={% static 'panel/plugins/raphael/raphael.min.js' %}></script>
+<script src={% static 'panel/plugins/morrisjs/morris.js' %}></script>
+
+<!-- ChartJs -->
+<script src={% static 'panel/plugins/chartjs/Chart.bundle.js' %}></script>
+
+<!-- Flot Charts Plugin Js -->
+<script src={% static 'panel/plugins/flot-charts/jquery.flot.js' %}></script>
+<script src={% static 'panel/plugins/flot-charts/jquery.flot.resize.js' %}></script>
+<script src={% static 'panel/plugins/flot-charts/jquery.flot.pie.js' %}></script>
+<script src={% static 'panel/plugins/flot-charts/jquery.flot.categories.js' %}></script>
+<script src={% static 'panel/plugins/flot-charts/jquery.flot.time.js' %}></script>
+
+<!-- Sparkline Chart Plugin Js -->
+<script src={% static 'panel/plugins/jquery-sparkline/jquery.sparkline.js' %}></script>
+
+<!-- Custom Js -->
+<script src={% static 'panel/js/admin.js' %}></script>
+<script src={% static 'panel/js/pages/ui/tooltips-popovers.js' %}></script>
+<script src={% static 'panel/js/pages/index.js' %}></script>
+
+<!-- Demo Js -->
+<script src={% static 'panel/js/demo.js' %}></script>
+
+
+
+{% endblock %}

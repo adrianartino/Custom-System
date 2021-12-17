@@ -17,6 +17,7 @@ from os import name
 from django.contrib import admin
 from django.urls import path
 from appCS import views
+from appCS import viewEmpleados
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -117,8 +118,9 @@ urlpatterns = [
     path("verUSB/", views.verUSB),
     
     path("agregarPrestamos/", views.agregarPrestamos),
-    path("verPrestamos/", views.verPrestamos)
+    path("verPrestamos/", views.verPrestamos),
     
+    path("principal/", viewEmpleados.principal)
 ]
 
 if settings.DEBUG:

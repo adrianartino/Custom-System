@@ -1,0 +1,564 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>
+        {% block titulo %}
+
+        {% endblock %}
+    </title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tourney:wght@800;900&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
+    <!-- Font Custom -->
+    <link href={% static 'font/stylesheet.css' %} rel="stylesheet" />
+
+    <!-- Light Gallery Plugin Css -->
+    <link href={% static 'panel/plugins/light-gallery/css/lightgallery.css' %} rel="stylesheet">
+    {% block estilos %}
+
+    {% endblock %}
+
+
+</head>
+
+
+<body class="theme-red">
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Por favor espere...</p>
+        </div>
+    </div>
+    <!-- #END# Page Loader -->
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars -->
+    <!-- Search Bar -->
+    <div class="search-bar">
+        <div class="search-icon">
+            <i class="material-icons">search</i>
+        </div>
+        <input type="text" placeholder="Buscar algo...">
+        <div class="close-search">
+            <i class="material-icons">close</i>
+        </div>
+    </div>
+    <!-- #END# Search Bar -->
+    <!-- Top Bar -->
+    <nav class="navbar" style="background-color: #28868F !important;">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#navbar-collapse" aria-expanded="false"></a>
+                <a href="javascript:void(0);" class="bars"></a>
+
+                <a class="navbar-brand" href="/inicio/"><span class="login100-form-title-1"
+                        style="font-family: 'ground_controlregular', cursive; font-size: 25px;">
+                        <img src={% static 'images/rayocustom.png' %} width="15px" alt="User"> Custom System
+                    </span></a>
+
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <!-- Call Search -->
+                    <!-- #END# Call Search -->
+                    <!-- Notifications -->
+                    <li class="dropdown">
+                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button">
+                            <i class="material-icons">notifications</i>
+                            <span class="label-count">{{numeroNoti}}</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="header">NOTIFICACIONES</li>
+                            <li class="body">
+                                <ul class="menu">
+                                    {% for computadora in mantenimientosNoti %}
+                                    <li>
+                                        <a href="javascript:void(0);">
+                                            <div class="icon-circle bg-deep-orange">
+                                                <i class="material-icons">cleaning_services</i>
+
+                                            </div>
+                                            <div class="menu-info">
+                                                <h4>{{computadora.0}}</h4>
+                                                <p>
+                                                    <i class="material-icons">face</i> {{computadora.1}}
+                                                </p>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    {% endfor %}
+                                    {% for cartucho in cartuchosNoti %}
+                                    <li>
+                                        <a href="javascript:void(0);">
+                                            <div class="icon-circle bg-cyan">
+                                                <i class="material-icons">print</i>
+                                            </div>
+                                            <div class="menu-info">
+                                                <h4>{{cartucho.0}}</h4>
+                                                <p>
+                                                    <i class="material-icons">print_disabled</i> {{cartucho.1}}
+                                                </p>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    {% endfor %}
+
+
+
+                                </ul>
+                            </li>
+
+                        </ul>
+                    </li>
+                    <!-- #END# Notifications -->
+
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- #Top Bar -->
+    <section>
+        <!-- Left Sidebar -->
+        <aside id="leftsidebar" class="sidebar">
+            <!-- User Info -->
+            <div class="user-info">
+                <div>
+                    <img src="{{foto.url}}" width="60" height="55" alt="User" style="border-radius: 120px;" />
+                </div>
+                <div class="info-container">
+                    <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{nombreCompleto}}</div>
+                    <div class="email">{{correo}}</div>
+                    <div class="btn-group user-helper-dropdown">
+                        <i class="material-icons" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="true">keyboard_arrow_down</i>
+                        <ul class="dropdown-menu pull-right">
+                            
+                            
+
+
+                            <li role="separator" class="divider"></li>
+                            <form id="form_validation" action="/salir/" enctype="multipart/form-data" method="POST">
+                                {% csrf_token %}
+
+                                <li style="padding-left: 10px;">
+                                    <button type="submit" class="btn bg-red waves-effect">
+                                        <i class="material-icons">input</i>
+                                        <span>Salir</span>
+                                    </button>
+
+                                </li>
+                                <li><input type="hidden" id="x" value="{{id_admin}}" name="idEmpleadoEditar"></li>
+
+                            </form>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- #User Info -->
+            <!-- Menu -->
+            <div class="menu">
+                <ul class="list">
+                    <li class="header" style="background-color: #FFC107;">MENÚ DE NAVEGACIÓN</li>
+                    {% if estaEnInicio %}
+                    <li class="active">
+                        {% else %}
+                    <li>
+                        {% endif %}
+                        {% if estaEnInicio %}
+                        <a href="/inicio/">
+                            <i class="material-icons" style="color: #00917C !important;">home</i>
+                            <span style="color: #00917C !important;">Inicio</span>
+                        </a>
+                        {% else %}
+                        <a href="/inicio/">
+                            <i class="material-icons">home</i>
+                            <span>Inicio</span>
+                        </a>
+                        {% endif %}
+                    </li>
+
+
+                    
+                        {% if Insumos %}
+                    <li class="active">
+                        {% else %}
+                    <li>
+
+                        {% endif %}
+                      
+                        <a href="javascript:void(0);" class="menu-toggle">
+                           
+                            {% if Insumos %}
+                            <i class="material-icons" style="color: #00917C !important;">poll</i>
+                            <span style="color: #00917C !important;"> Encuestas</span>
+                            {% else %}
+                            <i class="material-icons">poll</i>
+                            <span> Encuestas</span>
+                            {% endif %}
+                            
+                        </a>
+                        <ul class="ml-menu">
+
+                            {% if Insumos %}
+                            <li class="active">
+                                {% else %}
+                            <li>
+                                {% if estaEnVerInsumos %}
+                            <li class="active">
+                                {% else %}
+                            <li>
+                                {% endif %}
+                                {% endif %}
+
+                                <a href="javascript:void(0);" class="menu-toggle">
+                                   
+                                    {% if estaEnVerInsumos %}
+                                    <i class="material-icons" style="color: #336BFF !important;">date_range</i>
+                                    <span style="color: #E40017 !important;">2022</span>
+                                    {% else %}
+                                    <i class="material-icons">date_range</i>
+                                    <span>2022</span>
+                                    {% endif %}
+                                
+                                </a>
+                                <ul class="ml-menu">
+                                    {% if estaEnVerInsumos %}
+                                    <li class="active">
+                                        {% else %}
+                                    <li>
+                                        {% endif %}
+                                        {% if estaEnVerInsumos %}
+                                        <a href="/verInsumos/" style="color: #d49e0a !important;">Periodo enero</a>
+                                        {% else %}
+
+                                        <a href="/verInsumos/">Periodo enero</a>
+                                        {% endif %}
+
+                                    </li>
+                                    
+
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    {% if estaEnVerEmpleados %}
+                    <li class="active">
+                        {% else %}
+                    <li>
+                       
+                        {% endif %}
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            
+                            {% if estaEnVerEmpleados %}
+                            <i class="material-icons" style="color: #00917C !important;">person</i>
+                            <span style="color: #00917C !important;">Perfil</span>
+                            {% else %}
+                            <i class="material-icons">person</i>
+                            <span>Perfil</span>
+                            {% endif %}
+                            
+
+                        </a>
+                        <ul class="ml-menu">
+                            {% if estaEnVerEmpleados %}
+                            <li class="active">
+                                {% else %}
+                            <li>
+                                {% endif %}
+                                {% if estaEnVerEmpleados %}
+                                <a href="/verEmpleados/" style="color: #E40017 !important;">Ver perfil</a>
+                                {% else %}
+                                <a href="/verEmpleados/">Ver perfil</a>
+                                {% endif %}
+                            </li>
+                            
+
+                        </ul>
+                    </li>
+                    {% if estaEnVerEquipos %}
+                    <li class="active">
+                        {% else %}
+                    <li>
+                        {% if estaEnAgregarEquipos %}
+                    <li class="active">
+                        {% else %}
+                    <li>
+                        {% endif %}
+                        {% endif %}
+                        
+                   
+                    
+                       
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            {% if estaEnVerEquipos %}
+                            <i class="material-icons" style="color: #00917C !important;">computer</i>
+                            <span style="color: #00917C !important;">Mi equipo de cómputo</span>
+                            {% else %}
+                            {% if estaEnAgregarEquipos %}
+                            <i class="material-icons" style="color: #00917C !important;">computer</i>
+                            <span style="color: #00917C !important;">Mi equipo de cómputo</span>
+                            {% else %}
+                            
+                            <i class="material-icons">computer</i>
+                            <span>Mi equipo de cómputo</span>
+                            {% endif %}
+                            {% endif %}
+                           
+
+
+                        </a>
+                        <ul class="ml-menu">
+                            {% if estaEnVerEquipos %}
+                            <li class="active">
+                                {% else %}
+                            <li>
+                                {% endif %}
+                                {% if estaEnVerEquipos %}
+                                <a href="/verEquipos/" style="color: #E40017 !important;">Información de equipo</a>
+                                {% else %}
+                                <a href="/verEquipos/">Información de equipo</a>
+                            <li>
+                                {% endif %}
+
+                            </li>
+                            {% if estaEnAgregarEquipos %}
+                            <li class="active">
+                                {% else %}
+                            <li>
+                                {% endif %}
+                                {% if estaEnAgregarEquipos %}
+                                <a href="/agregarEquipos/" style="color: #E40017 !important;">Mis cartas responsivas</a>
+                                {% else %}
+                                <a href="/agregarEquipos/">Mis cartas responsivas</a>
+                                {% endif %}
+
+                           
+                            
+
+                            </li>
+
+                        </ul>
+                    </li>
+                    
+            </div>
+            <!-- #Menu -->
+            <!-- Footer -->
+            <div class="legal">
+                <div class="version">
+                    <a href="https://www.customco.com.mx/" style="color: #009688;"><b>Ir a página web Custom &
+                            Co.</b></a>
+                </div>
+                <div class="version">
+                    <a href="https://erp.evidencetech.app/access" style="color: #DCB60E;"><b>Ir a ERP Evidence.</b></a>
+                </div>
+                <div class="copyright">
+                    &copy; 2021 <a href="javascript:void(0);">Administrador Custom System</a>.
+                </div>
+                <div class="version">
+                    <b>Versión: </b> 1.0.0
+                </div>
+            </div>
+            <!-- #Footer -->
+        </aside>
+        <!-- #END# Left Sidebar -->
+        <!-- Right Sidebar -->
+        <aside id="rightsidebar" class="right-sidebar">
+            <ul class="nav nav-tabs tab-nav-right" role="tablist">
+                <li role="presentation" class="active"><a href="#skins" data-toggle="tab">SKINS</a></li>
+                <li role="presentation"><a href="#settings" data-toggle="tab">SETTINGS</a></li>
+            </ul>
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane fade in active in active" id="skins">
+                    <ul class="demo-choose-skin">
+                        <li data-theme="red" class="active">
+                            <div class="red"></div>
+                            <span>Red</span>
+                        </li>
+                        <li data-theme="pink">
+                            <div class="pink"></div>
+                            <span>Pink</span>
+                        </li>
+                        <li data-theme="purple">
+                            <div class="purple"></div>
+                            <span>Purple</span>
+                        </li>
+                        <li data-theme="deep-purple">
+                            <div class="deep-purple"></div>
+                            <span>Deep Purple</span>
+                        </li>
+                        <li data-theme="indigo">
+                            <div class="indigo"></div>
+                            <span>Indigo</span>
+                        </li>
+                        <li data-theme="blue">
+                            <div class="blue"></div>
+                            <span>Blue</span>
+                        </li>
+                        <li data-theme="light-blue">
+                            <div class="light-blue"></div>
+                            <span>Light Blue</span>
+                        </li>
+                        <li data-theme="cyan">
+                            <div class="cyan"></div>
+                            <span>Cyan</span>
+                        </li>
+                        <li data-theme="teal">
+                            <div class="teal"></div>
+                            <span>Teal</span>
+                        </li>
+                        <li data-theme="green">
+                            <div class="green"></div>
+                            <span>Green</span>
+                        </li>
+                        <li data-theme="light-green">
+                            <div class="light-green"></div>
+                            <span>Light Green</span>
+                        </li>
+                        <li data-theme="lime">
+                            <div class="lime"></div>
+                            <span>Lime</span>
+                        </li>
+                        <li data-theme="yellow">
+                            <div class="yellow"></div>
+                            <span>Yellow</span>
+                        </li>
+                        <li data-theme="amber">
+                            <div class="amber"></div>
+                            <span>Amber</span>
+                        </li>
+                        <li data-theme="orange">
+                            <div class="orange"></div>
+                            <span>Orange</span>
+                        </li>
+                        <li data-theme="deep-orange">
+                            <div class="deep-orange"></div>
+                            <span>Deep Orange</span>
+                        </li>
+                        <li data-theme="brown">
+                            <div class="brown"></div>
+                            <span>Brown</span>
+                        </li>
+                        <li data-theme="grey">
+                            <div class="grey"></div>
+                            <span>Grey</span>
+                        </li>
+                        <li data-theme="blue-grey">
+                            <div class="blue-grey"></div>
+                            <span>Blue Grey</span>
+                        </li>
+                        <li data-theme="black">
+                            <div class="black"></div>
+                            <span>Black</span>
+                        </li>
+                    </ul>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="settings">
+                    <div class="demo-settings">
+                        <p>GENERAL SETTINGS</p>
+                        <ul class="setting-list">
+                            <li>
+                                <span>Report Panel Usage</span>
+                                <div class="switch">
+                                    <label><input type="checkbox" checked><span class="lever"></span></label>
+                                </div>
+                            </li>
+                            <li>
+                                <span>Email Redirect</span>
+                                <div class="switch">
+                                    <label><input type="checkbox"><span class="lever"></span></label>
+                                </div>
+                            </li>
+                        </ul>
+                        <p>SYSTEM SETTINGS</p>
+                        <ul class="setting-list">
+                            <li>
+                                <span>Notifications</span>
+                                <div class="switch">
+                                    <label><input type="checkbox" checked><span class="lever"></span></label>
+                                </div>
+                            </li>
+                            <li>
+                                <span>Auto Updates</span>
+                                <div class="switch">
+                                    <label><input type="checkbox" checked><span class="lever"></span></label>
+                                </div>
+                            </li>
+                        </ul>
+                        <p>ACCOUNT SETTINGS</p>
+                        <ul class="setting-list">
+                            <li>
+                                <span>Offline</span>
+                                <div class="switch">
+                                    <label><input type="checkbox"><span class="lever"></span></label>
+                                </div>
+                            </li>
+                            <li>
+                                <span>Location Permission</span>
+                                <div class="switch">
+                                    <label><input type="checkbox" checked><span class="lever"></span></label>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        <!-- #END# Right Sidebar -->
+    </section>
+    <section class="content">
+        <div class="container-fluid">
+            {% block contenido %}
+
+            {% endblock %}
+            <!-- #END# Browser Usage -->
+        </div>
+        </div>
+    </section>
+
+
+
+
+
+
+    {% block estilosJs %}
+
+    {% endblock %}
+
+
+
+
+
+    <!-- Light Gallery Plugin Js -->
+    <script src={% static 'panel/plugins/light-gallery/js/lightgallery-all.js' %}></script>
+
+    <!-- Custom Js -->
+    <script src={% static 'panel/js/pages/medias/image-gallery.js' %}></script>
+
+
+</body>
+
+</html>

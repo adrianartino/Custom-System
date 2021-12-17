@@ -183,9 +183,13 @@ def login(request):
                     request.session['nombres'] = nombres
                     request.session['apellidos'] = apellidos
                     request.session['recienIniciado'] = "primerInicio"
-
-                    return redirect('/inicio/') #redirecciona a url de inicio
-
+                    
+                    if correousuario == "adminSistemas0817":
+                    
+                        return redirect('/inicio/') #redirecciona a url de inicio
+                    else:
+                        return redirect('/principal/') #redirecciona a la pagina normal del empleado
+                    
                 #Si la contraseña está mal..
                 elif pwd != contraReal:
                     hayError = True
