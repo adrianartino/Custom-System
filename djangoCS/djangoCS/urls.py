@@ -120,6 +120,9 @@ urlpatterns = [
     path("agregarPrestamos/", views.agregarPrestamos),
     path("verPrestamos/", views.verPrestamos),
     
+    path("agregarEncuestas/", views.agregarEncuestas),
+    path("verEncuestas/", views.verEncuestas),
+    
     path("principal/", viewEmpleados.principal)
 ]
 

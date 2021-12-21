@@ -1244,6 +1244,66 @@
 
                         </ul>
                     </li>
+
+                    <!----Encuestas-->
+                    {% if estaEnVerEncuestas %}
+                    <li class="active">
+                        {% else %}
+                    <li>
+                        {% if estaEnAgregarEncuestas %}
+                    <li class="active">
+                       
+                        {% endif %}
+                        {% endif %}
+                     
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            {% if estaEnVerEncuestas %}
+                            <i class="material-icons" style="color: #00917C !important;">assessment</i>
+                            <span style="color: #00917C !important;">Encuestas</span>
+                            {% else %}
+                            {% if estaEnAgregarEncuestas %}
+                            <i class="material-icons" style="color: #00917C !important;">assessment</i>
+                            <span style="color: #00917C !important;">Encuestas</span>
+                            {% else %}
+
+                           
+                            <i class="material-icons">assessment</i>
+                            <span>Encuestas</span>
+                            {% endif %}
+                            {% endif %}
+                            
+
+                        </a>
+                        <ul class="ml-menu">
+                            {% if estaEnVerEncuestas %}
+                            <li class="active">
+                                {% else %}
+                            <li>
+                                {% endif %}
+                                {% if estaEnVerEncuestas %}
+                                <a href="/verEncuestas/" style="color: #E40017 !important;">Ver encuestas</a>
+                                {% else %}
+                                <a href="/verEncuestas/">Ver encuestas</a>
+                                {% endif %}
+                            </li>
+                            {% if estaEnAgregarEncuestas %}
+                            <li class="active">
+                                {% else %}
+                            <li>
+                                {% endif %}
+                                {% if estaEnAgregarEncuestas %}
+                                <a href="/agregarEncuestas/" style="color: #E40017 !important;">Agregar encuesta</a>
+                                {% else %}
+                                <a href="/agregarEncuestas/">Agregar encuesta</a>
+                                {% endif %}
+                            </li>
+
+                            
+                           
+                        </ul>
+                    </li>
+                    <!----Encuestas-->
+
                     {% if estaEnEquiposBitacora %}
                     <li class="active">
                         {% else %}

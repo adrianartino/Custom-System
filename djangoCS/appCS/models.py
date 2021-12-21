@@ -1,3 +1,4 @@
+from os import truncate
 from django.db import models
 from django.db.models.deletion import CASCADE
 
@@ -130,3 +131,27 @@ class Bitacora (models.Model):
     id_objeto=models.IntegerField()
     operacion=models.CharField(max_length=80)
     fecha_hora=models.DateTimeField()
+    
+class Encuestas (models.Model):
+    id_encuesta = models.AutoField(primary_key=True)
+    fecha_encuesta = models.DateField()
+    nombre_encuesta = models.CharField(max_length=80)
+    preguntas_multiples = models.CharField(max_length=80)
+    preguntas_abiertas = models.CharField(max_length=80)
+    def __str__(self):
+        return self.id_encuesta
+        
+class Preguntas (models.Model):
+    id_pregunta = models.AutoField(primary_key=True)
+    id_encuesta = models.ForeignKey(Encuestas, on_delete=models.CASCADE)
+    pregunta = models.TextField(max_length=500)
+    tipo = models.CharField(max_length=3)
+    def __str__(self):
+        return self.id_pregunta
+    
+
+class Respuestas (models.Model):
+    id_respuesta = models.AutoField(primary_key=True)
+    id_pregunta = models.ForeignKey(Preguntas, on_delete=models.CASCADE)
+    id_empleado = models.ForeignKey(Empleados, on_delete=models.CASCADE)
+    respuesta = models.TextField(max_length=600)

@@ -11,7 +11,7 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 
 #Importación de modelos
-from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras
+from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Encuestas, Preguntas, Respuestas
 
 #Librería para manejar archivos en Python
 from django.core.files.base import ContentFile
@@ -8223,6 +8223,117 @@ def verPrestamos(request):
         numeroNoti = numNoti()
 
         return render(request, "prestamos/verPrestamo.html", {"estaEnVerPrestamos":estaEnVerPrestamos,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+    else:
+    
+        return redirect ('/login/')
+    
+    
+def agregarEncuestas(request):
+        
+    if "idSesion" in request.session:
+    
+        estaEnAgregarEncuestas= True
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        
+        nombreCompleto = nombre + " " + apellidos
+        
+        foto = fotoAdmin(request)
+        
+        
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+        
+        #----si se da clic en el boton en guardar encuesta
+        if request.method == "POST":
+            
+            nombreEncuesta = request.POST['nombreEnc']
+            cantidadMultiples = request.POST['multiples']
+            cantidadAbiertas = request.POST['abiertas']
+            fechaHoy =datetime.now()
+            pregunta = "pregunta"
+            multiple = 0
+            preguntasMultiples=[]
+            
+            for respuestaMultiple in range(int(cantidadMultiples)):
+                multiple= multiple + 1
+                nameMultiple = pregunta + str(multiple)
+                textoPreguntaMultiple = request.POST[nameMultiple]
+                preguntasMultiples.append(textoPreguntaMultiple)
+            
+            preguntaAb = "preguntaAb"
+            abierta = 0
+            preguntasAbiertas = []
+            
+            for respuestaAbierta in range(int(cantidadAbiertas)):
+                abierta = abierta + 1
+                nameAbierta = preguntaAb + str(abierta)
+                textoPreguntaAbierta = request.POST[nameAbierta]
+                preguntasAbiertas.append(textoPreguntaAbierta)
+                
+            
+            
+            
+            #--registro de encuesta
+            registrarEncuesta = Encuestas(fecha_encuesta=fechaHoy, nombre_encuesta = nombreEncuesta, preguntas_multiples =cantidadMultiples, preguntas_abiertas =cantidadAbiertas)
+            registrarEncuesta.save()
+         
+            if registrarEncuesta:
+                registrarEncuesta = Encuestas.objects.count()
+                
+              
+                    
+                for preguntaMultiple in preguntasMultiples:
+                    
+                    registroPreguntaMultiple = Preguntas(id_encuesta = Encuestas.objects.get(id_encuesta=registrarEncuesta), pregunta = preguntaMultiple, tipo = "M")
+                    
+                    registroPreguntaMultiple.save()
+                    
+                for preguntaAbierta in preguntasAbiertas:
+                        
+                    registroPreguntaAbierta = Preguntas(id_encuesta = Encuestas.objects.get(id_encuesta=registrarEncuesta),  pregunta = preguntaAbierta, tipo = "A")
+                    
+                    registroPreguntaAbierta.save()
+                
+            encuestaGuardada = True
+            encuestaGuardadaTexto = "La encuesta fue guardada con éxito!"
+            return render(request, "Encuestas/agregarEncuestas.html", {"estaEnAgregarEncuestas":estaEnAgregarEncuestas,"id_admin":id_admin, "encuestaGuardada": encuestaGuardada, "encuestaGuardadaTexto": encuestaGuardadaTexto, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+                    
+            
+
+        return render(request, "Encuestas/agregarEncuestas.html", {"estaEnAgregarEncuestas":estaEnAgregarEncuestas,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+    else:
+        return redirect ('/login/')
+
+def verEncuestas(request):
+    
+    if "idSesion" in request.session:
+        
+        estaEnVerEncuestas = True
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        
+        nombreCompleto = nombre + " " + apellidos
+        
+        foto = fotoAdmin(request)
+        
+        
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+        
+        inforEncuestas = Encuestas.objects.all()
+        
+        
+
+        return render(request, "Encuestas/verEncuestas.html", {"estaEnVerEncuestas":estaEnVerEncuestas,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "inforEncuestas":inforEncuestas , "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
     else:
     
         return redirect ('/login/')
