@@ -84,12 +84,12 @@ Encuestas | Custom System
                             <tr>
                               
                                 <th>
-                                    <form action="/infoImpresora/" method="POST">{% csrf_token %}
+                                    <form action="/preguntas/" method="POST">{% csrf_token %}
 
 
                                         <center>
                                             <input type="text" style="border: none; background: none;"
-                                                name="idImpresora" value="{{encuesta.id_encuesta}}" readonly
+                                                name="id_encuesta" value="{{encuesta.id_encuesta}}" readonly
                                                 size="1">
                                             <button type="submit" class="btn  waves-effect"
                                                 style="background-color: #0A77F9;">

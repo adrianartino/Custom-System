@@ -1,0 +1,271 @@
+{% extends "Menu/menu.html" %}
+{% load static %}
+
+{% block titulo %}
+Preguntas de Encuesta
+{% endblock %}
+
+{% block estilos %}
+<!-- Favicon-->
+<link rel="icon" href={% static 'images/icons/ra.ico' %} type="image/x-icon">
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
+    type="text/css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+
+<!-- Bootstrap Core Css -->
+<link href={% static 'panel/plugins/bootstrap/css/bootstrap.css' %} rel="stylesheet">
+
+<!-- Waves Effect Css -->
+<link href={% static 'panel/plugins/node-waves/waves.css' %} rel="stylesheet" />
+
+<!-- Animation Css -->
+<link href={% static 'panel/plugins/animate-css/animate.css' %} rel="stylesheet" />
+<!-- Bootstrap Select Css -->
+<link href={% static 'panel/plugins/bootstrap-select/css/bootstrap-select.css' %} rel="stylesheet" />
+<!-- JQuery DataTable Css -->
+<link href={% static 'panel/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css' %} rel="stylesheet">
+
+
+<!-- Custom Css -->
+<link href={% static 'panel/css/style.css' %} rel="stylesheet">
+
+<!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+<link href={% static 'panel/css/themes/all-themes.css' %} rel="stylesheet" />
+{% endblock %}
+
+{% block contenido %}
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h2 style="font-family: 'Oswald', sans-serif;">
+                    INFORMACIÓN DE ENCUESTA {{id_encuesta}}
+                    <small style="color: #790C05;">Información de encuesta solicitada.</small>
+                </h2>
+                <ul class="header-dropdown m-r--5">
+                    <li class="dropdown">
+                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                            aria-haspopup="true" aria-expanded="false">
+                            <i class="material-icons">more_vert</i>
+                        </a>
+                        <ul class="dropdown-menu pull-right">
+                            <li><a href="javascript:void(0);">Action</a></li>
+                            <li><a href="javascript:void(0);">Another action</a></li>
+                            <li><a href="javascript:void(0);">Something else here</a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+            </div>
+            <div class="body" id="divActivos">
+                {% for datoEncuesta in infoEncuesta %}
+                <center>
+                    
+                    <h1 style=" color: black;">Encuesta número {{datoEncuesta.id_encuesta}}</h1>
+                    <i class="material-icons" style="color: rgb(158, 154, 154); font-size:80px!important;" >question_answer</i>
+
+                    
+                    <h1 style="color: black;">Nombre: {{datoEncuesta.nombre_encuesta}}</h1>
+                    
+                </center>
+                <div class="row clearfix">
+                    <div class="col-md-4">
+                        <center>
+                            <h2 style="color: black;">Fecha:</h2>
+                            <span style="font-size: 200%;">
+                                <i class="material-icons"
+                                    style="color: rgb(42, 141, 17); font-size: 200%;">date_range</i>
+
+                            </span>
+                            <h3 style="color: black;">{{datoEncuesta.fecha_encuesta}}</h3>
+                        </center>
+                    </div>
+                    <div class="col-md-4">
+                        <center>
+                            <h2 style="color: black;">Número de preguntas multiples:</h2>
+                            <span style="font-size: 200%;">
+                                <i class="material-icons"
+                                    style="color: rgb(41, 57, 201);  font-size: 200%;">switch_camera</i>
+                            </span>
+                            <h3 style="color: black;">{{datoEncuesta.preguntas_multiples}}</h3>
+                        </center>
+                    </div>
+                    <div class="col-md-4">
+                        <center>
+                            <h2 style="color: black;">Número de preguntas abiertas:</h2>
+                            <span style="font-size: 200%;">
+                                <i class="material-icons"
+                                    style="color: rgb(226, 135, 31);  font-size: 200%;">textsms</i>
+                            </span>
+                            <h3 style="color: black;">{{datoEncuesta.preguntas_abiertas}}</h3>
+                        </center>
+                    </div>
+                </div>
+
+              
+                <h1 style="color: black;">Preguntas multiples:</h1>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                        <thead>
+                            <tr style="background-color: #fad60e; color:black">
+                                <th style="width: 10% !important;">ID pregunta</th>
+                                <th>pregunta</th>
+                                
+
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>ID pregunta</th>
+                                <th>pregunta</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            {% for preguntas in preguntasMultiples %}
+                            <tr>
+
+                                <th>{{preguntas.0}}</th>
+                                <th>{{preguntas.1}}</th>
+                               
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <br>
+                <h1 style="color: black;">Preguntas abiertas:</h1>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                        <thead>
+                            <tr style="background-color: #fad60e; color:black">
+                                <th style="width: 10% !important;">ID pregunta</th>
+                                <th>pregunta</th>
+                                
+
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>ID pregunta</th>
+                                <th>pregunta</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            {% for preguntas in preguntasAbiertas %}
+                            <tr>
+
+                                <th>{{preguntas.0}}</th>
+                                <th>{{preguntas.1}}</th>
+                               
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+               
+                {% endfor %}
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</div>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+{% if bajaEquipo %}
+<script type="text/javascript">
+    swal({
+        icon: 'error',
+        title: 'Wuu..!',
+        text: ' {{bajaExito}}',
+        footer: '<span style="color: red!important"> Vuelve a navegar por Custom System! </span>',
+        width: '40%'
+
+    });
+</script>
+{% endif %}
+{% if altaEquipo %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Wuu..!',
+        text: ' {{altaExito}}',
+        footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
+<script type="text/javascript">
+    function inicio() {
+        var div1 = document.getElementById("divInactivos");
+        div1.style.display = "none"; /* bloquear u ocultar la tabla..*/
+    }
+    window.onload = inicio;
+
+    function cambioFiltro() {
+        var div = document.getElementById("divActivos");
+        var div1 = document.getElementById("divInactivos");
+        /* Si la tabla de Empleados Activos está activa..*/
+        if (div.style.display === "none") {
+            //Bloquear la tabla de empleados Activos.. 
+            div.style.display = "block";
+            div1.style.display = "none";
+        } else { //Si la tabla de empleados Activos está inactiva
+            div.style.display = "none"; //Desbloquear la tabla de empleados Activos
+            div1.style.display = "block";
+        }
+
+    }
+</script>
+{% endblock %}
+
+{% block estilosJs %}
+<!-- Jquery Core Js -->
+<script src={% static 'panel/plugins/jquery/jquery.min.js' %}></script>
+
+<!-- Bootstrap Core Js -->
+<script src={% static 'panel/plugins/bootstrap/js/bootstrap.js' %}></script>
+
+<!-- Select Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-select/js/bootstrap-select.js' %}></script>
+
+<!-- Slimscroll Plugin Js -->
+<script src={% static 'panel/plugins/jquery-slimscroll/jquery.slimscroll.js' %}></script>
+<!-- Bootstrap Colorpicker Js -->
+<script src={% static 'panel/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js' %}></script>
+
+<!-- Dropzone Plugin Js -->
+<script src={% static 'panel/plugins/dropzone/dropzone.js' %}></script>
+
+<!-- Input Mask Plugin Js -->
+<script src={% static 'panel/plugins/jquery-inputmask/jquery.inputmask.bundle.js' %}></script>
+
+<!-- Multi Select Plugin Js -->
+<script src={% static 'panel/plugins/multi-select/js/jquery.multi-select.js' %}></script>
+
+<!-- Jquery Spinner Plugin Js -->
+<script src={% static 'panel/plugins/jquery-spinner/js/jquery.spinner.js' %}></script>
+
+<!-- Bootstrap Tags Input Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js' %}></script>
+
+<!-- noUISlider Plugin Js -->
+<script src={% static 'panel/plugins/nouislider/nouislider.js' %}></script>
+
+<!-- Waves Effect Plugin Js -->
+<script src={% static 'panel/plugins/node-waves/waves.js' %}></script>
+
+<!-- Jquery DataTable Plugin Js -->
+
+<!-- Custom Js -->
+<script src={% static 'panel/js/admin.js' %}></script>
+<script src={% static 'panel/js/pages/tables/jquery-datatable.js' %}></script>
+
+<!-- Demo Js -->
+<script src={% static 'panel/js/demo.js' %}></script>
+{% endblock %}

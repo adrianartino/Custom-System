@@ -122,8 +122,15 @@ urlpatterns = [
     
     path("agregarEncuestas/", views.agregarEncuestas),
     path("verEncuestas/", views.verEncuestas),
+    path("preguntas/", views.preguntas),
+
+    path("principal/", viewEmpleados.principal),
+    path("encuestas/", viewEmpleados.encuestas),
     
-    path("principal/", viewEmpleados.principal)
+    path("equipo/", viewEmpleados.equipo),
+    path("carta/", viewEmpleados.carta),
+    path("directorio/", viewEmpleados.directorio)
+
 ]
 
 if settings.DEBUG:

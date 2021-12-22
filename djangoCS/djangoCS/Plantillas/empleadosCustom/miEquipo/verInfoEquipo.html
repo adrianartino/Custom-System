@@ -1,0 +1,326 @@
+{% extends "empleadosCustom/menu/menu.html" %}
+{% load static %}
+
+{% block titulo %}
+Información de Equipo
+{% endblock %}
+
+{% block estilos %}
+<!-- Favicon-->
+<link rel="icon" href={% static 'images/icons/ra.ico' %} type="image/x-icon">
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
+    type="text/css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+
+<!-- Bootstrap Core Css -->
+<link href={% static 'panel/plugins/bootstrap/css/bootstrap.css' %} rel="stylesheet">
+
+<!-- Waves Effect Css -->
+<link href={% static 'panel/plugins/node-waves/waves.css' %} rel="stylesheet" />
+
+<!-- Animation Css -->
+<link href={% static 'panel/plugins/animate-css/animate.css' %} rel="stylesheet" />
+<!-- Bootstrap Select Css -->
+<link href={% static 'panel/plugins/bootstrap-select/css/bootstrap-select.css' %} rel="stylesheet" />
+<!-- JQuery DataTable Css -->
+<link href={% static 'panel/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css' %} rel="stylesheet">
+
+
+<!-- Custom Css -->
+<link href={% static 'panel/css/style.css' %} rel="stylesheet">
+
+<!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+<link href={% static 'panel/css/themes/all-themes.css' %} rel="stylesheet" />
+{% endblock %}
+
+{% block contenido %}
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h2 style="font-family: 'Oswald', sans-serif;">
+                    INFORMACIÓN DE MI EQUIPO
+                    <small style="color: #790C05;">Información de mi herramienta de trabajo.</small>
+                </h2>
+                <ul class="header-dropdown m-r--5">
+                    <li class="dropdown">
+                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                            aria-haspopup="true" aria-expanded="false">
+                            <i class="material-icons">more_vert</i>
+                        </a>
+                        <ul class="dropdown-menu pull-right">
+                            <li><a href="javascript:void(0);">Action</a></li>
+                            <li><a href="javascript:void(0);">Another action</a></li>
+                            <li><a href="javascript:void(0);">Something else here</a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+            </div>
+            <div class="body" id="divActivos">
+                {% if tieneEquipo %}
+                
+                    {% for datoEquipo in datosEquipo %}
+                    <center>
+                        <h1 style="color: black;"> <span style="font-size: 120%;">
+
+                                <i class="material-icons" style="color: rgb(158, 154, 154); font-size: 120%;">computer</i>
+
+                    </span> #1</h1>
+                        <h1 style=" color: black;">{{datoEquipo.tipo}} {{datoEquipo.marca}} {{datoEquipo.modelo}}</h1>
+                        <img src="{{datoEquipo.imagen.url}}" width="30%" alt="lap">
+
+                        {% if sinPropietario %}
+                        <h1 style="color: black;">Propietario: Sin Propietario</h1>
+                        {% else %}
+                        <h1 style="color: black;">Propietario: {{nombreEmpleado}}</h1>
+                        {% endif %}
+                    </center>
+                    <div class="row clearfix">
+                        <div class="col-md-6">
+                            <center>
+                                <h2 style="color: black;">Fecha de compra</h2>
+                                <span style="font-size: 200%;">
+                                    <i class="material-icons"
+                                        style="color: rgb(42, 141, 17); font-size: 200%;">shopping_cart</i>
+
+                                </span>
+                                <h3 style="color: black;">{{compra}}</h3>
+                            </center>
+                        </div>
+                        <div class="col-md-6">
+                            <center>
+                                <h2 style="color: black;">Fecha de renovación</h2>
+                                <span style="font-size: 200%;">
+                                    <i class="material-icons"
+                                        style="color: rgb(41, 57, 201);  font-size: 200%;">add_shopping_cart</i>
+                                </span>
+                                <h3 style="color: black;">{{renovar}}</h3>
+                            </center>
+                        </div>
+                    </div>
+
+                    <h1 style="color: black;">Características</h1>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                            <thead>
+                                <tr style="background-color: #fad60e; color:black">
+                                    <th>ID Equipo</th>
+                                    <th>Tipo</th>
+                                    <th>Marca</th>
+                                    <th>Modelo</th>
+                                    <th>Color</th>
+                                    <th>Memoria RAM</th>
+                                    <th>Procesador</th>
+                                    <th>Sistema Operativo</th>
+                                    <th>Cargador</th>
+                                    <th>Departamento</th>
+                                    <th>Estado</th>
+
+
+
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>ID Equipo</th>
+                                    <th>Tipo</th>
+                                    <th>Marca</th>
+                                    <th>Modelo</th>
+                                    <th>Color</th>
+                                    <th>Memoria RAM</th>
+                                    <th>Procesador</th>
+                                    <th>Sistema Operativo</th>
+                                    <th>Cargador</th>
+                                    <th>Departamento</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+
+                                <tr>
+                                    <th>
+                                        <form action="/infoEquipo/" method="POST">{% csrf_token %}
+
+
+                                            <center>
+                                                <input type="text" style="border: none; background: none;" name="idEquipo"
+                                                    value="{{datoEquipo.id_equipo}}" readonly size="1">
+                                               
+                                            </center>
+                                            <br>
+                                        </form>
+                                    </th>
+                                    <th>{{datoEquipo.tipo}}</th>
+                                    <th>{{datoEquipo.marca}}</th>
+                                    <th>{{datoEquipo.modelo}}</th>
+                                    <th>{{datoEquipo.color}}</th>
+
+                                    <th>{{datoEquipo.memoriaram}}</th>
+                                    <th>{{datoEquipo.procesador}}</th>
+                                    <th>{{datoEquipo.sistemaoperativo}}</th>
+                                    <th>{{datoEquipo.modelocargador}}</th>
+                                    <th><label class="{{colorArea}}">{{nombreArea}}</label></th>
+                                    <th>{{datoEquipo.estado}}</th>
+
+
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <h1 style="color: black;">Mantenimientos</h1>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                            <thead>
+                                <tr style="background-color: #fad60e; color:black">
+                                    <th>ID Operación</th>
+                                    <th>Operación</th>
+                                    <th>Fecha</th>
+                                    <th>Observaciones</th>
+
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>ID Operación</th>
+                                    <th>Operación</th>
+                                    <th>Fecha</th>
+                                    <th>Observaciones</th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                {% for dato in mantenimientos %}
+                                <tr>
+
+                                    <th>{{dato.id_calmantenimiento}}</th>
+                                    <th>{{dato.operacion}}</th>
+                                    <th>{{dato.fecha}}</th>
+                                    <th>{{dato.observaciones}}</th>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <br>
+                    <form action="/pdfInfoEquipo/" method="POST">{% csrf_token %}
+                        <label>Descargar PDF </label>
+                        <input type="hidden" value="{{datoEquipo.id_equipo}}" name="idequipo">
+                        <button type="submit" class="btn bg-red waves-effect">
+                            <i class="material-icons">get_app</i>
+                            <span>PDF</span>
+                        </button>
+                    </form>
+                    {% endfor %}
+                {% endif %}
+
+                {% if noTieneEquipo %}
+                <!-- Indicar que el empleado no tiene equipo.. -->
+                <h1>NO TIENES EQUIPO</h1>
+                {% endif %}
+                
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</div>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+{% if bajaEquipo %}
+<script type="text/javascript">
+    swal({
+        icon: 'error',
+        title: 'Wuu..!',
+        text: ' {{bajaExito}}',
+        footer: '<span style="color: red!important"> Vuelve a navegar por Custom System! </span>',
+        width: '40%'
+
+    });
+</script>
+{% endif %}
+{% if altaEquipo %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Wuu..!',
+        text: ' {{altaExito}}',
+        footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
+<script type="text/javascript">
+    function inicio() {
+        var div1 = document.getElementById("divInactivos");
+        div1.style.display = "none"; /* bloquear u ocultar la tabla..*/
+    }
+    window.onload = inicio;
+
+    function cambioFiltro() {
+        var div = document.getElementById("divActivos");
+        var div1 = document.getElementById("divInactivos");
+        /* Si la tabla de Empleados Activos está activa..*/
+        if (div.style.display === "none") {
+            //Bloquear la tabla de empleados Activos.. 
+            div.style.display = "block";
+            div1.style.display = "none";
+        } else { //Si la tabla de empleados Activos está inactiva
+            div.style.display = "none"; //Desbloquear la tabla de empleados Activos
+            div1.style.display = "block";
+        }
+
+    }
+</script>
+{% endblock %}
+
+{% block estilosJs %}
+<!-- Jquery Core Js -->
+<script src={% static 'panel/plugins/jquery/jquery.min.js' %}></script>
+
+<!-- Bootstrap Core Js -->
+<script src={% static 'panel/plugins/bootstrap/js/bootstrap.js' %}></script>
+
+<!-- Select Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-select/js/bootstrap-select.js' %}></script>
+
+<!-- Slimscroll Plugin Js -->
+<script src={% static 'panel/plugins/jquery-slimscroll/jquery.slimscroll.js' %}></script>
+<!-- Bootstrap Colorpicker Js -->
+<script src={% static 'panel/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js' %}></script>
+
+<!-- Dropzone Plugin Js -->
+<script src={% static 'panel/plugins/dropzone/dropzone.js' %}></script>
+
+<!-- Input Mask Plugin Js -->
+<script src={% static 'panel/plugins/jquery-inputmask/jquery.inputmask.bundle.js' %}></script>
+
+<!-- Multi Select Plugin Js -->
+<script src={% static 'panel/plugins/multi-select/js/jquery.multi-select.js' %}></script>
+
+<!-- Jquery Spinner Plugin Js -->
+<script src={% static 'panel/plugins/jquery-spinner/js/jquery.spinner.js' %}></script>
+
+<!-- Bootstrap Tags Input Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js' %}></script>
+
+<!-- noUISlider Plugin Js -->
+<script src={% static 'panel/plugins/nouislider/nouislider.js' %}></script>
+
+<!-- Waves Effect Plugin Js -->
+<script src={% static 'panel/plugins/node-waves/waves.js' %}></script>
+
+<!-- Jquery DataTable Plugin Js -->
+
+<!-- Custom Js -->
+<script src={% static 'panel/js/admin.js' %}></script>
+<script src={% static 'panel/js/pages/tables/jquery-datatable.js' %}></script>
+
+<!-- Demo Js -->
+<script src={% static 'panel/js/demo.js' %}></script>
+{% endblock %}

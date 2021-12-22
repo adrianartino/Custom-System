@@ -203,16 +203,15 @@
 
 
                     
-                        {% if Insumos %}
+                    {% if enAño %}
                     <li class="active">
                         {% else %}
                     <li>
-
                         {% endif %}
                       
                         <a href="javascript:void(0);" class="menu-toggle">
                            
-                            {% if Insumos %}
+                            {% if enAño %}
                             <i class="material-icons" style="color: #00917C !important;">poll</i>
                             <span style="color: #00917C !important;"> Encuestas</span>
                             {% else %}
@@ -222,12 +221,13 @@
                             
                         </a>
                         <ul class="ml-menu">
-
-                            {% if Insumos %}
+                            
+                            
+                            {% if enAño %}
                             <li class="active">
                                 {% else %}
                             <li>
-                                {% if estaEnVerInsumos %}
+                                {% if estaEnEncuesta %}
                             <li class="active">
                                 {% else %}
                             <li>
@@ -235,75 +235,41 @@
                                 {% endif %}
 
                                 <a href="javascript:void(0);" class="menu-toggle">
-                                   
-                                    {% if estaEnVerInsumos %}
+                                    
+                                    {% if estaEnEncuesta %}
                                     <i class="material-icons" style="color: #336BFF !important;">date_range</i>
-                                    <span style="color: #E40017 !important;">2022</span>
+                                    <span style="color: #E40017 !important;">Año 2022</span>
                                     {% else %}
                                     <i class="material-icons">date_range</i>
-                                    <span>2022</span>
+                                    <span>Año 2022</span>
                                     {% endif %}
-                                
+                                    
                                 </a>
                                 <ul class="ml-menu">
-                                    {% if estaEnVerInsumos %}
+                                    {% if estaEnEncuesta %}
                                     <li class="active">
                                         {% else %}
                                     <li>
                                         {% endif %}
-                                        {% if estaEnVerInsumos %}
-                                        <a href="/verInsumos/" style="color: #d49e0a !important;">Periodo enero</a>
+                                        {% if estaEnEncuesta %}
+                                        <a href="/encuestas/" style="color: #d49e0a !important;">Periodo enero</a>
                                         {% else %}
 
-                                        <a href="/verInsumos/">Periodo enero</a>
+                                        <a href="/encuestas/">Periodo enero</a>
                                         {% endif %}
 
                                     </li>
-                                    
-
-                                </ul>
-                            </li>
+                                   
+                                </ul>   
                         </ul>
+
                     </li>
-                    {% if estaEnVerEmpleados %}
+                   
+                    {% if estaEnVerEquipo %}
                     <li class="active">
                         {% else %}
                     <li>
-                       
-                        {% endif %}
-                        <a href="javascript:void(0);" class="menu-toggle">
-                            
-                            {% if estaEnVerEmpleados %}
-                            <i class="material-icons" style="color: #00917C !important;">person</i>
-                            <span style="color: #00917C !important;">Perfil</span>
-                            {% else %}
-                            <i class="material-icons">person</i>
-                            <span>Perfil</span>
-                            {% endif %}
-                            
-
-                        </a>
-                        <ul class="ml-menu">
-                            {% if estaEnVerEmpleados %}
-                            <li class="active">
-                                {% else %}
-                            <li>
-                                {% endif %}
-                                {% if estaEnVerEmpleados %}
-                                <a href="/verEmpleados/" style="color: #E40017 !important;">Ver perfil</a>
-                                {% else %}
-                                <a href="/verEmpleados/">Ver perfil</a>
-                                {% endif %}
-                            </li>
-                            
-
-                        </ul>
-                    </li>
-                    {% if estaEnVerEquipos %}
-                    <li class="active">
-                        {% else %}
-                    <li>
-                        {% if estaEnAgregarEquipos %}
+                        {% if estaEnVerCarta %}
                     <li class="active">
                         {% else %}
                     <li>
@@ -314,11 +280,11 @@
                     
                        
                         <a href="javascript:void(0);" class="menu-toggle">
-                            {% if estaEnVerEquipos %}
+                            {% if estaEnVerEquipo %}
                             <i class="material-icons" style="color: #00917C !important;">computer</i>
                             <span style="color: #00917C !important;">Mi equipo de cómputo</span>
                             {% else %}
-                            {% if estaEnAgregarEquipos %}
+                            {% if estaEnVerCarta %}
                             <i class="material-icons" style="color: #00917C !important;">computer</i>
                             <span style="color: #00917C !important;">Mi equipo de cómputo</span>
                             {% else %}
@@ -332,34 +298,69 @@
 
                         </a>
                         <ul class="ml-menu">
-                            {% if estaEnVerEquipos %}
+                            {% if estaEnVerEquipo %}
                             <li class="active">
                                 {% else %}
                             <li>
                                 {% endif %}
-                                {% if estaEnVerEquipos %}
-                                <a href="/verEquipos/" style="color: #E40017 !important;">Información de equipo</a>
+                                {% if estaEnVerEquipo %}
+                                <a href="/equipo/" style="color: #E40017 !important;">Información de equipo</a>
                                 {% else %}
-                                <a href="/verEquipos/">Información de equipo</a>
+                                <a href="/equipo/">Información de equipo</a>
                             <li>
                                 {% endif %}
 
                             </li>
-                            {% if estaEnAgregarEquipos %}
+                            {% if estaEnVerCarta %}
                             <li class="active">
                                 {% else %}
                             <li>
                                 {% endif %}
-                                {% if estaEnAgregarEquipos %}
-                                <a href="/agregarEquipos/" style="color: #E40017 !important;">Mis cartas responsivas</a>
+                                {% if estaEnVerCarta %}
+                                <a href="/carta/" style="color: #E40017 !important;">Mis cartas responsivas</a>
                                 {% else %}
-                                <a href="/agregarEquipos/">Mis cartas responsivas</a>
+                                <a href="/carta/">Mis cartas responsivas</a>
                                 {% endif %}
 
                            
                             
 
                             </li>
+
+                        </ul>
+                    </li>
+
+                    {% if estaEnVerCorreos %}
+                    <li class="active">
+                        {% else %}
+                    <li>
+                       
+                        {% endif %}
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            
+                            {% if estaEnVerCorreos %}
+                            <i class="material-icons" style="color: #00917C !important;">people</i>
+                            <span style="color: #00917C !important;">Mis compañeros</span>
+                            {% else %}
+                            <i class="material-icons">people</i>
+                            <span>Mis compañeros</span>
+                            {% endif %}
+                            
+
+                        </a>
+                        <ul class="ml-menu">
+                            {% if estaEnVerCorreos %}
+                            <li class="active">
+                                {% else %}
+                            <li>
+                                {% endif %}
+                                {% if estaEnVerCorreos %}
+                                <a href="/directorio/" style="color: #E40017 !important;">Ver directorio de correos</a>
+                                {% else %}
+                                <a href="/directorio/">Ver directorio de correos</a>
+                                {% endif %}
+                            </li>
+                            
 
                         </ul>
                     </li>

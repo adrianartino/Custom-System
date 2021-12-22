@@ -8337,3 +8337,50 @@ def verEncuestas(request):
     else:
     
         return redirect ('/login/')
+
+def preguntas(request):
+    
+    if "idSesion" in request.session:
+        
+        estaEnVerEncuestas = True
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        
+        nombreCompleto = nombre + " " + apellidos
+        
+        foto = fotoAdmin(request)
+        
+        
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+        
+        if request.method == "POST":
+            
+            id_encuesta = request.POST['id_encuesta']
+            
+            infoEncuesta = Encuestas.objects.filter(id_encuesta=id_encuesta)
+
+            preguntasEncuesta = Preguntas.objects.filter(id_encuesta_id__id_encuesta=id_encuesta)
+
+            preguntasMultiples=[]
+            preguntasAbiertas =[]
+
+            for pregunta in preguntasEncuesta:
+                if pregunta.tipo == "M":
+                    preguntasMultiples.append([pregunta.id_pregunta, pregunta.pregunta])
+                elif pregunta.tipo == "A":
+                    preguntasAbiertas.append([pregunta.id_pregunta, pregunta.pregunta])
+
+
+
+        
+        
+
+            return render(request, "Encuestas/preguntas.html", {"estaEnVerEncuestas":estaEnVerEncuestas, "preguntasMultiples" : preguntasMultiples, "preguntasAbiertas" : preguntasAbiertas,"infoEncuesta":infoEncuesta, "id_encuesta": id_encuesta, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+    else:
+    
+        return redirect ('/login/')
