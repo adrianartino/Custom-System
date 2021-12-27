@@ -129,7 +129,8 @@ urlpatterns = [
     
     path("equipo/", viewEmpleados.equipo),
     path("carta/", viewEmpleados.carta),
-    path("directorio/", viewEmpleados.directorio)
+    path("directorio/", viewEmpleados.directorio),
+    path("documentosAplicablesATodos/", viewEmpleados.documentosAplicablesATodos)
 
 ]
 

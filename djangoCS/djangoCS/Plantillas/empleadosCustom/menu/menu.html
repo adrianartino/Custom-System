@@ -364,6 +364,42 @@
 
                         </ul>
                     </li>
+
+                    {% if estaEnVerDocumentos %}
+                    <li class="active">
+                        {% else %}
+                    <li>
+                       
+                        {% endif %}
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            
+                            {% if estaEnVerDocumentos %}
+                            <i class="material-icons" style="color: #00917C !important;">assignment</i>
+                            <span style="color: #00917C !important;">Documentos</span>
+                            {% else %}
+                            <i class="material-icons">assignment</i>
+                            <span>Documentos</span>
+                            {% endif %}
+                            
+
+                        </a>
+                        <ul class="ml-menu">
+                            {% if estaEnVerDocumentos %}
+                            <li class="active">
+                                {% else %}
+                            <li>
+                                {% endif %}
+                                {% if estaEnVerDocumentos %}
+                                <a href="/documentosAplicablesATodos/" style="color: #E40017 !important;">Documentos aplicables a todos los departamentos.</a>
+                                {% else %}
+                                <a href="/documentosAplicablesATodos/">Documentos aplicables a todos los departamentos.</a>
+                                {% endif %}
+                            </li>
+                            
+
+                        </ul>
+                    </li>
+                    
                     
             </div>
             <!-- #Menu -->

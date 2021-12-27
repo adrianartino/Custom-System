@@ -190,8 +190,32 @@ def carta(request):
         foto = fotoAdmin(request)
         nombreCompleto = nombreini + " " + apellidosini #Blanca Yesenia Gaeta Talamantes
         
+        datosRegistro = Carta.objects.filter(id_empleado = id_admin)
         
-        return render(request, "empleadosCustom/miEquipo/verCartaResponsiva.html", { "estaEnVerCarta": estaEnVerCarta, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo})
+        empleados=[]
+        equipos=[]
+        
+        for registros in datosRegistro:
+            empleado= registros.id_empleado_id
+            equipo = registros.id_equipo_id
+            
+            datosEmpleado = Empleados.objects.filter(id_empleado=empleado)
+            for datos in datosEmpleado:
+                nombres= datos.nombre
+                apellido= datos.apellidos
+                
+            datosEquipos =Equipos.objects.filter(id_equipo=equipo)
+            for datos in datosEquipos:
+                marca=datos.marca
+                modelo=datos.modelo
+                
+            empleados.append([nombres,apellido])
+            equipos.append([marca, modelo])
+        
+        lista1=zip(datosRegistro,empleados,equipos)
+        
+        
+        return render(request, "empleadosCustom/miEquipo/verCartaResponsiva.html", { "estaEnVerCarta": estaEnVerCarta, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "lista1":lista1})
     
     #Si le da al inicio y no hay una sesión iniciada..
     else:
@@ -236,6 +260,31 @@ def directorio(request):
         
         
         return render(request, "empleadosCustom/directorioCorreos/verDirectorio.html", { "estaEnVerCorreos": estaEnVerCorreos, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "lista":lista})
+    
+    #Si le da al inicio y no hay una sesión iniciada..
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+    
+    
+
+def documentosAplicablesATodos(request):
+    
+    #Si ya hay una sesión iniciada..
+    if "idSesion" in request.session:
+        
+        
+        
+        estaEnVerDocumentos = True
+        estaEnEncuesta = True
+        id_admin=request.session["idSesion"]
+        nombreini = request.session['nombres']
+        apellidosini = request.session['apellidos']
+        correo = request.session['correoSesion']
+        foto = fotoAdmin(request)
+        nombreCompleto = nombreini + " " + apellidosini #Blanca Yesenia Gaeta Talamantes
+        
+        
+        return render(request, "empleadosCustom/documentos/aplicablesatodos.html", {"estaEnVerDocumentos":estaEnVerDocumentos, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo})
     
     #Si le da al inicio y no hay una sesión iniciada..
     else:
