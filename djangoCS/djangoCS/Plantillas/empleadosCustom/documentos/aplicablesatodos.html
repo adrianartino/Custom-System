@@ -30,6 +30,7 @@ Información de Equipo
 
 <!-- Custom Css -->
 <link href={% static 'panel/css/style.css' %} rel="stylesheet">
+<link href={% static 'css/aplicables.css' %} rel="stylesheet">
 
 <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
 <link href={% static 'panel/css/themes/all-themes.css' %} rel="stylesheet" />
@@ -44,185 +45,435 @@ Información de Equipo
                     DOCUMENTOS APLICABLES A TODOS LOS DEPARTAMENTOS
                     <small style="color: #790C05;">Aqui puedes descargar los documentos aplicables a todos los departamentos.</small>
                 </h2>
-                <ul class="header-dropdown m-r--5">
-                    <li class="dropdown">
-                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                            aria-haspopup="true" aria-expanded="false">
-                            <i class="material-icons">more_vert</i>
-                        </a>
-                        <ul class="dropdown-menu pull-right">
-                            <li><a href="javascript:void(0);">Action</a></li>
-                            <li><a href="javascript:void(0);">Another action</a></li>
-                            <li><a href="javascript:void(0);">Something else here</a></li>
-                        </ul>
-                    </li>
-                </ul>
+                
 
             </div>
             <div class="body" id="divActivos">
-                {% if tieneEquipo %}
-                
-                    {% for datoEquipo in datosEquipo %}
-                    <center>
-                        <h1 style="color: black;"> <span style="font-size: 120%;">
+                <!-- Widgets1 -->
+                <div class="row clearfix">
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        
+                            <form action="/aplicable1/" method="POST">{% csrf_token %}
 
-                                <i class="material-icons" style="color: rgb(158, 154, 154); font-size: 120%;">computer</i>
+                                <input type="hidden" name="fto1" value="FTO-ABT-01" onclick="window.open('aplicable1')">
 
-                    </span> #1</h1>
-                        <h1 style=" color: black;">{{datoEquipo.tipo}} {{datoEquipo.marca}} {{datoEquipo.modelo}}</h1>
-                        <img src="{{datoEquipo.imagen.url}}" width="30%" alt="lap">
+                                <center>
+                                    <button type="submit" class="btn aplicable bg-green waves-effect animate__animated animate__flipInX" >
+                                        <i class="material-icons">grid_on</i>
+                                    </button>
+                                </center>
 
-                        {% if sinPropietario %}
-                        <h1 style="color: black;">Propietario: Sin Propietario</h1>
-                        {% else %}
-                        <h1 style="color: black;">Propietario: {{nombreEmpleado}}</h1>
-                        {% endif %}
-                    </center>
+                            </form>
+                            <br>
+                            <center>
+                                <p style="font-family: 'Oswald', sans-serif;">FTO-ABT-01 REQUISICIÓN DE COMPRA.</p>
+                            </center>
+                            
+                        
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <form action="/aplicable1/" method="POST">{% csrf_token %}
+
+                            <input type="hidden" name="fto1" value="FTO-ADM-07" onclick="window.open('aplicable1')">
+
+                            <center>
+                                <button type="submit" class="btn aplicable bg-green waves-effect animate__animated animate__flipInX" >
+                                    <i class="material-icons">grid_on</i>
+                                </button>
+                            </center>
+
+                        </form>
+                        <br>
+                        <center>
+                            <p style="font-family: 'Oswald', sans-serif;">FTO-ADM-07 RELACIÓN DE GASTOS DE VIAJE.</p>
+                        </center>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <form action="/aplicable1/" method="POST">{% csrf_token %}
+
+                            <input type="hidden" name="fto1" value="FTO-ADM-12" onclick="window.open('aplicable1')">
+
+                            <center>
+                                <button type="submit" class="btn aplicable bg-green waves-effect animate__animated animate__flipInX" >
+                                    <i class="material-icons">grid_on</i>
+                                </button>
+                            </center>
+
+                        </form>
+                        <br>
+                        <center>
+                            <p style="font-family: 'Oswald', sans-serif;">FTO-ADM-12 SOLICITUD DE VIÁTICOS</p>
+                        </center>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <form action="/aplicable1/" method="POST">{% csrf_token %}
+
+                            <input type="hidden" name="fto1" value="FTO-RRH-04" onclick="window.open('aplicable1')">
+
+                            <center>
+                                <button type="submit" class="btn aplicable bg-green waves-effect animate__animated animate__flipInX" >
+                                    <i class="material-icons">grid_on</i>
+                                </button>
+                            </center>
+
+                        </form>
+                        <br>
+                        <center>
+                            <p style="font-family: 'Oswald', sans-serif;">FTO-RRH-04 LISTA DE ASIST.</p>
+                        </center>
+                    </div>
+                </div>
+                <!-- #END# Widgets1 -->
+
+                <!-- Widgets2 -->
+                <div class="row clearfix">
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        
+                            <form action="/aplicable1/" method="POST">{% csrf_token %}
+
+                                <input type="hidden" name="fto1" value="FTO-RRH-13" onclick="window.open('aplicable1')">
+
+                                <center>
+                                    <button type="submit" class="btn aplicable bg-green waves-effect animate__animated animate__flipInX" >
+                                        <i class="material-icons">grid_on</i>
+                                    </button>
+                                </center>
+
+                            </form>
+                            <br>
+                            <center>
+                                <p style="font-family: 'Oswald', sans-serif;">FTO-RRH-13 AUT. DE PERM.</p>
+                            </center>
+                            
+                        
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <form action="/aplicable1/" method="POST">{% csrf_token %}
+
+                            <input type="hidden" name="fto1" value="FTO-RRH-26" onclick="window.open('aplicable1')">
+
+                            <center>
+                                <button type="submit" class="btn aplicable bg-green waves-effect animate__animated animate__flipInX" >
+                                    <i class="material-icons">grid_on</i>
+                                </button>
+                            </center>
+
+                        </form>
+                        <br>
+                        <center>
+                            <p style="font-family: 'Oswald', sans-serif;">FTO-RRH-26 PASE DE SALIDA.</p>
+                        </center>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <form action="/aplicable1/" method="POST">{% csrf_token %}
+
+                            <input type="hidden" name="fto1" value="FTO-RRH-27" onclick="window.open('aplicable1')">
+
+                            <center>
+                                <button type="submit" class="btn aplicable bg-green waves-effect animate__animated animate__flipInX" >
+                                    <i class="material-icons">grid_on</i>
+                                </button>
+                            </center>
+
+                        </form>
+                        <br>
+                        <center>
+                            <p style="font-family: 'Oswald', sans-serif;">FTO-RRH-27 EVALUACIÓN DE DESEM.</p>
+                        </center>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <form action="/aplicable2/" method="POST">{% csrf_token %}
+
+                            <input type="hidden" name="fto1" value="FTO-RRH-31" onclick="window.open('aplicable2')">
+
+                            <center>
+                                <button type="submit" class="btn aplicable2 bg-blue waves-effect animate__animated animate__flipInX" >
+                                    <i class="material-icons">insert_drive_file</i>
+                                </button>
+                            </center>
+
+                        </form>
+                        <br>
+                        <center>
+                            <p style="font-family: 'Oswald', sans-serif;">FTO-RRH-31 EVALUACIÓN DE CONOCIMIENTOS.</p>
+                        </center>
+                    </div>
+                </div>
+                <!-- #END# Widgets2 -->
+                <!-- Widgets3 -->
+                <div class="row clearfix">
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        
+                            <form action="/aplicable2/" method="POST">{% csrf_token %}
+
+                                <input type="hidden" name="fto1" value="FTO-RRH-32" onclick="window.open('aplicable2')">
+
+                                <center>
+                                    <button type="submit" class="btn aplicable2 bg-blue waves-effect animate__animated animate__flipInX" >
+                                        <i class="material-icons"> insert_drive_file</i>
+                                    </button>
+                                </center>
+
+                            </form>
+                            <br>
+                            <center>
+                                <p style="font-family: 'Oswald', sans-serif;">FTO-RRH-32 EVALUACIÓN A CAPACITADOR.</p>
+                            </center>
+                            
+                        
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <form action="/aplicable1/" method="POST">{% csrf_token %}
+
+                            <input type="hidden" name="fto1" value="FTO-RRH-33" onclick="window.open('aplicable1')">
+
+                            <center>
+                                <button type="submit" class="btn aplicable bg-green waves-effect animate__animated animate__flipInX" >
+                                    <i class="material-icons">grid_on</i>
+                                </button>
+                            </center>
+
+                        </form>
+                        <br>
+                        <center>
+                            <p style="font-family: 'Oswald', sans-serif;">FTO-RRH-33 ENCUESTA DE CLIMA LAB.</p>
+                        </center>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <form action="/aplicable1/" method="POST">{% csrf_token %}
+
+                            <input type="hidden" name="fto1" value="FTO-RRH-43" onclick="window.open('aplicable1')">
+
+                            <center>
+                                <button type="submit" class="btn aplicable bg-green waves-effect animate__animated animate__flipInX" >
+                                    <i class="material-icons">grid_on</i>
+                                </button>
+                            </center>
+
+                        </form>
+                        <br>
+                        <center>
+                            <p style="font-family: 'Oswald', sans-serif;">FTO-RRH-43 PASE DE PREST. DE VEH.</p>
+                        </center>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <form action="/aplicable1/" method="POST">{% csrf_token %}
+
+                            <input type="hidden" name="fto1" value=">FTO-RRH-47" onclick="window.open('aplicable1')">
+
+                            <center>
+                                <button type="submit" class="btn aplicable bg-green waves-effect animate__animated animate__flipInX" >
+                                    <i class="material-icons">grid_on</i>
+                                </button>
+                            </center>
+
+                        </form>
+                        <br>
+                        <center>
+                            <p style="font-family: 'Oswald', sans-serif;">FTO-RRH-47 LISTA DE PERSONAL DE TRABAJO.</p>
+                        </center>
+                    </div>
+                </div>
+                <!-- #END# Widgets3 -->
+                    <!-- Widgets4 -->
                     <div class="row clearfix">
-                        <div class="col-md-6">
+                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                            
+                                <form action="/aplicable1/" method="POST">{% csrf_token %}
+    
+                                    <input type="hidden" name="fto1" value="FTO-SGC-11" onclick="window.open('aplicable1')">
+    
+                                    <center>
+                                        <button type="submit" class="btn aplicable bg-green waves-effect animate__animated animate__flipInX" >
+                                            <i class="material-icons"> grid_on</i>
+                                        </button>
+                                    </center>
+    
+                                </form>
+                                <br>
+                                <center>
+                                    <p style="font-family: 'Oswald', sans-serif;">FTO-SGC-11 MINUTA DE REUNIÓN.</p>
+                                </center>
+                                
+                            
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                            <form action="/aplicable3/" method="POST">{% csrf_token %}
+    
+                                <input type="hidden" name="fto1" value="POL-ABT-01" onclick="window.open('aplicable3')">
+    
+                                <center>
+                                    <button type="submit" class="btn aplicable3 bg-red waves-effect animate__animated animate__flipInX" >
+                                        <i class="material-icons">picture_as_pdf</i>
+                                    </button>
+                                </center>
+    
+                            </form>
+                            <br>
                             <center>
-                                <h2 style="color: black;">Fecha de compra</h2>
-                                <span style="font-size: 200%;">
-                                    <i class="material-icons"
-                                        style="color: rgb(42, 141, 17); font-size: 200%;">shopping_cart</i>
-
-                                </span>
-                                <h3 style="color: black;">{{compra}}</h3>
+                                <p style="font-family: 'Oswald', sans-serif;">POL-ABT-01 REGLAMENTO DE ALMACÉN.</p>
                             </center>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                            <form action="/aplicable3/" method="POST">{% csrf_token %}
+    
+                                <input type="hidden" name="fto1" value="POL-ADM-01" onclick="window.open('aplicable3')">
+    
+                                <center>
+                                    <button type="submit" class="btn aplicable3 bg-red waves-effect animate__animated animate__flipInX" >
+                                        <i class="material-icons">picture_as_pdf</i>
+                                    </button>
+                                </center>
+    
+                            </form>
+                            <br>
                             <center>
-                                <h2 style="color: black;">Fecha de renovación</h2>
-                                <span style="font-size: 200%;">
-                                    <i class="material-icons"
-                                        style="color: rgb(41, 57, 201);  font-size: 200%;">add_shopping_cart</i>
-                                </span>
-                                <h3 style="color: black;">{{renovar}}</h3>
+                                <p style="font-family: 'Oswald', sans-serif;">POL-ADM-01 POLITICA DE ENTREGA DE VIÁTICOS.</p>
+                            </center>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                            <form action="/aplicable3/" method="POST">{% csrf_token %}
+    
+                                <input type="hidden" name="fto1" value="POL-RRH-01" onclick="window.open('aplicable3')">
+    
+                                <center>
+                                    <button type="submit" class="btn aplicable3 bg-red waves-effect animate__animated animate__flipInX" >
+                                        <i class="material-icons">picture_as_pdf</i>
+                                    </button>
+                                </center>
+    
+                            </form>
+                            <br>
+                            <center>
+                                <p style="font-family: 'Oswald', sans-serif;">POL-RRH-01 POLÍTICA DE LEVANTAMIENTO DE ACTAS CON SANCIÓN.</p>
                             </center>
                         </div>
                     </div>
+                    <!-- #END# Widgets4 -->
+                        <!-- Widgets5 -->
+                        <div class="row clearfix">
+                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                
+                                    <form action="/aplicable3/" method="POST">{% csrf_token %}
+        
+                                        <input type="hidden" name="fto1" value="POL-RRH-02" onclick="window.open('aplicable3')">
+        
+                                        <center>
+                                            <button type="submit" class="btn aplicable3 bg-red waves-effect animate__animated animate__flipInX" >
+                                                <i class="material-icons"> picture_as_pdf</i>
+                                            </button>
+                                        </center>
+        
+                                    </form>
+                                    <br>
+                                    <center>
+                                        <p style="font-family: 'Oswald', sans-serif;">POL-RRH-02 POLÍTICA DE VACACIONES, DÍAS DE DESCANSO Y PERMISOS CON GOCE DE SUELDO.</p>
+                                    </center>
+                                    
+                                
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                <form action="/aplicable3/" method="POST">{% csrf_token %}
+        
+                                    <input type="hidden" name="fto1" value="POL-RRH-03" onclick="window.open('aplicable3')">
+        
+                                    <center>
+                                        <button type="submit" class="btn aplicable3 bg-red waves-effect animate__animated animate__flipInX" >
+                                            <i class="material-icons">picture_as_pdf</i>
+                                        </button>
+                                    </center>
+        
+                                </form>
+                                <br>
+                                <center>
+                                    <p style="font-family: 'Oswald', sans-serif;">POL-RRH-03 REGLAMENTO INTERIOR DE TRABAJO.</p>
+                                </center>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                <form action="/aplicable3/" method="POST">{% csrf_token %}
+        
+                                    <input type="hidden" name="fto1" value="POL-RRH-04" onclick="window.open('aplicable3')">
+        
+                                    <center>
+                                        <button type="submit" class="btn aplicable3 bg-red waves-effect animate__animated animate__flipInX" >
+                                            <i class="material-icons">picture_as_pdf</i>
+                                        </button>
+                                    </center>
+        
+                                </form>
+                                <br>
+                                <center>
+                                    <p style="font-family: 'Oswald', sans-serif;">POL-RRH-04 REGLAMENTO PARA EL USO DE VEHÍCULOS.</p>
+                                </center>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                <form action="/aplicable3/" method="POST">{% csrf_token %}
+        
+                                    <input type="hidden" name="fto1" value="POL-RRH-05" onclick="window.open('aplicable3')">
+        
+                                    <center>
+                                        <button type="submit" class="btn aplicable3 bg-red waves-effect animate__animated animate__flipInX" >
+                                            <i class="material-icons">picture_as_pdf</i>
+                                        </button>
+                                    </center>
+        
+                                </form>
+                                <br>
+                                <center>
+                                    <p style="font-family: 'Oswald', sans-serif;">POL-RRH-05 POLÍTICA DE VEHÍCULOS.</p>
+                                </center>
+                            </div>
+                        </div>
+                        <!-- #END# Widgets5 -->
 
-                    <h1 style="color: black;">Características</h1>
+                          <!-- Widgets6 -->
+                          <div class="row clearfix">
+                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                
+                                    <form action="/aplicable3/" method="POST">{% csrf_token %}
+        
+                                        <input type="hidden" name="fto1" value="POL-SIS-01" onclick="window.open('aplicable3')">
+        
+                                        <center>
+                                            <button type="submit" class="btn aplicable3 bg-red waves-effect animate__animated animate__flipInX" >
+                                                <i class="material-icons"> picture_as_pdf</i>
+                                            </button>
+                                        </center>
+        
+                                    </form>
+                                    <br>
+                                    <center>
+                                        <p style="font-family: 'Oswald', sans-serif;">POL-SIS-01 POLÍTICA DE ASIGNACIÓN Y USO DE EQUIPO DE CÓMPUTO.</p>
+                                    </center>
+                                    
+                                
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                <form action="/aplicable3/" method="POST">{% csrf_token %}
+        
+                                    <input type="hidden" name="fto1" value="POL-SIS-02" onclick="window.open('aplicable3')">
+        
+                                    <center>
+                                        <button type="submit" class="btn aplicable3 bg-red waves-effect animate__animated animate__flipInX" >
+                                            <i class="material-icons">picture_as_pdf</i>
+                                        </button>
+                                    </center>
+        
+                                </form>
+                                <br>
+                                <center>
+                                    <p style="font-family: 'Oswald', sans-serif;">POL-SIS-02 POLÍTICA DE ENTREGA DE EQUIPOS MÓVILES.</p>
+                                </center>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                               
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                
+                            </div>
+                        </div>
+                        <!-- #END# Widgets5 -->
 
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover dataTable js-exportable">
-                            <thead>
-                                <tr style="background-color: #fad60e; color:black">
-                                    <th>ID Equipo</th>
-                                    <th>Tipo</th>
-                                    <th>Marca</th>
-                                    <th>Modelo</th>
-                                    <th>Color</th>
-                                    <th>Memoria RAM</th>
-                                    <th>Procesador</th>
-                                    <th>Sistema Operativo</th>
-                                    <th>Cargador</th>
-                                    <th>Departamento</th>
-                                    <th>Estado</th>
-
-
-
-                                </tr>
-                            </thead>
-                            <tfoot>
-                                <tr>
-                                    <th>ID Equipo</th>
-                                    <th>Tipo</th>
-                                    <th>Marca</th>
-                                    <th>Modelo</th>
-                                    <th>Color</th>
-                                    <th>Memoria RAM</th>
-                                    <th>Procesador</th>
-                                    <th>Sistema Operativo</th>
-                                    <th>Cargador</th>
-                                    <th>Departamento</th>
-                                    <th>Estado</th>
-                                </tr>
-                            </tfoot>
-                            <tbody>
-
-                                <tr>
-                                    <th>
-                                        <form action="/infoEquipo/" method="POST">{% csrf_token %}
-
-
-                                            <center>
-                                                <input type="text" style="border: none; background: none;" name="idEquipo"
-                                                    value="{{datoEquipo.id_equipo}}" readonly size="1">
-                                               
-                                            </center>
-                                            <br>
-                                        </form>
-                                    </th>
-                                    <th>{{datoEquipo.tipo}}</th>
-                                    <th>{{datoEquipo.marca}}</th>
-                                    <th>{{datoEquipo.modelo}}</th>
-                                    <th>{{datoEquipo.color}}</th>
-
-                                    <th>{{datoEquipo.memoriaram}}</th>
-                                    <th>{{datoEquipo.procesador}}</th>
-                                    <th>{{datoEquipo.sistemaoperativo}}</th>
-                                    <th>{{datoEquipo.modelocargador}}</th>
-                                    <th><label class="{{colorArea}}">{{nombreArea}}</label></th>
-                                    <th>{{datoEquipo.estado}}</th>
-
-
-                                </tr>
-
-                            </tbody>
-                        </table>
-                    </div>
-                    <h1 style="color: black;">Mantenimientos</h1>
-
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover dataTable js-exportable">
-                            <thead>
-                                <tr style="background-color: #fad60e; color:black">
-                                    <th>ID Operación</th>
-                                    <th>Operación</th>
-                                    <th>Fecha</th>
-                                    <th>Observaciones</th>
-
-                                </tr>
-                            </thead>
-                            <tfoot>
-                                <tr>
-                                    <th>ID Operación</th>
-                                    <th>Operación</th>
-                                    <th>Fecha</th>
-                                    <th>Observaciones</th>
-                                </tr>
-                            </tfoot>
-                            <tbody>
-                                {% for dato in mantenimientos %}
-                                <tr>
-
-                                    <th>{{dato.id_calmantenimiento}}</th>
-                                    <th>{{dato.operacion}}</th>
-                                    <th>{{dato.fecha}}</th>
-                                    <th>{{dato.observaciones}}</th>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                    <br>
-                    <form action="/pdfInfoEquipo/" method="POST">{% csrf_token %}
-                        <label>Descargar PDF </label>
-                        <input type="hidden" value="{{datoEquipo.id_equipo}}" name="idequipo">
-                        <button type="submit" class="btn bg-red waves-effect">
-                            <i class="material-icons">get_app</i>
-                            <span>PDF</span>
-                        </button>
-                    </form>
-                    {% endfor %}
-                {% endif %}
-
-                {% if noTieneEquipo %}
-                <!-- Indicar que el empleado no tiene equipo.. -->
-                <h1 style="font-family: 'Oswald', sans-serif; color: black;">Lo sentimos, por el momento no tienes un equipo asignado.</h1>
-                {% endif %}
-                
 
             </div>
 

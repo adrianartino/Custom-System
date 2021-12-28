@@ -1,0 +1,63 @@
+.aplicable {
+    color: #fff !important;
+    font-size: 8px !important;
+    font-weight: 500 !important;
+    padding: 0.5em 1.2em !important;
+    padding-top: 0% !important;
+    background: #28c735 !important;
+    position: relative !important;
+    border: 2px solid #28c735!important;
+    outline: 1px solid !important;
+    outline-color: rgba(13, 114, 4, 0.527)!important;
+    transition: all 1s cubic-bezier(0.19, 1, 0.22, 1)!important;
+  }
+  .aplicable:hover {
+    box-shadow: inset 0 0 20px rgba(49, 138, 172, 0.5), 0 0 20px rgba(49, 138, 172, 0.4) !important;
+    outline-color: rgba(49, 138, 172, 0) !important;
+    outline-offset: 80px !important;
+    text-shadow: 1px 1px 6px #fff !important;
+
+  }
+
+  .aplicable2 {
+    color: #fff !important;
+    font-size: 8px !important;
+    font-weight: 500 !important;
+    padding: 0.5em 1.2em !important;
+    padding-top: 0% !important;
+    background: #278eee !important;
+    position: relative !important;
+    border: 2px solid #278eee !important;
+    outline: 1px solid !important;
+    outline-color: rgba(6, 46, 156, 0.527)!important;
+    transition: all 1s cubic-bezier(0.19, 1, 0.22, 1)!important;
+  }
+  .aplicable2:hover {
+    box-shadow: inset 0 0 20px rgba(49, 138, 172, 0.5), 0 0 20px rgba(49, 138, 172, 0.4) !important;
+    outline-color: rgba(49, 138, 172, 0) !important;
+    outline-offset: 80px !important;
+    text-shadow: 1px 1px 6px #fff !important;
+
+  }
+
+  .aplicable3 {
+    color: #fff !important;
+    font-size: 8px !important;
+    font-weight: 500 !important;
+    padding: 0.5em 1.2em !important;
+    padding-top: 0% !important;
+    background: #e71616 !important;
+    position: relative !important;
+    border: 2px solid #e71616 !important;
+    outline: 1px solid !important;
+    outline-color: rgba(156, 11, 6, 0.527)!important;
+    transition: all 1s cubic-bezier(0.19, 1, 0.22, 1)!important;
+  }
+  .aplicable3:hover {
+    box-shadow: inset 0 0 20px rgba(243, 20, 12, 0.5), 0 0 20px rgba(49, 138, 172, 0.4) !important;
+    outline-color: rgba(219, 32, 32, 0) !important;
+    outline-offset: 80px !important;
+    text-shadow: 1px 1px 6px #fff !important;
+
+  }
+  

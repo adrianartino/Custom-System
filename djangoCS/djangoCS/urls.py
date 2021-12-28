@@ -130,7 +130,13 @@ urlpatterns = [
     path("equipo/", viewEmpleados.equipo),
     path("carta/", viewEmpleados.carta),
     path("directorio/", viewEmpleados.directorio),
-    path("documentosAplicablesATodos/", viewEmpleados.documentosAplicablesATodos)
+    path("documentosAplicablesATodos/", viewEmpleados.documentosAplicablesATodos),
+
+    #descarga de archivos aplicables a todas las areas
+
+    path("aplicable1/", viewEmpleados.aplicable1),
+    path("aplicable2/", viewEmpleados.aplicable2),
+    path("aplicable3/", viewEmpleados.aplicable3)
 
 ]
 

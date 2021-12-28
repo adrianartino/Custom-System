@@ -289,3 +289,96 @@ def documentosAplicablesATodos(request):
     #Si le da al inicio y no hay una sesión iniciada..
     else:
         return redirect('/login/') #redirecciona a url de inicio
+
+def aplicable1(request):
+    
+    #Si ya hay una sesión iniciada..
+    if "idSesion" in request.session:
+        
+        
+     
+        
+        if request.method == "POST":
+            
+            formato = request.POST['fto1']
+
+
+            BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            nombreArchivo = formato+".xlsx"
+            ubicacionArchivo = BASE_DIR + '/media/documentosAreas/'+ nombreArchivo
+
+            path = open(ubicacionArchivo, 'rb')
+
+            mime_type, _= mimetypes.guess_type(ubicacionArchivo)
+            response = HttpResponse(path, content_type=mime_type)
+            response['Content-Disposition'] = "attachment; filename=%s" %nombreArchivo
+            return response
+
+
+            return render(request, "empleadosCustom/documentos/aplicablesatodos.html", {"estaEnVerDocumentos":estaEnVerDocumentos, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo})
+    
+    #Si le da al inicio y no hay una sesión iniciada..
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+
+def aplicable2(request):
+    
+    #Si ya hay una sesión iniciada..
+    if "idSesion" in request.session:
+        
+        
+     
+        
+        if request.method == "POST":
+            
+            formato = request.POST['fto1']
+
+
+            BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            nombreArchivo = formato+".docx"
+            ubicacionArchivo = BASE_DIR + '/media/documentosAreas/'+ nombreArchivo
+
+            path = open(ubicacionArchivo, 'rb')
+
+            mime_type, _= mimetypes.guess_type(ubicacionArchivo)
+            response = HttpResponse(path, content_type=mime_type)
+            response['Content-Disposition'] = "attachment; filename=%s" %nombreArchivo
+            return response
+
+
+            return render(request, "empleadosCustom/documentos/aplicablesatodos.html", {"estaEnVerDocumentos":estaEnVerDocumentos, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo})
+    
+    #Si le da al inicio y no hay una sesión iniciada..
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+
+def aplicable3(request):
+    
+    #Si ya hay una sesión iniciada..
+    if "idSesion" in request.session:
+        
+        
+     
+        
+        if request.method == "POST":
+            
+            formato = request.POST['fto1']
+
+
+            BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            nombreArchivo = formato+".pdf"
+            ubicacionArchivo = BASE_DIR + '/media/documentosAreas/'+ nombreArchivo
+
+            path = open(ubicacionArchivo, 'rb')
+
+            mime_type, _= mimetypes.guess_type(ubicacionArchivo)
+            response = HttpResponse(path, content_type=mime_type)
+            response['Content-Disposition'] = "attachment; filename=%s" %nombreArchivo
+            return response
+
+
+            return render(request, "empleadosCustom/documentos/aplicablesatodos.html", {"estaEnVerDocumentos":estaEnVerDocumentos, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo})
+    
+    #Si le da al inicio y no hay una sesión iniciada..
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
