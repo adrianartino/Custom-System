@@ -47,171 +47,148 @@ Información de Equipo
                 
 
             </div>
-            <div class="body" id="divActivos">
-                {% if tieneEquipo %}
-                
-                    {% for datoEquipo in datosEquipo %}
-                    <center>
-                        <h1 style="color: black;"> <span style="font-size: 120%;">
-
-                                <i class="material-icons" style="color: rgb(158, 154, 154); font-size: 120%;">computer</i>
-
-                    </span> #1</h1>
-                        <h1 style=" color: black;">{{datoEquipo.tipo}} {{datoEquipo.marca}} {{datoEquipo.modelo}}</h1>
-                        <img src="{{datoEquipo.imagen.url}}" width="30%" alt="lap">
-
-                        {% if sinPropietario %}
-                        <h1 style="color: black;">Propietario: Sin Propietario</h1>
+            <div class="body" >
+                <div class="container">
+                    <div class="row">
+                      <div class="col">
+                        
+                      </div>
+                      <div class="col-8">
+                        {% if empleadoTieneRespuestas %}
+                        <div id="divIntroduccionEncuesta" style="display: none;">
                         {% else %}
-                        <h1 style="color: black;">Propietario: {{nombreEmpleado}}</h1>
+                        <div id="divIntroduccionEncuesta">
                         {% endif %}
-                    </center>
-                    <div class="row clearfix">
-                        <div class="col-md-6">
                             <center>
-                                <h2 style="color: black;">Fecha de compra</h2>
-                                <span style="font-size: 200%;">
-                                    <i class="material-icons"
-                                        style="color: rgb(42, 141, 17); font-size: 200%;">shopping_cart</i>
-
-                                </span>
-                                <h3 style="color: black;">{{compra}}</h3>
+                                <h1 style="font-family: 'Oswald', sans-serif;">ENCUESTA DE CLIMA LABORAL ENERO 2022.</h1>
+                                <img src={% static 'images/custom-png.png' %} width="300" alt="User" />
+                            </center>
+                            
+                            <p class="m-t-10 m-b-30">
+                                Bienvenido a la primera realización anual de la encuesta de clima laboral enero 2022, que consiste en contestar
+                                {{contadorPreguntas}} preguntas de opción múltiple (SI/NO) y 3 preguntas abiertas para evaluar el clima laboral que los empleados persiben en la empresa.
+                            </p>
+                            <p class="m-t-10 m-b-30">
+                                Esto, con el motivo de poder mejorar los puntos y aspectos evaluados y aplicarlos en las áreas correspondientes para tener mejores 
+                                resultados.
+                            </p>
+                            <p class="m-t-10 m-b-30">
+                                <span style="color: red;">NOTA:</span> la encuesta será anónima. Esto quiere decir que no se verán tus datos a la hora de contestar pero si tus resultados.
+                            </p>
+                            <p class="m-t-10 m-b-30">
+                                Solo el personal encargado del departamento de recursos humanos y dirección podrán ver dichos resultados de la encuesta sin la información de los empleados.
+                            </p>
+                            <center>
+                                <button type="button" class="btn btn-warning m-t-15 waves-effect" onclick="mostrarPregunta1()"><i
+                                    class="material-icons">view_list</i> Empezar encuesta</button>
+    
                             </center>
                         </div>
-                        <div class="col-md-6">
+                        
+
+                        <div id="preguntas">
                             <center>
-                                <h2 style="color: black;">Fecha de renovación</h2>
-                                <span style="font-size: 200%;">
-                                    <i class="material-icons"
-                                        style="color: rgb(41, 57, 201);  font-size: 200%;">add_shopping_cart</i>
-                                </span>
-                                <h3 style="color: black;">{{renovar}}</h3>
+                                <h2 style="font-family: 'Oswald', sans-serif;" id="tituloM">
+                                    Preguntas Múltiples.
+                                    
+                                </h2>
+                                
                             </center>
-                        </div>
-                    </div>
+                            {% for preguntasM in preguntasMultiples %}
 
-                    <h1 style="color: black;">Características</h1>
-
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover dataTable js-exportable">
-                            <thead>
-                                <tr style="background-color: #fad60e; color:black">
-                                    <th>ID Equipo</th>
-                                    <th>Tipo</th>
-                                    <th>Marca</th>
-                                    <th>Modelo</th>
-                                    <th>Color</th>
-                                    <th>Memoria RAM</th>
-                                    <th>Procesador</th>
-                                    <th>Sistema Operativo</th>
-                                    <th>Cargador</th>
-                                    <th>Departamento</th>
-                                    <th>Estado</th>
-
-
-
-                                </tr>
-                            </thead>
-                            <tfoot>
-                                <tr>
-                                    <th>ID Equipo</th>
-                                    <th>Tipo</th>
-                                    <th>Marca</th>
-                                    <th>Modelo</th>
-                                    <th>Color</th>
-                                    <th>Memoria RAM</th>
-                                    <th>Procesador</th>
-                                    <th>Sistema Operativo</th>
-                                    <th>Cargador</th>
-                                    <th>Departamento</th>
-                                    <th>Estado</th>
-                                </tr>
-                            </tfoot>
-                            <tbody>
-
-                                <tr>
-                                    <th>
-                                        <form action="/infoEquipo/" method="POST">{% csrf_token %}
-
-
-                                            <center>
-                                                <input type="text" style="border: none; background: none;" name="idEquipo"
-                                                    value="{{datoEquipo.id_equipo}}" readonly size="1">
-                                               
-                                            </center>
-                                            <br>
+                                <div id="pregunta{{preguntasM.0}}" >
+                                    <form id="form_validation" action="/guardarRespuesta/" enctype="multipart/form-data" method="POST">{% csrf_token %}
+                                        <input type="hidden" value="{{id_admin}}" name="empleadoEncuesta">
+                
+                                        <h4 style="font-family: 'Oswald', sans-serif;">Pregunta # <span><input type="text" name="preguntaID" style="border: none;" value="{{preguntasM.0}}" readonly></span></h4>
+                                        <h3 style="font-family: 'Oswald', sans-serif;">{{preguntasM.1}}</h3>
+                                        <div class="switch">
+                                            <label>NO<input type="checkbox" name="respuesta" checked><span class="lever switch-col-red"></span>SI</label>
+                                        </div>
+                                        <center>
+                                            <button type="submit" class="btn bg-green waves-effect">
+                                                <i class="material-icons">save</i>
+                                                <span> Guardar respuesta</span>
+                                            </button>
+                
+                                        </center>
+                                        
+                                        <br>
                                         </form>
-                                    </th>
-                                    <th>{{datoEquipo.tipo}}</th>
-                                    <th>{{datoEquipo.marca}}</th>
-                                    <th>{{datoEquipo.modelo}}</th>
-                                    <th>{{datoEquipo.color}}</th>
+                                </div>
+                            
 
-                                    <th>{{datoEquipo.memoriaram}}</th>
-                                    <th>{{datoEquipo.procesador}}</th>
-                                    <th>{{datoEquipo.sistemaoperativo}}</th>
-                                    <th>{{datoEquipo.modelocargador}}</th>
-                                    <th><label class="{{colorArea}}">{{nombreArea}}</label></th>
-                                    <th>{{datoEquipo.estado}}</th>
+                            {% endfor %}
+
+                            <center>
+                                <h2 style="font-family: 'Oswald', sans-serif;" id="tituloA">
+                                    Preguntas Abiertas.
+                                    
+                                </h2>
+                            </center>
 
 
-                                </tr>
+                            {% for preguntasA in preguntasAbiertas %}
+                            <div id="pregunta{{preguntasA.0}}" >
+                                <form id="form_validation" action="/guardarRespuestaTextbox/" enctype="multipart/form-data" method="POST">{% csrf_token %}
+                                    <input type="hidden" value="{{id_admin}}" name="empleadoEncuesta">
+                
+                                    <h4 style="font-family: 'Oswald', sans-serif;">Pregunta # <span><input type="text" name="preguntaID" style="border: none;" value="{{preguntasA.0}}" readonly></span></h4>
+                                <h3 style="font-family: 'Oswald', sans-serif;">{{preguntasA.1}}</h3>
 
-                            </tbody>
-                        </table>
+                                <div class="form-group form-float">
+                                    <div class="form-line">
+                                        <textarea style="border: 1px solid rgb(67, 212, 188) !important;" name="respuestaText" cols="30" rows="5"
+                                            maxlength="400" class="form-control no-resize" required></textarea>
+
+                                    </div>
+                                    <br>
+                                    <center>
+                                        <button type="submit" class="btn bg-green waves-effect">
+                                            <i class="material-icons">save</i>
+                                            <span> Guardar respuesta</span>
+                                        </button>
+            
+                                    </center>
+                                </div>
+                                <br>
+                                </form>
+                            </div>
+                            {% endfor %}
+
+                            <div id="terminado">
+                                <center>
+                                    <h1 style="font-family: 'Oswald', sans-serif;">ENCUESTA DE CLIMA LABORAL ENERO 2022 <span style="color: crimson!important;">TERMINADA</span>.</h1>
+                                    <img src={% static 'images/custom-png.png' %} width="300" alt="User" />
+                                </center>
+                                
+                                <p class="m-t-10 m-b-30">
+                                    Gracias por haber respondido la encuesta de clima laboral 2022.
+                                </p>
+                                <p class="m-t-10 m-b-30">
+                                    Tus resultados serán previamente validados y enviados para su entendimiento y estudio.
+                                </p>
+                                
+                            </div>
+                        </div>
+                            
+
+
+                        
+                       
+                        
+                        
+                      </div>
+                      <div class="col">
+                    
+                      </div>
                     </div>
-                    <h1 style="color: black;">Mantenimientos</h1>
-
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover dataTable js-exportable">
-                            <thead>
-                                <tr style="background-color: #fad60e; color:black">
-                                    <th>ID Operación</th>
-                                    <th>Operación</th>
-                                    <th>Fecha</th>
-                                    <th>Observaciones</th>
-
-                                </tr>
-                            </thead>
-                            <tfoot>
-                                <tr>
-                                    <th>ID Operación</th>
-                                    <th>Operación</th>
-                                    <th>Fecha</th>
-                                    <th>Observaciones</th>
-                                </tr>
-                            </tfoot>
-                            <tbody>
-                                {% for dato in mantenimientos %}
-                                <tr>
-
-                                    <th>{{dato.id_calmantenimiento}}</th>
-                                    <th>{{dato.operacion}}</th>
-                                    <th>{{dato.fecha}}</th>
-                                    <th>{{dato.observaciones}}</th>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                    <br>
-                    <form action="/pdfInfoEquipo/" method="POST">{% csrf_token %}
-                        <label>Descargar PDF </label>
-                        <input type="hidden" value="{{datoEquipo.id_equipo}}" name="idequipo">
-                        <button type="submit" class="btn bg-red waves-effect">
-                            <i class="material-icons">get_app</i>
-                            <span>PDF</span>
-                        </button>
-                    </form>
-                    {% endfor %}
-                {% endif %}
-
-                {% if noTieneEquipo %}
-                <!-- Indicar que el empleado no tiene equipo.. -->
-                <h1 style="font-family: 'Oswald', sans-serif; color: black;">Lo sentimos, por el momento no tienes un equipo asignado.</h1>
-                {% endif %}
+                
+                
+               
                 
 
+                     
             </div>
 
         </div>
@@ -243,28 +220,115 @@ Información de Equipo
     });
 </script>
 {% endif %}
-<script type="text/javascript">
-    function inicio() {
-        var div1 = document.getElementById("divInactivos");
-        div1.style.display = "none"; /* bloquear u ocultar la tabla..*/
-    }
-    window.onload = inicio;
 
-    function cambioFiltro() {
-        var div = document.getElementById("divActivos");
-        var div1 = document.getElementById("divInactivos");
-        /* Si la tabla de Empleados Activos está activa..*/
-        if (div.style.display === "none") {
-            //Bloquear la tabla de empleados Activos.. 
-            div.style.display = "block";
-            div1.style.display = "none";
-        } else { //Si la tabla de empleados Activos está inactiva
-            div.style.display = "none"; //Desbloquear la tabla de empleados Activos
-            div1.style.display = "block";
+{% if introduccion %}
+<script type="text/javascript">
+    
+    window.onload = function () {
+        contador=0
+        for (var i=0; i<"{{contadorPreguntas}}" ; i++){
+            contador = contador +1;
+            contadorString = contador.toString();
+            pregunta = "pregunta"+contadorString;
+            console.log(pregunta)
+            var divPregunta = document.getElementById(pregunta);
+            divPregunta.style.display = "none";
+            
         }
 
+        var tituloMultiples = document.getElementById('tituloM');
+        tituloMultiples.style.display = "none";
+
+        var tituloAbiertas = document.getElementById('tituloA');
+        tituloAbiertas.style.display = "none";
+
+        var divPregunta = document.getElementById("terminado");
+            divPregunta.style.display = "none";
+        
+    };
+    
+
+    function mostrarPregunta1(){
+        
+        var divIntroduccionEncuesta = document.getElementById("divIntroduccionEncuesta");
+        divIntroduccionEncuesta.style.display = "none";
+        var divPregunta1 = document.getElementById("pregunta1");
+        divPregunta1.style.display = "block";
+        var tituloMultiples = document.getElementById('tituloM');
+        tituloMultiples.style.display = "block";
     }
+
+    
 </script>
+{% endif %}
+
+{% if contadorRespuestas %}
+    <script>
+        window.onload = function () {
+            var divIntroduccionEncuesta = document.getElementById("divIntroduccionEncuesta");
+            divIntroduccionEncuesta.style.display = "none";
+            var tituloMultiples = document.getElementById('tituloM');
+            tituloMultiples.style.display = "none";
+
+            var tituloAbiertas = document.getElementById('tituloA');
+            tituloAbiertas.style.display = "none";
+            var divPregunta = document.getElementById("terminado");
+            divPregunta.style.display = "none";
+
+
+
+            contadorRespuestas = "{{contadorRespuestas}}";
+            console.log("El empleado ha respondido "+ contadorRespuestas+ " preguntas.");
+
+            contador=0
+            for (var i=0; i<"{{contadorPreguntas}}" ; i++){
+                contador = contador +1;
+                contadorString = contador.toString();
+                pregunta = "pregunta"+contadorString;
+                var divPregunta = document.getElementById(pregunta);
+                divPregunta.style.display = "none";
+                
+            }
+
+            contador2 = 0
+            for (var i=0; i<"{{contadorPreguntas}}" ; i++){
+                contador2 = contador2 +1;
+                if(contador2 == contadorRespuestas){
+                    divSiguiente = parseInt(contadorRespuestas) + 1; //3
+                    console.log("Va a responder la pregunta"+divSiguiente)
+                    console.log("Mustrame el div"+divSiguiente);
+                    divSiguienteString = divSiguiente.toString(); //3 pero en string
+                    pregunta = "pregunta"+divSiguienteString; //pregunta3
+                    console.log("Se mostrará el div"+pregunta)
+                    var divPregunta = document.getElementById(pregunta);
+                    divPregunta.style.display = "block";
+                }
+
+                intPreguntas = parseInt("{{contadorPreguntas}}");
+                console.log("preguntas" + intPreguntas);
+                if(contadorRespuestas == intPreguntas){
+                    var divPregunta = document.getElementById("terminado");
+                    divPregunta.style.display = "block";
+                }
+                else
+                {
+                    var divPregunta = document.getElementById("terminado");
+                    divPregunta.style.display = "none";
+                }
+            }
+
+            
+        
+
+
+            
+        }
+
+        
+       
+    </script>
+{% endif %}
+
 {% endblock %}
 
 {% block estilosJs %}

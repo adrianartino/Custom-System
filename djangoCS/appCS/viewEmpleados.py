@@ -12,7 +12,7 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 
 #Importación de modelos
-from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras
+from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Preguntas, Encuestas, Respuestas, EncuestaEmpleadoResuelta
 
 #Librería para manejar archivos en Python
 from django.core.files.base import ContentFile
@@ -97,15 +97,154 @@ def encuestas(request):
         correo = request.session['correoSesion']
         foto = fotoAdmin(request)
         nombreCompleto = nombreini + " " + apellidosini #Blanca Yesenia Gaeta Talamantes
+
+        preguntas = Preguntas.objects.filter(id_encuesta = 1)
+
+        preguntasMultiples = []
+        preguntasAbiertas = []
+        contadorPreguntas = 0
+        for pregunta in preguntas:
+            id_pregunta = pregunta.id_pregunta
+            texto_pregunta = pregunta.pregunta
+            tipo = pregunta.tipo
+
+            if tipo== "M":
+                preguntasMultiples.append([id_pregunta, texto_pregunta])
+                contadorPreguntas = contadorPreguntas +1 
+            else:
+                preguntasAbiertas.append([id_pregunta, texto_pregunta])
+                contadorPreguntas = contadorPreguntas +1 
+
+
+
+        #Condicion para saber si el empleado ya contesto algo..
+
+        empleadoTieneRespuestas = Respuestas.objects.filter(id_empleado = id_admin) #Consulta a la tabla de respuestas para ver si alguna tiene el id del empleado
+
+        #Si el empleado ya tiene aunque sea una pregunta resuelta..
+        if empleadoTieneRespuestas:
+            aunqueseaunapregunta = True
+            contadorRespuestas = 0
+            for respuesta in empleadoTieneRespuestas:
+                contadorRespuestas = contadorRespuestas + 1
+            return render(request, "empleadosCustom/encuestas/año2022/encuestaEnero.html", {"enAño":enAño, "estaEnEncuesta": estaEnEncuesta, "preguntasMultiples":preguntasMultiples,"preguntasAbiertas":preguntasAbiertas, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
+            "aunqueseaunapregunta":aunqueseaunapregunta, "contadorPreguntas": contadorPreguntas, "contadorRespuestas":contadorRespuestas})
+
+        #Si el empleado no tiene ninguna pregunta resuelta
+        else:
+            #Mostrar solo la introducción.
+            aunqueseaunapregunta = False
+            introduccion = True
         
         
-        return render(request, "empleadosCustom/encuestas/año2022/encuestaEnero.html", {"enAño":enAño, "estaEnEncuesta": estaEnEncuesta, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo})
+            return render(request, "empleadosCustom/encuestas/año2022/encuestaEnero.html", {"enAño":enAño, "estaEnEncuesta": estaEnEncuesta, "preguntasMultiples":preguntasMultiples,"preguntasAbiertas":preguntasAbiertas, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
+            "aunqueseaunapregunta":aunqueseaunapregunta, "contadorPreguntas": contadorPreguntas, "introduccion":introduccion})
     
     #Si le da al inicio y no hay una sesión iniciada..
     else:
         return redirect('/login/') #redirecciona a url de inicio
 
+def guardarRespuesta(request):
     
+    #Si ya hay una sesión iniciada..
+    if "idSesion" in request.session:
+        
+        
+        
+        enAño = True
+        estaEnEncuesta = True
+        id_admin=request.session["idSesion"]
+        nombreini = request.session['nombres']
+        apellidosini = request.session['apellidos']
+        correo = request.session['correoSesion']
+        foto = fotoAdmin(request)
+        nombreCompleto = nombreini + " " + apellidosini #Blanca Yesenia Gaeta Talamantes
+
+        if request.method == "POST":
+            
+            empleadoID = request.POST['empleadoEncuesta']
+            id_pregunta = request.POST['preguntaID']
+            respuesta = ""
+            nameInput = "respuesta"
+
+            if request.POST.get(nameInput, False): #Checkeado
+                respuesta = "SI"
+            elif request.POST.get(nameInput, True): #No checkeado
+                respuesta = "NO"
+
+         
+
+            registroRespuesta = Respuestas(id_pregunta = Preguntas.objects.get(id_pregunta = id_pregunta), id_empleado = Empleados.objects.get(id_empleado = empleadoID), respuesta = respuesta)
+            registroRespuesta.save()
+
+        
+        return redirect('/encuestas/') #redirecciona a url de inicio
+   
+        
+
+        
+        
+
+    
+    #Si le da al inicio y no hay una sesión iniciada..
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+
+
+def guardarRespuestaTextbox(request):
+    
+    #Si ya hay una sesión iniciada..
+    if "idSesion" in request.session:
+        
+        
+        
+        enAño = True
+        estaEnEncuesta = True
+        id_admin=request.session["idSesion"]
+        nombreini = request.session['nombres']
+        apellidosini = request.session['apellidos']
+        correo = request.session['correoSesion']
+        foto = fotoAdmin(request)
+        nombreCompleto = nombreini + " " + apellidosini #Blanca Yesenia Gaeta Talamantes
+
+        if request.method == "POST":
+            
+            empleadoID = request.POST['empleadoEncuesta']
+            id_pregunta = request.POST['preguntaID']
+            respuesta = request.POST['respuestaText']
+
+            registroRespuesta = Respuestas(id_pregunta = Preguntas.objects.get(id_pregunta = id_pregunta), id_empleado = Empleados.objects.get(id_empleado = empleadoID), respuesta = respuesta)
+            registroRespuesta.save()
+
+            numeroPreguntas = Preguntas.objects.filter(id_encuesta = 1)
+            contadorPreguntas = 0
+            for pregunta in numeroPreguntas:
+                contadorPreguntas = contadorPreguntas +1
+
+            respuestasEmpleado = Respuestas.objects.filter(id_empleado = id_admin) #4 registros
+
+            contadorRespuestas = 0
+            for respuesta in respuestasEmpleado:
+                contadorRespuestas = contadorRespuestas +1
+
+            if (contadorRespuestas == contadorPreguntas):
+                registroEmpleadoCompletoEncuesta = EncuestaEmpleadoResuelta(id_empleado = Empleados.objects.get(id_empleado = id_admin), id_encuesta = Encuestas.objects.get(id_encuesta = 1))
+                registroEmpleadoCompletoEncuesta.save()
+
+
+        
+        return redirect('/encuestas/') #redirecciona a url de inicio
+   
+        
+
+        
+        
+
+    
+    #Si le da al inicio y no hay una sesión iniciada..
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+
 
 def equipo(request):
     

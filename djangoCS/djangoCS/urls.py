@@ -136,7 +136,10 @@ urlpatterns = [
 
     path("aplicable1/", viewEmpleados.aplicable1),
     path("aplicable2/", viewEmpleados.aplicable2),
-    path("aplicable3/", viewEmpleados.aplicable3)
+    path("aplicable3/", viewEmpleados.aplicable3),
+
+    path("guardarRespuesta/", viewEmpleados.guardarRespuesta),
+    path("guardarRespuestaTextbox/", viewEmpleados.guardarRespuestaTextbox)
 
 ]
 
