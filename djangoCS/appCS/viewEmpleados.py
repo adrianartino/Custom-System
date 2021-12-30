@@ -1,5 +1,6 @@
 
 #Librerías
+from email.mime import text
 import mimetypes
 import os
 import base64
@@ -55,8 +56,63 @@ def fotoAdmin(request):
         
     return foto
 
+def accesoEmpleado(request):
 
+    #Si ya existe una sesión
+    if "idSesion" in request.session:
+        if request.session['correoSesion'] == "adminSistemas0817":
+                    
+            return redirect('/inicio/') #redirecciona a url de inicio
+        else:
+            return redirect('/principal/') #redirecciona a la pagina normal del empleado
+
+    #Si no hay una sesión iniciada
+    else:
+
+        #si se apretó el botón.
+        if request.method == "POST":
+            
+            correousuario = request.POST['usernameEmpleado']
+            
+
+            datosUsuario = Empleados.objects.filter(correo=correousuario)
+
+            #Si encontro a un usuario con ese correo...
+            if datosUsuario:
+
+                for dato in datosUsuario:
+                    id = dato.id_empleado
+                    nombres = dato.nombre
+                    apellidos = dato.apellidos
+                    correo = dato.correo
+                    contraReal = dato.contraseña
+                    
+                #mandar correo...
+                asunto = "CS | Solicitud de acceso de " + nombres + " " + apellidos
+                plantilla = "empleadosCustom/solicitudAcceso/correo.html"
+                html_mensaje = render_to_string(plantilla, {"nombre": nombres, "apellidos": apellidos, "correo": correo, "contraseña": contraReal})
+                email_remitente = settings.EMAIL_HOST_USER
+                email_destino = [correo]
+                mensaje = EmailMessage(asunto, html_mensaje, email_remitente, email_destino)
+                mensaje.content_subtype = 'html'
+                mensaje.send()
                 
+                textoCorreo = "Se ha enviado un correo con tus datos de acceso."
+                request.session['textoCorreo'] = textoCorreo #variable global.. 
+                return redirect('/login/')
+                    
+
+            #Si no se encuentra a nadie con ese correo...
+            else:
+                hayError = True
+                error = "No se ha encontrado al usuario"
+                return render(request, "Login/accesoEmpleado.html", {"hayError":hayError, "textoError":error})
+
+        #se carga la pagina por primera vez.
+        return render(request, "Login/accesoEmpleado.html")
+
+
+    
             
 
 def principal(request):
@@ -73,10 +129,15 @@ def principal(request):
         correo = request.session['correoSesion']
         foto = fotoAdmin(request)
         nombreCompleto = nombreini + " " + apellidosini #Blanca Yesenia Gaeta Talamantes
+
+        if correo == "recursos.humanos@customco.com.mx":
+            rh = True
         
         
-        return render(request, "empleadosCustom/inicio/inicio.html", {"estaEnInicio":estaEnInicio,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo})
+            return render(request, "empleadosCustom/inicio/inicio.html", {"estaEnInicio":estaEnInicio,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, 
+            "rh": rh})
     
+        return render(request, "empleadosCustom/inicio/inicio.html", {"estaEnInicio":estaEnInicio,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo})
     #Si le da al inicio y no hay una sesión iniciada..
     else:
         return redirect('/login/') #redirecciona a url de inicio
@@ -97,6 +158,11 @@ def encuestas(request):
         correo = request.session['correoSesion']
         foto = fotoAdmin(request)
         nombreCompleto = nombreini + " " + apellidosini #Blanca Yesenia Gaeta Talamantes
+        if correo  == "recursos.humanos@customco.com.mx":
+            rh = True
+        else:
+            rh= False
+
 
         preguntas = Preguntas.objects.filter(id_encuesta = 1)
 
@@ -128,7 +194,7 @@ def encuestas(request):
             for respuesta in empleadoTieneRespuestas:
                 contadorRespuestas = contadorRespuestas + 1
             return render(request, "empleadosCustom/encuestas/año2022/encuestaEnero.html", {"enAño":enAño, "estaEnEncuesta": estaEnEncuesta, "preguntasMultiples":preguntasMultiples,"preguntasAbiertas":preguntasAbiertas, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
-            "aunqueseaunapregunta":aunqueseaunapregunta, "contadorPreguntas": contadorPreguntas, "contadorRespuestas":contadorRespuestas})
+            "aunqueseaunapregunta":aunqueseaunapregunta, "contadorPreguntas": contadorPreguntas, "contadorRespuestas":contadorRespuestas, "rh": rh})
 
         #Si el empleado no tiene ninguna pregunta resuelta
         else:
@@ -138,7 +204,129 @@ def encuestas(request):
         
         
             return render(request, "empleadosCustom/encuestas/año2022/encuestaEnero.html", {"enAño":enAño, "estaEnEncuesta": estaEnEncuesta, "preguntasMultiples":preguntasMultiples,"preguntasAbiertas":preguntasAbiertas, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
-            "aunqueseaunapregunta":aunqueseaunapregunta, "contadorPreguntas": contadorPreguntas, "introduccion":introduccion})
+            "aunqueseaunapregunta":aunqueseaunapregunta, "contadorPreguntas": contadorPreguntas, "introduccion":introduccion, "rh": rh})
+    
+    #Si le da al inicio y no hay una sesión iniciada..
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+
+def resultadosEncuestas(request):
+    
+    #Si ya hay una sesión iniciada..
+    if "idSesion" in request.session:
+        
+        
+        
+        enAño = True
+        estaEnReseultados = True
+        rh= True
+        id_admin=request.session["idSesion"]
+        nombreini = request.session['nombres']
+        apellidosini = request.session['apellidos']
+        correo = request.session['correoSesion']
+        foto = fotoAdmin(request)
+        nombreCompleto = nombreini + " " + apellidosini #Blanca Yesenia Gaeta Talamantes
+
+        empleadosActivos = Empleados.objects.filter(activo = "A", correo__icontains="@customco.com.mx")
+        contadorEmpleadosActivos = 0
+
+        for activos in empleadosActivos:
+            contadorEmpleadosActivos = contadorEmpleadosActivos + 1
+
+        empleadosContestados = EncuestaEmpleadoResuelta.objects.filter(id_encuesta = 1)
+        contadorEmpleadoscontestados = 0
+
+        for contestado in empleadosContestados:
+            contadorEmpleadoscontestados = contadorEmpleadoscontestados + 1
+
+        porcentaje = (contadorEmpleadoscontestados * 100) / contadorEmpleadosActivos
+
+        pregMultiples = []
+        pregAbiertas =[]
+        porcentajesPreguntasMultiples = []
+        contadorSiNo = []
+
+        preguntas = Preguntas.objects.filter(id_encuesta = 1)
+
+        for pregunta in preguntas:
+            id_pregunta = pregunta.id_pregunta
+            texto = pregunta.pregunta
+            tipo = pregunta.tipo
+
+            if tipo == "M":
+                pregMultiples.append([id_pregunta, texto])
+
+            elif tipo == "A":
+                pregAbiertas.append([id_pregunta, texto])
+        
+
+        for multiple in pregMultiples:
+            idPregunta = multiple[0]
+
+            respuestas = Respuestas.objects.filter(id_pregunta =idPregunta) #en este caso devuelve dos respuestas de dos diferentes empleados
+            contadorSI = 0
+            contadorNO = 0
+            for respuesta in respuestas:
+                res = respuesta.respuesta #SI o NO
+                
+                if res == "SI":
+                    contadorSI = contadorSI + 1
+                elif res == "NO":
+                    contadorNO = contadorNO +1
+                
+            contadorSiNo.append([contadorSI, contadorNO])
+            
+            porcentajePregunta = (contadorSI * 100)/ contadorEmpleadoscontestados
+            
+            criterio = ""
+            if porcentajePregunta >= 90 and porcentajePregunta <= 100:
+                criterio = "EXCELENTE"
+            elif porcentajePregunta >= 80 and porcentajePregunta <= 89:
+                criterio = "MUY BUENO"
+            elif porcentajePregunta >= 70 and porcentajePregunta <= 79:
+                criterio = "BUENO"
+            elif porcentajePregunta >= 60 and porcentajePregunta <= 69:
+                criterio = "REGULAR"
+            elif porcentajePregunta >= 0 and porcentajePregunta <= 59:
+                criterio = "DEFICIENTE"
+
+            porcentajesPreguntasMultiples.append([porcentajePregunta,criterio])
+
+        listaMultiples = zip(pregMultiples,porcentajesPreguntasMultiples, contadorSiNo)
+        listaMultiples2 = zip(pregMultiples,porcentajesPreguntasMultiples, contadorSiNo)
+
+        suma = 0
+
+        for porcentajesMultiples in porcentajesPreguntasMultiples:
+            porcentajeSuma = porcentajesMultiples[0]
+            suma = suma + porcentajeSuma
+
+        contadorPreguntasMultiples = 0
+
+        for m in pregMultiples:
+
+            contadorPreguntasMultiples = contadorPreguntasMultiples + 1
+
+        promedio = suma / contadorPreguntasMultiples
+
+        criterioPromedio = ""
+        if promedio >= 90 and promedio <= 100:
+            criterioPromedio = "EXCELENTE"
+        elif promedio >= 80 and promedio <= 89:
+            criterioPromedio = "MUY BUENO"
+        elif promedio >= 70 and promedio <= 79:
+            criterioPromedio = "BUENO"
+        elif promedio >= 60 and promedio <= 69:
+            criterioPromedio = "REGULAR"
+        elif promedio >= 0 and promedio <= 59:
+            criterioPromedio = "DEFICIENTE"
+
+        numeros =[1,2]
+
+
+        return render(request, "empleadosCustom/encuestas/año2022/resultadosEnero.html", {"enAño":enAño, "estaEnReseultados": estaEnReseultados, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
+              "rh":rh, "contadorEmpleadosActivos":contadorEmpleadosActivos, "contadorEmpleadoscontestados":contadorEmpleadoscontestados, "porcentaje":porcentaje, "pregMultiples":pregMultiples, "pregAbiertas":pregAbiertas,
+              "porcentajesPreguntasMultiples":porcentajesPreguntasMultiples,"listaMultiples":listaMultiples, "promedio":promedio, "criterioPromedio": criterioPromedio, "numeros":numeros, "listaMultiples2":listaMultiples2})
     
     #Si le da al inicio y no hay una sesión iniciada..
     else:
@@ -261,7 +449,10 @@ def equipo(request):
         correo = request.session['correoSesion']
         foto = fotoAdmin(request)
         nombreCompleto = nombreini + " " + apellidosini #Blanca Yesenia Gaeta Talamantes
-
+        if correo  == "recursos.humanos@customco.com.mx":
+            rh = True
+        else:
+            rh= False
 
         #Codigo de info equipos.
         datosEquipo = Equipos.objects.filter(id_empleado =id_admin)
@@ -299,15 +490,15 @@ def equipo(request):
             mantenimientos= CalendarioMantenimiento.objects.filter(id_equipo_id__id_equipo=id_equipo)
             if mantenimientos:
                 return render(request, "empleadosCustom/miEquipo/verInfoEquipo.html", { "estaEnVerEquipo": estaEnVerEquipo, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
-                "tieneEquipo":tieneEquipo, "datosPropietario":datosPropietario, "nombreEmpleado":nombreEmpleado, "nombreArea":nombreArea, "colorArea":colorArea, "compra":compra, "renovar":renovar, "mantenimientos":mantenimientos, "datosEquipo": datosEquipo})
+                "tieneEquipo":tieneEquipo, "datosPropietario":datosPropietario, "nombreEmpleado":nombreEmpleado, "nombreArea":nombreArea, "colorArea":colorArea, "compra":compra, "renovar":renovar, "mantenimientos":mantenimientos, "datosEquipo": datosEquipo,  "rh":rh})
             else:
                 return render(request, "empleadosCustom/miEquipo/verInfoEquipo.html", { "estaEnVerEquipo": estaEnVerEquipo, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
-                "tieneEquipo":tieneEquipo, "datosPropietario":datosPropietario, "nombreEmpleado":nombreEmpleado,"nombreArea":nombreArea, "colorArea":colorArea, "compra":compra, "renovar":renovar, "datosEquipo": datosEquipo})
+                "tieneEquipo":tieneEquipo, "datosPropietario":datosPropietario, "nombreEmpleado":nombreEmpleado,"nombreArea":nombreArea, "colorArea":colorArea, "compra":compra, "renovar":renovar, "datosEquipo": datosEquipo,  "rh":rh})
                     
         else:
             noTieneEquipo = True
             return render(request, "empleadosCustom/miEquipo/verInfoEquipo.html", { "estaEnVerEquipo": estaEnVerEquipo, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
-            "noTieneEquipo":noTieneEquipo})
+            "noTieneEquipo":noTieneEquipo,  "rh":rh})
     
     #Si le da al inicio y no hay una sesión iniciada..
     else:
@@ -328,6 +519,10 @@ def carta(request):
         correo = request.session['correoSesion']
         foto = fotoAdmin(request)
         nombreCompleto = nombreini + " " + apellidosini #Blanca Yesenia Gaeta Talamantes
+        if correo  == "recursos.humanos@customco.com.mx":
+            rh = True
+        else:
+            rh= False
         
         datosRegistro = Carta.objects.filter(id_empleado = id_admin)
         
@@ -354,7 +549,7 @@ def carta(request):
         lista1=zip(datosRegistro,empleados,equipos)
         
         
-        return render(request, "empleadosCustom/miEquipo/verCartaResponsiva.html", { "estaEnVerCarta": estaEnVerCarta, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "lista1":lista1})
+        return render(request, "empleadosCustom/miEquipo/verCartaResponsiva.html", { "estaEnVerCarta": estaEnVerCarta, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "lista1":lista1,  "rh":rh})
     
     #Si le da al inicio y no hay una sesión iniciada..
     else:
@@ -375,6 +570,10 @@ def directorio(request):
         correo = request.session['correoSesion']
         foto = fotoAdmin(request)
         nombreCompleto = nombreini + " " + apellidosini #Blanca Yesenia Gaeta Talamantes
+        if correo  == "recursos.humanos@customco.com.mx":
+            rh = True
+        else:
+            rh= False
 
         empleadosActivos = Empleados.objects.filter(activo__icontains= "A", correo__icontains = "customco.com.mx")
         
@@ -398,7 +597,7 @@ def directorio(request):
         lista = zip(empleadosActivos, datosAreasEnActivos)
         
         
-        return render(request, "empleadosCustom/directorioCorreos/verDirectorio.html", { "estaEnVerCorreos": estaEnVerCorreos, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "lista":lista})
+        return render(request, "empleadosCustom/directorioCorreos/verDirectorio.html", { "estaEnVerCorreos": estaEnVerCorreos, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "lista":lista,  "rh":rh})
     
     #Si le da al inicio y no hay una sesión iniciada..
     else:
@@ -421,9 +620,13 @@ def documentosAplicablesATodos(request):
         correo = request.session['correoSesion']
         foto = fotoAdmin(request)
         nombreCompleto = nombreini + " " + apellidosini #Blanca Yesenia Gaeta Talamantes
+        if correo  == "recursos.humanos@customco.com.mx":
+            rh = True
+        else:
+            rh= False
         
         
-        return render(request, "empleadosCustom/documentos/aplicablesatodos.html", {"estaEnVerDocumentos":estaEnVerDocumentos, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo})
+        return render(request, "empleadosCustom/documentos/aplicablesatodos.html", {"estaEnVerDocumentos":estaEnVerDocumentos, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,  "rh":rh})
     
     #Si le da al inicio y no hay una sesión iniciada..
     else:
@@ -454,7 +657,7 @@ def aplicable1(request):
             return response
 
 
-            return render(request, "empleadosCustom/documentos/aplicablesatodos.html", {"estaEnVerDocumentos":estaEnVerDocumentos, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo})
+            
     
     #Si le da al inicio y no hay una sesión iniciada..
     else:
@@ -485,7 +688,7 @@ def aplicable2(request):
             return response
 
 
-            return render(request, "empleadosCustom/documentos/aplicablesatodos.html", {"estaEnVerDocumentos":estaEnVerDocumentos, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo})
+           
     
     #Si le da al inicio y no hay una sesión iniciada..
     else:
@@ -516,7 +719,7 @@ def aplicable3(request):
             return response
 
 
-            return render(request, "empleadosCustom/documentos/aplicablesatodos.html", {"estaEnVerDocumentos":estaEnVerDocumentos, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo})
+           
     
     #Si le da al inicio y no hay una sesión iniciada..
     else:

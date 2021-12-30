@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <title>Document</title>
+</head>
+<body>
+    <center>
+        <h1 style="color: crimson;">Hola! Te hacemos llegar tus datos de acceso al sistema:</h1>
+        <h1><span>Nombre: </span>{{nombre}}</h1>
+        <h1><span>Apellido: </span>{{apellidos}}</h1>
+        <h1><span>Correo electrónico: </span>{{correo}}</h1>
+        <h1><span>Contraseña: </span>{{contraseña}}</h1>
+        <img src="custom-png.png" width="15px" alt="User">
+        <p>&copy; 2021 <a href="https://www.customco.com.mx/">Custom & Co S.A. de C.V.</a>. <span>Administrador de Custom System.</span></p>
+    </center>
+    
+    
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -231,6 +231,11 @@
                             <li class="active">
                                 {% else %}
                             <li>
+                                {% if estaEnReseultados %}
+                            <li class="active">
+                                {% else %}
+                            <li>
+                                {% endif %}
                                 {% endif %}
                                 {% endif %}
 
@@ -240,8 +245,13 @@
                                     <i class="material-icons" style="color: #336BFF !important;">date_range</i>
                                     <span style="color: #E40017 !important;">Año 2022</span>
                                     {% else %}
+                                    {% if estaEnReseultados %}
+                                    <i class="material-icons" style="color: #336BFF !important;">date_range</i>
+                                    <span style="color: #E40017 !important;">Año 2022</span>
+                                    {% else %}
                                     <i class="material-icons">date_range</i>
                                     <span>Año 2022</span>
+                                    {% endif %}
                                     {% endif %}
                                     
                                 </a>
@@ -259,6 +269,21 @@
                                         {% endif %}
 
                                     </li>
+                                    {% if rh %}
+                                    {% if estaEnReseultados %}
+                                    <li class="active">
+                                        {% else %}
+                                    <li>
+                                        {% endif %}
+                                        {% if estaEnReseultados %}
+                                        <a href="/resultadosEncuestas/" style="color: #d49e0a !important;">Resultados Periodo enero</a>
+                                        {% else %}
+
+                                        <a href="/resultadosEncuestas/">Resultados Periodo enero</a>
+                                        {% endif %}
+
+                                    </li>
+                                    {% endif %}
                                    
                                 </ul>   
                         </ul>

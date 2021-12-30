@@ -152,7 +152,11 @@ def login(request):
 
     #Si ya existe una sesión
     if "idSesion" in request.session:
-      return redirect('/inicio/')
+        if request.session['correoSesion'] == "adminSistemas0817":
+                    
+            return redirect('/inicio/') #redirecciona a url de inicio
+        else:
+            return redirect('/principal/') #redirecciona a la pagina normal del empleado
 
     #Si no hay una sesión iniciada
     else:
@@ -204,7 +208,14 @@ def login(request):
                 return render(request, "Login/login.html", {"hayError":hayError, "textoError":error})
 
         #se carga la pagina por primera vez.
-        return render(request, "Login/login.html")
+        if "textoCorreo" in request.session:
+            correoEnviado = True
+            texto = request.session['textoCorreo']#tomar el valor de la variable de sesion..
+
+            del request.session['textoCorreo']#se cierra la sesión del correo enviado.
+            return render(request, "Login/login.html",{"correoEnviado":correoEnviado, "texto":texto})
+        else:
+             return render(request, "Login/login.html")
 
 def salir(request):
 
