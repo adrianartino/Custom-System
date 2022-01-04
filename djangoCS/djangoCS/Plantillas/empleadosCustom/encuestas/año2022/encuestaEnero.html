@@ -27,7 +27,7 @@ Encuesta Enero 2022.
 <!-- JQuery DataTable Css -->
 <link href={% static 'panel/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css' %} rel="stylesheet">
 
-
+<link href={% static 'css/margen.css' %} rel="stylesheet" />
 <!-- Custom Css -->
 <link href={% static 'panel/css/style.css' %} rel="stylesheet">
 
@@ -47,8 +47,7 @@ Encuesta Enero 2022.
                 
 
             </div>
-            <div class="body" >
-                <div class="container">
+            <div class="body" id="margenDIV">
                     <div class="row">
                       <div class="col">
                         
@@ -64,18 +63,18 @@ Encuesta Enero 2022.
                                 <img src={% static 'images/custom-png.png' %} width="300" alt="User" />
                             </center>
                             
-                            <p class="m-t-10 m-b-30">
+                            <p class="m-t-10 m-b-30 margenP">
                                 Bienvenido a la primera realización anual de la encuesta de clima laboral enero 2022, que consiste en contestar
                                 {{contadorPreguntas}} preguntas de opción múltiple (SI/NO) y 3 preguntas abiertas para evaluar el clima laboral que los empleados persiben en la empresa.
                             </p>
-                            <p class="m-t-10 m-b-30">
+                            <p class="m-t-10 m-b-30 margenP">
                                 Esto, con el motivo de poder mejorar los puntos y aspectos evaluados y aplicarlos en las áreas correspondientes para tener mejores 
                                 resultados.
                             </p>
-                            <p class="m-t-10 m-b-30">
+                            <p class="m-t-10 m-b-30 margenP">
                                 <span style="color: red;">NOTA:</span> la encuesta será anónima. Esto quiere decir que no se verán tus datos a la hora de contestar pero si tus resultados.
                             </p>
-                            <p class="m-t-10 m-b-30">
+                            <p class="m-t-10 m-b-30 margenP">
                                 Solo el personal encargado del departamento de recursos humanos y dirección podrán ver dichos resultados de la encuesta sin la información de los empleados.
                             </p>
                             <center>
@@ -99,7 +98,28 @@ Encuesta Enero 2022.
                                 <div id="pregunta{{preguntasM.0}}" >
                                     <form id="form_validation" action="/guardarRespuesta/" enctype="multipart/form-data" method="POST">{% csrf_token %}
                                         <input type="hidden" value="{{id_admin}}" name="empleadoEncuesta">
-                
+                                        <h2 style="font-family: 'Oswald', sans-serif;">Clasificación:
+                                            
+                                        {% if preguntasM.2 == "COMUNICACIÓN INTERNA" %}
+                                        <span class="label bg-green">{{preguntasM.2}}</span> 
+                                        {% elif  preguntasM.2 == "TRABAJO EN EQUIPO" %}
+                                        <span class="label bg-pink">{{preguntasM.2}}</span>
+                                        {% elif  preguntasM.2 == "LIDERAZGO" %}
+                                        <span class="label bg-purple">{{preguntasM.2}}</span> 
+                                        {% elif  preguntasM.2 == "SUPERVISIÓN" %}
+                                        <span class="label bg-indigo">{{preguntasM.2}}</span> 
+                                        {% elif  preguntasM.2 == "CONDICIONES GENERALES Y PARTICULARES" %}
+                                        <span class="label bg-cyan">{{preguntasM.2}}</span> 
+                                        {% elif  preguntasM.2 == "FELICIDAD DEL TRABAJADOR" %}
+                                        <span class="label bg-teal">{{preguntasM.2}}</span> 
+                                        {% elif  preguntasM.2 == "OPORTUNIDADES PARA EL CRECIMIENTO" %}
+                                        <span class="label bg-amber">{{preguntasM.2}}</span> 
+                                        {% elif  preguntasM.2 == "POLÍTICAS DE COMPENSACIÓN Y RETRIBUCIÓN" %}
+                                        <span class="label bg-brown">{{preguntasM.2}}</span> 
+                                        {% elif  preguntasM.2 == "MOTIVACIÓN" %}
+                                        <span class="label bg-deep-orange">{{preguntasM.2}}</span> 
+                                        {% endif %} 
+                                        </h2>
                                         <h4 style="font-family: 'Oswald', sans-serif;">Pregunta # <span><input type="text" name="preguntaID" style="border: none;" value="{{preguntasM.0}}" readonly></span></h4>
                                         <h3 style="font-family: 'Oswald', sans-serif;">{{preguntasM.1}}</h3>
                                         <div class="switch">
@@ -182,7 +202,6 @@ Encuesta Enero 2022.
                       <div class="col">
                     
                       </div>
-                    </div>
                 
                 
                

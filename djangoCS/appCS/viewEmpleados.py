@@ -173,9 +173,10 @@ def encuestas(request):
             id_pregunta = pregunta.id_pregunta
             texto_pregunta = pregunta.pregunta
             tipo = pregunta.tipo
+            clasificacionPregunta = pregunta.clasificacion
 
             if tipo== "M":
-                preguntasMultiples.append([id_pregunta, texto_pregunta])
+                preguntasMultiples.append([id_pregunta, texto_pregunta, clasificacionPregunta])
                 contadorPreguntas = contadorPreguntas +1 
             else:
                 preguntasAbiertas.append([id_pregunta, texto_pregunta])
@@ -239,6 +240,42 @@ def resultadosEncuestas(request):
         for contestado in empleadosContestados:
             contadorEmpleadoscontestados = contadorEmpleadoscontestados + 1
 
+        empleadosFaltantes = contadorEmpleadosActivos - contadorEmpleadoscontestados
+
+        br = " <br> "
+        empleadosIrresponsables = ""
+
+        idsActivos = []
+        idsContestados = []
+
+        for empleadosTotales in empleadosActivos:
+
+            idEmpleado = empleadosTotales.id_empleado
+            idsActivos.append(str(idEmpleado))
+
+
+
+        for empleadosResueltos in empleadosContestados:
+
+            id_empleado = empleadosResueltos.id_empleado_id
+            idsContestados.append(str(id_empleado))
+
+        for activos in idsActivos:
+            if activos in idsContestados:
+                yaContesto = True
+            else:
+                datosEmpleadoSinContestar = Empleados.objects.filter(id_empleado = activos)
+
+                for datos in datosEmpleadoSinContestar:
+                    nombres = datos.nombre
+                    apellidos = datos.apellidos
+                
+                nombreCompleto= nombres + " " + apellidos
+
+                empleadosIrresponsables += nombreCompleto + br
+                
+
+
         porcentaje = (contadorEmpleadoscontestados * 100) / contadorEmpleadosActivos
 
         pregMultiples = []
@@ -252,9 +289,10 @@ def resultadosEncuestas(request):
             id_pregunta = pregunta.id_pregunta
             texto = pregunta.pregunta
             tipo = pregunta.tipo
+            clasificacion = pregunta.clasificacion
 
             if tipo == "M":
-                pregMultiples.append([id_pregunta, texto])
+                pregMultiples.append([id_pregunta, texto, clasificacion])
 
             elif tipo == "A":
                 pregAbiertas.append([id_pregunta, texto])
@@ -326,7 +364,8 @@ def resultadosEncuestas(request):
 
         return render(request, "empleadosCustom/encuestas/año2022/resultadosEnero.html", {"enAño":enAño, "estaEnReseultados": estaEnReseultados, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
               "rh":rh, "contadorEmpleadosActivos":contadorEmpleadosActivos, "contadorEmpleadoscontestados":contadorEmpleadoscontestados, "porcentaje":porcentaje, "pregMultiples":pregMultiples, "pregAbiertas":pregAbiertas,
-              "porcentajesPreguntasMultiples":porcentajesPreguntasMultiples,"listaMultiples":listaMultiples, "promedio":promedio, "criterioPromedio": criterioPromedio, "numeros":numeros, "listaMultiples2":listaMultiples2})
+              "porcentajesPreguntasMultiples":porcentajesPreguntasMultiples,"listaMultiples":listaMultiples, "promedio":promedio, "criterioPromedio": criterioPromedio, "numeros":numeros, "listaMultiples2":listaMultiples2, "empleadosFaltantes":empleadosFaltantes
+              , "empleadosIrresponsables":empleadosIrresponsables, "idsActivos":idsActivos, "idsContestados":idsContestados })
     
     #Si le da al inicio y no hay una sesión iniciada..
     else:
@@ -428,6 +467,50 @@ def guardarRespuestaTextbox(request):
         
         
 
+    
+    #Si le da al inicio y no hay una sesión iniciada..
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+
+
+def verRespuestasAbiertas(request):
+    
+    #Si ya hay una sesión iniciada..
+    if "idSesion" in request.session:
+        
+        
+        
+        enAño = True
+        estaEnReseultados = True
+        rh= True
+        id_admin=request.session["idSesion"]
+        nombreini = request.session['nombres']
+        apellidosini = request.session['apellidos']
+        correo = request.session['correoSesion']
+        foto = fotoAdmin(request)
+        nombreCompleto = nombreini + " " + apellidosini #Blanca Yesenia Gaeta Talamantes
+
+        if request.method == "POST":
+            
+            pregunta = request.POST['idPregunta']
+
+            datosPregunta = Preguntas.objects.filter(id_pregunta=pregunta)
+
+            for datos in datosPregunta:
+                idPregunta = datos.id_pregunta
+                texto = datos.pregunta
+
+            datosRespuestas = Respuestas.objects.filter(id_pregunta = idPregunta)
+
+
+
+
+
+        
+
+
+        return render(request, "empleadosCustom/encuestas/año2022/verRespuestasAbiertas.html", {"enAño":enAño, "estaEnReseultados": estaEnReseultados, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
+              "rh":rh, "idPregunta": idPregunta, "texto":texto, "datosRespuestas": datosRespuestas})
     
     #Si le da al inicio y no hay una sesión iniciada..
     else:

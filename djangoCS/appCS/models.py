@@ -146,6 +146,7 @@ class Preguntas (models.Model):
     id_encuesta = models.ForeignKey(Encuestas, on_delete=models.CASCADE)
     pregunta = models.TextField(max_length=500)
     tipo = models.CharField(max_length=3)
+    clasificacion = models.CharField(max_length=100)
     def __str__(self):
         return self.id_pregunta
     

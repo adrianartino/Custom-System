@@ -146,6 +146,8 @@ urlpatterns = [
 
     #resultados rh
     path("resultadosEncuestas/", viewEmpleados.resultadosEncuestas),
+    path("verRespuestasAbiertas/", viewEmpleados.verRespuestasAbiertas),
+
 
 ]
 

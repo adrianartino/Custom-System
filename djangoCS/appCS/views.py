@@ -610,8 +610,8 @@ def verEmpleados(request):
         numeroNoti = numNoti()
         foto = fotoAdmin(request)
         
-        empleadosActivos = Empleados.objects.filter(activo__icontains= "A")
-        empleadosInactivos = Empleados.objects.filter(activo__icontains= "I")
+        empleadosActivos = Empleados.objects.filter(activo__icontains= "A", correo__icontains = "@customco.com.mx")
+        empleadosInactivos = Empleados.objects.filter(activo__icontains= "I", correo__icontains = "@customco.com.mx")
         
         #empleados Actvos
         areasEnActivos = []
@@ -8267,14 +8267,21 @@ def agregarEncuestas(request):
             cantidadAbiertas = request.POST['abiertas']
             fechaHoy =datetime.now()
             pregunta = "pregunta"
+            clasificacion = "clasificacion"
             multiple = 0
             preguntasMultiples=[]
+            clasificacionesMultiples = []
             
             for respuestaMultiple in range(int(cantidadMultiples)):
                 multiple= multiple + 1
                 nameMultiple = pregunta + str(multiple)
+                nameClasificacion = clasificacion + str(multiple)
                 textoPreguntaMultiple = request.POST[nameMultiple]
+                textoClasificacion = request.POST[nameClasificacion]
                 preguntasMultiples.append(textoPreguntaMultiple)
+                clasificacionesMultiples.append(textoClasificacion)
+
+            listaMultiples = zip (preguntasMultiples, clasificacionesMultiples)
             
             preguntaAb = "preguntaAb"
             abierta = 0
@@ -8298,15 +8305,15 @@ def agregarEncuestas(request):
                 
               
                     
-                for preguntaMultiple in preguntasMultiples:
+                for preguntaMultiple, clasificacion in listaMultiples:
                     
-                    registroPreguntaMultiple = Preguntas(id_encuesta = Encuestas.objects.get(id_encuesta=registrarEncuesta), pregunta = preguntaMultiple, tipo = "M")
+                    registroPreguntaMultiple = Preguntas(id_encuesta = Encuestas.objects.get(id_encuesta=registrarEncuesta), pregunta = preguntaMultiple, tipo = "M", clasificacion = clasificacion)
                     
                     registroPreguntaMultiple.save()
                     
                 for preguntaAbierta in preguntasAbiertas:
                         
-                    registroPreguntaAbierta = Preguntas(id_encuesta = Encuestas.objects.get(id_encuesta=registrarEncuesta),  pregunta = preguntaAbierta, tipo = "A")
+                    registroPreguntaAbierta = Preguntas(id_encuesta = Encuestas.objects.get(id_encuesta=registrarEncuesta),  pregunta = preguntaAbierta, clasificacion = "A", tipo = "A")
                     
                     registroPreguntaAbierta.save()
                 
@@ -8382,7 +8389,7 @@ def preguntas(request):
 
             for pregunta in preguntasEncuesta:
                 if pregunta.tipo == "M":
-                    preguntasMultiples.append([pregunta.id_pregunta, pregunta.pregunta])
+                    preguntasMultiples.append([pregunta.id_pregunta, pregunta.pregunta, pregunta.clasificacion])
                 elif pregunta.tipo == "A":
                     preguntasAbiertas.append([pregunta.id_pregunta, pregunta.pregunta])
 

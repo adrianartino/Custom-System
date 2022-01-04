@@ -33,6 +33,8 @@ Resultados Enero 2022.
 <!-- Custom Css -->
 <link href={% static 'panel/css/style.css' %} rel="stylesheet">
 
+<link href={% static 'css/margen.css' %} rel="stylesheet" />
+
 <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
 <link href={% static 'panel/css/themes/all-themes.css' %} rel="stylesheet" />
 {% endblock %}
@@ -49,149 +51,167 @@ Resultados Enero 2022.
                 
 
             </div>
-            <div class="body" >
-                <div class="container">
-                    <div class="row">
-                      <div class="col">
-                        
-                      </div>
-                      <div class="col-8">
-                        {% if empleadoTieneRespuestas %}
-                        <div id="divIntroduccionEncuesta" style="display: none;">
-                        {% else %}
-                        <div id="divIntroduccionEncuesta">
-                        {% endif %}
-                            <center>
-                                <h1 style="font-family: 'Oswald', sans-serif;">RESULTADOS DE ENCUESTA DE CLIMA LABORAL ENERO 2022.</h1>
-                                <img src={% static 'images/custom-png.png' %} width="300" alt="User" />
-                            </center>
-                            
-                            <p class="m-t-10 m-b-30">
-                                Bienvenido, en esta pantalla podrás visualizar los resultados que se obtuvieron en base a las 26 preguntas de opción múltiple
-                                y las 3 preguntas abiertas correspondientes a la encuesta "Clima laboral Enero 2022".
-                            </p>
-                          <center>
-                            <div class="row clearfix">
-                                <div class="col-xs-12 col-sm-6">
-                                    <h2 style="font-family: 'Oswald', sans-serif;">Criterios de evaluación</h2>
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered table-striped table-hover dataTable js-exportable ">
-                                            <thead>
-                                                <tr style="background-color: #fad60e; color: black;">
-                                                    <th class="col-md-4">Rango porcentaje</th>
-                                                    <th>Criterio</th>
-                                                    <th class="col-md-3">Símbolo</th>
-                                                    
-                                            </thead>
-                                          
-                                            <tbody class="animate__animated animate__backInDown">
-                                               
-                                                <tr>
-                                                    <td>100% - 90%</td>
-                                                    <td><span class="label bg-green">Excelente</span> </td>
-                                                    <td> <i class="material-icons" style="color:#4caf50;">check</i> </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>89% - 80%</td>
-                                                    <td><span class="label bg-blue"> Muy bueno</span></td>
-                                                    <td> <i class="material-icons" style="color: #2196f3;">sentiment_very_satisfied</i> </td>
-                                                </tr>
-                                            
-                                                <tr>
-                                                    <td>79% - 70%</td>
-                                                    <td><span class="label bg-amber">Bueno</span></td>
-                                                    <td> <i class="material-icons" style="color: #ffc107;">sentiment_satisfied</i> </td>
-                                                </tr>
-                                            
-                                                <tr>
-                                                    <td>69% - 60%</td>
-                                                    <td><span class="label bg-deep-orange">Regular</span></td>
-                                                    <td> <i class="material-icons" style="color: #ff5722;">sentiment_neutral</i> </td>
-                                                </tr>
-                                            
-                                                <tr>
-                                                    <td>59% - 0%</td>
-                                                    <td><span class="label bg-red">Deficiente</span></td>
-                                                    <td> <i class="material-icons" style="color: #f44336;">mood_bad</i> </td>
-                                                </tr>
-                                            
-                                            
-                    
-                    
-                    
-                                            </tbody>
-                                        </table>
-                                    </div>
-
-
+            <div class="body" id="margenDIV" >
+                    <center>
+                        <h1 style="font-family: 'Oswald', sans-serif; color: black;">RESULTADOS DE ENCUESTA DE CLIMA LABORAL ENERO 2022.</h1>
+                        <img src={% static 'images/custom-png.png' %} width="300" alt="User" />
+                    </center>
+                    <p class="m-t-10 m-b-30">
+                        Bienvenido, en esta pantalla podrás visualizar los resultados que se obtuvieron en base a las 26 preguntas de opción múltiple
+                        y las 3 preguntas abiertas correspondientes a la encuesta "Clima laboral Enero 2022".
+                    </p>
+                    <center>
+                        <div class="row clearfix">
+                            <div class="col-xs-12 col-sm-6">
+                                <h2 style="font-family: 'Oswald', sans-serif; color: black;">Criterios de evaluación</h2>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped table-hover dataTable js-exportable ">
+                                        <thead>
+                                            <tr style="background-color: #fad60e; color: black;">
+                                                <th class="col-md-4">Rango porcentaje</th>
+                                                <th>Criterio</th>
+                                                <th class="col-md-3">Símbolo</th>
+                                                
+                                        </thead>
+                                      
+                                        <tbody class="animate__animated animate__backInDown">
+                                           
+                                            <tr>
+                                                <td>100% - 90%</td>
+                                                <td><span class="label bg-green">Excelente</span> </td>
+                                                <td> <i class="material-icons" style="color:#4caf50;">check</i> </td>
+                                            </tr>
+                                            <tr>
+                                                <td>89% - 80%</td>
+                                                <td><span class="label bg-blue"> Muy bueno</span></td>
+                                                <td> <i class="material-icons" style="color: #2196f3;">sentiment_very_satisfied</i> </td>
+                                            </tr>
+                                        
+                                            <tr>
+                                                <td>79% - 70%</td>
+                                                <td><span class="label bg-amber">Bueno</span></td>
+                                                <td> <i class="material-icons" style="color: #ffc107;">sentiment_satisfied</i> </td>
+                                            </tr>
+                                        
+                                            <tr>
+                                                <td>69% - 60%</td>
+                                                <td><span class="label bg-deep-orange">Regular</span></td>
+                                                <td> <i class="material-icons" style="color: #ff5722;">sentiment_neutral</i> </td>
+                                            </tr>
+                                        
+                                            <tr>
+                                                <td>59% - 0%</td>
+                                                <td><span class="label bg-red">Deficiente</span></td>
+                                                <td> <i class="material-icons" style="color: #f44336;">mood_bad</i> </td>
+                                            </tr>
+                                        
+                                        
+                
+                
+                
+                                        </tbody>
+                                    </table>
                                 </div>
-                                <div class="col-xs-12 col-sm-6">
-                                    <h2 style="font-family: 'Oswald', sans-serif;">Encuestas contestadas</h2>
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered table-striped table-hover dataTable js-exportable ">
-                                         
-                                          
-                                            <tbody class="animate__animated animate__backInDown">
-                                               
-                                                <tr>
-                                                    <td class="col-md-6" style="background-color: #fad60e; color: black; font-weight: bold;" >Numero de empleados activos</td>
-                                                    <td>{{contadorEmpleadosActivos}} empleados</td>
-                                                    
-                                                </tr>
-                                                <tr>
-                                                    <td  style="background-color: #fad60e; color: black; font-weight: bold;" >Numero de encuestas resultas esperadas</td>
-                                                    <td>{{contadorEmpleadosActivos}} encuestas</td>
-                                                    
-                                                </tr>
-                                                <tr>
-                                                    <td  style="background-color: #fad60e; color: black; font-weight: bold;" >Relación contestadas/ no contestadas</td>
-                                                    <td>
-                                                        <canvas id="myChart" width="400" height="400"></canvas>
-                                                        <center>
-                                                            <p>{{contadorEmpleadoscontestados}} de {{contadorEmpleadosActivos}} empleados han contestado.</p>
-                                                        </center>
-                                                      
-                                                    </td>
-                                                    
-                                                </tr>
-                                                <tr>
-                                                    <td  style="background-color: #fad60e; color: black; font-weight: bold;" >Porcentaje total resuelto</td>
-                                                    <td>
-                                                    <div class="progress">
-                                                        <div class="progress-bar bg-orange progress-bar-striped active" role="progressbar" aria-valuenow="{{porcentaje}}" aria-valuemin="0"
-                                                        aria-valuemax="100" style="width: {{porcentaje}}%">
-                                                       {{porcentaje}}
-                                                        </div>
-                                                    </div>
-                                                    <center>
-                                                        <p>{{porcentaje}}% de 100% completado</p>
-                                                    </center>
-                                                    </td>
-                                                    
-                                                </tr>
-                                              
-                                            
-                                            
-                    
-                    
-                    
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    
 
-                                </div>
-                               
+
                             </div>
-                          </center>
-                          <center>
-                            <h2 style="font-family: 'Oswald', sans-serif;" >
-                                Preguntas Múltiples.
+                            <div class="col-xs-12 col-sm-6">
+                                <h2 style="font-family: 'Oswald', sans-serif;color: black;">Encuestas contestadas</h2>
                                 
-                            </h2>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped table-hover dataTable js-exportable ">
+                                     
+                                      
+                                        <tbody class="animate__animated animate__backInDown">
+                                           
+                                            <tr>
+                                                <td class="col-md-6" style="background-color: #fad60e; color: black; font-weight: bold;" >Numero de empleados activos</td>
+                                                <td>{{contadorEmpleadosActivos}} empleados</td>
+                                                
+                                            </tr>
+                                            <tr>
+                                                <td  style="background-color: #fad60e; color: black; font-weight: bold;" >Numero de encuestas resultas esperadas</td>
+                                                <td>{{contadorEmpleadosActivos}} encuestas</td>
+                                                
+                                            </tr>
+                                            <tr>
+                                                <td  style="background-color: #fad60e; color: black; font-weight: bold;" >Relación contestadas/ no contestadas</td>
+                                                <td>
+                                                    <canvas id="myChart" width="400" height="400"></canvas>
+                                                    <center>
+                                                        <p>{{contadorEmpleadoscontestados}} de {{contadorEmpleadosActivos}} empleados han contestado.</p>
+                                                        <br>
+                                                        <button type="submit" class="btn bg-cyan waves-effect animate__animated animate__flipInX"
+                                                            data-toggle="tooltip" data-placement="bottom"
+                                                            data-html="true" title="Empleados faltantes: <br> {{empleadosIrresponsables}}" >
+                                                            <i class="material-icons">supervisor_account</i>
+                                                            <span>Ver empleados faltantes</span>
+                                                        </button>
+                                                    </center>
+
+                                                  
+                                                  
+                                                </td>
+                                                
+                                            </tr>
+                                            <tr>
+                                                <td  style="background-color: #fad60e; color: black; font-weight: bold;" >Porcentaje total resuelto</td>
+                                                <td>
+                                                <div class="progress">
+                                                    {% if porcentaje >= 0 and porcentaje <= 59 %} 
+                                                    <div class="progress-bar bg-red progress-bar-striped active" role="progressbar" aria-valuenow="{{porcentaje}}" aria-valuemin="0"
+                                                    aria-valuemax="100" style="width: {{porcentaje}}%">
+                                                        {{porcentaje}}
+                                                    </div>
+                                                    {% elif porcentaje >= 60 and porcentaje <= 69  %}
+                                                    <div class="progress-bar bg-orange progress-bar-striped active" role="progressbar" aria-valuenow="{{porcentaje}}" aria-valuemin="0"
+                                                    aria-valuemax="100" style="width: {{porcentaje}}%">
+                                                        {{porcentaje}}
+                                                    </div>
+                                                    {% elif porcentaje >= 70 and porcentaje <= 79  %}
+                                                    <div class="progress-bar bg-yellow progress-bar-striped active" role="progressbar" aria-valuenow="{{porcentaje}}" aria-valuemin="0"
+                                                    aria-valuemax="100" style="width: {{porcentaje}}%">
+                                                        {{porcentaje}}
+                                                    </div>
+                                                    {% elif porcentaje >= 80 and porcentaje <= 89  %}
+                                                    <div class="progress-bar bg-blue progress-bar-striped active" role="progressbar" aria-valuenow="{{porcentaje}}" aria-valuemin="0"
+                                                    aria-valuemax="100" style="width: {{porcentaje}}%">
+                                                        {{porcentaje}}
+                                                    </div>
+                                                    {% elif porcentaje >= 90 and porcentaje <= 100  %}
+                                                    <div class="progress-bar bg-green progress-bar-striped active" role="progressbar" aria-valuenow="{{porcentaje}}" aria-valuemin="0"
+                                                    aria-valuemax="100" style="width: {{porcentaje}}%">
+                                                        {{porcentaje}}
+                                                    </div>
+                                                    {% endif %}
+                                                </div>
+                                                <center>
+                                                    <p>{{porcentaje}}% de 100% completado</p>
+                                                </center>
+                                                </td>
+                                                
+                                            </tr>
+                                          
+                                        
+                                        
+                
+                
+                
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </center>
+
+                    <center>
+                        <h2 style="font-family: 'Oswald', sans-serif;" >
+                            Preguntas Múltiples.
                             
-                        </center>
-                        {% for multiples, porcentaje, contadorsino in listaMultiples %}
+                        </h2>
+                        
+                    </center>
+                    {% for multiples, porcentaje, contadorsino in listaMultiples %}
                         <h4 style="font-family: 'Oswald', sans-serif;">Pregunta #{{multiples.0}}</h4>
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped table-hover dataTable js-exportable ">
@@ -202,7 +222,7 @@ Resultados Enero 2022.
                                         <th >Promedio de pregunta</th>
                                         <th class="col-md-2">Gráfico</th>
                                         <th>Criterio</th>
-                                        <th >Símbolo</th>
+                                        <th >Clasificación</th>
                                         
                                 </thead>
                               
@@ -211,13 +231,40 @@ Resultados Enero 2022.
                                     <tr>
                                         <td>{{multiples.1}}</td>
                                         <td>
-                                            Promedio General: <span style="color: black; font-weight: bold;">{{porcentaje.0}}</span>
+
+                                            
+                                            <center>
+                                                <span style="color: black; font-weight: bold; font-size:medium;">Promedio General</span> 
+                                                <br>
+                                                <span style="color: black; font-weight: bold; font-size: xx-large;">{{porcentaje.0}}</span>
+                                                <br>
+                                                {% if porcentaje.1 == "EXCELENTE" %}
+                                            
+                                                <i class="material-icons" style="color:#4caf50;font-size: xx-large; font-weight: bold; ">check</i> 
+                                                {% elif porcentaje.1 == "MUY BUENO" %}
+                                                
+                                                <i class="material-icons" style="color: #2196f3;font-size: xx-large; font-weight: bold; ">sentiment_very_satisfied</i> 
+                                                {% elif porcentaje.1 == "BUENO" %}
+                                                
+                                                <i class="material-icons" style="color: #ffc107;font-size: xx-large; font-weight: bold; ">sentiment_satisfied</i>
+                                                {% elif porcentaje.1 == "REGULAR" %}
+                                            
+                                                <i class="material-icons" style="color: #ff5722;font-size: xx-large; font-weight: bold; ">sentiment_neutral</i>
+                                                {% elif porcentaje.1 == "DEFICIENTE" %}
+                                                
+                                                <i class="material-icons" style="color: #f44336;font-size: xx-large; font-weight: bold; ">mood_bad</i>
+                                                {% endif %}
+                                            </center>
+                                            
                                             <br>
                                             # respuestas totales: <span style="color: black; font-weight: bold;">{{contadorEmpleadoscontestados}}</span>
                                             <br>
                                             # respuestas SI: <span style="color: black; font-weight: bold;">{{contadorsino.0}}</span>
                                             <br>
                                             # respuestas NO: <span style="color: black; font-weight: bold;">{{contadorsino.1}}</span>
+                                            <br>
+                                            
+                                            
                                             
                                             
                                         </td>
@@ -229,20 +276,43 @@ Resultados Enero 2022.
                                         </td>
                                         {% if porcentaje.1 == "EXCELENTE" %}
                                         <td><span class="label bg-green">Excelente</span> </td>
-                                        <td> <i class="material-icons" style="color:#4caf50;">check</i> </td>
+                                        
                                         {% elif porcentaje.1 == "MUY BUENO" %}
                                         <td><span class="label bg-blue"> Muy bueno</span></td>
-                                        <td> <i class="material-icons" style="color: #2196f3;">sentiment_very_satisfied</i> </td>
+                                        
                                         {% elif porcentaje.1 == "BUENO" %}
                                         <td><span class="label bg-amber">Bueno</span></td>
-                                        <td> <i class="material-icons" style="color: #ffc107;">sentiment_satisfied</i> </td>
+                                        
                                         {% elif porcentaje.1 == "REGULAR" %}
                                         <td><span class="label bg-deep-orange">Regular</span></td>
-                                        <td> <i class="material-icons" style="color: #ff5722;">sentiment_neutral</i> </td>
+                                        
                                         {% elif porcentaje.1 == "DEFICIENTE" %}
                                         <td><span class="label bg-red">Deficiente</span></td>
-                                        <td> <i class="material-icons" style="color: #f44336;">mood_bad</i> </td>
+                                       
                                         {% endif %}
+
+                                        <td>
+                                            
+                                            {% if multiples.2 == "COMUNICACIÓN INTERNA" %}
+                                            <span class="label bg-green">{{multiples.2}}</span> 
+                                            {% elif  multiples.2 == "TRABAJO EN EQUIPO" %}
+                                            <span class="label bg-pink">{{multiples.2}}</span>
+                                            {% elif  multiples.2 == "LIDERAZGO" %}
+                                            <span class="label bg-purple">{{multiples.2}}</span> 
+                                            {% elif  multiples.2 == "SUPERVISIÓN" %}
+                                            <span class="label bg-indigo">{multiples.2}}</span> 
+                                            {% elif  multiples.2 == "CONDICIONES GENERALES Y PARTICULARES" %}
+                                            <span class="label bg-cyan">{{multiples.2}}</span> 
+                                            {% elif  multiples.2 == "FELICIDAD DEL TRABAJADOR" %}
+                                            <span class="label bg-teal">{{multiples.2}}</span> 
+                                            {% elif  multiples.2 == "OPORTUNIDADES PARA EL CRECIMIENTO" %}
+                                            <span class="label bg-amber">{{multiples.2}}</span> 
+                                            {% elif  multiples.2 == "POLÍTICAS DE COMPENSACIÓN Y RETRIBUCIÓN" %}
+                                            <span class="label bg-brown">{{multiples.2}}</span> 
+                                            {% elif  multiples.2 == "MOTIVACIÓN" %}
+                                            <span class="label bg-deep-orange">{{multiples.2}}</span> 
+                                            {% endif %} 
+                                        </td>
                                     </tr>
                                     
                                 
@@ -255,81 +325,102 @@ Resultados Enero 2022.
                       
 
                         {% endfor %}
-
                         <center>
                         
                         
-                        <h1>Promedio General: {{promedio}}</h1>
-                        {% if criterioPromedio == "EXCELENTE" %}
-                        <h1 >Criterio: <span class="label bg-green">{{criterioPromedio}}</span> <span><i class="material-icons" style="color:#4caf50; font-size: xx-large;">check</i></span></h1>
-                       
-                        
-                        {% elif criterioPromedio == "MUY BUENO" %}
-                        <h1 >Criterio: <span class="label bg-blue">{{criterioPromedio}}</span> <span><i class="material-icons" style="color: #2196f3; font-size: xx-large;">sentiment_very_satisfied</i></span></h1>
-                      
-                      
-                        {% elif criterioPromedio == "BUENO" %}
-                        <h1 >Criterio: <span class="label bg-amber">{{criterioPromedio}}</span><span> <i class="material-icons" style="color: #ffc107; font-size: xx-large;">sentiment_satisfied</i></span></h1>
-                       
-                       
-
-                        {% elif criterioPromedio == "REGULAR" %}
-                        <h1 >Criterio: <span class="label bg-deep-orange">{{criterioPromedio}}</span> <span><i class="material-icons" style="color: #ff5722; font-size: xx-large;">sentiment_neutral</i></span></h1>
-                       
-                        {% elif criterioPromedio == "DEFICIENTE" %}
-                        <h1 >Criterio: <span class="label bg-red">{{criterioPromedio}}</span>  <span><i class="material-icons" style="color: #f44336; font-size: xx-large;">mood_bad</i></span></h1>
-               
-                        {% endif %}
-
-                      
-                        </center>
-                        
-
-
-
-                        <center>
-                            <h2 style="font-family: 'Oswald', sans-serif;" >
-                                Preguntas Abiertas.
+                            <h1>Promedio General: {{promedio}}</h1>
+                            {% if criterioPromedio == "EXCELENTE" %}
+                            <h1 >Criterio: <span class="label bg-green">{{criterioPromedio}}</span> <span><i class="material-icons" style="color:#4caf50; font-size: xx-large;">check</i></span></h1>
+                           
+                            
+                            {% elif criterioPromedio == "MUY BUENO" %}
+                            <h1 >Criterio: <span class="label bg-blue">{{criterioPromedio}}</span> <span><i class="material-icons" style="color: #2196f3; font-size: xx-large;">sentiment_very_satisfied</i></span></h1>
+                          
+                          
+                            {% elif criterioPromedio == "BUENO" %}
+                            <h1 >Criterio: <span class="label bg-amber">{{criterioPromedio}}</span><span> <i class="material-icons" style="color: #ffc107; font-size: xx-large;">sentiment_satisfied</i></span></h1>
+                           
+                           
+    
+                            {% elif criterioPromedio == "REGULAR" %}
+                            <h1 >Criterio: <span class="label bg-deep-orange">{{criterioPromedio}}</span> <span><i class="material-icons" style="color: #ff5722; font-size: xx-large;">sentiment_neutral</i></span></h1>
+                           
+                            {% elif criterioPromedio == "DEFICIENTE" %}
+                            <h1 >Criterio: <span class="label bg-red">{{criterioPromedio}}</span>  <span><i class="material-icons" style="color: #f44336; font-size: xx-large;">mood_bad</i></span></h1>
+                   
+                            {% endif %}
+    
+                          
+                            </center>
+                            
+    
+    
+    
+                            <center>
+                                <h2 style="font-family: 'Oswald', sans-serif;" >
+                                    Preguntas Abiertas.
+                                    
+                                </h2>
                                 
-                            </h2>
+                            </center>
+                            {% for abiertas in pregAbiertas %}
+                            <form id="form_validation" action="/verRespuestasAbiertas/" method="POST">{% csrf_token %}
+                            <h4 style="font-family: 'Oswald', sans-serif;">Pregunta # <span><input type="text" style="border: none;" readonly name="idPregunta" value="{{abiertas.0}}"></span> </h4>
                             
-                        </center>
-                        {% for abiertas in pregAbiertas %}
-                        <h4 style="font-family: 'Oswald', sans-serif;">Pregunta #{{abiertas.0}}</h4>
-                        <h3 style="font-family: 'Oswald', sans-serif;">{{abiertas.1}}</h3>
-                        <br>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped table-hover dataTable js-exportable ">
+                                    <thead>
+                                        <tr style="background-color: #fad60e; color: black;">
+                                            <th class="col-md-6">Texto pregunta</th>
+                                            
+                                            <th >Ver respuestas</th>
+                                         
+                                           
+                                            
+                                    </thead>
+                                  
+                                    <tbody class="animate__animated animate__backInDown">
+                                       
+                                        <tr>
+                                            <td>{{abiertas.1}}</td>
+                                            <td>
+                                                <center>
+                                                    <button type="submit" class="btn bg-purple waves-effect">
+                                                        <i class="material-icons">visibility</i>
+                                                        <span>VER RESPUESTAS</span>
+                                                    </button>
+                                                </center>
+                                                
+                                             
+                                                
+                                                
+                                            </td>
+                                            
+                                            
+                                        </tr>
+                                        
+                                    
+            
+            
+            
+                                    </tbody>
+                                </table>
+                            </div>
+                           
+    
+                            <br>
+                            </form>
+    
+                            {% endfor %}
 
-                        {% endfor %}
-                        </div>
-                        
-
-                            
-
-
-                        
-                       
-                        
-                        
-                      </div>
-
-                      <div class="col">
-                    
-                      </div>
-
-                    </div>
-                
-                
-               
-                
-
-                     
             </div>
 
         </div>
     </div>
 </div>
 
-</div>
+
+
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 {% if bajaEquipo %}
 <script type="text/javascript">
@@ -369,13 +460,13 @@ Resultados Enero 2022.
                     ],
             datasets: [{
                         
-                        data: ["{{contadorEmpleadoscontestados}}", "{{contadorEmpleadosActivos}}" ],
+                        data: ["{{contadorEmpleadoscontestados}}", "{{empleadosFaltantes}}" ],
                         backgroundColor: [
                         '#e91e63',
                         '#009688'
                     
                         ],
-                        hoverOffset: 4
+                        hoverOffset: 8
                     }]
         },
         
@@ -406,8 +497,6 @@ Resultados Enero 2022.
     });
 </script>
 {% endfor %}
-
-
     
     
 
@@ -454,6 +543,7 @@ Resultados Enero 2022.
 
 <!-- Custom Js -->
 <script src={% static 'panel/js/admin.js' %}></script>
+<script src={% static 'panel/js/pages/ui/tooltips-popovers.js' %}></script>
 <script src={% static 'panel/js/pages/tables/jquery-datatable.js' %}></script>
 
 
