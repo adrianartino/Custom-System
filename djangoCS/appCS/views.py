@@ -1489,7 +1489,7 @@ def agregarInsumos(request):
         foto = fotoAdmin(request)
         
         Insumos = True
-        datosImpresoras = Impresoras.objects.all()
+        datosImpresoras = Impresoras.objects.filter(activo = "A")
         if request.method == "POST":
             
             marca_recibido = request.POST['marcas']
