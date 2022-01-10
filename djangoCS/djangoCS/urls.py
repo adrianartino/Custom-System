@@ -148,6 +148,11 @@ urlpatterns = [
     path("resultadosEncuestas/", viewEmpleados.resultadosEncuestas),
     path("verRespuestasAbiertas/", viewEmpleados.verRespuestasAbiertas),
 
+    #Reportes de resultados
+    path("pruebaPDF/",viewEmpleados.pruebaPDF),
+    path("resultadosMultiples/",viewEmpleados.resultadosMultiples),
+    path("resultadosAbiertas/",viewEmpleados.resultadosAbiertas)
+
 
 ]
 

@@ -5,6 +5,7 @@ import mimetypes
 import os
 import base64
 from io  import BytesIO
+from io import StringIO
 
 #Renderizado
 from django.http import response
@@ -42,9 +43,17 @@ from reportlab.platypus import Image, Paragraph, Table, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_CENTER
+from reportlab.graphics.shapes import Drawing 
+from reportlab.graphics.charts.piecharts import Pie
+from reportlab.graphics.charts.barcharts import BarChart
+from reportlab.graphics.charts.barcharts import VerticalBarChart
+from reportlab.graphics import renderPDF
 
 #Libreria excel.
 import xlwt
+
+#libreria iconos fontawesome
+
 
 
 def fotoAdmin(request):
@@ -804,6 +813,843 @@ def aplicable3(request):
 
            
     
+    #Si le da al inicio y no hay una sesión iniciada..
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+
+def pruebaPDF(request):
+    
+    #Si ya hay una sesión iniciada..
+    if "idSesion" in request.session:
+
+       #crear el http response con pdf
+        respuesta = HttpResponse(content_type='application/pdf')
+        respuesta['Content-Disposition'] = 'attachment; filename=Reporte Resultados Encuesta Clima Laboral - Enero 2022.pdf'
+        #Crear objeto PDF 
+        buffer =BytesIO()
+        c = canvas.Canvas(buffer, pagesize=letter)
+        base_dir = str(settings.BASE_DIR) #C:\Users\AuxSistemas\Desktop\CS Escritorio\Custom-System\djangoCS
+        #nombre de empresa
+        logo = base_dir+'/static/images/logoCustom.PNG'   
+        c.drawImage(logo, 40,700,120,70, preserveAspectRatio=True)
+            
+        c.setFont('Helvetica-Bold', 14)
+        c.drawString(150,750, 'Custom & Co S.A. de C.V.')
+            
+        c.setFont('Helvetica', 8)
+        c.drawString(150,735, 'Allende #646 Sur Colonia Centro, Durango, CP: 35000')
+            
+        c.setFont('Helvetica', 8)
+        c.drawString(150,720, 'RFC: CAC070116IS9')
+            
+        c.setFont('Helvetica', 8)
+        c.drawString(150,705, 'Tel: 8717147716')
+        #fecha
+        hoy=datetime.now()
+        fecha = str(hoy.date())
+        color_guinda="#B03A2E"
+        color_azul = "#cf1515"
+        c.setFillColor(color_guinda)
+        
+            
+        c.setFont('Helvetica-Bold', 12)
+        c.drawString(425,750, "CLIMA LABORAL 2022")
+        color_negro="#030305"
+        c.setFillColor(color_negro)
+        c.setFont('Helvetica-Bold', 10)
+        c.drawString(405,730, "Fecha de impresión: " +fecha)
+        #linea guinda
+            
+        c.setFillColor(color_guinda)
+        c.setStrokeColor(color_guinda)
+        c.line(40,695,560,695)
+        #nombre departamento
+        color_negro="#030305"
+        c.setFillColor(color_negro)
+        c.setFont('Helvetica', 12)
+        c.drawString(405,710, 'Departamento de Sistemas')
+        #titulo
+        c.setFont('Helvetica-Bold', 22)
+            
+        c.drawString(55,660, 'Resultados Encuesta Clima Laboral Enero 2022')
+
+
+        #tabla1
+        c.setFont('Helvetica-Bold', 18)
+        c.drawString(215,620, 'Criterios de Evaluación')
+
+
+        #header de tabla
+        styles = getSampleStyleSheet()
+        styleBH =styles["Normal"]
+        styleBH.alignment = TA_CENTER
+        styleBH.fontSize = 10
+        
+        
+        rango = Paragraph('''Rango Porcentaje''', styleBH)
+        criterio = Paragraph('''Criterio''', styleBH)
+       
+      
+        filasTabla=[]
+        filasTabla.append([rango, criterio])
+        #Tabla
+        styleN = styles["BodyText"]
+        styleN.alignment = TA_CENTER
+        styleN.fontSize = 7
+        
+        high = 590
+        porcentajes = ["100% - 90%", "89% - 80%", "79% - 70%","69% - 60%", "59% - 0%" ]
+        criterios = ["Excelente", "Muy bueno", "Bueno", "Regular", "Deficiente"]
+        
+        contador = 0
+        for x in porcentajes:
+            if contador == 0:
+                fila = [porcentajes[contador], criterios[contador]]
+                contador= 1
+
+            elif contador != 0:
+                fila = [porcentajes[contador], criterios[contador]]
+                contador= contador+1
+            filasTabla.append(fila)
+            high= high - 18 
+            
+        #escribir tabla
+        width, height = letter
+        tabla = Table(filasTabla, colWidths=[4 * cm, 4 * cm])
+        
+        tabla.setStyle(TableStyle([
+           
+            ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+            ('BACKGROUND', (0, 0), (-1, 0), '#e9c7ae'),
+            
+            ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+            ('BACKGROUND', (1,1), (-1,-5), '#4CAF50'),
+            ('BACKGROUND', (1,2), (-1,-4), '#2196F3'),
+            ('BACKGROUND', (1,3), (-1,-3), '#FFC107'),
+            ('BACKGROUND', (1,4), (-1,-2), '#FF5722'),
+            ('BACKGROUND', (1,5), (-1,-1), '#F44336'),
+        ]))
+
+        tabla.wrapOn(c, width, height)
+        tabla.drawOn(c, 200, high)
+
+        #tabla2
+
+        c.setFont('Helvetica-Bold', 18)
+        c.drawString(215,475, 'Encuestas contestadas')
+
+        empleadosActivos = Empleados.objects.filter(activo = "A", correo__icontains="@customco.com.mx")
+        contadorEmpleadosActivos = 0
+
+        for activos in empleadosActivos:
+            contadorEmpleadosActivos = contadorEmpleadosActivos + 1
+
+        contadorEmpleadosActivos = str(contadorEmpleadosActivos)
+
+        c.setFont('Helvetica-Bold', 16)
+        c.drawString(80,440, 'Número de empleados')
+        c.drawString(85,415, 'activos en la empresa:')
+        c.setFont('Helvetica-Bold', 36)
+        c.setFillColor(color_azul)
+        c.drawString(140,375, contadorEmpleadosActivos)
+
+
+        c.setFillColor(color_negro)
+        c.setFont('Helvetica-Bold', 16)
+        c.drawString(360,440, 'Número de encuestas')
+        c.drawString(365,415, 'resueltas esperadas:')
+        c.setFont('Helvetica-Bold', 36)
+        c.setFillColor(color_azul)
+        c.drawString(425,375, contadorEmpleadosActivos)
+        c.setFillColor(color_negro)
+
+        c.setFont('Helvetica-Bold', 16)
+        c.drawString(80,340, 'Relación contestadas/')
+        c.drawString(85,320, 'no contestadas:')
+
+        empleadosContestados = EncuestaEmpleadoResuelta.objects.filter(id_encuesta = 1)
+        contadorEmpleadoscontestados = 0
+
+        for contestado in empleadosContestados:
+            contadorEmpleadoscontestados = contadorEmpleadoscontestados + 1
+        
+        
+
+        empleadosFaltantes = int(contadorEmpleadosActivos) - int(contadorEmpleadoscontestados)
+
+        empleadosFaltantes = int(empleadosFaltantes)
+
+      
+
+       
+
+        
+
+        #grafico de pastel
+        b = Drawing()
+        pie = Pie()
+        pie.x = 0
+        pie.y = 0
+        pie.height = 160
+        pie.width = 160
+        pie.data = [contadorEmpleadoscontestados, empleadosFaltantes ]
+        pie.labels = ['Contestadas', 'No contestadas']
+        pie.slices.strokeWidth = 0.5
+        pie.slices[1].popout = 20
+        pie.slices[0].fillColor= colors.HexColor("#e91e63")
+        pie.slices[1].fillColor=colors.HexColor("#009688")
+        b.add(pie)
+        x,y = 100,130 
+        renderPDF.draw(b, c, x, y, showBoundary=False)
+
+        c.setFont('Helvetica-Bold', 16)
+        c.drawString(360,340, 'Porcentaje total')
+        c.drawString(365,320, 'resuelto:')
+
+        porcentajeTotal = 100
+        porcentaje = int(contadorEmpleadoscontestados * 100) / int(contadorEmpleadosActivos)
+
+        porcentaje = str(porcentaje)
+
+        porcentajeDigitos = ("{0:.4f}".format(float(porcentaje))) + "%"
+
+        porcentajeBarra = ("{0:.0f}".format(float(porcentaje)))
+
+        porcentajeBarraa = int(porcentajeBarra)
+
+        c.setStrokeColorRGB(0.7, 0, 0.7) #color de contorno
+        c.setFillColorRGB(255, 255, 255) #color de relleno
+        c.rect(360, 275, 200, 25, fill=True)
+
+        c.setStrokeColorRGB(0.7, 0, 0.7) #color de contorno
+
+        if porcentajeBarraa >= 0 and porcentajeBarraa <= 33:
+            c.setFillColorRGB(255, 0, 0) #color de relleno
+            c.rect(360, 275, porcentajeBarra, 25, fill=True)
+        elif porcentajeBarraa >= 34 and porcentajeBarraa <= 66:
+            c.setFillColorRGB(255, 165, 0) #color de relleno
+            c.rect(360, 275, porcentajeBarra, 25, fill=True)
+        elif porcentajeBarraa >= 67 and porcentajeBarraa <= 100:
+            c.setFillColorRGB(0, 128, 0) #color de relleno
+            c.rect(360, 275, porcentajeBarra, 25, fill=True)
+
+        c.setFont('Helvetica-Bold', 30)
+        c.setFillColor(color_azul)
+        c.drawString(360,230, porcentajeDigitos)
+        c.setFont('Helvetica-Bold', 18)
+        c.setFillColor(color_negro)
+        c.drawString(360,200, "del 100% de empleados")
+       
+
+
+
+  
+
+        
+        
+        f = Drawing()
+        barra = VerticalBarChart()
+        barra.x = 0
+        barra.y = 0
+        barra.height = 100
+        barra.width = 50
+        data = [(10,2)]
+        barra.valueAxis.valueMin = 0
+        barra.valueAxis.valueMax = 20 
+        barra.data = data
+        barra.categoryAxis.categoryNames = ['SI', 'NO']
+        barra.bars[(0,0)].fillColor = colors.HexColor("#E91E63")
+        barra.bars[(0,1)].fillColor = colors.red
+        f.add(barra)
+        x,y = 60, 300
+        #renderPDF.draw(f, c, x, y, showBoundary=False)  
+
+
+        #linea guinda
+        color_guinda="#B03A2E"
+        c.setFillColor(color_guinda)
+        c.setStrokeColor(color_guinda)
+        c.line(40,60,560,60)
+        
+        color_negro="#030305"
+        c.setFillColor(color_negro)
+        c.setFont('Helvetica-Bold', 11)
+        c.drawString(170,48, '2021 - Administrador de Custom System. - Versión: 1.0.0 ')
+        
+        
+        c.showPage()
+        
+        
+        
+        #guardar pdf
+        c.save()
+        #obtener valores de bytesIO y esribirlos en la respuesta
+        pdf = buffer.getvalue()
+        buffer.close()
+        respuesta.write(pdf)
+        return respuesta
+
+
+        
+    #Si le da al inicio y no hay una sesión iniciada..
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+
+
+def resultadosMultiples(request):
+    
+    #Si ya hay una sesión iniciada..
+    if "idSesion" in request.session:
+
+       #crear el http response con pdf
+        respuesta = HttpResponse(content_type='application/pdf')
+        respuesta['Content-Disposition'] = 'attachment; filename=Reporte Resultados Preguntas Multiples Encuesta Clima Laboral - Enero 2022.pdf'
+        #Crear objeto PDF 
+        buffer =BytesIO()
+        c = canvas.Canvas(buffer, pagesize=letter)
+        base_dir = str(settings.BASE_DIR) #C:\Users\AuxSistemas\Desktop\CS Escritorio\Custom-System\djangoCS
+        #nombre de empresa
+        logo = base_dir+'/static/images/logoCustom.PNG'   
+        c.drawImage(logo, 40,700,120,70, preserveAspectRatio=True)
+            
+        c.setFont('Helvetica-Bold', 14)
+        c.drawString(150,750, 'Custom & Co S.A. de C.V.')
+            
+        c.setFont('Helvetica', 8)
+        c.drawString(150,735, 'Allende #646 Sur Colonia Centro, Durango, CP: 35000')
+            
+        c.setFont('Helvetica', 8)
+        c.drawString(150,720, 'RFC: CAC070116IS9')
+            
+        c.setFont('Helvetica', 8)
+        c.drawString(150,705, 'Tel: 8717147716')
+        #fecha
+        hoy=datetime.now()
+        fecha = str(hoy.date())
+        color_guinda="#B03A2E"
+        color_azul = "#cf1515"
+        c.setFillColor(color_guinda)
+        
+            
+        c.setFont('Helvetica-Bold', 12)
+        c.drawString(425,750, "CLIMA LABORAL 2022")
+        color_negro="#030305"
+        c.setFillColor(color_negro)
+        c.setFont('Helvetica-Bold', 10)
+        c.drawString(405,730, "Fecha de impresión: " +fecha)
+        #linea guinda
+            
+        c.setFillColor(color_guinda)
+        c.setStrokeColor(color_guinda)
+        c.line(40,695,560,695)
+        #nombre departamento
+        color_negro="#030305"
+        c.setFillColor(color_negro)
+        c.setFont('Helvetica', 12)
+        c.drawString(405,710, 'Departamento de Sistemas')
+        #titulo
+        c.setFont('Helvetica-Bold', 22)
+            
+        c.drawString(55,660, 'Resultados Encuesta Clima Laboral Enero 2022')
+
+
+        #tabla1
+        c.setFont('Helvetica-Bold', 18)
+        c.drawString(215,620, 'Criterios de Evaluación')
+
+
+        #header de tabla
+        styles = getSampleStyleSheet()
+        styleBH =styles["Normal"]
+        styleBH.alignment = TA_CENTER
+        styleBH.fontSize = 10
+        
+        
+        rango = Paragraph('''Rango Porcentaje''', styleBH)
+        criterio = Paragraph('''Criterio''', styleBH)
+       
+      
+        filasTabla=[]
+        filasTabla.append([rango, criterio])
+        #Tabla
+        styleN = styles["BodyText"]
+        styleN.alignment = TA_CENTER
+        styleN.fontSize = 7
+        
+        high = 590
+        porcentajes = ["100% - 90%", "89% - 80%", "79% - 70%","69% - 60%", "59% - 0%" ]
+        criterios = ["Excelente", "Muy bueno", "Bueno", "Regular", "Deficiente"]
+        
+        contador = 0
+        for x in porcentajes:
+            if contador == 0:
+                fila = [porcentajes[contador], criterios[contador]]
+                contador= 1
+
+            elif contador != 0:
+                fila = [porcentajes[contador], criterios[contador]]
+                contador= contador+1
+            filasTabla.append(fila)
+            high= high - 18 
+            
+        #escribir tabla
+        width, height = letter
+        tabla = Table(filasTabla, colWidths=[4 * cm, 4 * cm])
+        
+        tabla.setStyle(TableStyle([
+           
+            ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+            ('BACKGROUND', (0, 0), (-1, 0), '#e9c7ae'),
+            
+            ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+            ('BACKGROUND', (1,1), (-1,-5), '#4CAF50'),
+            ('BACKGROUND', (1,2), (-1,-4), '#2196F3'),
+            ('BACKGROUND', (1,3), (-1,-3), '#FFC107'),
+            ('BACKGROUND', (1,4), (-1,-2), '#FF5722'),
+            ('BACKGROUND', (1,5), (-1,-1), '#F44336'),
+        ]))
+
+        tabla.wrapOn(c, width, height)
+        tabla.drawOn(c, 200, high)
+
+        #tabla2
+
+        c.setFont('Helvetica-Bold', 18)
+        c.drawString(215,475, 'Encuestas contestadas')
+
+        empleadosActivos = Empleados.objects.filter(activo = "A", correo__icontains="@customco.com.mx")
+        contadorEmpleadosActivos = 0
+
+        for activos in empleadosActivos:
+            contadorEmpleadosActivos = contadorEmpleadosActivos + 1
+
+        contadorEmpleadosActivos = str(contadorEmpleadosActivos)
+
+        c.setFont('Helvetica-Bold', 16)
+        c.drawString(80,440, 'Número de empleados')
+        c.drawString(85,415, 'activos en la empresa:')
+        c.setFont('Helvetica-Bold', 36)
+        c.setFillColor(color_azul)
+        c.drawString(140,375, contadorEmpleadosActivos)
+
+
+        c.setFillColor(color_negro)
+        c.setFont('Helvetica-Bold', 16)
+        c.drawString(360,440, 'Número de encuestas')
+        c.drawString(365,415, 'resueltas esperadas:')
+        c.setFont('Helvetica-Bold', 36)
+        c.setFillColor(color_azul)
+        c.drawString(425,375, contadorEmpleadosActivos)
+        c.setFillColor(color_negro)
+
+        c.setFont('Helvetica-Bold', 16)
+        c.drawString(80,340, 'Relación contestadas/')
+        c.drawString(85,320, 'no contestadas:')
+
+        empleadosContestados = EncuestaEmpleadoResuelta.objects.filter(id_encuesta = 1)
+        contadorEmpleadoscontestados = 0
+
+        for contestado in empleadosContestados:
+            contadorEmpleadoscontestados = contadorEmpleadoscontestados + 1
+        
+        
+
+        empleadosFaltantes = int(contadorEmpleadosActivos) - int(contadorEmpleadoscontestados)
+
+        empleadosFaltantes = int(empleadosFaltantes)
+
+      
+
+       
+
+        
+
+        #grafico de pastel
+        b = Drawing()
+        pie = Pie()
+        pie.x = 0
+        pie.y = 0
+        pie.height = 160
+        pie.width = 160
+        pie.data = [contadorEmpleadoscontestados, empleadosFaltantes ]
+        pie.labels = ['Contestadas', 'No contestadas']
+        pie.slices.strokeWidth = 0.5
+        pie.slices[1].popout = 20
+        pie.slices[0].fillColor= colors.HexColor("#e91e63")
+        pie.slices[1].fillColor=colors.HexColor("#009688")
+        b.add(pie)
+        x,y = 100,130 
+        renderPDF.draw(b, c, x, y, showBoundary=False)
+
+        c.setFont('Helvetica-Bold', 16)
+        c.drawString(360,340, 'Porcentaje total')
+        c.drawString(365,320, 'resuelto:')
+
+        porcentajeTotal = 100
+        porcentaje = int(contadorEmpleadoscontestados * 100) / int(contadorEmpleadosActivos)
+
+        porcentaje = str(porcentaje)
+
+        porcentajeDigitos = ("{0:.4f}".format(float(porcentaje))) + "%"
+
+        porcentajeBarra = ("{0:.0f}".format(float(porcentaje)))
+
+        porcentajeBarraa = int(porcentajeBarra)
+
+        c.setStrokeColorRGB(0.7, 0, 0.7) #color de contorno
+        c.setFillColorRGB(255, 255, 255) #color de relleno
+        c.rect(360, 275, 200, 25, fill=True)
+
+        c.setStrokeColorRGB(0.7, 0, 0.7) #color de contorno
+
+        if porcentajeBarraa >= 0 and porcentajeBarraa <= 33:
+            c.setFillColorRGB(255, 0, 0) #color de relleno
+            c.rect(360, 275, porcentajeBarra, 25, fill=True)
+        elif porcentajeBarraa >= 34 and porcentajeBarraa <= 66:
+            c.setFillColorRGB(255, 165, 0) #color de relleno
+            c.rect(360, 275, porcentajeBarra, 25, fill=True)
+        elif porcentajeBarraa >= 67 and porcentajeBarraa <= 100:
+            c.setFillColorRGB(0, 128, 0) #color de relleno
+            c.rect(360, 275, porcentajeBarra, 25, fill=True)
+
+        c.setFont('Helvetica-Bold', 30)
+        c.setFillColor(color_azul)
+        c.drawString(360,230, porcentajeDigitos)
+        c.setFont('Helvetica-Bold', 18)
+        c.setFillColor(color_negro)
+        c.drawString(360,200, "del 100% de empleados")
+       
+
+
+
+  
+
+        
+        
+        f = Drawing()
+        barra = VerticalBarChart()
+        barra.x = 0
+        barra.y = 0
+        barra.height = 100
+        barra.width = 50
+        data = [(10,2)]
+        barra.valueAxis.valueMin = 0
+        barra.valueAxis.valueMax = 20 
+        barra.data = data
+        barra.categoryAxis.categoryNames = ['SI', 'NO']
+        barra.bars[(0,0)].fillColor = colors.HexColor("#E91E63")
+        barra.bars[(0,1)].fillColor = colors.red
+        f.add(barra)
+        x,y = 60, 300
+        #renderPDF.draw(f, c, x, y, showBoundary=False)  
+
+
+        #linea guinda
+        color_guinda="#B03A2E"
+        c.setFillColor(color_guinda)
+        c.setStrokeColor(color_guinda)
+        c.line(40,60,560,60)
+        
+        color_negro="#030305"
+        c.setFillColor(color_negro)
+        c.setFont('Helvetica-Bold', 11)
+        c.drawString(170,48, '2021 - Administrador de Custom System. - Versión: 1.0.0 ')
+        
+        
+        c.showPage()
+        
+        
+        
+        #guardar pdf
+        c.save()
+        #obtener valores de bytesIO y esribirlos en la respuesta
+        pdf = buffer.getvalue()
+        buffer.close()
+        respuesta.write(pdf)
+        return respuesta
+
+
+        
+    #Si le da al inicio y no hay una sesión iniciada..
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+
+
+
+def resultadosAbiertas(request):
+    
+    #Si ya hay una sesión iniciada..
+    if "idSesion" in request.session:
+
+       #crear el http response con pdf
+        respuesta = HttpResponse(content_type='application/pdf')
+        respuesta['Content-Disposition'] = 'attachment; filename=Reporte Resultados Preguntas Abiertas Encuesta Clima Laboral - Enero 2022.pdf'
+        #Crear objeto PDF 
+        buffer =BytesIO()
+        c = canvas.Canvas(buffer, pagesize=letter)
+        base_dir = str(settings.BASE_DIR) #C:\Users\AuxSistemas\Desktop\CS Escritorio\Custom-System\djangoCS
+        #nombre de empresa
+        logo = base_dir+'/static/images/logoCustom.PNG'   
+        c.drawImage(logo, 40,700,120,70, preserveAspectRatio=True)
+            
+        c.setFont('Helvetica-Bold', 14)
+        c.drawString(150,750, 'Custom & Co S.A. de C.V.')
+            
+        c.setFont('Helvetica', 8)
+        c.drawString(150,735, 'Allende #646 Sur Colonia Centro, Durango, CP: 35000')
+            
+        c.setFont('Helvetica', 8)
+        c.drawString(150,720, 'RFC: CAC070116IS9')
+            
+        c.setFont('Helvetica', 8)
+        c.drawString(150,705, 'Tel: 8717147716')
+        #fecha
+        hoy=datetime.now()
+        fecha = str(hoy.date())
+        color_guinda="#B03A2E"
+        color_azul = "#cf1515"
+        c.setFillColor(color_guinda)
+        
+            
+        c.setFont('Helvetica-Bold', 12)
+        c.drawString(425,750, "CLIMA LABORAL 2022")
+        color_negro="#030305"
+        c.setFillColor(color_negro)
+        c.setFont('Helvetica-Bold', 10)
+        c.drawString(405,730, "Fecha de impresión: " +fecha)
+        #linea guinda
+            
+        c.setFillColor(color_guinda)
+        c.setStrokeColor(color_guinda)
+        c.line(40,695,560,695)
+        #nombre departamento
+        color_negro="#030305"
+        c.setFillColor(color_negro)
+        c.setFont('Helvetica', 12)
+        c.drawString(405,710, 'Departamento de Sistemas')
+        #titulo
+        c.setFont('Helvetica-Bold', 22)
+            
+        c.drawString(55,660, 'Resultados Encuesta Clima Laboral Enero 2022')
+
+
+        #tabla1
+        c.setFont('Helvetica-Bold', 18)
+        c.drawString(215,620, 'Criterios de Evaluación')
+
+
+        #header de tabla
+        styles = getSampleStyleSheet()
+        styleBH =styles["Normal"]
+        styleBH.alignment = TA_CENTER
+        styleBH.fontSize = 10
+        
+        
+        rango = Paragraph('''Rango Porcentaje''', styleBH)
+        criterio = Paragraph('''Criterio''', styleBH)
+       
+      
+        filasTabla=[]
+        filasTabla.append([rango, criterio])
+        #Tabla
+        styleN = styles["BodyText"]
+        styleN.alignment = TA_CENTER
+        styleN.fontSize = 7
+        
+        high = 590
+        porcentajes = ["100% - 90%", "89% - 80%", "79% - 70%","69% - 60%", "59% - 0%" ]
+        criterios = ["Excelente", "Muy bueno", "Bueno", "Regular", "Deficiente"]
+        
+        contador = 0
+        for x in porcentajes:
+            if contador == 0:
+                fila = [porcentajes[contador], criterios[contador]]
+                contador= 1
+
+            elif contador != 0:
+                fila = [porcentajes[contador], criterios[contador]]
+                contador= contador+1
+            filasTabla.append(fila)
+            high= high - 18 
+            
+        #escribir tabla
+        width, height = letter
+        tabla = Table(filasTabla, colWidths=[4 * cm, 4 * cm])
+        
+        tabla.setStyle(TableStyle([
+           
+            ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+            ('BACKGROUND', (0, 0), (-1, 0), '#e9c7ae'),
+            
+            ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+            ('BACKGROUND', (1,1), (-1,-5), '#4CAF50'),
+            ('BACKGROUND', (1,2), (-1,-4), '#2196F3'),
+            ('BACKGROUND', (1,3), (-1,-3), '#FFC107'),
+            ('BACKGROUND', (1,4), (-1,-2), '#FF5722'),
+            ('BACKGROUND', (1,5), (-1,-1), '#F44336'),
+        ]))
+
+        tabla.wrapOn(c, width, height)
+        tabla.drawOn(c, 200, high)
+
+        #tabla2
+
+        c.setFont('Helvetica-Bold', 18)
+        c.drawString(215,475, 'Encuestas contestadas')
+
+        empleadosActivos = Empleados.objects.filter(activo = "A", correo__icontains="@customco.com.mx")
+        contadorEmpleadosActivos = 0
+
+        for activos in empleadosActivos:
+            contadorEmpleadosActivos = contadorEmpleadosActivos + 1
+
+        contadorEmpleadosActivos = str(contadorEmpleadosActivos)
+
+        c.setFont('Helvetica-Bold', 16)
+        c.drawString(80,440, 'Número de empleados')
+        c.drawString(85,415, 'activos en la empresa:')
+        c.setFont('Helvetica-Bold', 36)
+        c.setFillColor(color_azul)
+        c.drawString(140,375, contadorEmpleadosActivos)
+
+
+        c.setFillColor(color_negro)
+        c.setFont('Helvetica-Bold', 16)
+        c.drawString(360,440, 'Número de encuestas')
+        c.drawString(365,415, 'resueltas esperadas:')
+        c.setFont('Helvetica-Bold', 36)
+        c.setFillColor(color_azul)
+        c.drawString(425,375, contadorEmpleadosActivos)
+        c.setFillColor(color_negro)
+
+        c.setFont('Helvetica-Bold', 16)
+        c.drawString(80,340, 'Relación contestadas/')
+        c.drawString(85,320, 'no contestadas:')
+
+        empleadosContestados = EncuestaEmpleadoResuelta.objects.filter(id_encuesta = 1)
+        contadorEmpleadoscontestados = 0
+
+        for contestado in empleadosContestados:
+            contadorEmpleadoscontestados = contadorEmpleadoscontestados + 1
+        
+        
+
+        empleadosFaltantes = int(contadorEmpleadosActivos) - int(contadorEmpleadoscontestados)
+
+        empleadosFaltantes = int(empleadosFaltantes)
+
+      
+
+       
+
+        
+
+        #grafico de pastel
+        b = Drawing()
+        pie = Pie()
+        pie.x = 0
+        pie.y = 0
+        pie.height = 160
+        pie.width = 160
+        pie.data = [contadorEmpleadoscontestados, empleadosFaltantes ]
+        pie.labels = ['Contestadas', 'No contestadas']
+        pie.slices.strokeWidth = 0.5
+        pie.slices[1].popout = 20
+        pie.slices[0].fillColor= colors.HexColor("#e91e63")
+        pie.slices[1].fillColor=colors.HexColor("#009688")
+        b.add(pie)
+        x,y = 100,130 
+        renderPDF.draw(b, c, x, y, showBoundary=False)
+
+        c.setFont('Helvetica-Bold', 16)
+        c.drawString(360,340, 'Porcentaje total')
+        c.drawString(365,320, 'resuelto:')
+
+        porcentajeTotal = 100
+        porcentaje = int(contadorEmpleadoscontestados * 100) / int(contadorEmpleadosActivos)
+
+        porcentaje = str(porcentaje)
+
+        porcentajeDigitos = ("{0:.4f}".format(float(porcentaje))) + "%"
+
+        porcentajeBarra = ("{0:.0f}".format(float(porcentaje)))
+
+        porcentajeBarraa = int(porcentajeBarra)
+
+        c.setStrokeColorRGB(0.7, 0, 0.7) #color de contorno
+        c.setFillColorRGB(255, 255, 255) #color de relleno
+        c.rect(360, 275, 200, 25, fill=True)
+
+        c.setStrokeColorRGB(0.7, 0, 0.7) #color de contorno
+
+        if porcentajeBarraa >= 0 and porcentajeBarraa <= 33:
+            c.setFillColorRGB(255, 0, 0) #color de relleno
+            c.rect(360, 275, porcentajeBarra, 25, fill=True)
+        elif porcentajeBarraa >= 34 and porcentajeBarraa <= 66:
+            c.setFillColorRGB(255, 165, 0) #color de relleno
+            c.rect(360, 275, porcentajeBarra, 25, fill=True)
+        elif porcentajeBarraa >= 67 and porcentajeBarraa <= 100:
+            c.setFillColorRGB(0, 128, 0) #color de relleno
+            c.rect(360, 275, porcentajeBarra, 25, fill=True)
+
+        c.setFont('Helvetica-Bold', 30)
+        c.setFillColor(color_azul)
+        c.drawString(360,230, porcentajeDigitos)
+        c.setFont('Helvetica-Bold', 18)
+        c.setFillColor(color_negro)
+        c.drawString(360,200, "del 100% de empleados")
+       
+
+
+
+  
+
+        
+        
+        f = Drawing()
+        barra = VerticalBarChart()
+        barra.x = 0
+        barra.y = 0
+        barra.height = 100
+        barra.width = 50
+        data = [(10,2)]
+        barra.valueAxis.valueMin = 0
+        barra.valueAxis.valueMax = 20 
+        barra.data = data
+        barra.categoryAxis.categoryNames = ['SI', 'NO']
+        barra.bars[(0,0)].fillColor = colors.HexColor("#E91E63")
+        barra.bars[(0,1)].fillColor = colors.red
+        f.add(barra)
+        x,y = 60, 300
+        #renderPDF.draw(f, c, x, y, showBoundary=False)  
+
+
+        #linea guinda
+        color_guinda="#B03A2E"
+        c.setFillColor(color_guinda)
+        c.setStrokeColor(color_guinda)
+        c.line(40,60,560,60)
+        
+        color_negro="#030305"
+        c.setFillColor(color_negro)
+        c.setFont('Helvetica-Bold', 11)
+        c.drawString(170,48, '2021 - Administrador de Custom System. - Versión: 1.0.0 ')
+        
+        
+        c.showPage()
+        
+        
+        
+        #guardar pdf
+        c.save()
+        #obtener valores de bytesIO y esribirlos en la respuesta
+        pdf = buffer.getvalue()
+        buffer.close()
+        respuesta.write(pdf)
+        return respuesta
+
+
+        
     #Si le da al inicio y no hay una sesión iniciada..
     else:
         return redirect('/login/') #redirecciona a url de inicio

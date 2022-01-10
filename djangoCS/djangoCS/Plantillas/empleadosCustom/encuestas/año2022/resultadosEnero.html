@@ -112,6 +112,39 @@ Resultados Enero 2022.
                                         </tbody>
                                     </table>
                                 </div>
+                                <h2 style="font-family: 'Oswald', sans-serif; color: black;">Descargar reporte en PDF</h2>
+                                <br>
+                                <form action="/pruebaPDF/" method="POST">{% csrf_token %}
+                                    <input type="hidden" name="activo" value="I">
+                                    <button type="submit" class="btn bg-red waves-effect animate__animated animate__flipInX"
+                                        data-toggle="tooltip" data-placement="left"
+                                        title="Descargar reporte Resultados Totales  Clima Laboral Enero 2022.">
+                                        <i class="material-icons">card_membership</i>
+                                        <span>Resultados totales</span>
+                                    </button>
+                                </form>
+                                <br>
+                                <form action="/resultadosMultiples/" method="POST">{% csrf_token %}
+                                    <input type="hidden" name="activo" value="I">
+                                    <button type="submit" class="btn bg-cyan waves-effect animate__animated animate__flipInX"
+                                        data-toggle="tooltip" data-placement="left"
+                                        title="Reporte preguntas Multiples Clima Laboral Enero 2022.">
+                                        <i class="material-icons">dns</i>
+                                        <span>Resultados Preguntas Múltiples</span>
+                                    </button>
+                                </form>
+                                <br>
+                                <form action="/resultadosAbiertas/" method="POST">{% csrf_token %}
+                                    <input type="hidden" name="activo" value="I">
+                                    <button type="submit" class="btn bg-purple waves-effect animate__animated animate__flipInX"
+                                        data-toggle="tooltip" data-placement="left"
+                                        title="Reporte preguntas abiertas Clima Laboral Enero 2022.">
+                                        <i class="material-icons">textsms</i>
+                                        <span>Resultados Preguntas Abiertas</span>
+                                    </button>
+                                </form>
+
+
 
 
                             </div>
