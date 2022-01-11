@@ -1150,182 +1150,211 @@ def resultadosMultiples(request):
         #titulo
         c.setFont('Helvetica-Bold', 22)
             
-        c.drawString(55,660, 'Resultados Encuesta Clima Laboral Enero 2022')
-
-
-        #tabla1
-        c.setFont('Helvetica-Bold', 18)
-        c.drawString(215,620, 'Criterios de Evaluación')
-
-
-        #header de tabla
-        styles = getSampleStyleSheet()
-        styleBH =styles["Normal"]
-        styleBH.alignment = TA_CENTER
-        styleBH.fontSize = 10
+        c.drawString(65,660, 'Resultados Preguntas Múltiples')
         
+
+
         
-        rango = Paragraph('''Rango Porcentaje''', styleBH)
-        criterio = Paragraph('''Criterio''', styleBH)
-       
-      
-        filasTabla=[]
-        filasTabla.append([rango, criterio])
-        #Tabla
-        styleN = styles["BodyText"]
-        styleN.alignment = TA_CENTER
-        styleN.fontSize = 7
-        
-        high = 590
-        porcentajes = ["100% - 90%", "89% - 80%", "79% - 70%","69% - 60%", "59% - 0%" ]
-        criterios = ["Excelente", "Muy bueno", "Bueno", "Regular", "Deficiente"]
-        
-        contador = 0
-        for x in porcentajes:
-            if contador == 0:
-                fila = [porcentajes[contador], criterios[contador]]
-                contador= 1
-
-            elif contador != 0:
-                fila = [porcentajes[contador], criterios[contador]]
-                contador= contador+1
-            filasTabla.append(fila)
-            high= high - 18 
-            
-        #escribir tabla
-        width, height = letter
-        tabla = Table(filasTabla, colWidths=[4 * cm, 4 * cm])
-        
-        tabla.setStyle(TableStyle([
-           
-            ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
-            ('BACKGROUND', (0, 0), (-1, 0), '#e9c7ae'),
-            
-            ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
-            ('BACKGROUND', (1,1), (-1,-5), '#4CAF50'),
-            ('BACKGROUND', (1,2), (-1,-4), '#2196F3'),
-            ('BACKGROUND', (1,3), (-1,-3), '#FFC107'),
-            ('BACKGROUND', (1,4), (-1,-2), '#FF5722'),
-            ('BACKGROUND', (1,5), (-1,-1), '#F44336'),
-        ]))
-
-        tabla.wrapOn(c, width, height)
-        tabla.drawOn(c, 200, high)
-
-        #tabla2
-
-        c.setFont('Helvetica-Bold', 18)
-        c.drawString(215,475, 'Encuestas contestadas')
-
-        empleadosActivos = Empleados.objects.filter(activo = "A", correo__icontains="@customco.com.mx")
-        contadorEmpleadosActivos = 0
-
-        for activos in empleadosActivos:
-            contadorEmpleadosActivos = contadorEmpleadosActivos + 1
-
-        contadorEmpleadosActivos = str(contadorEmpleadosActivos)
-
-        c.setFont('Helvetica-Bold', 16)
-        c.drawString(80,440, 'Número de empleados')
-        c.drawString(85,415, 'activos en la empresa:')
-        c.setFont('Helvetica-Bold', 36)
-        c.setFillColor(color_azul)
-        c.drawString(140,375, contadorEmpleadosActivos)
-
-
-        c.setFillColor(color_negro)
-        c.setFont('Helvetica-Bold', 16)
-        c.drawString(360,440, 'Número de encuestas')
-        c.drawString(365,415, 'resueltas esperadas:')
-        c.setFont('Helvetica-Bold', 36)
-        c.setFillColor(color_azul)
-        c.drawString(425,375, contadorEmpleadosActivos)
-        c.setFillColor(color_negro)
-
-        c.setFont('Helvetica-Bold', 16)
-        c.drawString(80,340, 'Relación contestadas/')
-        c.drawString(85,320, 'no contestadas:')
 
         empleadosContestados = EncuestaEmpleadoResuelta.objects.filter(id_encuesta = 1)
         contadorEmpleadoscontestados = 0
 
         for contestado in empleadosContestados:
             contadorEmpleadoscontestados = contadorEmpleadoscontestados + 1
+
+
+        pregMultiples = []
+        pregAbiertas =[]
+        porcentajesPreguntasMultiples = []
+        contadorSiNo = []
+
+        preguntas = Preguntas.objects.filter(id_encuesta = 1)
+
+        for pregunta in preguntas:
+            id_pregunta = pregunta.id_pregunta
+            texto = pregunta.pregunta
+            tipo = pregunta.tipo
+            clasificacion = pregunta.clasificacion
+
+            if tipo == "M":
+                pregMultiples.append([id_pregunta, texto, clasificacion])
+
+            elif tipo == "A":
+                pregAbiertas.append([id_pregunta, texto])
         
+
+        for multiple in pregMultiples:
+            idPregunta = multiple[0]
+
+            respuestas = Respuestas.objects.filter(id_pregunta =idPregunta) #en este caso devuelve dos respuestas de dos diferentes empleados
+            contadorSI = 0
+            contadorNO = 0
+            for respuestaX in respuestas:
+                res = respuestaX.respuesta #SI o NO
+                
+                if res == "SI":
+                    contadorSI = contadorSI + 1
+                elif res == "NO":
+                    contadorNO = contadorNO +1
+                
+            contadorSiNo.append([contadorSI, contadorNO])
+            
+            porcentajePregunta = (contadorSI * 100)/ contadorEmpleadoscontestados
+            
+            criterio = ""
+            if porcentajePregunta >= 90 and porcentajePregunta <= 100:
+                criterio = "EXCELENTE"
+            elif porcentajePregunta >= 80 and porcentajePregunta <= 89:
+                criterio = "MUY BUENO"
+            elif porcentajePregunta >= 70 and porcentajePregunta <= 79:
+                criterio = "BUENO"
+            elif porcentajePregunta >= 60 and porcentajePregunta <= 69:
+                criterio = "REGULAR"
+            elif porcentajePregunta >= 0 and porcentajePregunta <= 59:
+                criterio = "DEFICIENTE"
+
+            porcentajesPreguntasMultiples.append([porcentajePregunta,criterio])
+
+     
+        listaMultiples = zip(pregMultiples, porcentajesPreguntasMultiples)
         
+           
+    
+       
 
-        empleadosFaltantes = int(contadorEmpleadosActivos) - int(contadorEmpleadoscontestados)
+           
+        valorHigh = 550
+        contador = 0
+        alturaTituloPregunta = 0
+        high = 0
 
-        empleadosFaltantes = int(empleadosFaltantes)
+        xBarra = 0
+        yBarra = 0
+        
+        for preguntaX, porcentajeX in listaMultiples:
 
+            contador = contador + 1
+
+         
+
+            idPregunta = preguntaX[0]
+            idp= str(idPregunta)
+
+            barra = "barra" 
+
+           
+            if contador == 1:
+                alturaTituloPregunta = 630
+                high = 520
+                xBarra = 365
+                yBarra = 540
+
+            elif contador > 1:
+                    alturaTituloPregunta = alturaTituloPregunta - 135
+                    high = high - 135
+                    
+                    yBarra = yBarra - 135
+
+            
+                #tabla1
+            c.setFont('Helvetica-Bold', 18)
+            c.drawString(80,alturaTituloPregunta, "Pregunta"+ idp)
+
+
+            #header de tabla
+            styles = getSampleStyleSheet()
+            styleBH =styles["Normal"]
+            styleBH.alignment = TA_CENTER
+            styleBH.fontSize = 10
+                
+                
+            preguntaE = Paragraph('''Texto Pregunta''', styleBH)
+            promedioE = Paragraph('''Promedio''', styleBH)
+            graficoE = Paragraph('''Gráfico''', styleBH)
+            criterioE = Paragraph('''Criterio''', styleBH)
+            
+            
+            filasTabla=[]
+            filasTabla.append([preguntaE, promedioE, graficoE, criterioE])
+                #Tabla
+            styleN = styles["BodyText"]
+            styleN.alignment = TA_CENTER
+            styleN.fontSize = 7
+
+            f = Drawing()
+            barra= VerticalBarChart()
+            barra.x = 0
+            barra.y = 0
+            barra.height = 55
+            barra.width = 50
+            data = [(contadorSI,contadorNO)]
+            barra.valueAxis.valueMin = 0
+            barra.valueAxis.valueMax = 40 
+            barra.data = data
+            barra.categoryAxis.categoryNames = ['SI', 'NO']
+            barra.bars[(0,0)].fillColor = colors.HexColor("#E91E63")
+            barra.bars[(0,1)].fillColor = colors.red
+            f.add(barra)
+                    
+            renderPDF.draw(f, c, xBarra, yBarra, showBoundary=False) 
+
+                    
+                
+
+                    
+            campo_texto = Paragraph(str(preguntaX[1]), styleN)
+            campo_promedio = Paragraph(str(porcentajeX[0]), styleN)
+            campo_grafico = Paragraph(str(barra), styleN)
+            campo_criterio = Paragraph(str(porcentajeX[1]), styleN)
+                                                            
+                                                                
+            fila = [campo_texto, campo_promedio, campo_grafico, campo_criterio ]
+                                                                
+            filasTabla.append(fila)
+                                                                
+                    #high= high - 18
+
+        
+                #escribir tabla
+            height = letter
+            tabla = Table(filasTabla, colWidths=[3 * cm, 5 * cm, 7 * cm, 0.5 * cm])
+            tabla = Table(filasTabla, rowHeights =[0.5 * cm, 3 * cm])
+                                                                                        
+            tabla.setStyle(TableStyle([
+                                                                                        
+                    ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+                    ('BACKGROUND', (0, 0), (-1, 0), '#e9c7ae'),
+                                                                                            
+                    ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+                                                                
+                                                                                        ]))
+
+            tabla.wrapOn(c, 550, height)
+            tabla.drawOn(c, 30, high)
+
+             
+                   
+                            
+
+       
+                
+               
+
+         
+
+
+
+
+                
+        
       
 
        
 
         
 
-        #grafico de pastel
-        b = Drawing()
-        pie = Pie()
-        pie.x = 0
-        pie.y = 0
-        pie.height = 160
-        pie.width = 160
-        pie.data = [contadorEmpleadoscontestados, empleadosFaltantes ]
-        pie.labels = ['Contestadas', 'No contestadas']
-        pie.slices.strokeWidth = 0.5
-        pie.slices[1].popout = 20
-        pie.slices[0].fillColor= colors.HexColor("#e91e63")
-        pie.slices[1].fillColor=colors.HexColor("#009688")
-        b.add(pie)
-        x,y = 100,130 
-        renderPDF.draw(b, c, x, y, showBoundary=False)
+      
 
-        c.setFont('Helvetica-Bold', 16)
-        c.drawString(360,340, 'Porcentaje total')
-        c.drawString(365,320, 'resuelto:')
-
-        porcentajeTotal = 100
-        porcentaje = int(contadorEmpleadoscontestados * 100) / int(contadorEmpleadosActivos)
-
-        porcentaje = str(porcentaje)
-
-        porcentajeDigitos = ("{0:.4f}".format(float(porcentaje))) + "%"
-
-        porcentajeBarra = ("{0:.0f}".format(float(porcentaje)))
-
-        porcentajeBarraa = int(porcentajeBarra)
-
-        c.setStrokeColorRGB(0.7, 0, 0.7) #color de contorno
-        c.setFillColorRGB(255, 255, 255) #color de relleno
-        c.rect(360, 275, 200, 25, fill=True)
-
-        c.setStrokeColorRGB(0.7, 0, 0.7) #color de contorno
-
-        if porcentajeBarraa >= 0 and porcentajeBarraa <= 33:
-            c.setFillColorRGB(255, 0, 0) #color de relleno
-            c.rect(360, 275, porcentajeBarra, 25, fill=True)
-        elif porcentajeBarraa >= 34 and porcentajeBarraa <= 66:
-            c.setFillColorRGB(255, 165, 0) #color de relleno
-            c.rect(360, 275, porcentajeBarra, 25, fill=True)
-        elif porcentajeBarraa >= 67 and porcentajeBarraa <= 100:
-            c.setFillColorRGB(0, 128, 0) #color de relleno
-            c.rect(360, 275, porcentajeBarra, 25, fill=True)
-
-        c.setFont('Helvetica-Bold', 30)
-        c.setFillColor(color_azul)
-        c.drawString(360,230, porcentajeDigitos)
-        c.setFont('Helvetica-Bold', 18)
-        c.setFillColor(color_negro)
-        c.drawString(360,200, "del 100% de empleados")
-       
-
-
-
-  
-
-        
-        
         f = Drawing()
         barra = VerticalBarChart()
         barra.x = 0
