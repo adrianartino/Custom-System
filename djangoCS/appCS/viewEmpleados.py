@@ -1101,293 +1101,560 @@ def resultadosMultiples(request):
     #Si ya hay una sesión iniciada..
     if "idSesion" in request.session:
 
-       #crear el http response con pdf
+        preguntas = Preguntas.objects.filter(id_encuesta = 1)
+        hojas =0
+        contPreguntas = 0
+        for preg in preguntas:
+            if preg.tipo == "M":
+         
+                contPreguntas = contPreguntas + 1
+                
+        
+        #contPreguntas equivale a 10
+        numeroHojasExactas = 0
+        numeroHojas = contPreguntas / 4 
+        
+        residuo = contPreguntas%4
+
+        if residuo == 0:
+            numeroHojasExactas = ("{0:.0f}".format(float(numeroHojas)))
+        
+        elif residuo > 0:
+            numeroHojasExtras = ("{0:.0f}".format(float(numeroHojas)))
+            numeroHojasExactas = int(numeroHojasExtras) + 1
+
+        #crear el http response con pdf
         respuesta = HttpResponse(content_type='application/pdf')
         respuesta['Content-Disposition'] = 'attachment; filename=Reporte Resultados Preguntas Multiples Encuesta Clima Laboral - Enero 2022.pdf'
         #Crear objeto PDF 
         buffer =BytesIO()
         c = canvas.Canvas(buffer, pagesize=letter)
-        base_dir = str(settings.BASE_DIR) #C:\Users\AuxSistemas\Desktop\CS Escritorio\Custom-System\djangoCS
-        #nombre de empresa
-        logo = base_dir+'/static/images/logoCustom.PNG'   
-        c.drawImage(logo, 40,700,120,70, preserveAspectRatio=True)
-            
-        c.setFont('Helvetica-Bold', 14)
-        c.drawString(150,750, 'Custom & Co S.A. de C.V.')
-            
-        c.setFont('Helvetica', 8)
-        c.drawString(150,735, 'Allende #646 Sur Colonia Centro, Durango, CP: 35000')
-            
-        c.setFont('Helvetica', 8)
-        c.drawString(150,720, 'RFC: CAC070116IS9')
-            
-        c.setFont('Helvetica', 8)
-        c.drawString(150,705, 'Tel: 8717147716')
-        #fecha
-        hoy=datetime.now()
-        fecha = str(hoy.date())
-        color_guinda="#B03A2E"
-        color_azul = "#cf1515"
-        c.setFillColor(color_guinda)
+        contadorHojas = 0
         
-            
-        c.setFont('Helvetica-Bold', 12)
-        c.drawString(425,750, "CLIMA LABORAL 2022")
-        color_negro="#030305"
-        c.setFillColor(color_negro)
-        c.setFont('Helvetica-Bold', 10)
-        c.drawString(405,730, "Fecha de impresión: " +fecha)
-        #linea guinda
-            
-        c.setFillColor(color_guinda)
-        c.setStrokeColor(color_guinda)
-        c.line(40,695,560,695)
-        #nombre departamento
-        color_negro="#030305"
-        c.setFillColor(color_negro)
-        c.setFont('Helvetica', 12)
-        c.drawString(405,710, 'Departamento de Sistemas')
-        #titulo
-        c.setFont('Helvetica-Bold', 22)
-            
-        c.drawString(65,660, 'Resultados Preguntas Múltiples')
-        
-
-
-        
-
-        empleadosContestados = EncuestaEmpleadoResuelta.objects.filter(id_encuesta = 1)
-        contadorEmpleadoscontestados = 0
-
-        for contestado in empleadosContestados:
-            contadorEmpleadoscontestados = contadorEmpleadoscontestados + 1
-
-
-        pregMultiples = []
-        pregAbiertas =[]
-        porcentajesPreguntasMultiples = []
-        contadorSiNo = []
-
-        preguntas = Preguntas.objects.filter(id_encuesta = 1)
-
-        for pregunta in preguntas:
-            id_pregunta = pregunta.id_pregunta
-            texto = pregunta.pregunta
-            tipo = pregunta.tipo
-            clasificacion = pregunta.clasificacion
-
-            if tipo == "M":
-                pregMultiples.append([id_pregunta, texto, clasificacion])
-
-            elif tipo == "A":
-                pregAbiertas.append([id_pregunta, texto])
-        
-
-        for multiple in pregMultiples:
-            idPregunta = multiple[0]
-
-            respuestas = Respuestas.objects.filter(id_pregunta =idPregunta) #en este caso devuelve dos respuestas de dos diferentes empleados
-            contadorSI = 0
-            contadorNO = 0
-            for respuestaX in respuestas:
-                res = respuestaX.respuesta #SI o NO
-                
-                if res == "SI":
-                    contadorSI = contadorSI + 1
-                elif res == "NO":
-                    contadorNO = contadorNO +1
-                
-            contadorSiNo.append([contadorSI, contadorNO])
-            
-            porcentajePregunta = (contadorSI * 100)/ contadorEmpleadoscontestados
-            
-            criterio = ""
-            if porcentajePregunta >= 90 and porcentajePregunta <= 100:
-                criterio = "EXCELENTE"
-            elif porcentajePregunta >= 80 and porcentajePregunta <= 89:
-                criterio = "MUY BUENO"
-            elif porcentajePregunta >= 70 and porcentajePregunta <= 79:
-                criterio = "BUENO"
-            elif porcentajePregunta >= 60 and porcentajePregunta <= 69:
-                criterio = "REGULAR"
-            elif porcentajePregunta >= 0 and porcentajePregunta <= 59:
-                criterio = "DEFICIENTE"
-
-            porcentajesPreguntasMultiples.append([porcentajePregunta,criterio])
-
-     
-        listaMultiples = zip(pregMultiples, porcentajesPreguntasMultiples)
-        
+        for x in range(numeroHojasExactas):
            
+            contadorHojas = contadorHojas + 1
+
+            if contadorHojas == 1:
+                contadorPreguntas = 0
+
+                
+                pregMultiples = []
+                
+                porcentajesPreguntasMultiples = []
+                contadorSiNo = []
+
+                preguntas = Preguntas.objects.filter(id_encuesta = 1)
+
+                for pregunta in preguntas:
+                    id_pregunta = pregunta.id_pregunta
+                    texto = pregunta.pregunta
+                    tipo = pregunta.tipo
+                    clasificacion = pregunta.clasificacion
+
+                    contadorPreguntas = contadorPreguntas + 1
+
+                    if contadorPreguntas >=1 and contadorPreguntas <=4:
+                        if tipo == "M":
+                            pregMultiples.append([id_pregunta, texto, clasificacion])
+        
+            if contadorHojas == 2:
+                contadorPreguntas = 0
+
+                
+                pregMultiples = []
+                
+                porcentajesPreguntasMultiples = []
+                contadorSiNo = []
+
+                preguntas = Preguntas.objects.filter(id_encuesta = 1)
+
+                for pregunta in preguntas:
+                    id_pregunta = pregunta.id_pregunta
+                    texto = pregunta.pregunta
+                    tipo = pregunta.tipo
+                    clasificacion = pregunta.clasificacion
+
+                    contadorPreguntas = contadorPreguntas + 1
+
+                    if contadorPreguntas >=5 and contadorPreguntas <=8:
+                        if tipo == "M":
+                            pregMultiples.append([id_pregunta, texto, clasificacion])
+            
+            if contadorHojas == 3:
+                contadorPreguntas = 0
+
+                
+                pregMultiples = []
+                
+                porcentajesPreguntasMultiples = []
+                contadorSiNo = []
+
+                preguntas = Preguntas.objects.filter(id_encuesta = 1)
+
+                for pregunta in preguntas:
+                    id_pregunta = pregunta.id_pregunta
+                    texto = pregunta.pregunta
+                    tipo = pregunta.tipo
+                    clasificacion = pregunta.clasificacion
+
+                    contadorPreguntas = contadorPreguntas + 1
+
+                    if contadorPreguntas >=9 and contadorPreguntas <=12:
+                        if tipo == "M":
+                            pregMultiples.append([id_pregunta, texto, clasificacion])
+
+            if contadorHojas == 4:
+                contadorPreguntas = 0
+
+                
+                pregMultiples = []
+                
+                porcentajesPreguntasMultiples = []
+                contadorSiNo = []
+
+                preguntas = Preguntas.objects.filter(id_encuesta = 1)
+
+                for pregunta in preguntas:
+                    id_pregunta = pregunta.id_pregunta
+                    texto = pregunta.pregunta
+                    tipo = pregunta.tipo
+                    clasificacion = pregunta.clasificacion
+
+                    contadorPreguntas = contadorPreguntas + 1
+
+                    if contadorPreguntas >=13 and contadorPreguntas <=16:
+                        if tipo == "M":
+                            pregMultiples.append([id_pregunta, texto, clasificacion])
+
+            if contadorHojas == 5:
+                contadorPreguntas = 0
+
+                
+                pregMultiples = []
+                
+                porcentajesPreguntasMultiples = []
+                contadorSiNo = []
+
+                preguntas = Preguntas.objects.filter(id_encuesta = 1)
+
+                for pregunta in preguntas:
+                    id_pregunta = pregunta.id_pregunta
+                    texto = pregunta.pregunta
+                    tipo = pregunta.tipo
+                    clasificacion = pregunta.clasificacion
+
+                    contadorPreguntas = contadorPreguntas + 1
+
+                    if contadorPreguntas >=17 and contadorPreguntas <=20:
+                        if tipo == "M":
+                            pregMultiples.append([id_pregunta, texto, clasificacion])
+                        
+
+            if contadorHojas == 6:
+                contadorPreguntas = 0
+
+                
+                pregMultiples = []
+                
+                porcentajesPreguntasMultiples = []
+                contadorSiNo = []
+
+                preguntas = Preguntas.objects.filter(id_encuesta = 1)
+
+                for pregunta in preguntas:
+                    id_pregunta = pregunta.id_pregunta
+                    texto = pregunta.pregunta
+                    tipo = pregunta.tipo
+                    clasificacion = pregunta.clasificacion
+
+                    contadorPreguntas = contadorPreguntas + 1
+
+                    if contadorPreguntas >=21 and contadorPreguntas <=24:
+                        if tipo == "M":
+                            pregMultiples.append([id_pregunta, texto, clasificacion])
+
+            if contadorHojas == 7:
+                contadorPreguntas = 0
+
+                
+                pregMultiples = []
+                
+                porcentajesPreguntasMultiples = []
+                contadorSiNo = []
+
+                preguntas = Preguntas.objects.filter(id_encuesta = 1)
+
+                for pregunta in preguntas:
+                    id_pregunta = pregunta.id_pregunta
+                    texto = pregunta.pregunta
+                    tipo = pregunta.tipo
+                    clasificacion = pregunta.clasificacion
+
+                    contadorPreguntas = contadorPreguntas + 1
+
+                    if contadorPreguntas >=25 and contadorPreguntas <=28:
+                        if tipo == "M":
+                            pregMultiples.append([id_pregunta, texto, clasificacion])
+
+
+
+            base_dir = str(settings.BASE_DIR) #C:\Users\AuxSistemas\Desktop\CS Escritorio\Custom-System\djangoCS
+            #nombre de empresa
+            logo = base_dir+'/static/images/logoCustom.PNG'   
+            c.drawImage(logo, 40,700,120,70, preserveAspectRatio=True)
+                
+            c.setFont('Helvetica-Bold', 14)
+            c.drawString(150,750, 'Custom & Co S.A. de C.V.')
+                
+            c.setFont('Helvetica', 8)
+            c.drawString(150,735, 'Allende #646 Sur Colonia Centro, Durango, CP: 35000')
+                
+            c.setFont('Helvetica', 8)
+            c.drawString(150,720, 'RFC: CAC070116IS9')
+                
+            c.setFont('Helvetica', 8)
+            c.drawString(150,705, 'Tel: 8717147716')
+            #fecha
+            hoy=datetime.now()
+            fecha = str(hoy.date())
+            color_guinda="#B03A2E"
+            color_azul = "#cf1515"
+            c.setFillColor(color_guinda)
+            
+                
+            c.setFont('Helvetica-Bold', 12)
+            c.drawString(425,750, "CLIMA LABORAL 2022")
+            color_negro="#030305"
+            c.setFillColor(color_negro)
+            c.setFont('Helvetica-Bold', 10)
+            c.drawString(405,730, "Fecha de impresión: " +fecha)
+            #linea guinda
+                
+            c.setFillColor(color_guinda)
+            c.setStrokeColor(color_guinda)
+            c.line(40,695,560,695)
+            #nombre departamento
+            color_negro="#030305"
+            c.setFillColor(color_negro)
+            c.setFont('Helvetica', 12)
+            c.drawString(405,710, 'Departamento de Sistemas')
+            #titulo
+            c.setFont('Helvetica-Bold', 22)
+                
+            c.drawString(140,660, 'Resultados Preguntas Múltiples')
+            
+
+
+            
+
+            empleadosContestados = EncuestaEmpleadoResuelta.objects.filter(id_encuesta = 1)
+            contadorEmpleadoscontestados = 0
+
+            for contestado in empleadosContestados:
+                contadorEmpleadoscontestados = contadorEmpleadoscontestados + 1
+
+
     
-       
+            
 
-           
-        valorHigh = 550
-        contador = 0
-        alturaTituloPregunta = 0
-        high = 0
+            for multiple in pregMultiples:
+                idPregunta = multiple[0]
 
-        xBarra = 0
-        yBarra = 0
+                respuestas = Respuestas.objects.filter(id_pregunta =idPregunta) #en este caso devuelve dos respuestas de dos diferentes empleados
+                contadorSI = 0
+                contadorNO = 0
+                contadorRespuestas = 0
+                for respuestaX in respuestas:
+                    res = respuestaX.respuesta #SI o NO
+                    contadorRespuestas = contadorRespuestas + 1
+                    
+                    if res == "SI":
+                        contadorSI = contadorSI + 1
+                    elif res == "NO":
+                        contadorNO = contadorNO +1
+                
+                contadorSiNo.append([contadorSI, contadorNO,contadorRespuestas])
+                
+                porcentajePregunta = (contadorSI * 100)/ contadorEmpleadoscontestados
+                
+                criterio = ""
+                if porcentajePregunta >= 90 and porcentajePregunta <= 100:
+                    criterio = "EXCELENTE"
+                elif porcentajePregunta >= 80 and porcentajePregunta <= 89:
+                    criterio = "MUY BUENO"
+                elif porcentajePregunta >= 70 and porcentajePregunta <= 79:
+                    criterio = "BUENO"
+                elif porcentajePregunta >= 60 and porcentajePregunta <= 69:
+                    criterio = "REGULAR"
+                elif porcentajePregunta >= 0 and porcentajePregunta <= 59:
+                    criterio = "DEFICIENTE"
+
+                porcentajesPreguntasMultiples.append([porcentajePregunta,criterio])
+
         
-        for preguntaX, porcentajeX in listaMultiples:
+            listaMultiples = zip(pregMultiples, porcentajesPreguntasMultiples, contadorSiNo)
+            
+            
+        
+        
 
-            contador = contador + 1
+            
+            valorHigh = 550
+            contador = 0
+            alturaTituloPregunta = 0
+            high = 0
 
-         
+            xBarra = 0
+            yBarra = 0
+            
+            for preguntaX, porcentajeX, contsino in listaMultiples:
 
-            idPregunta = preguntaX[0]
-            idp= str(idPregunta)
+                contador = contador + 1
 
-            barra = "barra" 
+            
 
-           
-            if contador == 1:
-                alturaTituloPregunta = 630
-                high = 520
-                xBarra = 365
-                yBarra = 540
+                idPregunta = preguntaX[0]
+                idp= str(idPregunta)
 
-            elif contador > 1:
+                barra = "barra" 
+
+            
+                if contador == 1:
+                    alturaTituloPregunta = 630
+                    high = 520
+                    xBarra = 365
+                    yBarra = 540
+
+                if contador > 1:
                     alturaTituloPregunta = alturaTituloPregunta - 135
                     high = high - 135
+                        
+                    yBarra = yBarra - 135 
+                
+                c.setFont('Helvetica-Bold', 18)
+                c.drawString(80,alturaTituloPregunta, "Pregunta"+ idp)
+
+
+                #header de tabla
+                styles = getSampleStyleSheet()
+                styleBH =styles["Normal"]
+                styleBH.alignment = TA_CENTER
+                styleBH.fontSize = 10
                     
-                    yBarra = yBarra - 135
-
-            
-                #tabla1
-            c.setFont('Helvetica-Bold', 18)
-            c.drawString(80,alturaTituloPregunta, "Pregunta"+ idp)
-
-
-            #header de tabla
-            styles = getSampleStyleSheet()
-            styleBH =styles["Normal"]
-            styleBH.alignment = TA_CENTER
-            styleBH.fontSize = 10
+                    
+                preguntaE = Paragraph('''Texto Pregunta''', styleBH)
+                promedioE = Paragraph('''Promedio''', styleBH)
+                graficoE = Paragraph('''Gráfico''', styleBH)
+                criterioE = Paragraph('''Criterio''', styleBH)
                 
                 
-            preguntaE = Paragraph('''Texto Pregunta''', styleBH)
-            promedioE = Paragraph('''Promedio''', styleBH)
-            graficoE = Paragraph('''Gráfico''', styleBH)
-            criterioE = Paragraph('''Criterio''', styleBH)
-            
-            
-            filasTabla=[]
-            filasTabla.append([preguntaE, promedioE, graficoE, criterioE])
-                #Tabla
-            styleN = styles["BodyText"]
-            styleN.alignment = TA_CENTER
-            styleN.fontSize = 7
-
-            f = Drawing()
-            barra= VerticalBarChart()
-            barra.x = 0
-            barra.y = 0
-            barra.height = 55
-            barra.width = 50
-            data = [(contadorSI,contadorNO)]
-            barra.valueAxis.valueMin = 0
-            barra.valueAxis.valueMax = 40 
-            barra.data = data
-            barra.categoryAxis.categoryNames = ['SI', 'NO']
-            barra.bars[(0,0)].fillColor = colors.HexColor("#E91E63")
-            barra.bars[(0,1)].fillColor = colors.red
-            f.add(barra)
-                    
-            renderPDF.draw(f, c, xBarra, yBarra, showBoundary=False) 
-
-                    
-                
-
-                    
-            campo_texto = Paragraph(str(preguntaX[1]), styleN)
-            campo_promedio = Paragraph(str(porcentajeX[0]), styleN)
-            campo_grafico = Paragraph(str(barra), styleN)
-            campo_criterio = Paragraph(str(porcentajeX[1]), styleN)
-                                                            
-                                                                
-            fila = [campo_texto, campo_promedio, campo_grafico, campo_criterio ]
-                                                                
-            filasTabla.append(fila)
-                                                                
-                    #high= high - 18
+                filasTabla=[]
+                filasTabla.append([preguntaE, promedioE, graficoE, criterioE])
+                    #Tabla
+                styleN = styles["BodyText"]
+                styleN.alignment = TA_CENTER
+                styleN.fontSize = 9
 
         
-                #escribir tabla
-            height = letter
-            tabla = Table(filasTabla, colWidths=[3 * cm, 5 * cm, 7 * cm, 0.5 * cm])
-            tabla = Table(filasTabla, rowHeights =[0.5 * cm, 3 * cm])
-                                                                                        
-            tabla.setStyle(TableStyle([
-                                                                                        
-                    ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
-                    ('BACKGROUND', (0, 0), (-1, 0), '#e9c7ae'),
+
+    
+
+
+                f = Drawing()
+                barra= VerticalBarChart()
+                barra.x = 0
+                barra.y = 0
+                barra.height = 45
+                barra.width = 40
+                data = [(contsino[0],contsino[1])]
+                barra.valueAxis.valueMin = 0
+                barra.valueAxis.valueMax = 35 
+                barra.data = data
+                barra.categoryAxis.categoryNames = ['SI', 'NO']
+                barra.bars[(0,0)].fillColor = colors.HexColor("#E91E63")
+                barra.bars[(0,1)].fillColor = colors.red
+                f.add(barra)
+                        
+                renderPDF.draw(f, c, xBarra, yBarra, showBoundary=False) 
+
+ 
+                suma = 0
+
+                for porcentajesMultiples in porcentajesPreguntasMultiples:
+                    porcentajeSuma = porcentajesMultiples[0]
+                    suma = suma + porcentajeSuma
+
+                contadorPreguntasMultiples = 0
+
+                for m in pregMultiples:
+
+                    contadorPreguntasMultiples = contadorPreguntasMultiples + 1
+
+                promedio = suma / contadorPreguntasMultiples
+
+                criterio = ""
+                if porcentajeX[0] >= 90 and porcentajeX[0] <= 100:
+                    criterio = "EXCELENTE"
+                    campo_texto = Paragraph(str(preguntaX[1]), styleN)
+                    #campo_promedio = Paragraph("Promedio General"+"<br/>" + str(porcentajeX[0]) + "<br/>"+ "# respuestas totales: 2" + "<br/>"+ "# respuestas SI: 0" +  "<br/>"+ "# respuestas NO: 1"  , styleN)
+                    campo_promedio = Paragraph('''<para align=center>Promedio General <br/> <br/><b><font color="#4caf50" fontsize=20> '''+ str(porcentajeX[0]) +''' </font></b> <br/># respuestas totales: <b>'''+ str(contsino[2]) +'''</b> <br/># respuestas SI: <b>'''+ str(contsino[0]) +'''</b><br/># respuestas NO: <b>'''+ str(contsino[1]) +'''</b></para>''',styleN)
+                    campo_grafico = Paragraph(str(barra), styleN)
+                    campo_criterio = Paragraph('''<para align=center><b><font color="#4caf50" fontsize=16>'''+str(porcentajeX[1]) +'''</font></b></para>''', styleN)
+                elif porcentajeX[0] >= 80 and porcentajeX[0] <= 89:
+                    criterio = "MUY BUENO"
+                    campo_texto = Paragraph(str(preguntaX[1]), styleN)
+                    #campo_promedio = Paragraph("Promedio General"+"<br/>" + str(porcentajeX[0]) + "<br/>"+ "# respuestas totales: 2" + "<br/>"+ "# respuestas SI: 0" +  "<br/>"+ "# respuestas NO: 1"  , styleN)
+                    campo_promedio = Paragraph('''<para align=center>Promedio General <br/> <br/><b><font color="#2196f3" fontsize=20> '''+ str(porcentajeX[0]) +''' </font></b> <br/># respuestas totales: <b>'''+ str(contsino[2]) +'''</b> <br/># respuestas SI: <b>'''+ str(contsino[0]) +'''</b><br/># respuestas NO: <b>'''+ str(contsino[1]) +'''</b></para>''',styleN)
+                    campo_grafico = Paragraph(str(barra), styleN)
+                    campo_criterio = Paragraph('''<para align=center><b><font color="#2196f3" fontsize=16>'''+str(porcentajeX[1]) +'''</font></b></para>''', styleN)
+                elif porcentajeX[0] >= 70 and porcentajeX[0] <= 79:
+                    criterio = "BUENO"
+                    campo_texto = Paragraph(str(preguntaX[1]), styleN)
+                    #campo_promedio = Paragraph("Promedio General"+"<br/>" + str(porcentajeX[0]) + "<br/>"+ "# respuestas totales: 2" + "<br/>"+ "# respuestas SI: 0" +  "<br/>"+ "# respuestas NO: 1"  , styleN)
+                    campo_promedio = Paragraph('''<para align=center>Promedio General <br/> <br/><b><font color="#ffc107" fontsize=20> '''+ str(porcentajeX[0]) +''' </font></b> <br/># respuestas totales: <b>'''+ str(contsino[2]) +'''</b> <br/># respuestas SI: <b>'''+ str(contsino[0]) +'''</b><br/># respuestas NO: <b>'''+ str(contsino[1]) +'''</b></para>''',styleN)
+                    campo_grafico = Paragraph(str(barra), styleN)
+                    campo_criterio = Paragraph('''<para align=center><b><font color="#ffc107" fontsize=16>'''+str(porcentajeX[1]) +'''</font></b></para>''', styleN)
+                elif porcentajeX[0] >= 60 and porcentajeX[0] <= 69:
+                    criterio = "REGULAR"
+                    campo_texto = Paragraph(str(preguntaX[1]), styleN)
+                    #campo_promedio = Paragraph("Promedio General"+"<br/>" + str(porcentajeX[0]) + "<br/>"+ "# respuestas totales: 2" + "<br/>"+ "# respuestas SI: 0" +  "<br/>"+ "# respuestas NO: 1"  , styleN)
+                    campo_promedio = Paragraph('''<para align=center>Promedio General <br/> <br/><b><font color="#ff5722" fontsize=20> '''+ str(porcentajeX[0]) +''' </font></b> <br/># respuestas totales: <b>'''+ str(contsino[2]) +'''</b> <br/># respuestas SI: <b>'''+ str(contsino[0]) +'''</b><br/># respuestas NO: <b>'''+ str(contsino[1]) +'''</b></para>''',styleN)
+                    campo_grafico = Paragraph(str(barra), styleN)
+                    campo_criterio = Paragraph('''<para align=center><b><font color="#ff5722" fontsize=16>'''+str(porcentajeX[1]) +'''</font></b></para>''', styleN)
+                elif porcentajeX[0] >= 0 and porcentajeX[0] <= 59:
+                    criterio = "DEFICIENTE"
+                    campo_texto = Paragraph(str(preguntaX[1]), styleN)
+                    #campo_promedio = Paragraph("Promedio General"+"<br/>" + str(porcentajeX[0]) + "<br/>"+ "# respuestas totales: 2" + "<br/>"+ "# respuestas SI: 0" +  "<br/>"+ "# respuestas NO: 1"  , styleN)
+                    campo_promedio = Paragraph('''<para align=center>Promedio General <br/> <br/><b><font color="#f44336" fontsize=20> '''+ str(porcentajeX[0]) +''' </font></b> <br/># respuestas totales: <b>'''+ str(contsino[2]) +'''</b> <br/># respuestas SI: <b>'''+ str(contsino[0]) +'''</b><br/># respuestas NO: <b>'''+ str(contsino[1]) +'''</b></para>''',styleN)
+                    campo_grafico = Paragraph(str(barra), styleN)
+                    campo_criterio = Paragraph('''<para align=center><b><font color="#f44336" fontsize=16>'''+str(porcentajeX[1]) +'''</font></b></para>''', styleN)
+                
+                                                    
+                fila = [campo_texto, campo_promedio, campo_grafico, campo_criterio ]
+                                                                    
+                filasTabla.append(fila)
+                                                                    
+                        #high= high - 18
+
+            
+                    #escribir tabla
+                height = letter
+                tabla = Table(filasTabla, colWidths=[3 * cm, 5 * cm, 7 * cm, 0.5 * cm])
+                tabla = Table(filasTabla, rowHeights =[0.5 * cm, 3 * cm])
                                                                                             
-                    ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
-                                                                
-                                                                                        ]))
+                tabla.setStyle(TableStyle([
+                                                                                            
+                        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+                        ('BACKGROUND', (0, 0), (-1, 0), '#FFC107'),
+                        ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+                        ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
+                        ('VALIGN', (1,1), (-3,-1), 'MIDDLE'),
+                    
+                                                                    
+                                                                                            ]))
 
-            tabla.wrapOn(c, 550, height)
-            tabla.drawOn(c, 30, high)
+                tabla.wrapOn(c, 550, height)
+                tabla.drawOn(c, 30, high)
 
-             
-                   
-                            
+            if contadorHojas == numeroHojasExactas:
 
-       
+                alturaPromedio = high-30
+                alturaCriterio = alturaPromedio-25
+            
+
+                suma = 0
+
+                for porcentajesMultiples in porcentajesPreguntasMultiples:
+                    porcentajeSuma = porcentajesMultiples[0]
+                    suma = suma + porcentajeSuma
+
+                contadorPreguntasMultiples = 0
+
+                for m in pregMultiples:
+
+                    contadorPreguntasMultiples = contadorPreguntasMultiples + 1
+
+                promedio = suma / contadorPreguntasMultiples
+                promedioGeneral = str(promedio)
+
+                criterio = ""
+                if promedio >= 90 and promedio <= 100:
+                    
+                    criterio = "EXCELENTE"
+                    c.setFont('Helvetica-Bold', 18)
+                    c.drawString(200,alturaPromedio, "Promedio General: "+ promedioGeneral)
+                    c.drawString(205,alturaCriterio, "Criterio: ")
+                    color_verde="#4caf50"
+                    c.setFillColor(color_verde)
+                    c.drawString(280,alturaCriterio, criterio)
+
+                    
+                elif promedio >= 80 and promedio <= 89:
                 
-               
-
-         
-
-
-
-
+                    criterio = "MUY BUENO"
                 
-        
-      
+                    c.setFont('Helvetica-Bold', 18)
+                    c.drawString(200,alturaPromedio, "Promedio General: "+ promedioGeneral)
+                    
+                    c.drawString(205,alturaCriterio, "Criterio: ")
+                    color_azul="#2196f3"
+                    c.setFillColor(color_azul)
+                    c.drawString(280,alturaCriterio, criterio)
+                
+                elif promedio >= 70 and promedio <= 79:
+                    
+                    criterio = "BUENO"
+            
+                    c.setFont('Helvetica-Bold', 18)
+                    c.drawString(200,alturaPromedio, "Promedio General: "+ promedioGeneral)
+                    
+                    c.drawString(205,alturaCriterio, "Criterio: ")
+                    color_amarillo="#ffc107"
+                    c.setFillColor(color_amarillo)
+                    c.drawString(280,alturaCriterio, criterio)
+                
+                elif promedio >= 60 and promedio <= 69:
+                
+                    criterio = "REGULAR"
+                
+                    c.setFont('Helvetica-Bold', 18)
+                    c.drawString(200,alturaPromedio, "Promedio General: "+ promedioGeneral)
+                    
+                    c.drawString(205,alturaCriterio, "Criterio: ")
+                    color_naranja="#ff5722"
+                    c.setFillColor(color_naranja)
+                    c.drawString(280,alturaCriterio, criterio)
+                
+                elif promedio >= 0 and promedio <= 59:
+                
+                    criterio = "DEFICIENTE"
+                    
+                    c.setFont('Helvetica-Bold', 18)
+                    c.drawString(200,alturaPromedio, "Promedio General: "+ promedioGeneral)
+                
+                    c.drawString(205,alturaCriterio, "Criterio: ")
+                    color_rojo="#f44336"
+                    c.setFillColor(color_rojo)
+                    c.drawString(280,alturaCriterio, criterio)
+                
 
-       
 
-        
-
-      
-
-        f = Drawing()
-        barra = VerticalBarChart()
-        barra.x = 0
-        barra.y = 0
-        barra.height = 100
-        barra.width = 50
-        data = [(10,2)]
-        barra.valueAxis.valueMin = 0
-        barra.valueAxis.valueMax = 20 
-        barra.data = data
-        barra.categoryAxis.categoryNames = ['SI', 'NO']
-        barra.bars[(0,0)].fillColor = colors.HexColor("#E91E63")
-        barra.bars[(0,1)].fillColor = colors.red
-        f.add(barra)
-        x,y = 60, 300
-        #renderPDF.draw(f, c, x, y, showBoundary=False)  
-
-
-        #linea guinda
-        color_guinda="#B03A2E"
-        c.setFillColor(color_guinda)
-        c.setStrokeColor(color_guinda)
-        c.line(40,60,560,60)
-        
-        color_negro="#030305"
-        c.setFillColor(color_negro)
-        c.setFont('Helvetica-Bold', 11)
-        c.drawString(170,48, '2021 - Administrador de Custom System. - Versión: 1.0.0 ')
-        
-        
-        c.showPage()
-        
-        
+            #linea guinda
+            color_guinda="#B03A2E"
+            c.setFillColor(color_guinda)
+            c.setStrokeColor(color_guinda)
+            c.line(40,60,560,60)
+            
+            color_negro="#030305"
+            c.setFillColor(color_negro)
+            c.setFont('Helvetica-Bold', 11)
+            c.drawString(170,48, '2021 - Administrador de Custom System. - Versión: 1.0.0 ')
+            
+            
+            c.showPage()
+            
+            
         
         #guardar pdf
         c.save()
@@ -1410,272 +1677,582 @@ def resultadosAbiertas(request):
     #Si ya hay una sesión iniciada..
     if "idSesion" in request.session:
 
-       #crear el http response con pdf
+        if request.method == "POST":
+            
+            preguntaA = request.POST['pregunta']
+        
+        preguntaAbierta = Preguntas.objects.filter(id_pregunta = preguntaA)
+        for pregA in preguntaAbierta:
+            texto = pregA.pregunta
+
+
+
+        preguntas = Preguntas.objects.filter(id_encuesta = 1)
+        hojas =0
+        contPreguntas = 0
+        for preg in preguntas:
+            if preg.tipo == "A":
+         
+                contPreguntas = contPreguntas + 1
+                
+        
+        #contPreguntas equivale a 10
+        numeroHojasExactas = 0
+        numeroHojas = contPreguntas / 4 
+        
+        residuo = contPreguntas%4
+
+        if residuo == 0:
+            numeroHojasExactas = ("{0:.0f}".format(float(numeroHojas)))
+        
+        elif residuo > 0:
+            numeroHojasExtras = ("{0:.0f}".format(float(numeroHojas)))
+            numeroHojasExactas = int(numeroHojasExtras) + 1
+
+        #crear el http response con pdf
         respuesta = HttpResponse(content_type='application/pdf')
         respuesta['Content-Disposition'] = 'attachment; filename=Reporte Resultados Preguntas Abiertas Encuesta Clima Laboral - Enero 2022.pdf'
         #Crear objeto PDF 
         buffer =BytesIO()
         c = canvas.Canvas(buffer, pagesize=letter)
-        base_dir = str(settings.BASE_DIR) #C:\Users\AuxSistemas\Desktop\CS Escritorio\Custom-System\djangoCS
-        #nombre de empresa
-        logo = base_dir+'/static/images/logoCustom.PNG'   
-        c.drawImage(logo, 40,700,120,70, preserveAspectRatio=True)
-            
-        c.setFont('Helvetica-Bold', 14)
-        c.drawString(150,750, 'Custom & Co S.A. de C.V.')
-            
-        c.setFont('Helvetica', 8)
-        c.drawString(150,735, 'Allende #646 Sur Colonia Centro, Durango, CP: 35000')
-            
-        c.setFont('Helvetica', 8)
-        c.drawString(150,720, 'RFC: CAC070116IS9')
-            
-        c.setFont('Helvetica', 8)
-        c.drawString(150,705, 'Tel: 8717147716')
-        #fecha
-        hoy=datetime.now()
-        fecha = str(hoy.date())
-        color_guinda="#B03A2E"
-        color_azul = "#cf1515"
-        c.setFillColor(color_guinda)
+        contadorHojas = 0
         
-            
-        c.setFont('Helvetica-Bold', 12)
-        c.drawString(425,750, "CLIMA LABORAL 2022")
-        color_negro="#030305"
-        c.setFillColor(color_negro)
-        c.setFont('Helvetica-Bold', 10)
-        c.drawString(405,730, "Fecha de impresión: " +fecha)
-        #linea guinda
-            
-        c.setFillColor(color_guinda)
-        c.setStrokeColor(color_guinda)
-        c.line(40,695,560,695)
-        #nombre departamento
-        color_negro="#030305"
-        c.setFillColor(color_negro)
-        c.setFont('Helvetica', 12)
-        c.drawString(405,710, 'Departamento de Sistemas')
-        #titulo
-        c.setFont('Helvetica-Bold', 22)
-            
-        c.drawString(55,660, 'Resultados Encuesta Clima Laboral Enero 2022')
-
-
-        #tabla1
-        c.setFont('Helvetica-Bold', 18)
-        c.drawString(215,620, 'Criterios de Evaluación')
-
-
-        #header de tabla
-        styles = getSampleStyleSheet()
-        styleBH =styles["Normal"]
-        styleBH.alignment = TA_CENTER
-        styleBH.fontSize = 10
-        
-        
-        rango = Paragraph('''Rango Porcentaje''', styleBH)
-        criterio = Paragraph('''Criterio''', styleBH)
-       
-      
-        filasTabla=[]
-        filasTabla.append([rango, criterio])
-        #Tabla
-        styleN = styles["BodyText"]
-        styleN.alignment = TA_CENTER
-        styleN.fontSize = 7
-        
-        high = 590
-        porcentajes = ["100% - 90%", "89% - 80%", "79% - 70%","69% - 60%", "59% - 0%" ]
-        criterios = ["Excelente", "Muy bueno", "Bueno", "Regular", "Deficiente"]
-        
-        contador = 0
-        for x in porcentajes:
-            if contador == 0:
-                fila = [porcentajes[contador], criterios[contador]]
-                contador= 1
-
-            elif contador != 0:
-                fila = [porcentajes[contador], criterios[contador]]
-                contador= contador+1
-            filasTabla.append(fila)
-            high= high - 18 
-            
-        #escribir tabla
-        width, height = letter
-        tabla = Table(filasTabla, colWidths=[4 * cm, 4 * cm])
-        
-        tabla.setStyle(TableStyle([
+        for x in range(1):
            
-            ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
-            ('BACKGROUND', (0, 0), (-1, 0), '#e9c7ae'),
+            contadorHojas = contadorHojas + 1
+
+            if contadorHojas == 1:
+                contadorPreguntas = 0
+
+                
+                pregMultiples = []
+                
+                porcentajesPreguntasMultiples = []
+                contadorSiNo = []
+
+                preguntas = Preguntas.objects.filter(id_encuesta = 1)
+
+                for pregunta in preguntas:
+                    id_pregunta = pregunta.id_pregunta
+                    texto = pregunta.pregunta
+                    tipo = pregunta.tipo
+                    clasificacion = pregunta.clasificacion
+
+                    contadorPreguntas = contadorPreguntas + 1
+
+                    if contadorPreguntas >=1 and contadorPreguntas <=4:
+                        if tipo == "M":
+                            pregMultiples.append([id_pregunta, texto, clasificacion])
+        
+            if contadorHojas == 2:
+                contadorPreguntas = 0
+
+                
+                pregMultiples = []
+                
+                porcentajesPreguntasMultiples = []
+                contadorSiNo = []
+
+                preguntas = Preguntas.objects.filter(id_encuesta = 1)
+
+                for pregunta in preguntas:
+                    id_pregunta = pregunta.id_pregunta
+                    texto = pregunta.pregunta
+                    tipo = pregunta.tipo
+                    clasificacion = pregunta.clasificacion
+
+                    contadorPreguntas = contadorPreguntas + 1
+
+                    if contadorPreguntas >=5 and contadorPreguntas <=8:
+                        if tipo == "M":
+                            pregMultiples.append([id_pregunta, texto, clasificacion])
             
-            ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
-            ('BACKGROUND', (1,1), (-1,-5), '#4CAF50'),
-            ('BACKGROUND', (1,2), (-1,-4), '#2196F3'),
-            ('BACKGROUND', (1,3), (-1,-3), '#FFC107'),
-            ('BACKGROUND', (1,4), (-1,-2), '#FF5722'),
-            ('BACKGROUND', (1,5), (-1,-1), '#F44336'),
-        ]))
+            if contadorHojas == 3:
+                contadorPreguntas = 0
 
-        tabla.wrapOn(c, width, height)
-        tabla.drawOn(c, 200, high)
+                
+                pregMultiples = []
+                
+                porcentajesPreguntasMultiples = []
+                contadorSiNo = []
 
-        #tabla2
+                preguntas = Preguntas.objects.filter(id_encuesta = 1)
 
-        c.setFont('Helvetica-Bold', 18)
-        c.drawString(215,475, 'Encuestas contestadas')
+                for pregunta in preguntas:
+                    id_pregunta = pregunta.id_pregunta
+                    texto = pregunta.pregunta
+                    tipo = pregunta.tipo
+                    clasificacion = pregunta.clasificacion
 
-        empleadosActivos = Empleados.objects.filter(activo = "A", correo__icontains="@customco.com.mx")
-        contadorEmpleadosActivos = 0
+                    contadorPreguntas = contadorPreguntas + 1
 
-        for activos in empleadosActivos:
-            contadorEmpleadosActivos = contadorEmpleadosActivos + 1
+                    if contadorPreguntas >=9 and contadorPreguntas <=12:
+                        if tipo == "M":
+                            pregMultiples.append([id_pregunta, texto, clasificacion])
 
-        contadorEmpleadosActivos = str(contadorEmpleadosActivos)
+            if contadorHojas == 4:
+                contadorPreguntas = 0
 
-        c.setFont('Helvetica-Bold', 16)
-        c.drawString(80,440, 'Número de empleados')
-        c.drawString(85,415, 'activos en la empresa:')
-        c.setFont('Helvetica-Bold', 36)
-        c.setFillColor(color_azul)
-        c.drawString(140,375, contadorEmpleadosActivos)
+                
+                pregMultiples = []
+                
+                porcentajesPreguntasMultiples = []
+                contadorSiNo = []
+
+                preguntas = Preguntas.objects.filter(id_encuesta = 1)
+
+                for pregunta in preguntas:
+                    id_pregunta = pregunta.id_pregunta
+                    texto = pregunta.pregunta
+                    tipo = pregunta.tipo
+                    clasificacion = pregunta.clasificacion
+
+                    contadorPreguntas = contadorPreguntas + 1
+
+                    if contadorPreguntas >=13 and contadorPreguntas <=16:
+                        if tipo == "M":
+                            pregMultiples.append([id_pregunta, texto, clasificacion])
+
+            if contadorHojas == 5:
+                contadorPreguntas = 0
+
+                
+                pregMultiples = []
+                
+                porcentajesPreguntasMultiples = []
+                contadorSiNo = []
+
+                preguntas = Preguntas.objects.filter(id_encuesta = 1)
+
+                for pregunta in preguntas:
+                    id_pregunta = pregunta.id_pregunta
+                    texto = pregunta.pregunta
+                    tipo = pregunta.tipo
+                    clasificacion = pregunta.clasificacion
+
+                    contadorPreguntas = contadorPreguntas + 1
+
+                    if contadorPreguntas >=17 and contadorPreguntas <=20:
+                        if tipo == "M":
+                            pregMultiples.append([id_pregunta, texto, clasificacion])
+                        
+
+            if contadorHojas == 6:
+                contadorPreguntas = 0
+
+                
+                pregMultiples = []
+                
+                porcentajesPreguntasMultiples = []
+                contadorSiNo = []
+
+                preguntas = Preguntas.objects.filter(id_encuesta = 1)
+
+                for pregunta in preguntas:
+                    id_pregunta = pregunta.id_pregunta
+                    texto = pregunta.pregunta
+                    tipo = pregunta.tipo
+                    clasificacion = pregunta.clasificacion
+
+                    contadorPreguntas = contadorPreguntas + 1
+
+                    if contadorPreguntas >=21 and contadorPreguntas <=24:
+                        if tipo == "M":
+                            pregMultiples.append([id_pregunta, texto, clasificacion])
+
+            if contadorHojas == 7:
+                contadorPreguntas = 0
+
+                
+                pregMultiples = []
+                
+                porcentajesPreguntasMultiples = []
+                contadorSiNo = []
+
+                preguntas = Preguntas.objects.filter(id_encuesta = 1)
+
+                for pregunta in preguntas:
+                    id_pregunta = pregunta.id_pregunta
+                    texto = pregunta.pregunta
+                    tipo = pregunta.tipo
+                    clasificacion = pregunta.clasificacion
+
+                    contadorPreguntas = contadorPreguntas + 1
+
+                    if contadorPreguntas >=25 and contadorPreguntas <=28:
+                        if tipo == "M":
+                            pregMultiples.append([id_pregunta, texto, clasificacion])
 
 
-        c.setFillColor(color_negro)
-        c.setFont('Helvetica-Bold', 16)
-        c.drawString(360,440, 'Número de encuestas')
-        c.drawString(365,415, 'resueltas esperadas:')
-        c.setFont('Helvetica-Bold', 36)
-        c.setFillColor(color_azul)
-        c.drawString(425,375, contadorEmpleadosActivos)
-        c.setFillColor(color_negro)
 
-        c.setFont('Helvetica-Bold', 16)
-        c.drawString(80,340, 'Relación contestadas/')
-        c.drawString(85,320, 'no contestadas:')
+            base_dir = str(settings.BASE_DIR) #C:\Users\AuxSistemas\Desktop\CS Escritorio\Custom-System\djangoCS
+            #nombre de empresa
+            logo = base_dir+'/static/images/logoCustom.PNG'   
+            c.drawImage(logo, 40,700,120,70, preserveAspectRatio=True)
+                
+            c.setFont('Helvetica-Bold', 14)
+            c.drawString(150,750, 'Custom & Co S.A. de C.V.')
+                
+            c.setFont('Helvetica', 8)
+            c.drawString(150,735, 'Allende #646 Sur Colonia Centro, Durango, CP: 35000')
+                
+            c.setFont('Helvetica', 8)
+            c.drawString(150,720, 'RFC: CAC070116IS9')
+                
+            c.setFont('Helvetica', 8)
+            c.drawString(150,705, 'Tel: 8717147716')
+            #fecha
+            hoy=datetime.now()
+            fecha = str(hoy.date())
+            color_guinda="#B03A2E"
+            color_azul = "#cf1515"
+            c.setFillColor(color_guinda)
+            
+                
+            c.setFont('Helvetica-Bold', 12)
+            c.drawString(425,750, "CLIMA LABORAL 2022")
+            color_negro="#030305"
+            c.setFillColor(color_negro)
+            c.setFont('Helvetica-Bold', 10)
+            c.drawString(405,730, "Fecha de impresión: " +fecha)
+            #linea guinda
+                
+            c.setFillColor(color_guinda)
+            c.setStrokeColor(color_guinda)
+            c.line(40,695,560,695)
+            #nombre departamento
+            color_negro="#030305"
+            c.setFillColor(color_negro)
+            c.setFont('Helvetica', 12)
+            c.drawString(405,710, 'Departamento de Sistemas')
+            #titulo
+            c.setFont('Helvetica-Bold', 22)
+                
+            c.drawString(140,660, 'Resultados Preguntas Abiertas')
 
-        empleadosContestados = EncuestaEmpleadoResuelta.objects.filter(id_encuesta = 1)
-        contadorEmpleadoscontestados = 0
+            c.setFont('Helvetica-Bold', 18)
+                
+            c.drawString(140,630, texto)
+            
 
-        for contestado in empleadosContestados:
-            contadorEmpleadoscontestados = contadorEmpleadoscontestados + 1
+
+            
+
+            empleadosContestados = EncuestaEmpleadoResuelta.objects.filter(id_encuesta = 1)
+            contadorEmpleadoscontestados = 0
+
+            for contestado in empleadosContestados:
+                contadorEmpleadoscontestados = contadorEmpleadoscontestados + 1
+
+
+    
+            
+
+            for multiple in pregMultiples:
+                idPregunta = multiple[0]
+
+                respuestas = Respuestas.objects.filter(id_pregunta =idPregunta) #en este caso devuelve dos respuestas de dos diferentes empleados
+                contadorSI = 0
+                contadorNO = 0
+                contadorRespuestas = 0
+                for respuestaX in respuestas:
+                    res = respuestaX.respuesta #SI o NO
+                    contadorRespuestas = contadorRespuestas + 1
+                    
+                    if res == "SI":
+                        contadorSI = contadorSI + 1
+                    elif res == "NO":
+                        contadorNO = contadorNO +1
+                
+                contadorSiNo.append([contadorSI, contadorNO,contadorRespuestas])
+                
+                porcentajePregunta = (contadorSI * 100)/ contadorEmpleadoscontestados
+                
+                criterio = ""
+                if porcentajePregunta >= 90 and porcentajePregunta <= 100:
+                    criterio = "EXCELENTE"
+                elif porcentajePregunta >= 80 and porcentajePregunta <= 89:
+                    criterio = "MUY BUENO"
+                elif porcentajePregunta >= 70 and porcentajePregunta <= 79:
+                    criterio = "BUENO"
+                elif porcentajePregunta >= 60 and porcentajePregunta <= 69:
+                    criterio = "REGULAR"
+                elif porcentajePregunta >= 0 and porcentajePregunta <= 59:
+                    criterio = "DEFICIENTE"
+
+                porcentajesPreguntasMultiples.append([porcentajePregunta,criterio])
+
+        
+            listaMultiples = zip(pregMultiples, porcentajesPreguntasMultiples, contadorSiNo)
+            
+            
         
         
 
-        empleadosFaltantes = int(contadorEmpleadosActivos) - int(contadorEmpleadoscontestados)
+            
+            valorHigh = 550
+            contador = 0
+            alturaTituloPregunta = 0
+            high = 0
 
-        empleadosFaltantes = int(empleadosFaltantes)
+            xBarra = 0
+            yBarra = 0
+            
+            for preguntaX, porcentajeX, contsino in listaMultiples:
 
-      
+                contador = contador + 1
 
-       
+            
 
-        
+                idPregunta = preguntaX[0]
+                idp= str(idPregunta)
 
-        #grafico de pastel
-        b = Drawing()
-        pie = Pie()
-        pie.x = 0
-        pie.y = 0
-        pie.height = 160
-        pie.width = 160
-        pie.data = [contadorEmpleadoscontestados, empleadosFaltantes ]
-        pie.labels = ['Contestadas', 'No contestadas']
-        pie.slices.strokeWidth = 0.5
-        pie.slices[1].popout = 20
-        pie.slices[0].fillColor= colors.HexColor("#e91e63")
-        pie.slices[1].fillColor=colors.HexColor("#009688")
-        b.add(pie)
-        x,y = 100,130 
-        renderPDF.draw(b, c, x, y, showBoundary=False)
+                barra = "barra" 
 
-        c.setFont('Helvetica-Bold', 16)
-        c.drawString(360,340, 'Porcentaje total')
-        c.drawString(365,320, 'resuelto:')
+            
+                if contador == 1:
+                    alturaTituloPregunta = 630
+                    high = 520
+                    xBarra = 365
+                    yBarra = 540
 
-        porcentajeTotal = 100
-        porcentaje = int(contadorEmpleadoscontestados * 100) / int(contadorEmpleadosActivos)
-
-        porcentaje = str(porcentaje)
-
-        porcentajeDigitos = ("{0:.4f}".format(float(porcentaje))) + "%"
-
-        porcentajeBarra = ("{0:.0f}".format(float(porcentaje)))
-
-        porcentajeBarraa = int(porcentajeBarra)
-
-        c.setStrokeColorRGB(0.7, 0, 0.7) #color de contorno
-        c.setFillColorRGB(255, 255, 255) #color de relleno
-        c.rect(360, 275, 200, 25, fill=True)
-
-        c.setStrokeColorRGB(0.7, 0, 0.7) #color de contorno
-
-        if porcentajeBarraa >= 0 and porcentajeBarraa <= 33:
-            c.setFillColorRGB(255, 0, 0) #color de relleno
-            c.rect(360, 275, porcentajeBarra, 25, fill=True)
-        elif porcentajeBarraa >= 34 and porcentajeBarraa <= 66:
-            c.setFillColorRGB(255, 165, 0) #color de relleno
-            c.rect(360, 275, porcentajeBarra, 25, fill=True)
-        elif porcentajeBarraa >= 67 and porcentajeBarraa <= 100:
-            c.setFillColorRGB(0, 128, 0) #color de relleno
-            c.rect(360, 275, porcentajeBarra, 25, fill=True)
-
-        c.setFont('Helvetica-Bold', 30)
-        c.setFillColor(color_azul)
-        c.drawString(360,230, porcentajeDigitos)
-        c.setFont('Helvetica-Bold', 18)
-        c.setFillColor(color_negro)
-        c.drawString(360,200, "del 100% de empleados")
-       
+                if contador > 1:
+                    alturaTituloPregunta = alturaTituloPregunta - 135
+                    high = high - 135
+                        
+                    yBarra = yBarra - 135 
+                
+                c.setFont('Helvetica-Bold', 18)
+                c.drawString(80,alturaTituloPregunta, "Pregunta"+ idp)
 
 
-
-  
+                #header de tabla
+                styles = getSampleStyleSheet()
+                styleBH =styles["Normal"]
+                styleBH.alignment = TA_CENTER
+                styleBH.fontSize = 10
+                    
+                    
+                preguntaE = Paragraph('''Texto Pregunta''', styleBH)
+                promedioE = Paragraph('''Promedio''', styleBH)
+                graficoE = Paragraph('''Gráfico''', styleBH)
+                criterioE = Paragraph('''Criterio''', styleBH)
+                
+                
+                filasTabla=[]
+                filasTabla.append([preguntaE, promedioE, graficoE, criterioE])
+                    #Tabla
+                styleN = styles["BodyText"]
+                styleN.alignment = TA_CENTER
+                styleN.fontSize = 9
 
         
-        
-        f = Drawing()
-        barra = VerticalBarChart()
-        barra.x = 0
-        barra.y = 0
-        barra.height = 100
-        barra.width = 50
-        data = [(10,2)]
-        barra.valueAxis.valueMin = 0
-        barra.valueAxis.valueMax = 20 
-        barra.data = data
-        barra.categoryAxis.categoryNames = ['SI', 'NO']
-        barra.bars[(0,0)].fillColor = colors.HexColor("#E91E63")
-        barra.bars[(0,1)].fillColor = colors.red
-        f.add(barra)
-        x,y = 60, 300
-        #renderPDF.draw(f, c, x, y, showBoundary=False)  
+
+    
 
 
-        #linea guinda
-        color_guinda="#B03A2E"
-        c.setFillColor(color_guinda)
-        c.setStrokeColor(color_guinda)
-        c.line(40,60,560,60)
+                f = Drawing()
+                barra= VerticalBarChart()
+                barra.x = 0
+                barra.y = 0
+                barra.height = 45
+                barra.width = 40
+                data = [(contsino[0],contsino[1])]
+                barra.valueAxis.valueMin = 0
+                barra.valueAxis.valueMax = 35 
+                barra.data = data
+                barra.categoryAxis.categoryNames = ['SI', 'NO']
+                barra.bars[(0,0)].fillColor = colors.HexColor("#E91E63")
+                barra.bars[(0,1)].fillColor = colors.red
+                f.add(barra)
+                        
+                renderPDF.draw(f, c, xBarra, yBarra, showBoundary=False) 
+
+ 
+                suma = 0
+
+                for porcentajesMultiples in porcentajesPreguntasMultiples:
+                    porcentajeSuma = porcentajesMultiples[0]
+                    suma = suma + porcentajeSuma
+
+                contadorPreguntasMultiples = 0
+
+                for m in pregMultiples:
+
+                    contadorPreguntasMultiples = contadorPreguntasMultiples + 1
+
+                promedio = suma / contadorPreguntasMultiples
+
+                criterio = ""
+                if porcentajeX[0] >= 90 and porcentajeX[0] <= 100:
+                    criterio = "EXCELENTE"
+                    campo_texto = Paragraph(str(preguntaX[1]), styleN)
+                    #campo_promedio = Paragraph("Promedio General"+"<br/>" + str(porcentajeX[0]) + "<br/>"+ "# respuestas totales: 2" + "<br/>"+ "# respuestas SI: 0" +  "<br/>"+ "# respuestas NO: 1"  , styleN)
+                    campo_promedio = Paragraph('''<para align=center>Promedio General <br/> <br/><b><font color="#4caf50" fontsize=20> '''+ str(porcentajeX[0]) +''' </font></b> <br/># respuestas totales: <b>'''+ str(contsino[2]) +'''</b> <br/># respuestas SI: <b>'''+ str(contsino[0]) +'''</b><br/># respuestas NO: <b>'''+ str(contsino[1]) +'''</b></para>''',styleN)
+                    campo_grafico = Paragraph(str(barra), styleN)
+                    campo_criterio = Paragraph('''<para align=center><b><font color="#4caf50" fontsize=16>'''+str(porcentajeX[1]) +'''</font></b></para>''', styleN)
+                elif porcentajeX[0] >= 80 and porcentajeX[0] <= 89:
+                    criterio = "MUY BUENO"
+                    campo_texto = Paragraph(str(preguntaX[1]), styleN)
+                    #campo_promedio = Paragraph("Promedio General"+"<br/>" + str(porcentajeX[0]) + "<br/>"+ "# respuestas totales: 2" + "<br/>"+ "# respuestas SI: 0" +  "<br/>"+ "# respuestas NO: 1"  , styleN)
+                    campo_promedio = Paragraph('''<para align=center>Promedio General <br/> <br/><b><font color="#2196f3" fontsize=20> '''+ str(porcentajeX[0]) +''' </font></b> <br/># respuestas totales: <b>'''+ str(contsino[2]) +'''</b> <br/># respuestas SI: <b>'''+ str(contsino[0]) +'''</b><br/># respuestas NO: <b>'''+ str(contsino[1]) +'''</b></para>''',styleN)
+                    campo_grafico = Paragraph(str(barra), styleN)
+                    campo_criterio = Paragraph('''<para align=center><b><font color="#2196f3" fontsize=16>'''+str(porcentajeX[1]) +'''</font></b></para>''', styleN)
+                elif porcentajeX[0] >= 70 and porcentajeX[0] <= 79:
+                    criterio = "BUENO"
+                    campo_texto = Paragraph(str(preguntaX[1]), styleN)
+                    #campo_promedio = Paragraph("Promedio General"+"<br/>" + str(porcentajeX[0]) + "<br/>"+ "# respuestas totales: 2" + "<br/>"+ "# respuestas SI: 0" +  "<br/>"+ "# respuestas NO: 1"  , styleN)
+                    campo_promedio = Paragraph('''<para align=center>Promedio General <br/> <br/><b><font color="#ffc107" fontsize=20> '''+ str(porcentajeX[0]) +''' </font></b> <br/># respuestas totales: <b>'''+ str(contsino[2]) +'''</b> <br/># respuestas SI: <b>'''+ str(contsino[0]) +'''</b><br/># respuestas NO: <b>'''+ str(contsino[1]) +'''</b></para>''',styleN)
+                    campo_grafico = Paragraph(str(barra), styleN)
+                    campo_criterio = Paragraph('''<para align=center><b><font color="#ffc107" fontsize=16>'''+str(porcentajeX[1]) +'''</font></b></para>''', styleN)
+                elif porcentajeX[0] >= 60 and porcentajeX[0] <= 69:
+                    criterio = "REGULAR"
+                    campo_texto = Paragraph(str(preguntaX[1]), styleN)
+                    #campo_promedio = Paragraph("Promedio General"+"<br/>" + str(porcentajeX[0]) + "<br/>"+ "# respuestas totales: 2" + "<br/>"+ "# respuestas SI: 0" +  "<br/>"+ "# respuestas NO: 1"  , styleN)
+                    campo_promedio = Paragraph('''<para align=center>Promedio General <br/> <br/><b><font color="#ff5722" fontsize=20> '''+ str(porcentajeX[0]) +''' </font></b> <br/># respuestas totales: <b>'''+ str(contsino[2]) +'''</b> <br/># respuestas SI: <b>'''+ str(contsino[0]) +'''</b><br/># respuestas NO: <b>'''+ str(contsino[1]) +'''</b></para>''',styleN)
+                    campo_grafico = Paragraph(str(barra), styleN)
+                    campo_criterio = Paragraph('''<para align=center><b><font color="#ff5722" fontsize=16>'''+str(porcentajeX[1]) +'''</font></b></para>''', styleN)
+                elif porcentajeX[0] >= 0 and porcentajeX[0] <= 59:
+                    criterio = "DEFICIENTE"
+                    campo_texto = Paragraph(str(preguntaX[1]), styleN)
+                    #campo_promedio = Paragraph("Promedio General"+"<br/>" + str(porcentajeX[0]) + "<br/>"+ "# respuestas totales: 2" + "<br/>"+ "# respuestas SI: 0" +  "<br/>"+ "# respuestas NO: 1"  , styleN)
+                    campo_promedio = Paragraph('''<para align=center>Promedio General <br/> <br/><b><font color="#f44336" fontsize=20> '''+ str(porcentajeX[0]) +''' </font></b> <br/># respuestas totales: <b>'''+ str(contsino[2]) +'''</b> <br/># respuestas SI: <b>'''+ str(contsino[0]) +'''</b><br/># respuestas NO: <b>'''+ str(contsino[1]) +'''</b></para>''',styleN)
+                    campo_grafico = Paragraph(str(barra), styleN)
+                    campo_criterio = Paragraph('''<para align=center><b><font color="#f44336" fontsize=16>'''+str(porcentajeX[1]) +'''</font></b></para>''', styleN)
+                
+                                                    
+                fila = [campo_texto, campo_promedio, campo_grafico, campo_criterio ]
+                                                                    
+                filasTabla.append(fila)
+                                                                    
+                        #high= high - 18
+
+            
+                    #escribir tabla
+                height = letter
+                tabla = Table(filasTabla, colWidths=[3 * cm, 5 * cm, 7 * cm, 0.5 * cm])
+                tabla = Table(filasTabla, rowHeights =[0.5 * cm, 3 * cm])
+                                                                                            
+                tabla.setStyle(TableStyle([
+                                                                                            
+                        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+                        ('BACKGROUND', (0, 0), (-1, 0), '#FFC107'),
+                        ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+                        ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
+                        ('VALIGN', (1,1), (-3,-1), 'MIDDLE'),
+                    
+                                                                    
+                                                                                            ]))
+
+                tabla.wrapOn(c, 550, height)
+                tabla.drawOn(c, 30, high)
+
+            if contadorHojas == numeroHojasExactas:
+
+                alturaPromedio = high-30
+                alturaCriterio = alturaPromedio-25
+            
+
+                suma = 0
+
+                for porcentajesMultiples in porcentajesPreguntasMultiples:
+                    porcentajeSuma = porcentajesMultiples[0]
+                    suma = suma + porcentajeSuma
+
+                contadorPreguntasMultiples = 0
+
+                for m in pregMultiples:
+
+                    contadorPreguntasMultiples = contadorPreguntasMultiples + 1
+
+                promedio = suma / contadorPreguntasMultiples
+                promedioGeneral = str(promedio)
+
+                criterio = ""
+                if promedio >= 90 and promedio <= 100:
+                    
+                    criterio = "EXCELENTE"
+                    c.setFont('Helvetica-Bold', 18)
+                    c.drawString(200,alturaPromedio, "Promedio General: "+ promedioGeneral)
+                    c.drawString(205,alturaCriterio, "Criterio: ")
+                    color_verde="#4caf50"
+                    c.setFillColor(color_verde)
+                    c.drawString(280,alturaCriterio, criterio)
+
+                    
+                elif promedio >= 80 and promedio <= 89:
+                
+                    criterio = "MUY BUENO"
+                
+                    c.setFont('Helvetica-Bold', 18)
+                    c.drawString(200,alturaPromedio, "Promedio General: "+ promedioGeneral)
+                    
+                    c.drawString(205,alturaCriterio, "Criterio: ")
+                    color_azul="#2196f3"
+                    c.setFillColor(color_azul)
+                    c.drawString(280,alturaCriterio, criterio)
+                
+                elif promedio >= 70 and promedio <= 79:
+                    
+                    criterio = "BUENO"
+            
+                    c.setFont('Helvetica-Bold', 18)
+                    c.drawString(200,alturaPromedio, "Promedio General: "+ promedioGeneral)
+                    
+                    c.drawString(205,alturaCriterio, "Criterio: ")
+                    color_amarillo="#ffc107"
+                    c.setFillColor(color_amarillo)
+                    c.drawString(280,alturaCriterio, criterio)
+                
+                elif promedio >= 60 and promedio <= 69:
+                
+                    criterio = "REGULAR"
+                
+                    c.setFont('Helvetica-Bold', 18)
+                    c.drawString(200,alturaPromedio, "Promedio General: "+ promedioGeneral)
+                    
+                    c.drawString(205,alturaCriterio, "Criterio: ")
+                    color_naranja="#ff5722"
+                    c.setFillColor(color_naranja)
+                    c.drawString(280,alturaCriterio, criterio)
+                
+                elif promedio >= 0 and promedio <= 59:
+                
+                    criterio = "DEFICIENTE"
+                    
+                    c.setFont('Helvetica-Bold', 18)
+                    c.drawString(200,alturaPromedio, "Promedio General: "+ promedioGeneral)
+                
+                    c.drawString(205,alturaCriterio, "Criterio: ")
+                    color_rojo="#f44336"
+                    c.setFillColor(color_rojo)
+                    c.drawString(280,alturaCriterio, criterio)
+                
+
+
+            #linea guinda
+            color_guinda="#B03A2E"
+            c.setFillColor(color_guinda)
+            c.setStrokeColor(color_guinda)
+            c.line(40,60,560,60)
+            
+            color_negro="#030305"
+            c.setFillColor(color_negro)
+            c.setFont('Helvetica-Bold', 11)
+            c.drawString(170,48, '2021 - Administrador de Custom System. - Versión: 1.0.0 ')
+            
+            
+            c.showPage()
+            
+            
         
-        color_negro="#030305"
-        c.setFillColor(color_negro)
-        c.setFont('Helvetica-Bold', 11)
-        c.drawString(170,48, '2021 - Administrador de Custom System. - Versión: 1.0.0 ')
-        
-        
-        c.showPage()
-        
-        
-        
-        #guardar pdf
-        c.save()
-        #obtener valores de bytesIO y esribirlos en la respuesta
-        pdf = buffer.getvalue()
-        buffer.close()
-        respuesta.write(pdf)
-        return respuesta
+            #guardar pdf
+            c.save()
+            #obtener valores de bytesIO y esribirlos en la respuesta
+            pdf = buffer.getvalue()
+            buffer.close()
+            respuesta.write(pdf)
+            return respuesta
 
 
         

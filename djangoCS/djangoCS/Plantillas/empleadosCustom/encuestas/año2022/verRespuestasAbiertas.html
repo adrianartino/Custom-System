@@ -74,7 +74,17 @@ Resultados Enero 2022.
                             </p>
                           <center>
                            <h1 style="font-family: 'Oswald', sans-serif; color: black;" >{{texto}}</h1>
+                          
                           </center>
+                          <form action="/resultadosAbiertas/" method="POST">{% csrf_token %}
+                            <input type="hidden" name="pregunta" value="{{idPregunta}}">
+                            <button type="submit" class="btn bg-purple waves-effect animate__animated animate__flipInX"
+                                data-toggle="tooltip" data-placement="left"
+                                title="Reporte preguntas abiertas Clima Laboral Enero 2022.">
+                                <i class="material-icons">textsms</i>
+                                <span>Resultados Preguntas Abiertas</span>
+                            </button>
+                        </form>
                      
                         {% for res in datosRespuestas %}
                         <h4 style="font-family: 'Oswald', sans-serif;">Respuesta #{{res.id_respuesta}}</h4>
