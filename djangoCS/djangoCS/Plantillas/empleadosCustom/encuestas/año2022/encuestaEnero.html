@@ -36,6 +36,28 @@ Encuesta Enero 2022.
 {% endblock %}
 
 {% block contenido %}
+<script>
+    function contarcaracteres(){
+        
+           //Numero de caracteres permitidos
+               var total=100;
+
+        setTimeout(function(){
+        var valor=document.getElementById('contador');
+        var respuesta=document.getElementById('res');
+        var cantidad=valor.value.length;
+        document.getElementById('res').innerHTML = cantidad + ' caractere/s, te quedan ' + (total - cantidad) ;
+        if(cantidad>89){
+            respuesta.style.color = "red";
+        }
+        else if (cantidad <90){
+            respuesta.style.color = "#0D8E28;";
+        }
+        },10);
+
+    }
+</script>
+
 <div class="row clearfix">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <div class="card">
@@ -158,10 +180,12 @@ Encuesta Enero 2022.
 
                                 <div class="form-group form-float">
                                     <div class="form-line">
-                                        <textarea style="border: 1px solid rgb(67, 212, 188) !important;" name="respuestaText" cols="30" rows="5"
-                                            maxlength="400" class="form-control no-resize" required></textarea>
+                                        <textarea style="border: 1px solid rgb(67, 212, 188) !important;" name="respuestaText" id="contador" onpaste="contarcaracteres();" onkeyup="contarcaracteres();" cols="30" rows="5"
+                                            maxlength="100" class="form-control no-resize" required></textarea>
 
                                     </div>
+                                    <br>
+                                    <p id="res" style="font-family: 'Oswald', sans-serif; color: #0D8E28;" >0 caractere/s</p>
                                     <br>
                                     <center>
                                         <button type="submit" class="btn bg-green waves-effect">
@@ -242,6 +266,8 @@ Encuesta Enero 2022.
 
 {% if introduccion %}
 <script type="text/javascript">
+
+    
     
     window.onload = function () {
         contador=0

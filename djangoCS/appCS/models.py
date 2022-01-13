@@ -155,7 +155,7 @@ class Respuestas (models.Model):
     id_respuesta = models.AutoField(primary_key=True)
     id_pregunta = models.ForeignKey(Preguntas, on_delete=models.CASCADE)
     id_empleado = models.ForeignKey(Empleados, on_delete=models.CASCADE)
-    respuesta = models.TextField(max_length=600)
+    respuesta = models.TextField(max_length=100)
 
 class EncuestaEmpleadoResuelta (models.Model):
     id_empleado = id_empleado = models.ForeignKey(Empleados, on_delete=models.CASCADE)
