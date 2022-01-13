@@ -325,6 +325,7 @@ def resultadosEncuestas(request):
             contadorSiNo.append([contadorSI, contadorNO])
             
             porcentajePregunta = (contadorSI * 100)/ contadorEmpleadoscontestados
+            p = ("{0:.2f}".format(float(porcentajePregunta)))
             
             criterio = ""
             if porcentajePregunta >= 90 and porcentajePregunta <= 100:
@@ -338,7 +339,7 @@ def resultadosEncuestas(request):
             elif porcentajePregunta >= 0 and porcentajePregunta <= 59:
                 criterio = "DEFICIENTE"
 
-            porcentajesPreguntasMultiples.append([porcentajePregunta,criterio])
+            porcentajesPreguntasMultiples.append([float(p),criterio])
 
         listaMultiples = zip(pregMultiples,porcentajesPreguntasMultiples, contadorSiNo)
         listaMultiples2 = zip(pregMultiples,porcentajesPreguntasMultiples, contadorSiNo)
@@ -1469,6 +1470,7 @@ def resultadosMultiples(request):
                 contadorSiNo.append([contadorSI, contadorNO,contadorRespuestas])
                 
                 porcentajePregunta = (contadorSI * 100)/ contadorEmpleadoscontestados
+                p = ("{0:.2f}".format(float(porcentajePregunta)))
                 
                 criterio = ""
                 if porcentajePregunta >= 90 and porcentajePregunta <= 100:
@@ -1482,7 +1484,7 @@ def resultadosMultiples(request):
                 elif porcentajePregunta >= 0 and porcentajePregunta <= 59:
                     criterio = "DEFICIENTE"
 
-                porcentajesPreguntasMultiples.append([porcentajePregunta,criterio])
+                porcentajesPreguntasMultiples.append([float(p),criterio])
 
         
             listaMultiples = zip(pregMultiples, porcentajesPreguntasMultiples, contadorSiNo)
