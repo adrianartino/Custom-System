@@ -146,8 +146,13 @@ def principal(request):
         
             return render(request, "empleadosCustom/inicio/inicio.html", {"estaEnInicio":estaEnInicio,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, 
             "rh": rh})
-    
-        return render(request, "empleadosCustom/inicio/inicio.html", {"estaEnInicio":estaEnInicio,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo})
+            
+        if "recienIniciado" in request.session:
+            del request.session['recienIniciado']
+            recienIniciado = True
+            return render(request, "empleadosCustom/inicio/inicio.html", {"estaEnInicio":estaEnInicio,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "recienIniciado":recienIniciado})
+        else:
+            return render(request, "empleadosCustom/inicio/inicio.html", {"estaEnInicio":estaEnInicio,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo})
     #Si le da al inicio y no hay una sesión iniciada..
     else:
         return redirect('/login/') #redirecciona a url de inicio
