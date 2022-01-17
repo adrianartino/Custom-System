@@ -316,10 +316,29 @@ def resultadosEncuestas(request):
         for multiple in pregMultiples:
             idPregunta = multiple[0]
 
+            
+
             respuestas = Respuestas.objects.filter(id_pregunta =idPregunta) #en este caso devuelve dos respuestas de dos diferentes empleados
+
+            for datos in respuestas:
+                empleadoID = datos.id_empleado_id
+
+            encuestaEmpleado = EncuestaEmpleadoResuelta.objects.filter(id_encuesta = 1, id_empleado = empleadoID)
+
+           
+            cont = 0
+            for dato in encuestaEmpleado:
+                idEmpleadoRespondio = str(dato.id_empleado_id)
+                cont = cont +1
+
+                
+
+                respuestasCompletas = Respuestas.objects.filter(id_empleado = str(idEmpleadoRespondio))
+
+            
             contadorSI = 0
             contadorNO = 0
-            for respuesta in respuestas:
+            for respuesta in respuestasCompletas:
                 res = respuesta.respuesta #SI o NO
                 
                 if res == "SI":
@@ -329,7 +348,7 @@ def resultadosEncuestas(request):
                 
             contadorSiNo.append([contadorSI, contadorNO])
             
-            porcentajePregunta = (contadorSI * 100)/ contadorEmpleadoscontestados
+            porcentajePregunta = (contadorSI * 100)/ cont
             p = ("{0:.2f}".format(float(porcentajePregunta)))
             
             criterio = ""

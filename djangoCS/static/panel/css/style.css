@@ -8211,3 +8211,20 @@ html.ie11 .dropdown-menu ul.menu li a {
 
 html.ie11 .bs-searchbox .form-control {
   width: 90%; }
+
+
+.colorBlanco{
+  color:whitesmoke !important;
+}
+
+.colorGrisIcono{
+  color: #b0b0b0 !important;
+}
+
+.colorAmarilloIcono{
+  color: #ffc300 !important;
+  
+}
+.colorTextoSeleccionado{
+  color: #fe9207 !important;
+}

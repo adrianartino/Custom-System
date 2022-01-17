@@ -194,7 +194,7 @@
             <!-- Menu -->
             <div class="menu" style="background-color: #212F3D!important;">
                 <ul class="list" >
-                    <li class="header" style="background-color: #FFC107;">MENÚ DE NAVEGACIÓN</li>
+                    <li class="header" style="background-color: #a2a6a7; color:black;">MENÚ DE NAVEGACIÓN</li>
                     {% if estaEnInicio %}
                     <li class="active">
                         {% else %}
@@ -202,13 +202,13 @@
                         {% endif %}
                         {% if estaEnInicio %}
                         <a href="/inicio/">
-                            <i class="material-icons" style="color: #00917C !important;">home</i>
+                            <i class="material-icons" style="color: #ffc300 !important;">home</i>
                             <span style="color: #00917C !important;">Inicio</span>
                         </a>
                         {% else %}
                         <a href="/inicio/">
-                            <i class="material-icons" style="color: whitesmoke !important;">home</i>
-                            <span>Inicio</span>
+                            <i class="material-icons colorGrisIcono" >home</i>
+                            <span class="colorBlanco">Inicio</span>
                         </a>
                         {% endif %}
                     </li>
@@ -226,14 +226,14 @@
                         {% endif %}
                         <a href="javascript:void(0);" class="menu-toggle">
                             {% if estaEnVerAreas %}
-                            <i class="material-icons" style="color: #00917C !important;">work</i>
+                            <i class="material-icons colorAmarilloIcono" >work</i>
                             <span style="color: #00917C !important;">Departamentos</span>
                             {% else %}
                             {% if estaEnAgregarAreas %}
-                            <i class="material-icons" style="color: #00917C !important;">work</i>
+                            <i class="material-icons colorAmarilloIcono" >work</i>
                             <span style="color: #00917C !important;">Departamentos</span>
                             {% else %}
-                            <i class="material-icons" style="color: whitesmoke !important;">work</i>
+                            <i class="material-icons colorGrisIcono" >work</i>
                             <span style="color: whitesmoke !important;">Departamentos</span>
                             {% endif %}
                             {% endif %}
@@ -245,9 +245,9 @@
                             <li>
                                 {% endif %}
                                 {% if estaEnVerAreas %}
-                                <a href="/verAreas/" style="color: #E40017 !important;">Ver departamentos</a>
+                                <a href="/verAreas/" style="color: #fe9207 !important;">Ver departamentos</a>
                                 {% else %}
-                                <a href="/verAreas/">Ver departamentos</a>
+                                <a href="/verAreas/" class="colorBlanco">Ver departamentos</a>
                                 {% endif %}
 
                             </li>
@@ -257,9 +257,9 @@
                             <li>
                                 {% endif %}
                                 {% if estaEnAgregarAreas %}
-                                <a href="/agregarAreas/" style="color: #E40017 !important;">Agregar departamento</a>
+                                <a href="/agregarAreas/" class="colorTextoSeleccionado">Agregar departamento</a>
                                 {% else %}
-                                <a href="/agregarAreas/">Agregar departamento</a>
+                                <a href="/agregarAreas/" class="colorBlanco">Agregar departamento</a>
                                 {% endif %}
                             </li>
 
@@ -278,15 +278,15 @@
                         {% endif %}
                         <a href="javascript:void(0);" class="menu-toggle">
                             {% if estaEnVerEmpleados %}
-                            <i class="material-icons" style="color: #00917C !important;">groups</i>
+                            <i class="material-icons colorAmarilloIcono" >groups</i>
                             <span style="color: #00917C !important;">Empleados</span>
                             {% else %}
                             {% if estaEnAgregarEmpleados %}
-                            <i class="material-icons" style="color: #00917C !important;">groups</i>
+                            <i class="material-icons colorAmarilloIcono" >groups</i>
                             <span style="color: #00917C !important;">Empleados</span>
                             {% else %}
-                            <i class="material-icons">groups</i>
-                            <span>Empleados</span>
+                            <i class="material-icons colorGrisIcono">groups</i>
+                            <span class="colorBlanco">Empleados</span>
                             {% endif %}
                             {% endif %}
 
@@ -298,9 +298,9 @@
                             <li>
                                 {% endif %}
                                 {% if estaEnVerEmpleados %}
-                                <a href="/verEmpleados/" style="color: #E40017 !important;">Ver empleados</a>
+                                <a href="/verEmpleados/" class="colorTextoSeleccionado">Ver empleados</a>
                                 {% else %}
-                                <a href="/verEmpleados/">Ver empleados</a>
+                                <a href="/verEmpleados/" class="colorBlanco">Ver empleados</a>
                                 {% endif %}
                             </li>
                             {% if estaEnAgregarEmpleados %}
@@ -309,9 +309,9 @@
                             <li>
                                 {% endif %}
                                 {% if estaEnAgregarEmpleados %}
-                                <a href="/agregarEmpleados/" style="color: #E40017 !important;">Agregar empleados</a>
+                                <a href="/agregarEmpleados/" class="colorTextoSeleccionado">Agregar empleados</a>
                                 {% else %}
-                                <a href="/agregarEmpleados/">Agregar empleados</a>
+                                <a href="/agregarEmpleados/" class="colorBlanco">Agregar empleados</a>
                                 {% endif %}
                             </li>
 
@@ -334,19 +334,19 @@
                         {% endif %}
                         <a href="javascript:void(0);" class="menu-toggle">
                             {% if estaEnVerEquipos %}
-                            <i class="material-icons" style="color: #00917C !important;">computer</i>
+                            <i class="material-icons colorAmarilloIcono" >computer</i>
                             <span style="color: #00917C !important;">Equipos de Cómputo</span>
                             {% else %}
                             {% if estaEnAgregarEquipos %}
-                            <i class="material-icons" style="color: #00917C !important;">computer</i>
+                            <i class="material-icons colorAmarilloIcono" >computer</i>
                             <span style="color: #00917C !important;">Equipos de Cómputo</span>
                             {% else %}
                             {% if estaEnRenovacionEquipos %}
-                            <i class="material-icons" style="color: #00917C !important;">computer</i>
+                            <i class="material-icons colorAmarilloIcono" >computer</i>
                             <span style="color: #00917C !important;">Equipos de Cómputo</span>
                             {% else %}
-                            <i class="material-icons">computer</i>
-                            <span>Equipos de Cómputo</span>
+                            <i class="material-icons colorGrisIcono">computer</i>
+                            <span class="colorBlanco">Equipos de Cómputo</span>
                             {% endif %}
                             {% endif %}
                             {% endif %}
@@ -360,9 +360,9 @@
                             <li>
                                 {% endif %}
                                 {% if estaEnVerEquipos %}
-                                <a href="/verEquipos/" style="color: #E40017 !important;">Ver equipos</a>
+                                <a href="/verEquipos/" class="colorTextoSeleccionado">Ver equipos</a>
                                 {% else %}
-                                <a href="/verEquipos/">Ver equipos</a>
+                                <a href="/verEquipos/" class="colorBlanco">Ver equipos</a>
                             <li>
                                 {% endif %}
 
@@ -373,9 +373,9 @@
                             <li>
                                 {% endif %}
                                 {% if estaEnAgregarEquipos %}
-                                <a href="/agregarEquipos/" style="color: #E40017 !important;">Agregar equipos</a>
+                                <a href="/agregarEquipos/" class="colorTextoSeleccionado">Agregar equipos</a>
                                 {% else %}
-                                <a href="/agregarEquipos/">Agregar equipos</a>
+                                <a href="/agregarEquipos/" class="colorBlanco">Agregar equipos</a>
                                 {% endif %}
 
                             </li>
@@ -385,10 +385,10 @@
                             <li>
                                 {% endif %}
                                 {% if estaEnRenovacionEquipos %}
-                                <a href="/renovacionEquipos/" style="color: #E40017 !important;">Renovación de
+                                <a href="/renovacionEquipos/" class="colorTextoSeleccionado">Renovación de
                                     equipos</a>
                                 {% else %}
-                                <a href="/renovacionEquipos/">Renovación de equipos</a>
+                                <a href="/renovacionEquipos/" class="colorBlanco">Renovación de equipos</a>
                                 {% endif %}
 
                             </li>
@@ -418,23 +418,23 @@
                         {% endif %}
                         <a href="javascript:void(0);" class="menu-toggle">
                             {% if estaEnVerImpresoras %}
-                            <i class="material-icons" style="color: #00917C !important;">local_printshop</i>
+                            <i class="material-icons colorAmarilloIcono" >local_printshop</i>
                             <span style="color: #00917C !important;"> Impresoras</span>
                             {% else %}
                             {% if estaEnAgregarImpresoras %}
-                            <i class="material-icons" style="color: #00917C !important;">local_printshop</i>
+                            <i class="material-icons colorAmarilloIcono" >local_printshop</i>
                             <span style="color: #00917C !important;"> Impresoras</span>
                             {% else %}
                             {% if estaEnRenovacionImpresoras %}
-                            <i class="material-icons" style="color: #00917C !important;">local_printshop</i>
+                            <i class="material-icons colorAmarilloIcono" >local_printshop</i>
                             <span style="color: #00917C !important;"> Impresoras</span>
                             {% else %}
                             {% if Insumos %}
-                            <i class="material-icons" style="color: #00917C !important;">local_printshop</i>
+                            <i class="material-icons colorAmarilloIcono" >local_printshop</i>
                             <span style="color: #00917C !important;"> Impresoras</span>
                             {% else %}
-                            <i class="material-icons">local_printshop</i>
-                            <span> Impresoras</span>
+                            <i class="material-icons colorGrisIcono">local_printshop</i>
+                            <span class="colorBlanco"> Impresoras</span>
                             {% endif %}
                             {% endif %}
                             {% endif %}
@@ -449,9 +449,9 @@
                             <li>
                                 {% endif %}
                                 {% if estaEnVerImpresoras %}
-                                <a href="/verImpresoras/" style="color: #E40017 !important;">Ver impresoras</a>
+                                <a href="/verImpresoras/" class="colorTextoSeleccionado">Ver impresoras</a>
                                 {% else %}
-                                <a href="/verImpresoras/">Ver impresoras</a>
+                                <a href="/verImpresoras/" class="colorBlanco">Ver impresoras</a>
                                 {% endif %}
                             </li>
                             {% if estaEnAgregarImpresoras %}
@@ -460,9 +460,9 @@
                             <li>
                                 {% endif %}
                                 {% if estaEnAgregarImpresoras %}
-                                <a href="/agregarImpresoras/" style="color: #E40017 !important;">Agregar impresoras</a>
+                                <a href="/agregarImpresoras/" class="colorTextoSeleccionado">Agregar impresoras</a>
                                 {% else %}
-                                <a href="/agregarImpresoras/">Agregar impresoras</a>
+                                <a href="/agregarImpresoras/" class="colorBlanco">Agregar impresoras</a>
                                 {% endif %}
                             </li>
                             {% if estaEnRenovacionImpresoras %}
@@ -471,10 +471,10 @@
                             <li>
                                 {% endif %}
                                 {% if estaEnRenovacionImpresoras %}
-                                <a href="/renovacionImpresoras/" style="color: #E40017 !important;">Renovación
+                                <a href="/renovacionImpresoras/" class="colorTextoSeleccionado">Renovación
                                     impresoras</a>
                                 {% else %}
-                                <a href="/renovacionImpresoras/">Renovación impresoras</a>
+                                <a href="/renovacionImpresoras/" class="colorBlanco">Renovación impresoras</a>
                                 {% endif %}
                             </li>
                             {% if Insumos %}
@@ -491,14 +491,14 @@
                                 <a href="javascript:void(0);" class="menu-toggle">
                                     {% if estaEnAgregarInsumos %}
                                     <i class="material-icons" style="color: #336BFF !important;">opacity</i>
-                                    <span style="color: #E40017 !important;">Insumos</span>
+                                    <span class="colorTextoSeleccionado">Insumos</span>
                                     {% else %}
                                     {% if estaEnVerInsumos %}
                                     <i class="material-icons" style="color: #336BFF !important;">opacity</i>
-                                    <span style="color: #E40017 !important;">Insumos</span>
+                                    <span class="colorTextoSeleccionado">Insumos</span>
                                     {% else %}
-                                    <i class="material-icons">opacity</i>
-                                    <span>Insumos</span>
+                                    <i class="material-icons colorGrisIcono">opacity</i>
+                                    <span class="colorBlanco">Insumos</span>
                                     {% endif %}
                                     {% endif %}
                                 </a>
@@ -512,7 +512,7 @@
                                         <a href="/verInsumos/" style="color: #d49e0a !important;">Ver insumos</a>
                                         {% else %}
 
-                                        <a href="/verInsumos/">Ver insumos</a>
+                                        <a href="/verInsumos/" class="colorBlanco">Ver insumos</a>
                                         {% endif %}
 
                                     </li>
@@ -524,7 +524,7 @@
                                         {% if estaEnAgregarInsumos %}
                                         <a href="/agregarInsumos/" style="color: #d49e0a !important;">Agregar insumos</a>
                                         {% else %}
-                                        <a href="/agregarInsumos/">Agregar insumos</a>
+                                        <a href="/agregarInsumos/" class="colorBlanco">Agregar insumos</a>
                                         {% endif %}
                                     </li>
 
@@ -582,43 +582,43 @@
                         <a href="javascript:void(0);" class="menu-toggle">
                             
                             {% if estaEnVerMouses %}
-                            <i class="material-icons" style="color: #00917C !important;">settings_input_component</i>
+                            <i class="material-icons colorAmarilloIcono" >settings_input_component</i>
                             <span style="color: #00917C !important;"> Equipos de sistemas</span>
                             {% else %}
                             {% if estaEnAgregarMouses %}
-                            <i class="material-icons" style="color: #00917C !important;">settings_input_component</i>
+                            <i class="material-icons colorAmarilloIcono" >settings_input_component</i>
                             <span style="color: #00917C !important;"> Equipos de sistemas</span>
                             {% else %}
                             {% if estaEnVerTeclados %}
-                            <i class="material-icons" style="color: #00917C !important;">settings_input_component</i>
+                            <i class="material-icons colorAmarilloIcono" >settings_input_component</i>
                             <span style="color: #00917C !important;"> Equipos de sistemas</span>
                             {% else %}
                             {% if estaEnAgregarTeclados %}
-                            <i class="material-icons" style="color: #00917C !important;">settings_input_component</i>
+                            <i class="material-icons colorAmarilloIcono" >settings_input_component</i>
                             <span style="color: #00917C !important;"> Equipos de sistemas</span>
                             {% else %}
                             {% if estaEnVerMonitores %}
-                            <i class="material-icons" style="color: #00917C !important;">settings_input_component</i>
+                            <i class="material-icons colorAmarilloIcono" >settings_input_component</i>
                             <span style="color: #00917C !important;"> Equipos de sistemas</span>
                             {% else %}
                             {% if estaEnAgregarMonitores %}
-                            <i class="material-icons" style="color: #00917C !important;">settings_input_component</i>
+                            <i class="material-icons colorAmarilloIcono" >settings_input_component</i>
                             <span style="color: #00917C !important;"> Equipos de sistemas</span>
                             {% else %}
                             {% if estaEnVerTelefonos %}
-                            <i class="material-icons" style="color: #00917C !important;">settings_input_component</i>
+                            <i class="material-icons colorAmarilloIcono" >settings_input_component</i>
                             <span style="color: #00917C !important;"> Equipos de sistemas</span>
                             {% else %}
                             {% if estaEnAgregarTelefonos %}
-                            <i class="material-icons" style="color: #00917C !important;">settings_input_component</i>
+                            <i class="material-icons colorAmarilloIcono" >settings_input_component</i>
                             <span style="color: #00917C !important;"> Equipos de sistemas</span>
                             {% else %}
                             {% if estaEnExtensionesTelefonos %}
-                            <i class="material-icons" style="color: #00917C !important;">settings_input_component</i>
+                            <i class="material-icons colorAmarilloIcono" >settings_input_component</i>
                             <span style="color: #00917C !important;"> Equipos de sistemas</span>
                             {% else %}
-                            <i class="material-icons">settings_input_component</i>
-                            <span> Equipos de sistemas</span>
+                            <i class="material-icons colorGrisIcono">settings_input_component</i>
+                            <span class="colorBlanco"> Equipos de sistemas</span>
                             {% endif %}
                             {% endif %}
                             {% endif %}
@@ -650,15 +650,15 @@
                                 <a href="javascript:void(0);" class="menu-toggle">
                                     {% if estaEnVerMouses %}
                                     <i class="material-icons" style="color: #336BFF !important;">mouse</i>
-                                    <span style="color: #E40017 !important;">Mouses</span>
+                                    <span class="colorTextoSeleccionado">Mouses</span>
                                     {% else %}
                                     {% if estaEnAgregarMouses %}
                                     <i class="material-icons" style="color: #336BFF !important;">mouse</i>
-                                    <span style="color: #E40017 !important;">Mouses</span>
+                                    <span class="colorTextoSeleccionado">Mouses</span>
                                     {% else %}
                                     
-                                    <i class="material-icons">mouse</i>
-                                    <span>Mouses</span>
+                                    <i class="material-icons colorGrisIcono">mouse</i>
+                                    <span class="colorBlanco">Mouses</span>
                                     {% endif %}
                                     {% endif %}
                                 </a>
@@ -672,7 +672,7 @@
                                         <a href="/verMouses/" style="color: #d49e0a !important;">Ver mouses</a>
                                         {% else %}
 
-                                        <a href="/verMouses/">Ver mouses</a>
+                                        <a href="/verMouses/" class="colorBlanco">Ver mouses</a>
                                         {% endif %}
 
                                     </li>
@@ -684,7 +684,7 @@
                                         {% if estaEnAgregarMouses %}
                                         <a href="/agregarMouses/" style="color: #d49e0a !important;">Agregar mouses</a>
                                         {% else %}
-                                        <a href="/agregarMouses/">Agregar mouses</a>
+                                        <a href="/agregarMouses/" class="colorBlanco">Agregar mouses</a>
                                         {% endif %}
                                     </li>
 
@@ -708,15 +708,15 @@
                                 <a href="javascript:void(0);" class="menu-toggle">
                                     {% if estaEnVerTeclados %}
                                     <i class="material-icons" style="color: #336BFF !important;">keyboard</i>
-                                    <span style="color: #E40017 !important;">Teclados</span>
+                                    <span class="colorTextoSeleccionado">Teclados</span>
                                     {% else %}
                                     {% if estaEnAgregarTeclados %}
                                     <i class="material-icons" style="color: #336BFF !important;">keyboard</i>
-                                    <span style="color: #E40017 !important;">Teclados</span>
+                                    <span class="colorTextoSeleccionado">Teclados</span>
                                     {% else %}
                                     
-                                    <i class="material-icons">keyboard</i>
-                                    <span>Teclados</span>
+                                    <i class="material-icons colorGrisIcono">keyboard</i>
+                                    <span class="colorBlanco">Teclados</span>
                                     {% endif %}
                                     {% endif %}
                                 </a>
@@ -730,7 +730,7 @@
                                         <a href="/verTeclados/" style="color: #d49e0a !important;">Ver teclados</a>
                                         {% else %}
 
-                                        <a href="/verTeclados/">Ver teclados</a>
+                                        <a href="/verTeclados/" class="colorBlanco">Ver teclados</a>
                                         {% endif %}
 
                                     </li>
@@ -742,7 +742,7 @@
                                         {% if estaEnAgregarTeclados %}
                                         <a href="/agregarTeclados/" style="color: #d49e0a !important;">Agregar teclados</a>
                                         {% else %}
-                                        <a href="/agregarTeclados/">Agregar teclados</a>
+                                        <a href="/agregarTeclados/" class="colorBlanco">Agregar teclados</a>
                                         {% endif %}
                                     </li>
 
@@ -767,15 +767,15 @@
                                 <a href="javascript:void(0);" class="menu-toggle">
                                     {% if estaEnVerMonitores %}
                                     <i class="material-icons" style="color: #336BFF !important;">desktop_windows</i>
-                                    <span style="color: #E40017 !important;">Monitores</span>
+                                    <span class="colorTextoSeleccionado">Monitores</span>
                                     {% else %}
                                     {% if estaEnAgregarMonitores %}
                                     <i class="material-icons" style="color: #336BFF !important;">desktop_windows</i>
-                                    <span style="color: #E40017 !important;">Monitores</span>
+                                    <span class="colorTextoSeleccionado">Monitores</span>
                                     {% else %}
                                     
-                                    <i class="material-icons">desktop_windows</i>
-                                    <span>Monitores</span>
+                                    <i class="material-icons colorGrisIcono">desktop_windows</i>
+                                    <span class="colorBlanco">Monitores</span>
                                     {% endif %}
                                     {% endif %}
                                 </a>
@@ -789,7 +789,7 @@
                                         <a href="/verMonitores/" style="color: #d49e0a !important;">Ver monitores</a>
                                         {% else %}
 
-                                        <a href="/verMonitores/">Ver monitores</a>
+                                        <a href="/verMonitores/" class="colorBlanco">Ver monitores</a>
                                         {% endif %}
 
                                     </li>
@@ -801,7 +801,7 @@
                                         {% if estaEnAgregarMonitores %}
                                         <a href="/agregarMonitores/" style="color: #d49e0a !important;">Agregar monitores</a>
                                         {% else %}
-                                        <a href="/agregarMonitores/">Agregar monitores</a>
+                                        <a href="/agregarMonitores/" class="colorBlanco">Agregar monitores</a>
                                         {% endif %}
                                     </li>
 
@@ -832,19 +832,19 @@
                                 <a href="javascript:void(0);" class="menu-toggle">
                                     {% if estaEnVerTelefonos %}
                                     <i class="material-icons" style="color: #336BFF !important;">phone</i>
-                                    <span style="color: #E40017 !important;">Teléfonos</span>
+                                    <span class="colorTextoSeleccionado">Teléfonos</span>
                                     {% else %}
                                     {% if estaEnAgregarTelefonos %}
                                     <i class="material-icons" style="color: #336BFF !important;">phone</i>
-                                    <span style="color: #E40017 !important;">Teléfonos</span>
+                                    <span class="colorTextoSeleccionado">Teléfonos</span>
                                     {% else %}
                                     {% if estaEnExtensionesTelefonos %}
                                     <i class="material-icons" style="color: #336BFF !important;">phone</i>
-                                    <span style="color: #E40017 !important;">Teléfonos</span>
+                                    <span class="colorTextoSeleccionado">Teléfonos</span>
                                     {% else %}
                                     
-                                    <i class="material-icons">phone</i>
-                                    <span>Teléfonos</span>
+                                    <i class="material-icons colorGrisIcono">phone</i>
+                                    <span class="colorBlanco">Teléfonos</span>
                                     {% endif %}
                                     {% endif %}
                                     {% endif %}
@@ -859,7 +859,7 @@
                                         <a href="/verTelefonos/" style="color: #d49e0a !important;">Ver teléfonos</a>
                                         {% else %}
 
-                                        <a href="/verTelefonos/">Ver teléfonos</a>
+                                        <a href="/verTelefonos/" class="colorBlanco">Ver teléfonos</a>
                                         {% endif %}
 
                                     </li>
@@ -871,7 +871,7 @@
                                         {% if estaEnAgregarTelefonos %}
                                         <a href="/agregarTelefonos/" style="color: #d49e0a !important;">Agregar teléfonos</a>
                                         {% else %}
-                                        <a href="/agregarTelefonos/">Agregar teléfonos</a>
+                                        <a href="/agregarTelefonos/" class="colorBlanco">Agregar teléfonos</a>
                                         {% endif %}
                                     </li>
                                         {% if estaEnExtensionesTelefonos %}
@@ -882,7 +882,7 @@
                                         {% if estaEnExtensionesTelefonos %}
                                         <a href="/extensionesTel/" style="color: #d49e0a !important;">Extensiones</a>
                                         {% else %}
-                                        <a href="/extensionesTel/">Extensiones</a>
+                                        <a href="/extensionesTel/" class="colorBlanco">Extensiones</a>
                                         {% endif %}
                                     </li>
 
@@ -906,15 +906,15 @@
                         {% endif %}
                         <a href="javascript:void(0);" class="menu-toggle">
                             {% if estaEnVerDiscosDuros %}
-                            <i class="material-icons" style="color: #00917C !important;">save</i>
+                            <i class="material-icons colorAmarilloIcono" >save</i>
                             <span style="color: #00917C !important;"> Discos Duros</span>
                             {% else %}
                             {% if estaEnAgregarDiscosDuros %}
-                            <i class="material-icons" style="color: #00917C !important;">save</i>
+                            <i class="material-icons colorAmarilloIcono" >save</i>
                             <span style="color: #00917C !important;">Discos Duros</span>
                             {% else %}
-                            <i class="material-icons">save</i>
-                            <span>Discos Duros</span>
+                            <i class="material-icons colorGrisIcono">save</i>
+                            <span class="colorBlanco">Discos Duros</span>
                             {% endif %}
                             {% endif %}
                         </a>
@@ -925,9 +925,9 @@
                             <li>
                                 {% endif %}
                                 {% if estaEnVerDiscosDuros %}
-                                <a href="/verDiscosDuros/" style="color: #E40017 !important;">Ver discos duros</a>
+                                <a href="/verDiscosDuros/" class="colorTextoSeleccionado">Ver discos duros</a>
                                 {% else %}
-                                <a href="/verDiscosDuros/">Ver discos duros</a>
+                                <a href="/verDiscosDuros/" class="colorBlanco">Ver discos duros</a>
                                 {% endif %}
                             </li>
                             {% if estaEnAgregarDiscosDuros %}
@@ -936,9 +936,9 @@
                             <li>
                                 {% endif %}
                                 {% if estaEnAgregarDiscosDuros %}
-                                <a href="/agregarDiscosDuros/" style="color: #E40017 !important;">Agregar disco duro</a>
+                                <a href="/agregarDiscosDuros/" class="colorTextoSeleccionado">Agregar disco duro</a>
                                 {% else %}
-                                <a href="/agregarDiscosDuros/">Agregar disco duro</a>
+                                <a href="/agregarDiscosDuros/" class="colorBlanco">Agregar disco duro</a>
                                 {% endif %}
                             </li>
 
@@ -962,15 +962,15 @@
                         {% endif %}
                         <a href="javascript:void(0);" class="menu-toggle">
                             {% if estaEnVerUSB %}
-                            <i class="material-icons" style="color: #00917C !important;">usb</i>
+                            <i class="material-icons colorAmarilloIcono" >usb</i>
                             <span style="color: #00917C !important;"> Memorias USB</span>
                             {% else %}
                             {% if estaEnAgregarUSB %}
-                            <i class="material-icons" style="color: #00917C !important;">save</i>
+                            <i class="material-icons colorAmarilloIcono" >save</i>
                             <span style="color: #00917C !important;">Memorias USB</span>
                             {% else %}
-                            <i class="material-icons">usb</i>
-                            <span>Memorias USB</span>
+                            <i class="material-icons colorGrisIcono">usb</i>
+                            <span class="colorBlanco">Memorias USB</span>
                             {% endif %}
                             {% endif %}
                         </a>
@@ -981,9 +981,9 @@
                             <li>
                                 {% endif %}
                                 {% if estaEnVerUSB %}
-                                <a href="/verUSB/" style="color: #E40017 !important;">Ver memorias USB</a>
+                                <a href="/verUSB/" class="colorTextoSeleccionado">Ver memorias USB</a>
                                 {% else %}
-                                <a href="/verUSB/">Ver memorias USB</a>
+                                <a href="/verUSB/" class="colorBlanco">Ver memorias USB</a>
                                 {% endif %}
                             </li>
                             {% if estaEnAgregarUSB %}
@@ -992,9 +992,9 @@
                             <li>
                                 {% endif %}
                                 {% if estaEnAgregarUSB %}
-                                <a href="/agregarUSB/" style="color: #E40017 !important;">Agregar memorias USB</a>
+                                <a href="/agregarUSB/" class="colorTextoSeleccionado">Agregar memorias USB</a>
                                 {% else %}
-                                <a href="/agregarUSB/">Agregar memorias USB</a>
+                                <a href="/agregarUSB/" class="colorBlanco">Agregar memorias USB</a>
                                 {% endif %}
                             </li>
 
@@ -1020,15 +1020,15 @@
                         {% endif %}
                         <a href="javascript:void(0);" class="menu-toggle">
                             {% if estaEnVerPrestamos %}
-                            <i class="material-icons" style="color: #00917C !important;">credit_score</i>
+                            <i class="material-icons colorAmarilloIcono" >credit_score</i>
                             <span style="color: #00917C !important;"> Prestamos</span>
                             {% else %}
                             {% if estaEnAgregarPrestamo %}
-                            <i class="material-icons" style="color: #00917C !important;">credit_score</i>
+                            <i class="material-icons colorAmarilloIcono" >credit_score</i>
                             <span style="color: #00917C !important;">Prestamos</span>
                             {% else %}
-                            <i class="material-icons">credit_score</i>
-                            <span>Prestamos</span>
+                            <i class="material-icons colorGrisIcono">credit_score</i>
+                            <span class="colorBlanco">Prestamos</span>
                             {% endif %}
                             {% endif %}
                         </a>
@@ -1039,9 +1039,9 @@
                             <li>
                                 {% endif %}
                                 {% if estaEnVerPrestamos %}
-                                <a href="/verPrestamo/" style="color: #E40017 !important;">Ver prestamos</a>
+                                <a href="/verPrestamo/" class="colorTextoSeleccionado">Ver prestamos</a>
                                 {% else %}
-                                <a href="/verPrestamo/">Ver prestamos</a>
+                                <a href="/verPrestamo/" class="colorBlanco">Ver prestamos</a>
                                 {% endif %}
                             </li>
                             {% if estaEnAgregarPrestamo %}
@@ -1050,9 +1050,9 @@
                             <li>
                                 {% endif %}
                                 {% if estaEnAgregarPrestamo %}
-                                <a href="/agregarPrestamo/" style="color: #E40017 !important;">Agregar prestamo</a>
+                                <a href="/agregarPrestamo/" class="colorTextoSeleccionado">Agregar prestamo</a>
                                 {% else %}
-                                <a href="/agregarPrestamo/">Agregar prestamo</a>
+                                <a href="/agregarPrestamo/" class="colorBlanco">Agregar prestamo</a>
                                 {% endif %}
                             </li>
 
@@ -1084,20 +1084,20 @@
                         {% endif %}
                         <a href="javascript:void(0);" class="menu-toggle">
                             {% if estaEnVerProgramas %}
-                            <i class="material-icons" style="color: #00917C !important;">apps</i>
+                            <i class="material-icons colorAmarilloIcono" >apps</i>
                             <span style="color: #00917C !important;">Programas</span>
                             {% else %}
                             {% if estaEnAgregarProgramas %}
-                            <i class="material-icons" style="color: #00917C !important;">apps</i>
+                            <i class="material-icons colorAmarilloIcono" >apps</i>
                             <span style="color: #00917C !important;">Programas</span>
                             {% else %}
 
                             {% if estaEnverProgramasPorArea %}
-                            <i class="material-icons" style="color: #00917C !important;">apps</i>
+                            <i class="material-icons colorAmarilloIcono" >apps</i>
                             <span style="color: #00917C !important;">Programas</span>
                             {% else %}
-                            <i class="material-icons">apps</i>
-                            <span>Programas</span>
+                            <i class="material-icons colorGrisIcono">apps</i>
+                            <span class="colorBlanco">Programas</span>
                             {% endif %}
                             {% endif %}
                             {% endif %}
@@ -1110,9 +1110,9 @@
                             <li>
                                 {% endif %}
                                 {% if estaEnVerProgramas %}
-                                <a href="/verProgramas/" style="color: #E40017 !important;">Ver programas</a>
+                                <a href="/verProgramas/" class="colorTextoSeleccionado">Ver programas</a>
                                 {% else %}
-                                <a href="/verProgramas/">Ver programas</a>
+                                <a href="/verProgramas/" class="colorBlanco">Ver programas</a>
                                 {% endif %}
                             </li>
                             {% if estaEnAgregarProgramas %}
@@ -1121,9 +1121,9 @@
                             <li>
                                 {% endif %}
                                 {% if estaEnAgregarProgramas %}
-                                <a href="/agregarProgramas/" style="color: #E40017 !important;">Agregar programas</a>
+                                <a href="/agregarProgramas/" class="colorTextoSeleccionado">Agregar programas</a>
                                 {% else %}
-                                <a href="/agregarProgramas/">Agregar programas</a>
+                                <a href="/agregarProgramas/" class="colorBlanco">Agregar programas</a>
                                 {% endif %}
                             </li>
 
@@ -1133,10 +1133,10 @@
                             <li>
                                 {% endif %}
                                 {% if estaEnverProgramasPorArea %}
-                                <a href="/ProgramaPorArea/" style="color: #E40017 !important;">Ver programas por
+                                <a href="/ProgramaPorArea/" class="colorTextoSeleccionado">Ver programas por
                                     departamento</a>
                                 {% else %}
-                                <a href="/ProgramaPorArea/">Ver programas por departamento</a>
+                                <a href="/ProgramaPorArea/" class="colorBlanco">Ver programas por departamento</a>
                                 {% endif %}
                             </li>
                         </ul>
@@ -1153,15 +1153,15 @@
                         {% endif %}
                         <a href="javascript:void(0);" class="menu-toggle">
                             {% if estaEnCalendario %}
-                            <i class="material-icons" style="color: #00917C !important;">cleaning_services</i>
+                            <i class="material-icons colorAmarilloIcono" >cleaning_services</i>
                             <span style="color: #00917C !important;">Mantenimiento</span>
                             {% else %}
                             {% if estaEnFormulario %}
-                            <i class="material-icons" style="color: #00917C !important;">cleaning_services</i>
+                            <i class="material-icons colorAmarilloIcono" >cleaning_services</i>
                             <span style="color: #00917C !important;">Mantenimiento</span>
                             {% else %}
-                            <i class="material-icons">cleaning_services</i>
-                            <span>Mantenimiento</span>
+                            <i class="material-icons colorGrisIcono">cleaning_services</i>
+                            <span class="colorBlanco">Mantenimiento</span>
                             {% endif %}
                             {% endif %}
                         </a>
@@ -1172,11 +1172,11 @@
                             <li>
                                 {% endif %}
                                 {% if estaEnCalendario %}
-                                <a href="/calendarioMant/" style="color: #E40017 !important;">Calendario de
+                                <a href="/calendarioMant/" class="colorTextoSeleccionado">Calendario de
                                     mantenimiento</a>
                                 {% else %}
 
-                                <a href="/calendarioMant/">Calendario de mantenimiento</a>
+                                <a href="/calendarioMant/" class="colorBlanco">Calendario de mantenimiento</a>
                                 {% endif %}
                             </li>
                             {% if estaEnFormulario %}
@@ -1185,10 +1185,10 @@
                             <li>
                                 {% endif %}
                                 {% if estaEnFormulario %}
-                                <a href="/formularioMant/" style="color: #E40017 !important;">Formulario de
+                                <a href="/formularioMant/" class="colorTextoSeleccionado">Formulario de
                                     mantenimiento</a>
                                 {% else %}
-                                <a href="/formularioMant/">Formulario de mantenimiento</a>
+                                <a href="/formularioMant/" class="colorBlanco">Formulario de mantenimiento</a>
                                 {% endif %}
                             </li>
 
@@ -1206,15 +1206,15 @@
                         {% endif %}
                         <a href="javascript:void(0);" class="menu-toggle">
                             {% if estaEnVerCarta %}
-                            <i class="material-icons" style="color: #00917C !important;">assignment</i>
+                            <i class="material-icons colorAmarilloIcono" >assignment</i>
                             <span style="color: #00917C !important;"> Carta Compromiso</span>
                             {% else %}
                             {% if estaEnAgregarCarta %}
-                            <i class="material-icons" style="color: #00917C !important;">assignment</i>
+                            <i class="material-icons colorAmarilloIcono" >assignment</i>
                             <span style="color: #00917C !important;">Carta Compromiso</span>
                             {% else %}
-                            <i class="material-icons">assignment</i>
-                            <span>Carta Compromiso</span>
+                            <i class="material-icons colorGrisIcono">assignment</i>
+                            <span class="colorBlanco">Carta Compromiso</span>
                             {% endif %}
                             {% endif %}
                         </a>
@@ -1225,9 +1225,9 @@
                             <li>
                                 {% endif %}
                                 {% if estaEnVerCarta %}
-                                <a href="/verCarta/" style="color: #E40017 !important;">Ver cartas</a>
+                                <a href="/verCarta/" class="colorTextoSeleccionado">Ver cartas</a>
                                 {% else %}
-                                <a href="/verCarta/">Ver cartas</a>
+                                <a href="/verCarta/" class="colorBlanco">Ver cartas</a>
                                 {% endif %}
                             </li>
                             {% if estaEnAgregarCarta %}
@@ -1236,9 +1236,9 @@
                             <li>
                                 {% endif %}
                                 {% if estaEnAgregarCarta %}
-                                <a href="/agregarCarta/" style="color: #E40017 !important;">Realizar carta</a>
+                                <a href="/agregarCarta/" class="colorTextoSeleccionado">Realizar carta</a>
                                 {% else %}
-                                <a href="/agregarCarta/">Realizar carta</a>
+                                <a href="/agregarCarta/" class="colorBlanco">Realizar carta</a>
                                 {% endif %}
                             </li>
 
@@ -1258,17 +1258,17 @@
                      
                         <a href="javascript:void(0);" class="menu-toggle">
                             {% if estaEnVerEncuestas %}
-                            <i class="material-icons" style="color: #00917C !important;">assessment</i>
+                            <i class="material-icons colorAmarilloIcono" >assessment</i>
                             <span style="color: #00917C !important;">Encuestas</span>
                             {% else %}
                             {% if estaEnAgregarEncuestas %}
-                            <i class="material-icons" style="color: #00917C !important;">assessment</i>
+                            <i class="material-icons colorAmarilloIcono" >assessment</i>
                             <span style="color: #00917C !important;">Encuestas</span>
                             {% else %}
 
                            
-                            <i class="material-icons">assessment</i>
-                            <span>Encuestas</span>
+                            <i class="material-icons colorGrisIcono">assessment</i>
+                            <span class="colorBlanco">Encuestas</span>
                             {% endif %}
                             {% endif %}
                             
@@ -1281,9 +1281,9 @@
                             <li>
                                 {% endif %}
                                 {% if estaEnVerEncuestas %}
-                                <a href="/verEncuestas/" style="color: #E40017 !important;">Ver encuestas</a>
+                                <a href="/verEncuestas/" class="colorTextoSeleccionado">Ver encuestas</a>
                                 {% else %}
-                                <a href="/verEncuestas/">Ver encuestas</a>
+                                <a href="/verEncuestas/" class="colorBlanco">Ver encuestas</a>
                                 {% endif %}
                             </li>
                             {% if estaEnAgregarEncuestas %}
@@ -1292,9 +1292,9 @@
                             <li>
                                 {% endif %}
                                 {% if estaEnAgregarEncuestas %}
-                                <a href="/agregarEncuestas/" style="color: #E40017 !important;">Agregar encuesta</a>
+                                <a href="/agregarEncuestas/" class="colorTextoSeleccionado">Agregar encuesta</a>
                                 {% else %}
-                                <a href="/agregarEncuestas/">Agregar encuesta</a>
+                                <a href="/agregarEncuestas/" class="colorBlanco">Agregar encuesta</a>
                                 {% endif %}
                             </li>
 
@@ -1331,26 +1331,26 @@
                         {% endif %}
                         <a href="javascript:void(0);" class="menu-toggle">
                             {% if estaEnEquiposBitacora %}
-                            <i class="material-icons" style="color: #00917C !important;">import_contacts</i>
+                            <i class="material-icons colorAmarilloIcono" >import_contacts</i>
                             <span style="color: #00917C !important;">Bitacora</span>
                             {% else %}
                             {% if estaEnImpresorasBitacora %}
-                            <i class="material-icons" style="color: #00917C !important;">import_contacts</i>
+                            <i class="material-icons colorAmarilloIcono" >import_contacts</i>
                             <span style="color: #00917C !important;">Bitacora</span>
                             {% else %}
                             {% if estaEnEmpleadosBitacora %}
-                            <i class="material-icons" style="color: #00917C !important;">import_contacts</i>
+                            <i class="material-icons colorAmarilloIcono" >import_contacts</i>
                             <span style="color: #00917C !important;">Bitacora</span>
                             {% else %}
 
                             {% if estaEnCartuchosBitacora %}
-                            <i class="material-icons" style="color: #00917C !important;">import_contacts</i>
+                            <i class="material-icons colorAmarilloIcono" >import_contacts</i>
                             <span style="color: #00917C !important;">Bitacora</span>
                             {% else %}
 
 
-                            <i class="material-icons">import_contacts</i>
-                            <span>Bitacora</span>
+                            <i class="material-icons colorGrisIcono">import_contacts</i>
+                            <span class="colorBlanco">Bitacora</span>
 
 
                             {% endif %}
@@ -1367,9 +1367,9 @@
                             <li>
                                 {% endif %}
                                 {% if estaEnEquiposBitacora %}
-                                <a href="/BitacorasEquipos/" style="color: #E40017 !important;">Equipos</a>
+                                <a href="/BitacorasEquipos/" class="colorTextoSeleccionado">Equipos</a>
                                 {% else %}
-                                <a href="/BitacorasEquipos/">Equipos</a>
+                                <a href="/BitacorasEquipos/" class="colorBlanco">Equipos</a>
                                 {% endif %}
                             </li>
                             {% if estaEnImpresorasBitacora %}
@@ -1378,9 +1378,9 @@
                             <li>
                                 {% endif %}
                                 {% if estaEnImpresorasBitacora %}
-                                <a href="/BitacorasImpresoras/" style="color: #E40017 !important;">Impresoras</a>
+                                <a href="/BitacorasImpresoras/" class="colorTextoSeleccionado">Impresoras</a>
                                 {% else %}
-                                <a href="/BitacorasImpresoras/">Impresoras</a>
+                                <a href="/BitacorasImpresoras/" class="colorBlanco">Impresoras</a>
                                 {% endif %}
                             </li>
                             {% if estaEnEmpleadosBitacora %}
@@ -1389,9 +1389,9 @@
                             <li>
                                 {% endif %}
                                 {% if estaEnEmpleadosBitacora %}
-                                <a href="/BitacorasEmpleados/" style="color: #E40017 !important;">Empleados</a>
+                                <a href="/BitacorasEmpleados/" class="colorTextoSeleccionado">Empleados</a>
                                 {% else %}
-                                <a href="/BitacorasEmpleados/">Empleados</a>
+                                <a href="/BitacorasEmpleados/" class="colorBlanco">Empleados</a>
                                 {% endif %}
 
 
@@ -1403,9 +1403,9 @@
                             <li>
                                 {% endif %}
                                 {% if estaEnCartuchosBitacora %}
-                                <a href="/BitacorasCartuchos/" style="color: #E40017 !important;">Cartuchos</a>
+                                <a href="/BitacorasCartuchos/" class="colorTextoSeleccionado">Cartuchos</a>
                                 {% else %}
-                                <a href="/BitacorasCartuchos/">Cartuchos</a>
+                                <a href="/BitacorasCartuchos/" class="colorBlanco">Cartuchos</a>
                                 {% endif %}
                             </li>
 
