@@ -312,34 +312,39 @@ def resultadosEncuestas(request):
             elif tipo == "A":
                 pregAbiertas.append([id_pregunta, texto])
         
-
+        
         for multiple in pregMultiples:
+            respuestasFinalizadas = []
             idPregunta = multiple[0]
 
             
 
             respuestas = Respuestas.objects.filter(id_pregunta =idPregunta) #en este caso devuelve dos respuestas de dos diferentes empleados
-
+            cont = 0
             for datos in respuestas:
                 empleadoID = datos.id_empleado_id
 
-            encuestaEmpleado = EncuestaEmpleadoResuelta.objects.filter(id_encuesta = 1, id_empleado = empleadoID)
+                encuestaEmpleado = EncuestaEmpleadoResuelta.objects.filter(id_encuesta = 1, id_empleado = empleadoID)
+
+                if encuestaEmpleado:
+                    preguntaID = datos.id_pregunta_id
+                    respuestaEm = datos.respuesta
+                    respuestasFinalizadas.append(respuestaEm)
+                    cont = cont +1
+                    
+
 
            
-            cont = 0
-            for dato in encuestaEmpleado:
-                idEmpleadoRespondio = str(dato.id_empleado_id)
-                cont = cont +1
+            
+           
 
                 
-
-                respuestasCompletas = Respuestas.objects.filter(id_empleado = str(idEmpleadoRespondio))
 
             
             contadorSI = 0
             contadorNO = 0
-            for respuesta in respuestasCompletas:
-                res = respuesta.respuesta #SI o NO
+            for respuesta in respuestasFinalizadas:
+                res = respuesta #SI o NO
                 
                 if res == "SI":
                     contadorSI = contadorSI + 1
@@ -1082,12 +1087,24 @@ def pruebaPDF(request):
                 multiples.append(idp)
         
         for multiple in multiples:
-
+            respuestasFinalizadas = []
             respuestas = Respuestas.objects.filter(id_pregunta =multiple) #en este caso devuelve dos respuestas de dos diferentes empleados
+            cont = 0
+            for datos in respuestas:
+                empleadoID = datos.id_empleado_id
+
+                encuestaEmpleado = EncuestaEmpleadoResuelta.objects.filter(id_encuesta = 1, id_empleado = empleadoID)
+
+                if encuestaEmpleado:
+                    preguntaID = datos.id_pregunta_id
+                    respuestaEm = datos.respuesta
+                    respuestasFinalizadas.append(respuestaEm)
+                    cont = cont +1
+
             contadorSI = 0
                 
-            for respuestaX in respuestas:
-                res = respuestaX.respuesta #SI o NO
+            for respuestaX in respuestasFinalizadas:
+                res = respuestaX #SI o NO
                         
                     
                 if res == "SI":
@@ -1116,19 +1133,19 @@ def pruebaPDF(request):
         colorCriterio = ""
         if promedio >= 90 and promedio <= 100:
             criterio = "EXCELENTE"
-            colorCriterio = "#4CAF50"
-        elif promedio >= 80 and promedio <= 89:
+            colorCriterio = "#acaf50"
+        elif promedio >= 80 and promedio < 90:
             criterio = "MUY BUENO"
-            colorCriterio = "#2196F3"
-        elif promedio >= 70 and promedio <= 79:
+            colorCriterio = "#2196f3"
+        elif promedio >= 70 and promedio < 80:
             criterio = "BUENO"
-            colorCriterio = "#FFC107"
-        elif promedio >= 60 and promedio <= 69:
+            colorCriterio = "#ffc107"
+        elif promedio >= 60 and promedio < 70:
             criterio = "REGULAR"
-            colorCriterio = "#FF5722"
-        elif promedio >= 0 and promedio <= 59:
+            colorCriterio = "#ff5722"
+        elif promedio >= 0 and promedio < 60:
             criterio = "DEFICIENTE"
-            colorCriterio = "#F44336"
+            colorCriterio = "#f44336"
             
         
         
