@@ -1483,6 +1483,7 @@ def resultadosMultiples(request):
             for multiple in pregMultiples:
                 idPregunta = multiple[0]
                 clasificacion = multiple[2]
+                respuestasFinalizadas = []
                 
                 
                 palabrasClasificacion = clasificacion.split(" ")
@@ -1496,11 +1497,25 @@ def resultadosMultiples(request):
                     unaSolaPalabra = False
 
                 respuestas = Respuestas.objects.filter(id_pregunta =idPregunta) #en este caso devuelve dos respuestas de dos diferentes empleados
+                cont = 0
+
+                for datos in respuestas:
+                    empleadoID = datos.id_empleado_id
+
+                    encuestaEmpleado = EncuestaEmpleadoResuelta.objects.filter(id_encuesta = 1, id_empleado = empleadoID)
+
+                    if encuestaEmpleado:
+                     
+                        respuestaEm = datos.respuesta
+                        respuestasFinalizadas.append(respuestaEm)
+                        cont = cont +1
+
                 contadorSI = 0
                 contadorNO = 0
+
                 contadorRespuestas = 0
-                for respuestaX in respuestas:
-                    res = respuestaX.respuesta #SI o NO
+                for respuestaX in respuestasFinalizadas:
+                    res = respuestaX #SI o NO
                     contadorRespuestas = contadorRespuestas + 1
                     
                     if res == "SI":
@@ -1516,13 +1531,13 @@ def resultadosMultiples(request):
                 criterio = ""
                 if porcentajePregunta >= 90 and porcentajePregunta <= 100:
                     criterio = "EXCELENTE"
-                elif porcentajePregunta >= 80 and porcentajePregunta <= 89:
+                elif porcentajePregunta >= 80 and porcentajePregunta < 90:
                     criterio = "MUY BUENO"
-                elif porcentajePregunta >= 70 and porcentajePregunta <= 79:
+                elif porcentajePregunta >= 70 and porcentajePregunta < 80:
                     criterio = "BUENO"
-                elif porcentajePregunta >= 60 and porcentajePregunta <= 69:
+                elif porcentajePregunta >= 60 and porcentajePregunta < 70:
                     criterio = "REGULAR"
-                elif porcentajePregunta >= 0 and porcentajePregunta <= 59:
+                elif porcentajePregunta >= 0 and porcentajePregunta < 60:
                     criterio = "DEFICIENTE"
 
                 porcentajesPreguntasMultiples.append([float(p),criterio])
@@ -1715,28 +1730,28 @@ def resultadosMultiples(request):
                     campo_promedio = Paragraph('''<para align=center>Promedio General <br/> <br/><b><font color="#4caf50" fontsize=20> '''+ str(porcentajeX[0]) +''' </font></b> <br/># respuestas totales: <b>'''+ str(contsino[2]) +'''</b> <br/># respuestas SI: <b>'''+ str(contsino[0]) +'''</b><br/># respuestas NO: <b>'''+ str(contsino[1]) +'''</b></para>''',styleN)
                     campo_grafico = Paragraph(str(barra), styleN)
                     campo_criterio = Paragraph('''<para align=center><b><font color="#4caf50" fontsize=16>'''+str(porcentajeX[1]) +'''</font></b></para>''', styleN)
-                elif porcentajeX[0] >= 80 and porcentajeX[0] <= 89:
+                elif porcentajeX[0] >= 80 and porcentajeX[0] < 90:
                     criterio = "MUY BUENO"
                     campo_texto = Paragraph(str(preguntaX[1]), styleN)
                     #campo_promedio = Paragraph("Promedio General"+"<br/>" + str(porcentajeX[0]) + "<br/>"+ "# respuestas totales: 2" + "<br/>"+ "# respuestas SI: 0" +  "<br/>"+ "# respuestas NO: 1"  , styleN)
                     campo_promedio = Paragraph('''<para align=center>Promedio General <br/> <br/><b><font color="#2196f3" fontsize=20> '''+ str(porcentajeX[0]) +''' </font></b> <br/># respuestas totales: <b>'''+ str(contsino[2]) +'''</b> <br/># respuestas SI: <b>'''+ str(contsino[0]) +'''</b><br/># respuestas NO: <b>'''+ str(contsino[1]) +'''</b></para>''',styleN)
                     campo_grafico = Paragraph(str(barra), styleN)
                     campo_criterio = Paragraph('''<para align=center><b><font color="#2196f3" fontsize=16>'''+str(porcentajeX[1]) +'''</font></b></para>''', styleN)
-                elif porcentajeX[0] >= 70 and porcentajeX[0] <= 79:
+                elif porcentajeX[0] >= 70 and porcentajeX[0] < 80:
                     criterio = "BUENO"
                     campo_texto = Paragraph(str(preguntaX[1]), styleN)
                     #campo_promedio = Paragraph("Promedio General"+"<br/>" + str(porcentajeX[0]) + "<br/>"+ "# respuestas totales: 2" + "<br/>"+ "# respuestas SI: 0" +  "<br/>"+ "# respuestas NO: 1"  , styleN)
                     campo_promedio = Paragraph('''<para align=center>Promedio General <br/> <br/><b><font color="#ffc107" fontsize=20> '''+ str(porcentajeX[0]) +''' </font></b> <br/># respuestas totales: <b>'''+ str(contsino[2]) +'''</b> <br/># respuestas SI: <b>'''+ str(contsino[0]) +'''</b><br/># respuestas NO: <b>'''+ str(contsino[1]) +'''</b></para>''',styleN)
                     campo_grafico = Paragraph(str(barra), styleN)
                     campo_criterio = Paragraph('''<para align=center><b><font color="#ffc107" fontsize=16>'''+str(porcentajeX[1]) +'''</font></b></para>''', styleN)
-                elif porcentajeX[0] >= 60 and porcentajeX[0] <= 69:
+                elif porcentajeX[0] >= 60 and porcentajeX[0] < 70:
                     criterio = "REGULAR"
                     campo_texto = Paragraph(str(preguntaX[1]), styleN)
                     #campo_promedio = Paragraph("Promedio General"+"<br/>" + str(porcentajeX[0]) + "<br/>"+ "# respuestas totales: 2" + "<br/>"+ "# respuestas SI: 0" +  "<br/>"+ "# respuestas NO: 1"  , styleN)
                     campo_promedio = Paragraph('''<para align=center>Promedio General <br/> <br/><b><font color="#ff5722" fontsize=20> '''+ str(porcentajeX[0]) +''' </font></b> <br/># respuestas totales: <b>'''+ str(contsino[2]) +'''</b> <br/># respuestas SI: <b>'''+ str(contsino[0]) +'''</b><br/># respuestas NO: <b>'''+ str(contsino[1]) +'''</b></para>''',styleN)
                     campo_grafico = Paragraph(str(barra), styleN)
                     campo_criterio = Paragraph('''<para align=center><b><font color="#ff5722" fontsize=16>'''+str(porcentajeX[1]) +'''</font></b></para>''', styleN)
-                elif porcentajeX[0] >= 0 and porcentajeX[0] <= 59:
+                elif porcentajeX[0] >= 0 and porcentajeX[0] < 60:
                     criterio = "DEFICIENTE"
                     campo_texto = Paragraph(str(preguntaX[1]), styleN)
                     #campo_promedio = Paragraph("Promedio General"+"<br/>" + str(porcentajeX[0]) + "<br/>"+ "# respuestas totales: 2" + "<br/>"+ "# respuestas SI: 0" +  "<br/>"+ "# respuestas NO: 1"  , styleN)
@@ -1778,12 +1793,25 @@ def resultadosMultiples(request):
                 promediosMultiples = []
                 
                 for multiple in multiples:
-
+                    respuestasFinalizadas = []
                     respuestas = Respuestas.objects.filter(id_pregunta =multiple) #en este caso devuelve dos respuestas de dos diferentes empleados
+                    cont = 0
+
+                    for datos in respuestas:
+                        empleadoID = datos.id_empleado_id
+
+                        encuestaEmpleado = EncuestaEmpleadoResuelta.objects.filter(id_encuesta = 1, id_empleado = empleadoID)
+
+                        if encuestaEmpleado:
+                        
+                            respuestaEm = datos.respuesta
+                            respuestasFinalizadas.append(respuestaEm)
+                            cont = cont +1
+
                     contadorSI = 0
                 
-                    for respuestaX in respuestas:
-                        res = respuestaX.respuesta #SI o NO
+                    for respuestaX in respuestasFinalizadas:
+                        res = respuestaX #SI o NO
                         
                     
                         if res == "SI":

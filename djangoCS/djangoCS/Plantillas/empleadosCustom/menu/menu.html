@@ -180,9 +180,9 @@
             </div>
             <!-- #User Info -->
             <!-- Menu -->
-            <div class="menu">
+            <div class="menu"  style="background-color: #212F3D!important;">
                 <ul class="list">
-                    <li class="header" style="background-color: #FFC107;">MENÚ DE NAVEGACIÓN</li>
+                    <li class="header" sstyle="background-color: #a2a6a7; color:black;">MENÚ DE NAVEGACIÓN</li>
                     {% if estaEnInicio %}
                     <li class="active">
                         {% else %}
@@ -190,13 +190,13 @@
                         {% endif %}
                         {% if estaEnInicio %}
                         <a href="/principal/">
-                            <i class="material-icons" style="color: #00917C !important;">home</i>
+                            <i class="material-icons"  style="color: #ffc300 !important;">home</i>
                             <span style="color: #00917C !important;">Inicio</span>
                         </a>
                         {% else %}
                         <a href="/principal/">
-                            <i class="material-icons">home</i>
-                            <span>Inicio</span>
+                            <i class="material-icons colorGrisIcono">home</i>
+                            <span class="colorBlanco">Inicio</span>
                         </a>
                         {% endif %}
                     </li>
@@ -212,11 +212,11 @@
                         <a href="javascript:void(0);" class="menu-toggle">
                            
                             {% if enAño %}
-                            <i class="material-icons" style="color: #00917C !important;">poll</i>
+                            <i class="material-icons colorAmarilloIcono" >poll</i>
                             <span style="color: #00917C !important;"> Encuestas</span>
                             {% else %}
-                            <i class="material-icons">poll</i>
-                            <span> Encuestas</span>
+                            <i class="material-icons colorGrisIcono">poll</i>
+                            <span style="color: whitesmoke !important;"> Encuestas</span>
                             {% endif %}
                             
                         </a>
@@ -243,14 +243,14 @@
                                     
                                     {% if estaEnEncuesta %}
                                     <i class="material-icons" style="color: #336BFF !important;">date_range</i>
-                                    <span style="color: #E40017 !important;">Clima Laboral 2022</span>
+                                    <span class="colorTextoSeleccionado">Clima Laboral 2022</span>
                                     {% else %}
                                     {% if estaEnReseultados %}
                                     <i class="material-icons" style="color: #336BFF !important;">date_range</i>
-                                    <span style="color: #E40017 !important;">Clima Laboral 2022</span>
+                                    <span class="colorTextoSeleccionado">Clima Laboral 2022</span>
                                     {% else %}
-                                    <i class="material-icons">date_range</i>
-                                    <span>Clima Laboral 2022</span>
+                                    <i class="material-icons colorGrisIcono">date_range</i>
+                                    <span style="color: whitesmoke !important;">Clima Laboral 2022</span>
                                     {% endif %}
                                     {% endif %}
                                     
@@ -262,10 +262,10 @@
                                     <li>
                                         {% endif %}
                                         {% if estaEnEncuesta %}
-                                        <a href="/encuestas/" style="color: #d49e0a !important;">Periodo enero</a>
+                                        <a href="/encuestas/" style="color: #e74c3c !important;">Periodo enero</a>
                                         {% else %}
 
-                                        <a href="/encuestas/">Periodo enero</a>
+                                        <a href="/encuestas/" style="color: whitesmoke !important;">Periodo enero</a>
                                         {% endif %}
 
                                     </li>
@@ -276,10 +276,10 @@
                                     <li>
                                         {% endif %}
                                         {% if estaEnReseultados %}
-                                        <a href="/resultadosEncuestas/" style="color: #d49e0a !important;">Resultados Periodo enero</a>
+                                        <a href="/resultadosEncuestas/" style="color: #e74c3c !important;">Resultados Periodo enero</a>
                                         {% else %}
 
-                                        <a href="/resultadosEncuestas/">Resultados Periodo enero</a>
+                                        <a href="/resultadosEncuestas/" style="color: whitesmoke !important;">Resultados Periodo enero</a>
                                         {% endif %}
 
                                     </li>
@@ -306,16 +306,16 @@
                        
                         <a href="javascript:void(0);" class="menu-toggle">
                             {% if estaEnVerEquipo %}
-                            <i class="material-icons" style="color: #00917C !important;">computer</i>
+                            <i class="material-icons colorAmarilloIcono" >computer</i>
                             <span style="color: #00917C !important;">Mi equipo de cómputo</span>
                             {% else %}
                             {% if estaEnVerCarta %}
-                            <i class="material-icons" style="color: #00917C !important;">computer</i>
+                            <i class="material-icons colorAmarilloIcono" >computer</i>
                             <span style="color: #00917C !important;">Mi equipo de cómputo</span>
                             {% else %}
                             
-                            <i class="material-icons">computer</i>
-                            <span>Mi equipo de cómputo</span>
+                            <i class="material-icons colorGrisIcono">computer</i>
+                            <span class="colorBlanco">Mi equipo de cómputo</span>
                             {% endif %}
                             {% endif %}
                            
@@ -329,9 +329,9 @@
                             <li>
                                 {% endif %}
                                 {% if estaEnVerEquipo %}
-                                <a href="/equipo/" style="color: #E40017 !important;">Información de equipo</a>
+                                <a href="/equipo/" class="colorTextoSeleccionado">Información de equipo</a>
                                 {% else %}
-                                <a href="/equipo/">Información de equipo</a>
+                                <a href="/equipo/" class="colorBlanco">Información de equipo</a>
                             <li>
                                 {% endif %}
 
@@ -342,9 +342,9 @@
                             <li>
                                 {% endif %}
                                 {% if estaEnVerCarta %}
-                                <a href="/carta/" style="color: #E40017 !important;">Mis cartas responsivas</a>
+                                <a href="/carta/"  class="colorTextoSeleccionado">Mis cartas responsivas</a>
                                 {% else %}
-                                <a href="/carta/">Mis cartas responsivas</a>
+                                <a href="/carta/" class="colorBlanco">Mis cartas responsivas</a>
                                 {% endif %}
 
                            
@@ -364,11 +364,11 @@
                         <a href="javascript:void(0);" class="menu-toggle">
                             
                             {% if estaEnVerCorreos %}
-                            <i class="material-icons" style="color: #00917C !important;">people</i>
+                            <i class="material-icons colorAmarilloIcono" >people</i>
                             <span style="color: #00917C !important;">Mis compañeros</span>
                             {% else %}
-                            <i class="material-icons">people</i>
-                            <span>Mis compañeros</span>
+                            <i class="material-icons colorGrisIcono">people</i>
+                            <span class="colorBlanco">Mis compañeros</span>
                             {% endif %}
                             
 
@@ -380,9 +380,9 @@
                             <li>
                                 {% endif %}
                                 {% if estaEnVerCorreos %}
-                                <a href="/directorio/" style="color: #E40017 !important;">Ver directorio de correos</a>
+                                <a href="/directorio/" class="colorTextoSeleccionado">Ver directorio de correos</a>
                                 {% else %}
-                                <a href="/directorio/">Ver directorio de correos</a>
+                                <a href="/directorio/" class="colorBlanco">Ver directorio de correos</a>
                                 {% endif %}
                             </li>
                             
@@ -399,11 +399,11 @@
                         <a href="javascript:void(0);" class="menu-toggle">
                             
                             {% if estaEnVerDocumentos %}
-                            <i class="material-icons" style="color: #00917C !important;">assignment</i>
+                            <i class="material-icons colorAmarilloIcono" >assignment</i>
                             <span style="color: #00917C !important;">Documentos</span>
                             {% else %}
-                            <i class="material-icons">assignment</i>
-                            <span>Documentos</span>
+                            <i class="material-icons colorGrisIcono">assignment</i>
+                            <span class="colorBlanco">Documentos</span>
                             {% endif %}
                             
 
@@ -415,9 +415,9 @@
                             <li>
                                 {% endif %}
                                 {% if estaEnVerDocumentos %}
-                                <a href="/documentosAplicablesATodos/" style="color: #E40017 !important;">Documentos aplicables a todos los departamentos.</a>
+                                <a href="/documentosAplicablesATodos/" class="colorTextoSeleccionado">Documentos aplicables a todos los departamentos.</a>
                                 {% else %}
-                                <a href="/documentosAplicablesATodos/">Documentos aplicables a todos los departamentos.</a>
+                                <a href="/documentosAplicablesATodos/" class="colorBlanco">Documentos aplicables a todos los departamentos.</a>
                                 {% endif %}
                             </li>
                             

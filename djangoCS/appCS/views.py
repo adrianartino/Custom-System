@@ -3755,7 +3755,7 @@ def reporteEmpleadosActivos(request):
             
             
         
-        empleaditos = Empleados.objects.filter(activo__icontains = activo) #20 empleados
+        empleaditos = Empleados.objects.filter(activo__icontains = activo, correo__icontains = "customco.com.mx") #20 empleados
         
         numero_empleados = 0 #contador
         for empleado in empleaditos:
@@ -3790,7 +3790,7 @@ def reporteEmpleadosActivos(request):
         for hoja in range(division):
             
             #HASTA AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
-            datosEmpleados= Empleados.objects.filter(activo__icontains=activo) ##11 empleados
+            datosEmpleados= Empleados.objects.filter(activo__icontains=activo, correo__icontains = "customco.com.mx") ##11 empleados
             
             
             ids =[]
