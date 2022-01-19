@@ -46,6 +46,61 @@ class Equipos (models.Model):
     def __str__(self):
         return self.id_equipo
 
+class Mouses (models.Model):
+    id_mouse = models.AutoField(primary_key=True)
+    conexion = models.CharField(max_length=2)
+    marca = models.CharField(max_length=30)
+    modelo = models.CharField(max_length=30)
+    estado = models.CharField(max_length=30)
+    foto = models.ImageField(upload_to="mouses", null = True)
+    id_equipo = models.ForeignKey(Equipos, on_delete=models.CASCADE, null=True)
+    activo = models.CharField(max_length=2)
+
+    def __str__(self):
+        return self.id_mouse
+
+class Teclados (models.Model):
+    id_teclado = models.AutoField(primary_key=True)
+    conexion = models.CharField(max_length=2)
+    marca = models.CharField(max_length=30)
+    modelo = models.CharField(max_length=30)
+    estado = models.CharField(max_length=30)
+    foto = models.ImageField(upload_to="teclados", null = True)
+    id_equipo = models.ForeignKey(Equipos, on_delete=models.CASCADE, null=True)
+    activo = models.CharField(max_length=2)
+
+    def __str__(self):
+        return self.id_teclado
+
+class Monitores (models.Model):
+    id_monitor = models.AutoField(primary_key=True)
+    marca = models.CharField(max_length=30)
+    modelo = models.CharField(max_length=30)
+    estado = models.CharField(max_length=30)
+    foto = models.ImageField(upload_to="monitores", null = True)
+    id_equipo = models.ForeignKey(Equipos, on_delete=models.CASCADE, null=True)
+    activo = models.CharField(max_length=2)
+
+    def __str__(self):
+        return self.id_monitor
+
+class Telefonos (models.Model):
+    id_telefono = models.AutoField(primary_key=True)
+    id_empleado = models.ForeignKey(Empleados,  on_delete=models.CASCADE, null=True)
+    conexion = models.CharField(max_length=2)
+    marca = models.CharField(max_length=30)
+    modelo = models.CharField(max_length=30)
+    estado = models.CharField(max_length=30)
+    foto = models.ImageField(upload_to="telefonos", null = True)
+    extension = models.CharField(max_length=10, null=True)
+    nodo = models.CharField(max_length=20, null=True)
+    activo = models.CharField(max_length=2)
+
+    def __str__(self):
+        return self.id_telefono
+
+
+
 class Renovacion_Equipos (models.Model):
     id_renov_equipo=models.AutoField(primary_key=True)
     id_equipo=models.ForeignKey(Equipos, on_delete=models.CASCADE)
