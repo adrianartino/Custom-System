@@ -217,4 +217,28 @@ class Respuestas (models.Model):
 class EncuestaEmpleadoResuelta (models.Model):
     id_empleado = id_empleado = models.ForeignKey(Empleados, on_delete=models.CASCADE)
     id_encuesta = models.ForeignKey(Encuestas, on_delete=models.CASCADE)
-  
+
+class DiscosDuros (models.Model):
+    id_disco = models.AutoField(primary_key=True)
+    tipo = models.CharField(max_length=30)
+    marca = models.CharField(max_length=30)
+    capacidad = models.IntegerField(null=True)
+    dimension = models.CharField(max_length=20)
+    alm_uso = models.IntegerField(null=True)
+    alm_libre = models.IntegerField(null=True)
+    estado = models.CharField(max_length=30)
+    def __str__(self):
+        return self.id_disco
+
+class EmpleadosDiscosDuros (models.Model):
+    id_empleado = models.ForeignKey(Empleados, on_delete=models.CASCADE)
+    id_disco = models.ForeignKey(DiscosDuros, on_delete=models.CASCADE)
+
+class MemoriasUSB (models.Model):
+    id_usb = models.AutoField(primary_key=True)
+    marca = models.CharField(max_length=30)
+    modelo = models.CharField(max_length=30)
+    capacidad = models.IntegerField()
+    cantidadStock = models.IntegerField()
+    def __str__(self):
+        return self.id_usb
