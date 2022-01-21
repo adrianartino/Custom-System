@@ -57,7 +57,7 @@ ROOT_URLCONF = 'djangoCS.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['C:/Users/Sistemas/Desktop/systema/Custom-System/djangoCS/djangoCS/Plantillas'],
+        'DIRS': ['C:/Users/AuxSistemas/Desktop/CUSTOMSYSTEM/Custom-System/djangoCS/djangoCS/Plantillas'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -80,9 +80,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'customsystem',
-        'USER': 'artino',
+        'USER': 'root',
         'PASSWORD': 'CustomCo',
-        'HOST': '192.168.10.22',
+        'HOST': 'localhost',
         'PORT': '3306',
     }
 }
@@ -136,7 +136,7 @@ EMAIL_HOST = 'mail.customco.com.mx'
 EMAIL_USE_TLS = True
 EMAIL_PORT =  587
 EMAIL_HOST_USER = 'sistemas@customco.com.mx'
-EMAIL_HOST_PASSWORD = 'SystemasCustom2166%'
+EMAIL_HOST_PASSWORD = 'j[S1m7=_cvhS'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
