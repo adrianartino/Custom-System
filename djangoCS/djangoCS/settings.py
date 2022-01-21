@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-gj89t90*$7xaj*q_hw4q*#pl=(-u720cq-_30z^^1ak6lgf&o2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.10.22', '127.0.0.1', '192.168.10.4']
+ALLOWED_HOSTS = ['192.168.10.22', '127.0.0.1', '192.168.10.4', '192.168.10.84' ]
 
 
 # Application definition
@@ -57,7 +57,7 @@ ROOT_URLCONF = 'djangoCS.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['C:/Users/AuxSistemas/Desktop/CUSTOMSYSTEM/Custom-System/djangoCS/djangoCS/Plantillas'],
+        'DIRS': ['C:/Users/SISTEMAS/Desktop/CUSTOM_SYSTEM/Custom-System/djangoCS/djangoCS/Plantillas'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -80,9 +80,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'customsystem',
-        'USER': 'root',
+        'USER': 'artino',
         'PASSWORD': 'CustomCo',
-        'HOST': 'localhost',
+        'HOST': '192.168.10.22',
         'PORT': '3306',
     }
 }
