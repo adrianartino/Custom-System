@@ -57,7 +57,7 @@ ROOT_URLCONF = 'djangoCS.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['C:/Users/SISTEMAS/Desktop/CUSTOM_SYSTEM/Custom-System/djangoCS/djangoCS/Plantillas'],
+        'DIRS': ['C:/Users/AuxSistemas/Desktop/CUSTOMSYSTEM/Custom-System/djangoCS/djangoCS/Plantillas'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -80,9 +80,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'customsystem',
-        'USER': 'root',
+        'USER': 'remotoBD',
         'PASSWORD': 'CustomCo99$',
-        'HOST': 'localhost',
+        'HOST': '192.168.10.84',
         'PORT': '3310',
     }
 }
