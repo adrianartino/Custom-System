@@ -80,10 +80,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'customsystem',
-        'USER': 'remotoBD',
+        'USER': 'remotobd',
         'PASSWORD': 'CustomCo99$',
         'HOST': '192.168.10.84',
-        'PORT': '3310',
+        'PORT': '3306',
     }
 }
 
