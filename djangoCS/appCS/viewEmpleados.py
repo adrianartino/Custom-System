@@ -2104,3 +2104,8 @@ def resultadosAbiertas(request):
     #Si le da al inicio y no hay una sesión iniciada..
     else:
         return redirect('/login/') #redirecciona a url de inicio
+
+
+
+    
+    

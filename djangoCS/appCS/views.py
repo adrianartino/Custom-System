@@ -8214,7 +8214,7 @@ def agregarPrestamos(request):
         return redirect ('/login/')
 
 def verPrestamos(request):
-    
+
     if "idSesion" in request.session:
         
         estaEnVerPrestamos = True
@@ -8222,22 +8222,87 @@ def verPrestamos(request):
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
         correo = request.session['correoSesion']
-        
         nombreCompleto = nombre + " " + apellidos
-        
-        foto = fotoAdmin(request)
-        
-        
         
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
+        foto = fotoAdmin(request)
+        
+        equiposActivos = Equipos.objects.filter(activo__icontains= "A")
+        equiposInactivos = Equipos.objects.filter(activo__icontains= "I")
+        
+        #empleados Actvos
+        empleadosEnActivos = []
+        datosAreasEnActivos = []
+    
+        
+        for equipos in equiposActivos:
+                
+            empleadosEnActivos.append(equipos.id_empleado_id)
+            
+        
+            #areasEnActivos = ["1"]
+            
+        for id in empleadosEnActivos:
+            if id == None:
+                datosAreasEnActivos.append(["", "", "", ""])
+                
+            elif id != None:
+                datosEmpleado = Empleados.objects.filter(id_empleado = id) #["1", "Sistemas", "rojo"]
+                
+                if datosEmpleado:
+                    for dato in datosEmpleado:
+                        nombreEmpleado = dato.nombre
+                        apellidosEmpleado = dato.apellidos
+                        areaEmpleado = dato.id_area_id
+                        datosArea = Areas.objects.filter(id_area=areaEmpleado)
+                        
+                        if datosArea:
+                            for dato in datosArea:
+                                nombreArea = dato.nombre
+                                color = dato.color
+            
+                datosAreasEnActivos.append([nombreEmpleado, apellidosEmpleado, nombreArea, color])
+            
+        lista = zip(equiposActivos, datosAreasEnActivos)
+        lista2=zip(equiposActivos, datosAreasEnActivos)
+        
+        
+        
+        if "idEquipoBaja" in request.session:
+            bajaEquipo=True
+            if "errorBD" in request.session:
+                bajaExito= "Error en la base de datos"
+            else:
+                bajaExito= "Se dió de baja el " + request.session["idEquipoBaja"] + " con éxito!"
+            del request.session["idEquipoBaja"]
+            return render(request, "Equipos/verEquipos.html", {"estaEnVerPrestamos": estaEnVerPrestamos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "bajaEquipo":
+                bajaEquipo, "bajaExito": bajaExito, "equiposInactivos":equiposInactivos, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "equiposActivos":equiposActivos, "lista2":lista2, "foto":foto})
+            
+        if "idEquipoAlta" in request.session:
+            altaEquipo= True
+            if "errorBD" in request.session:
+                altaExito= "Error en la base de datos"
+            else:
+            
+                altaExito= "Se dió de alta el " + request.session["idEquipoAlta"] + " con éxito"
+            del request.session["idEquipoAlta"]
+            return render(request, "Equipos/verEquipos.html", {"estaEnVerPrestamos": estaEnVerPrestamos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,
+                                                            "altaEquipo": altaEquipo, "altaExito":altaExito, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti,  "equiposActivos":equiposActivos, "lista2":lista2, "foto":foto})
 
-        return render(request, "prestamos/verPrestamo.html", {"estaEnVerPrestamos":estaEnVerPrestamos,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+        return render(request, "prestamos/verPrestamo.html", {"estaEnVerPrestamos": estaEnVerPrestamos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "equiposInactivos":equiposInactivos, 
+                                                           "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti,  "equiposActivos":equiposActivos, "lista2":lista2, "foto":foto})
+
     else:
+        return redirect('/login/') #redirecciona a url de inicio
     
-        return redirect ('/login/')
+  
+        
+        
+        
     
+
     
 def agregarEncuestas(request):
         

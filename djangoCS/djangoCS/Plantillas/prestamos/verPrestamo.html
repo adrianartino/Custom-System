@@ -1,0 +1,549 @@
+{% extends "Menu/menu.html" %}
+{% load static %}
+
+{% block titulo %}
+Equipos | Custom System
+{% endblock %}
+
+{% block estilos %}
+<!-- Favicon-->
+<link rel="icon" href={% static 'images/icons/ra.ico' %} type="image/x-icon">
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
+    type="text/css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+
+<!-- Bootstrap Core Css -->
+<link href={% static 'panel/plugins/bootstrap/css/bootstrap.css' %} rel="stylesheet">
+
+<!-- Waves Effect Css -->
+<link href={% static 'panel/plugins/node-waves/waves.css' %} rel="stylesheet" />
+
+<!-- Animation Css -->
+<link href={% static 'panel/plugins/animate-css/animate.css' %} rel="stylesheet" />
+<!-- Bootstrap Select Css -->
+<link href={% static 'panel/plugins/bootstrap-select/css/bootstrap-select.css' %} rel="stylesheet" />
+<!-- JQuery DataTable Css -->
+<link href={% static 'panel/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css' %} rel="stylesheet">
+
+
+<!-- Custom Css -->
+<link href={% static 'panel/css/style.css' %} rel="stylesheet">
+
+<!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+<link href={% static 'panel/css/themes/all-themes.css' %} rel="stylesheet" />
+{% endblock %}
+
+{% block contenido %}
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h2 style="font-family: 'Oswald', sans-serif;">
+                    EQUIPOS DE CUSTOM & CO
+                    <small style="color: #790C05;">Vista de listado de equipos de cómputo de la empresa.</small>
+                </h2>
+                <br>
+                <label for="email_address">Filtro de estatus de equipos:</label>
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="material-icons">build</i>
+                    </span>
+                    <select class="form-control show-tick" id="filtroEquipo" onchange="cambioFiltro();">
+                        <option>No aplica devolución</option>
+                        <option>Prestamos devueltos</option>
+                        <option>Prestamos no devueltos</option>
+
+                    </select>
+                </div>
+
+            </div>
+            <div class="body" id="divDados">
+                <div class="row clear-fix">
+                    <div class="col-xs-12 col-sm-1">
+                        <form action="/reporteEquiposActivos/" method="POST">{% csrf_token %}
+                            <input type="hidden" name="activo" value="A">
+                            <button type="submit" class="btn bg-red waves-effect animate__animated animate__flipInX"
+                                data-toggle="tooltip" data-placement="bottom"
+                                title="Descargar reporte Equipos Activos en PDF.">
+                                <i class="material-icons">picture_as_pdf</i>
+                                <span>PDF</span>
+                            </button>
+                        </form>
+                    </div>
+                    <div class="col-xs-12 col-sm-1">
+                        <form action="/xlEquipos/" method="POST">{% csrf_token %}
+                            <input type="hidden" name="activo" value="A">
+                            <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
+                                data-toggle="tooltip" data-placement="bottom"
+                                title="Descargar reporte Equipos Activos en Excel.">
+                                <i class="material-icons">grid_on</i>
+                                <span>Excel</span>
+                            </button>
+                        </form>
+                    </div>
+                    <div class="col-xs-12 col-sm-4">
+                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarEquipos/">Agregar
+                            Equipo</a>
+                    </div>
+
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                        <thead>
+                            <tr style="background-color: #fad60e; color:black">
+                                <th>ID Prestamo</th>
+                                <th>Empleado</th>
+                                <th>Equipo prestado</th>
+                                <th>Cantidad</th>
+                                <th>Fecha de prestamo</th>
+                                <th>Firma</th>
+                                <th>Estatus</th>
+                                
+                                
+
+
+
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>ID Prestamo</th>
+                                <th>Empleado</th>
+                                <th>Equipo prestado</th>
+                                <th>Cantidad</th>
+                                <th>Fecha de prestamo</th>
+                                <th>Firma</th>
+                                <th>Estatus</th>
+                             
+                                
+
+
+                            </tr>
+                        </tfoot>
+                        <tbody class="animate__animated animate__backInDown">
+                            {% for equipo, empleado in lista %}
+                            <tr>
+                                <th>
+                                    <form action="/infoEquipo/" method="POST">{% csrf_token %}
+
+
+                                        <center>
+                                            <input type="text" style="border: none; background: none;" name="idEquipo"
+                                                value="{{equipo.id_equipo}}" readonly size="1">
+                                            <button type="submit" class="btn  waves-effect"
+                                                style="background-color: #0A77F9;">
+                                                <i class="material-icons" style="color: white;">visibility</i>
+                                            </button>
+                                        </center>
+                                        <br>
+                                    </form>
+                                </th>
+                                <th>{{equipo.tipo}}</th>
+                                <th>{{equipo.marca}}</th>
+                                <th>{{equipo.modelo}}</th>
+                                <th>{{equipo.color}}</th>
+                            
+                              
+                               
+                                
+                            
+                              
+                   
+                                <th>
+                                    <form action="/editarEquipo/" method="POST">{% csrf_token %}
+                                        <input type="hidden" name="idEquipo" value="{{equipo.id_equipo}}">
+
+                                        <center>
+                                            <button type="submit" class="btn btn-warning waves-effect">
+                                                <i class="material-icons">edit</i>
+                                            </button>
+                                        </center>
+                                        <br>
+                                    </form>
+                    
+
+                                </th>
+
+
+                                <th>
+                                    <center>
+                                        <button type="button" class="btn bg-red waves-effect" data-toggle="modal"
+                                            data-target="#{{equipo.id_equipo}}">
+                                            <i class="material-icons">cancel</i>
+                                        </button>
+                                    </center>
+
+                                </th>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <br>
+
+            </div>
+            <div class="body" id="divDevueltos">
+                <div class="row clear-fix">
+                    <div class="col-xs-12 col-sm-1">
+                        <form action="/reporteEquiposActivos/" method="POST">{% csrf_token %}
+                            <input type="hidden" name="activo" value="I">
+                            <button type="submit" class="btn bg-red waves-effect animate__animated animate__flipInX"
+                                data-toggle="tooltip" data-placement="bottom"
+                                title="Descargar reporte Equipos de baja en PDF.">
+                                <i class="material-icons">picture_as_pdf</i>
+                                <span>PDF</span>
+                            </button>
+                        </form>
+                    </div>
+                    <div class="col-xs-12 col-sm-1">
+                        <form action="/xlEquipos/" method="POST">{% csrf_token %}
+                            <input type="hidden" name="activo" value="I">
+                            <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
+                                data-toggle="tooltip" data-placement="bottom"
+                                title="Descargar reporte Equipos de baja en Excel.">
+                                <i class="material-icons">grid_on</i>
+                                <span>Excel</span>
+                            </button>
+                        </form>
+                    </div>
+                    <div class="col-xs-12 col-sm-4">
+                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarEquipos/">Agregar
+                            Equipo</a>
+                    </div>
+
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover dataTable js-exportable ">
+                        <thead>
+                            <tr style="background-color: #E05D5D; color:black">
+                                <th>ID Prestamo</th>
+                                <th>Empleado</th>
+                                <th>Equipo prestado</th>
+                                <th>Cantidad</th>
+                                <th>Fecha de prestamo</th>
+                                <th>Firma</th>
+                                <th>Estatus</th>
+                                <th>Fecha de entrega</th>
+                                <th>Condiciones </th>
+                                <th>Firma de devolución</th>
+
+
+
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>ID Prestamo</th>
+                                <th>Empleado</th>
+                                <th>Equipo prestado</th>
+                                <th>Cantidad</th>
+                                <th>Fecha de prestamo</th>
+                                <th>Firma</th>
+                                <th>Estatus</th>
+                                <th>Fecha de entrega</th>
+                                <th>Condiciones </th>
+                                <th>Firma de devolución</th>
+
+
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            {% for equipoIna in equiposInactivos %}
+                            <tr>
+                                <form action="/DescargarPDF/" method="POST">{% csrf_token %}
+                                    <th>
+                                        <input type="text" style="border: none; background: none;" name="idEquipopdf"
+                                            value="{{equipoIna.id_equipo}}" readonly size="1">
+
+                                        <center>
+                                            <button type="submit" class="btn bg-red waves-effect">
+                                                <i class="material-icons">picture_as_pdf</i>
+                                            </button>
+                                        </center>
+
+                                    </th>
+                                </form>
+                                <th>{{equipoIna.tipo}}</th>
+                                <th>{{equipoIna.marca}}</th>
+                                <th>{{equipoIna.modelo}}</th>
+                                <th>{{equipoIna.color}}</th>
+                                <th>
+                                    <center>
+                                        <img src="{{equipoIna.imagen.url}}" width="60%" alt="lap">
+                                    </center>
+                                </th>
+                                <th>{{equipoIna.memoriaram}}</th>
+                                <th>{{equipoIna.procesador}} </th>
+                                <th>{{equipoIna.sistemaoperativo}}</th>
+                                <th>{{equipoIna.modelocargador}}</th>
+
+
+                                
+
+
+
+                            </tr>
+                            {% endfor %}
+
+
+
+                        </tbody>
+                    </table>
+
+                </div>
+                <br>
+
+            </div>
+
+            <div class="body" id="divSinAunDevolucion">
+                <div class="row clear-fix">
+                    <div class="col-xs-12 col-sm-1">
+                        <form action="/reporteEquiposActivos/" method="POST">{% csrf_token %}
+                            <input type="hidden" name="activo" value="I">
+                            <button type="submit" class="btn bg-red waves-effect animate__animated animate__flipInX"
+                                data-toggle="tooltip" data-placement="bottom"
+                                title="Descargar reporte Equipos de baja en PDF.">
+                                <i class="material-icons">picture_as_pdf</i>
+                                <span>PDF</span>
+                            </button>
+                        </form>
+                    </div>
+                    <div class="col-xs-12 col-sm-1">
+                        <form action="/xlEquipos/" method="POST">{% csrf_token %}
+                            <input type="hidden" name="activo" value="I">
+                            <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
+                                data-toggle="tooltip" data-placement="bottom"
+                                title="Descargar reporte Equipos de baja en Excel.">
+                                <i class="material-icons">grid_on</i>
+                                <span>Excel</span>
+                            </button>
+                        </form>
+                    </div>
+                    <div class="col-xs-12 col-sm-4">
+                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarEquipos/">Agregar
+                            Equipo</a>
+                    </div>
+
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover dataTable js-exportable ">
+                        <thead>
+                            <tr style="background-color: #E05D5D; color:black">
+                                <th>ID Prestamo</th>
+                                <th>Empleado</th>
+                                <th>Equipo prestado</th>
+                                <th>Cantidad</th>
+                                <th>Fecha de prestamo</th>
+                                <th>Firma</th>
+                                <th>Estatus</th>
+                                <th>Fecha de entrega</th>
+                                <th>Condiciones </th>
+                               
+
+
+
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>ID Prestamo</th>
+                                <th>Empleado</th>
+                                <th>Equipo prestado</th>
+                                <th>Cantidad</th>
+                                <th>Fecha de prestamo</th>
+                                <th>Firma</th>
+                                <th>Estatus</th>
+                                <th>Fecha de entrega</th>
+                                <th>Condiciones </th>
+                       
+
+
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            {% for equipoIna in equiposInactivos %}
+                            <tr>
+                                <form action="/DescargarPDF/" method="POST">{% csrf_token %}
+                                    <th>
+                                        <input type="text" style="border: none; background: none;" name="idEquipopdf"
+                                            value="{{equipoIna.id_equipo}}" readonly size="1">
+
+                                        <center>
+                                            <button type="submit" class="btn bg-red waves-effect">
+                                                <i class="material-icons">picture_as_pdf</i>
+                                            </button>
+                                        </center>
+
+                                    </th>
+                                </form>
+                                <th>{{equipoIna.tipo}}</th>
+                                <th>{{equipoIna.marca}}</th>
+                                <th>{{equipoIna.modelo}}</th>
+                                <th>{{equipoIna.color}}</th>
+                                <th>
+                                    <center>
+                                        <img src="{{equipoIna.imagen.url}}" width="60%" alt="lap">
+                                    </center>
+                                </th>
+                                <th>{{equipoIna.memoriaram}}</th>
+                                <th>{{equipoIna.procesador}} </th>
+                                <th>{{equipoIna.sistemaoperativo}}</th>
+                       
+
+                       
+
+
+
+
+                            </tr>
+                            {% endfor %}
+
+
+
+                        </tbody>
+                    </table>
+
+                </div>
+                <br>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+{% if bajaEquipo %}
+<script type="text/javascript">
+    swal({
+        icon: 'error',
+        title: 'Wuu..!',
+        text: ' {{bajaExito}}',
+        footer: '<span style="color: red!important"> Vuelve a navegar por Custom System! </span>',
+        width: '40%'
+
+    });
+</script>
+{% endif %}
+{% if altaEquipo %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Wuu..!',
+        text: ' {{altaExito}}',
+        footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
+<script type="text/javascript">
+    function inicio() {
+        var div1 = document.getElementById("divDevueltos");
+        div1.style.display = "none"; /* bloquear u ocultar la tabla..*/
+        var div2 = document.getElementById("divSinAunDevolucion");
+        div2.style.display = "none";
+    }
+    window.onload = inicio;
+
+    function cambioFiltro() {
+        var div = document.getElementById("divDados");
+        var div1 = document.getElementById("divDevueltos");
+        var div2 = document.getElementById("divSinAunDevolucion");
+        /* Si la tabla de Empleados Activos está activa..*/
+        if (div.style.display === "none") {
+            //Bloquear la tabla de empleados Activos.. 
+            div.style.display = "block";
+          
+        } else { //Si la tabla de empleados Activos está inactiva
+            div.style.display = "none"; //Desbloquear la tabla de empleados Activos
+      
+        }
+        if (div1.style.display === "none") {
+            //Bloquear la tabla de empleados Activos.. 
+      
+            div1.style.display = "block";
+         
+        } else { //Si la tabla de empleados Activos está inactiva
+       
+            div1.style.display = "none";
+       
+        }
+        if (div2.style.display === "none") {
+            //Bloquear la tabla de empleados Activos.. 
+      
+            div1.style.display = "block";
+         
+        } else { //Si la tabla de empleados Activos está inactiva
+       
+            div2.style.display = "none";
+       
+        }
+        
+    
+
+
+    }
+</script>
+{% endblock %}
+
+{% block estilosJs %}
+<!-- Jquery Core Js -->
+<script src={% static 'panel/plugins/jquery/jquery.min.js' %}></script>
+
+<!-- Bootstrap Core Js -->
+<script src={% static 'panel/plugins/bootstrap/js/bootstrap.js' %}></script>
+
+<!-- Select Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-select/js/bootstrap-select.js' %}></script>
+
+<!-- Slimscroll Plugin Js -->
+<script src={% static 'panel/plugins/jquery-slimscroll/jquery.slimscroll.js' %}></script>
+<!-- Bootstrap Colorpicker Js -->
+<script src={% static 'panel/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js' %}></script>
+
+<!-- Dropzone Plugin Js -->
+<script src={% static 'panel/plugins/dropzone/dropzone.js' %}></script>
+
+<!-- Input Mask Plugin Js -->
+<script src={% static 'panel/plugins/jquery-inputmask/jquery.inputmask.bundle.js' %}></script>
+
+<!-- Multi Select Plugin Js -->
+<script src={% static 'panel/plugins/multi-select/js/jquery.multi-select.js' %}></script>
+
+<!-- Jquery Spinner Plugin Js -->
+<script src={% static 'panel/plugins/jquery-spinner/js/jquery.spinner.js' %}></script>
+
+<!-- Bootstrap Tags Input Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js' %}></script>
+
+<!-- noUISlider Plugin Js -->
+<script src={% static 'panel/plugins/nouislider/nouislider.js' %}></script>
+
+<!-- Waves Effect Plugin Js -->
+<script src={% static 'panel/plugins/node-waves/waves.js' %}></script>
+
+<!-- Jquery DataTable Plugin Js -->
+<script src={% static 'panel/plugins/jquery-datatable/jquery.dataTables.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.flash.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/jszip.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/pdfmake.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/vfs_fonts.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.html5.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.print.min.js' %}></script>
+
+<!-- Custom Js -->
+<script src={% static 'panel/js/admin.js' %}></script>
+<script src={% static 'panel/js/pages/ui/tooltips-popovers.js' %}></script>
+<script src={% static 'panel/js/pages/tables/jquery-datatable.js' %}></script>
+
+<!-- Demo Js -->
+<script src={% static 'panel/js/demo.js' %}></script>
+{% endblock %}
