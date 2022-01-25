@@ -249,7 +249,6 @@ class MemoriasUSB (models.Model):
 class PrestamosSistemas (models.Model):
     id_prestamo = models.AutoField(primary_key=True)
     id_empleado = models.ForeignKey(Empleados, on_delete=models.CASCADE)
-    id_prestador = models.ForeignKey(Empleados, on_delete=models.CASCADE)
     tabla = models.CharField(max_length=100, null=True)
     id_producto = models.CharField(max_length=4, null=True)
     otro = models.CharField(max_length=100, null=True)
