@@ -1,0 +1,577 @@
+{% extends "Menu/menu.html" %}
+{% load static %}
+
+{% block titulo %}
+Agregar Prestamo | Custom System
+{% endblock %}
+
+{% block estilos %}
+<!-- Favicon-->
+<link rel="icon" href={% static 'images/icons/ra.ico' %} type="image/x-icon">
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
+    type="text/css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+
+<!-- Bootstrap Core Css -->
+<link href={% static 'panel/plugins/bootstrap/css/bootstrap.css' %} rel="stylesheet">
+
+<!-- Waves Effect Css -->
+<link href={% static 'panel/plugins/node-waves/waves.css' %} rel="stylesheet" />
+
+<!-- Animation Css -->
+<link href={% static 'panel/plugins/animate-css/animate.css' %} rel="stylesheet" />
+
+<!-- Bootstrap Material Datetime Picker Css -->
+<link href={% static 'panel/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css' %}
+    rel="stylesheet" />
+
+<!-- Bootstrap DatePicker Css -->
+<link href={% static 'panel/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css' %} rel="stylesheet" />
+
+<!-- Wait Me Css -->
+<link href={% static 'panel/plugins/waitme/waitMe.css' %} rel="stylesheet" />
+
+<!-- Bootstrap Select Css -->
+<link href={% static 'panel/plugins/bootstrap-select/css/bootstrap-select.css' %} rel="stylesheet" />
+
+<!-- Custom Css -->
+<link href={% static 'panel/css/style.css' %} rel="stylesheet">
+<link href={% static 'css/margen.css' %} rel="stylesheet" />
+
+<!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+<link href={% static 'panel/css/themes/all-themes.css' %} rel="stylesheet" />
+
+<script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
+
+
+{% endblock %}
+
+{% block contenido %}
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h2 style="font-family: 'Oswald', sans-serif;">
+                    AGREGAR EQUIPOS
+                    <small style="color: #790C05;">Formulario para agregar un prestamo al sistema.</small>
+                </h2>
+
+            </div>
+            <div class="body">
+                <form action="/agregarEquipos/" enctype="multipart/form-data" method="POST">{% csrf_token %}
+                    <div class="row clearfix">
+
+                        <div class="col-md-4">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Empleado:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">badge</i>
+                                </span>
+                                <select class="form-control show-tick" name="propietario">
+                                    <option value="nopropietario">Sin propietario</option>
+                                    {% for propietario in info_empleados %}
+                                    <option value="{{propietario.id_empleado}}">{{propietario.nombre}}
+                                        {{propietario.apellidos}}</option>
+
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Clasificación:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">badge</i>
+                                </span>
+                                <select class="form-control show-tick" name="propietario">
+                                    <option value="nopropietario">Sin propietario</option>
+                                    {% for propietario in info_empleados %}
+                                    <option value="{{propietario.id_empleado}}">{{propietario.nombre}}
+                                        {{propietario.apellidos}}</option>
+
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Equipo/Material:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">badge</i>
+                                </span>
+                                <select class="form-control show-tick" name="propietario">
+                                    <option value="nopropietario">Sin propietario</option>
+                                    {% for propietario in info_empleados %}
+                                    <option value="{{propietario.id_empleado}}">{{propietario.nombre}}
+                                        {{propietario.apellidos}}</option>
+
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        
+                     
+                        
+
+                    
+                    </div>
+
+
+
+
+                    <div class="row clearfix">
+                        <div class="col-md-2">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Cantidad:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">memory</i>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" class="form-control date" placeholder="Ingresar procesador"
+                                        maxlength="50" name="procesador" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <h2 class="card-inside-title"><span style="color: #078F68;">* </span>Fecha de prestamo:</h2>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">date_range</i>
+                                </span>
+                                <div class="form-line" id="bs_datepicker_container">
+                                    <input type="text" class="form-control" name="fecha_compra"
+                                        placeholder="Seleccionar fecha" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Devolución?:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">build</i>
+                                </span>
+                                <div class="switch">
+                                    <label>NO<input type="checkbox" name="respuesta" checked><span class="lever switch-col-red"></span>SI</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Estatus:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">build</i>
+                                </span>
+                                <select class="form-control show-tick" name="estado">
+                                    <option value="No aplica devolución">No aplica devolución</option>
+                                    <option value="No devuelto">No devuelto</option>
+                                    <option value="Devuelto">Devuelto</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Condiciones de prestamo:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">memory</i>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" class="form-control date" placeholder="Ingresar procesador"
+                                        maxlength="50" name="procesador" required>
+                                </div>
+                            </div>
+                        </div>
+                       
+                      
+                       
+
+                    </div>
+
+
+                    
+                    <div class="row clearfix">
+                        
+                        
+
+                       
+
+
+                    </div>
+                    <div class="row clearfix" >
+
+                        <center>
+                            <h2>Ingresar Firma Electrónica</h2>
+                        </center>
+                      
+                    
+
+                        <label for=""></label>
+                        <div class="contenedor" id="margenDIV1">
+
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <canvas id="draw-canvas" width="500" height="250">
+                                        No tienes un buen navegador.
+                                    </canvas>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <input type="button" class="button" id="draw-submitBtn" value="Crear Imagen"></input>
+                                    <input type="button" class="button" id="draw-clearBtn" value="Borrar Canvas"></input>
+
+                                    <label>Color</label>
+                                    <input type="color" id="color">
+                                    <div>
+                                        <br>
+                                        <label>Tamaño Puntero</label>
+                                        <input type="range" id="puntero" min="1" default="1" max="5" width="10%">
+                                    </div>
+
+
+
+                                </div>
+
+                            </div>
+
+                            <br />
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <textarea id="draw-dataUrl" class="form-control"
+                                        rows="5">Para los que saben que es esto:</textarea>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="contenedor">
+                                <div class="col-md-12">
+                                    <img id="draw-image" src="" alt="Tu Imagen aparecera Aqui!" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="margenDIV1">
+
+                            <br><br>
+                            <form action="/guardarImagen/" method="POST" id="form1">{% csrf_token %}
+                                <input type="hidden" name="canvasData" id="my_hidden">
+                                {% for equipo in datosEquipo %}
+                                <input type="hidden" name="idEquipo" value="{{equipo.id_equipo}}">
+                                {% endfor %}
+                                {% for empleados in datosEmpleado %}
+                                <input type="hidden" name="idEmpleado" value="{{empleados.id_empleado}}">
+                                {% endfor %}
+                                <button type="submit" class="btn btn-success m-t-15 waves-effect" onclick="save()"><i
+                                        class="material-icons">save</i> Guardar</button>
+
+
+                            </form>
+                        </div>
+                    </div>
+
+
+
+
+
+                        <br>
+                        <button type="submit"
+                            class="btn btn-warning m-t-15 waves-effect animate__animated animate__flipInX"><i
+                                class="material-icons">laptop_mac</i> Guardar Equipo</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+{% if compuSin %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Wujuu..',
+        text: ' {{textoCompu}}',
+        footer: '<span style="color: green!important"> Sigue navegando por Custom System! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
+{% if compuCon %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Wujuu..',
+        text: ' {{textoCompu}}',
+        footer: '<span style="color: green!important"> Sigue navegando por Custom System! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
+{% endblock %}
+
+{% block estilosJs %}
+<script>
+    function save() {
+        var canvas = document.getElementById('draw-canvas');
+        var inputVacio = document.getElementById('my_hidden');
+        inputVacio.value = canvas.toDataURL();
+        document.forms["form1"].submit();
+    }
+
+    (function () { // Comenzamos una funcion auto-ejecutable
+
+        // Obtenenemos un intervalo regular(Tiempo) en la pamtalla
+        window.requestAnimFrame = (function (callback) {
+            return window.requestAnimationFrame ||
+                window.webkitRequestAnimationFrame ||
+                window.mozRequestAnimationFrame ||
+                window.oRequestAnimationFrame ||
+                window.msRequestAnimaitonFrame ||
+                function (callback) {
+                    window.setTimeout(callback, 1000 / 60);
+                    // Retrasa la ejecucion de la funcion para mejorar la experiencia
+                };
+        })();
+
+        // Traemos el canvas mediante el id del elemento html
+        var canvas = document.getElementById("draw-canvas");
+        var ctx = canvas.getContext("2d");
+
+
+        // Mandamos llamar a los Elemetos interactivos de la Interfaz HTML
+        var drawText = document.getElementById("draw-dataUrl");
+        var drawImage = document.getElementById("draw-image");
+        var clearBtn = document.getElementById("draw-clearBtn");
+        var submitBtn = document.getElementById("draw-submitBtn");
+        clearBtn.addEventListener("click", function (e) {
+            // Definimos que pasa cuando el boton draw-clearBtn es pulsado
+            clearCanvas();
+            drawImage.setAttribute("src", "");
+        }, false);
+        // Definimos que pasa cuando el boton draw-submitBtn es pulsado
+        submitBtn.addEventListener("click", function (e) {
+            var dataUrl = canvas.toDataURL();
+            drawText.innerHTML = dataUrl;
+            drawImage.setAttribute("src", dataUrl);
+        }, false);
+
+        // Activamos MouseEvent para nuestra pagina
+        var drawing = false;
+        var mousePos = {
+            x: 0,
+            y: 0
+        };
+        var lastPos = mousePos;
+        canvas.addEventListener("mousedown", function (e) {
+            /*
+              Mas alla de solo llamar a una funcion, usamos function (e){...}
+              para mas versatilidad cuando ocurre un evento
+            */
+            var tint = document.getElementById("color");
+            var punta = document.getElementById("puntero");
+            console.log(e);
+            drawing = true;
+            lastPos = getMousePos(canvas, e);
+        }, false);
+        canvas.addEventListener("mouseup", function (e) {
+            drawing = false;
+        }, false);
+        canvas.addEventListener("mousemove", function (e) {
+            mousePos = getMousePos(canvas, e);
+        }, false);
+
+        // Activamos touchEvent para nuestra pagina
+        canvas.addEventListener("touchstart", function (e) {
+            mousePos = getTouchPos(canvas, e);
+            console.log(mousePos);
+            e.preventDefault(); // Prevent scrolling when touching the canvas
+            var touch = e.touches[0];
+            var mouseEvent = new MouseEvent("mousedown", {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            canvas.dispatchEvent(mouseEvent);
+        }, false);
+        canvas.addEventListener("touchend", function (e) {
+            e.preventDefault(); // Prevent scrolling when touching the canvas
+            var mouseEvent = new MouseEvent("mouseup", {});
+            canvas.dispatchEvent(mouseEvent);
+        }, false);
+        canvas.addEventListener("touchleave", function (e) {
+            // Realiza el mismo proceso que touchend en caso de que el dedo se deslice fuera del canvas
+            e.preventDefault(); // Prevent scrolling when touching the canvas
+            var mouseEvent = new MouseEvent("mouseup", {});
+            canvas.dispatchEvent(mouseEvent);
+        }, false);
+        canvas.addEventListener("touchmove", function (e) {
+            e.preventDefault(); // Prevent scrolling when touching the canvas
+            var touch = e.touches[0];
+            var mouseEvent = new MouseEvent("mousemove", {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            canvas.dispatchEvent(mouseEvent);
+        }, false);
+
+        // Get the position of the mouse relative to the canvas
+        function getMousePos(canvasDom, mouseEvent) {
+            var rect = canvasDom.getBoundingClientRect();
+            /*
+              Devuelve el tamaño de un elemento y su posición relativa respecto
+              a la ventana de visualización (viewport).
+            */
+            return {
+                x: mouseEvent.clientX - rect.left,
+                y: mouseEvent.clientY - rect.top
+            };
+        }
+
+        // Get the position of a touch relative to the canvas
+        function getTouchPos(canvasDom, touchEvent) {
+            var rect = canvasDom.getBoundingClientRect();
+            console.log(touchEvent);
+            /*
+              Devuelve el tamaño de un elemento y su posición relativa respecto
+              a la ventana de visualización (viewport).
+            */
+            return {
+                x: touchEvent.touches[0].clientX - rect.left, // Popiedad de todo evento Touch
+                y: touchEvent.touches[0].clientY - rect.top
+            };
+        }
+
+        // Draw to the canvas
+        function renderCanvas() {
+            if (drawing) {
+                var tint = document.getElementById("color");
+                var punta = document.getElementById("puntero");
+                ctx.strokeStyle = tint.value;
+                ctx.beginPath();
+                ctx.moveTo(lastPos.x, lastPos.y);
+                ctx.lineTo(mousePos.x, mousePos.y);
+                console.log(punta.value);
+                ctx.lineWidth = punta.value;
+                ctx.stroke();
+                ctx.closePath();
+                lastPos = mousePos;
+            }
+        }
+
+        function clearCanvas() {
+            canvas.width = canvas.width;
+        }
+
+        // Allow for animation
+        (function drawLoop() {
+            requestAnimFrame(drawLoop);
+            renderCanvas();
+        })();
+
+    })();
+</script>
+<script>
+    function soloLetras(e) {
+        key = e.keyCode || e.which;
+        tecla = String.fromCharCode(key).toLowerCase();
+        letras = " áéíóúabcdefghijklmnñopqrstuvwxyz";
+        especiales = "8-37-39-46";
+
+        tecla_especial = false
+        for (var i in especiales) {
+            if (key == especiales[i]) {
+                tecla_especial = true;
+                break;
+            }
+        }
+
+        if (letras.indexOf(tecla) == -1 && !tecla_especial) {
+            return false;
+        }
+    }
+
+    function validaNumericos(event) {
+        if (event.charCode >= 48 && event.charCode <= 57) {
+            return true;
+        }
+        return false;
+    }
+
+    function cambiarImagen() {
+        var selection = document.getElementById('marcas');
+        var marca = selection.options[selection.selectedIndex].value;
+        var primeraparte = "/static/images/"
+        var segundaparte = ".png"
+        var todo = primeraparte + marca + segundaparte
+        document.getElementById('marcaslap').src = todo
+        document.getElementById('valorSelect').value = todo;
+    }
+</script>
+<!-- Jquery Core Js -->
+<script src={% static 'panel/plugins/jquery/jquery.min.js' %}></script>
+
+<!-- Bootstrap Core Js -->
+<script src={% static 'panel/plugins/bootstrap/js/bootstrap.js' %}></script>
+
+<!-- Select Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-select/js/bootstrap-select.js' %}></script>
+
+<!-- Slimscroll Plugin Js -->
+<script src={% static 'panel/plugins/jquery-slimscroll/jquery.slimscroll.js' %}></script>
+
+<!-- Bootstrap Colorpicker Js -->
+<script src={% static 'panel/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js' %}></script>
+
+<!-- Dropzone Plugin Js -->
+<script src={% static 'panel/plugins/dropzone/dropzone.js' %}></script>
+
+<!-- Input Mask Plugin Js -->
+<script src={% static 'panel/plugins/jquery-inputmask/jquery.inputmask.bundle.js' %}></script>
+
+<!-- Multi Select Plugin Js -->
+<script src={% static 'panel/plugins/multi-select/js/jquery.multi-select.js' %}></script>
+
+<!-- Jquery Spinner Plugin Js -->
+<script src={% static 'panel/plugins/jquery-spinner/js/jquery.spinner.js' %}></script>
+
+<!-- Bootstrap Tags Input Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js' %}></script>
+
+<!-- noUISlider Plugin Js -->
+<script src={% static 'panel/plugins/nouislider/nouislider.js' %}></script>
+
+<!-- Waves Effect Plugin Js -->
+<script src={% static 'panel/plugins/node-waves/waves.js' %}></script>
+
+<!-- Autosize Plugin Js -->
+<script src={% static 'panel/plugins/autosize/autosize.js' %}></script>
+
+<!-- Moment Plugin Js -->
+<script src={% static 'panel/plugins/momentjs/moment.js' %}></script>
+
+<!-- Bootstrap Material Datetime Picker Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js' %}>
+</script>
+
+<!-- Bootstrap Datepicker Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js' %}></script>
+
+<!-- Jquery DataTable Plugin Js -->
+<script src={% static 'panel/plugins/jquery-datatable/jquery.dataTables.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.flash.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/jszip.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/pdfmake.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/vfs_fonts.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.html5.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.print.min.js' %}></script>
+
+<!-- Custom Js -->
+<script src={% static 'panel/js/admin.js' %}></script>
+<script src={% static 'panel/js/pages/forms/basic-form-elements.js' %}></script>
+<script src={% static 'panel/js/pages/tables/jquery-datatable.js' %}></script>
+<script src={% static 'panel/js/pages/forms/advanced-form-elements.js' %}></script>
+
+
+<!-- Demo Js -->
+<script src={% static 'panel/js/demo.js' %}></script>
+
+{% endblock %}

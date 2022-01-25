@@ -1,6 +1,8 @@
 from os import truncate
+from pyexpat import model
 from django.db import models
 from django.db.models.deletion import CASCADE
+from django.forms import CharField
 
 # Create your models here.
 class Areas (models.Model):
@@ -242,3 +244,23 @@ class MemoriasUSB (models.Model):
     cantidadStock = models.IntegerField()
     def __str__(self):
         return self.id_usb
+
+
+class PrestamosSistemas (models.Model):
+    id_prestamo = models.AutoField(primary_key=True)
+    id_empleado = models.ForeignKey(Empleados, on_delete=models.CASCADE)
+    id_prestador = models.ForeignKey(Empleados, on_delete=models.CASCADE)
+    tabla = models.CharField(max_length=100, null=True)
+    id_producto = models.CharField(max_length=4, null=True)
+    otro = models.CharField(max_length=100, null=True)
+    cantidad = models.IntegerField()
+    fecha_prestamo = models.DateField()
+    firma_entrega = models.ImageField(upload_to="firmasPrestamos", null = True)
+    devolucion = models.CharField(max_length=1)
+    fecha_entrega = models.DateField(null=True)
+    condiciones = models.CharField(max_length=100, null=True)
+    firma_devolucion = models.ImageField(upload_to="firmasPrestamos2", null = True)
+    estatus = CharField(max_length=20)
+
+    def __str__(self):
+        return self.id_prestamo
