@@ -84,7 +84,7 @@ Agregar Mouses | Custom System
                                 <span class="input-group-addon">
                                     <i class="material-icons">network_wifi</i>
                                 </span>
-                                <select class="form-control show-tick" name="impresora">
+                                <select class="form-control show-tick" name="tipo">
                                     
                                     <option value="alambrico">Alámbrico</option>
                                     <option value="inalambrico">Inalámbrico</option>
@@ -102,7 +102,7 @@ Agregar Mouses | Custom System
                                 <span class="input-group-addon">
                                     <i class="material-icons">build</i>
                                 </span>
-                                <select class="form-control show-tick" name="colores">
+                                <select class="form-control show-tick" name="estado">
                                     <option value="activoFuncional">Activo Funcional</option>
                                     <option value="stockUsado">En Stock Usado</option>
                                     <option value="stockNuevo">En Stock Nuevo</option>
@@ -122,7 +122,7 @@ Agregar Mouses | Custom System
                                     <i class="material-icons">add_photo_alternate</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="file" name="imagenCartucho" id="txtimagen">
+                                    <input type="file" name="imagenMouse" id="txtimagen">
                                 </div>
                             </div>
                         </div>
@@ -132,7 +132,7 @@ Agregar Mouses | Custom System
                                 <span class="input-group-addon">
                                     <i class="material-icons">computer</i>
                                 </span>
-                                <select class="form-control show-tick" name="impresora">
+                                <select class="form-control show-tick" name="equipo">
                                     <option value="Sin equipo">Sin equipo</option>
                                     {% for impresoras in datosImpresoras %}
                                     <option value="{{impresoras.id_impresora}}">{{impresoras.marca}}

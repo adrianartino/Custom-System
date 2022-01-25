@@ -11,7 +11,7 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 
 #Importación de modelos
-from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Encuestas, Preguntas, Respuestas
+from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Encuestas, Preguntas, Respuestas,Mouses
 
 #Librería para manejar archivos en Python
 from django.core.files.base import ContentFile
@@ -7874,11 +7874,121 @@ def agregarMouses(request):
         
         foto = fotoAdmin(request)
         
-        
-        
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
+
+        if request.method == "POST":
+        
+            
+            marca_recibido = request.POST['marcas']
+            modelo_recibida = request.POST['modelo']
+            tipo_recibido = request.POST['tipo']
+            estado_recibido = request.POST['estado']
+            imagen_recibido = request.FILES.get('imagenMouse')
+           
+            equipo_recibida = request.POST['equipo']
+
+            if request.POST.get('activoMou', True):
+                activo_recibido = "A"
+            elif request.POST.get('activoMou', False):
+                activo_recibido = "I"
+            
+
+     
+               
+            if equipo_recibida == "Sin equipo":
+               
+                    
+                    registroMouse = Mouses (marca=marca_recibido,modelo= modelo_recibida,tipo=tipo_recibido, estado=estado_recibido, imagen= imagen_recibido, activo="I")
+                    if registroMouse:
+                        registroMouse.save()
+                        
+                        registros = Mouses.objects.count()
+                        
+                        
+                        
+                        id_sistemas = request.session['idSesion']
+                
+                        fecha = datetime.now()
+                        mouse= tipo_recibido + " " + marca_recibido + " " + modelo_recibida
+                        texto= "Se agregó al mouse " + mouse 
+                        registroBitacora= Bitacora(id_empleado=Empleados.objects.get(id_empleado=id_sistemas), tabla = "Mouses", id_objeto=registros, operacion=texto, fecha_hora= fecha)
+                        registroBitacora.save()
+       
+                        
+                    mouseSin = True
+                    textoMouse = "Se ha guardado  "+ marca_recibido + " " + modelo_recibida + " sin equipo!"
+                    return render(request,"Mouses/agregarMouses.html", {"estaEnAgregarEquipos": estaEnAgregarEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "mouseSin": mouseSin, "textoMouse":textoMouse, 
+                                                                        "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+                
+                
+            elif equipo_recibida != "Sin equipo":
+
+                infoEquipo = Equipos.objects.filter(id_equipo=equipo_recibida)
+                
+                for dato in infoEquipo:
+                    tipo = dato.tipo
+                    marcaCom = dato.marca
+                    modeloCom = dato.modelo
+
+                equipoCompleto = tipo + " " + marcaCom +  " " + modeloCom
+                    
+                mouseCon= True
+                txtMouse = "Se ha guardado  "+ marca_recibido + " " + modelo_recibida + " asignada al equipo " + equipoCompleto +"!"
+                
+                if cargador_recibido == "":
+                    
+                    registroCompu=Equipos(tipo=tipo_recibido,marca=marca_recibido,modelo= modelo_recibida,
+                                    color=color_recibido,imagen= imagen_recibido, pdf=pdf_recibido,
+                                    memoriaram=memoriaram_recibida,procesador=procesador_recibida,sistemaoperativo= sistemaop_recibida,
+                                    id_empleado =Empleados.objects.get(id_empleado = propietario_recibida),estado=estado_recibida, activo="A", modelocargador = "Sin cargador")
+                    if registroCompu:
+                        registroCompu.save()
+                        
+                        ultimo_registro = Equipos.objects.count()
+                        
+                        
+                        registroAntiguiedad = Renovacion_Equipos(id_equipo = Equipos.objects.get(id_equipo = ultimo_registro), fecha_compra = fecha_normal, fecha_renov = fecha_renovacion)
+                        registroAntiguiedad.save()
+                        id_sistemas = request.session['idSesion']
+                
+                        fecha = datetime.now()
+                        equipo= tipo_recibido + " " + marca_recibido + " " + modelo_recibida
+                        texto= "Se agregó al equipo " + equipo 
+                        registroBitacora= Bitacora(id_empleado=Empleados.objects.get(id_empleado=id_sistemas), tabla = "Equipos", id_objeto=ultimo_registro, operacion=texto, fecha_hora= fecha)
+                        registroBitacora.save()
+                        
+                else: 
+                    registroCompu=Equipos(tipo=tipo_recibido,marca=marca_recibido,modelo= modelo_recibida,
+                                    color=color_recibido,imagen= imagen_recibido, pdf=pdf_recibido,
+                                    memoriaram=memoriaram_recibida,procesador=procesador_recibida,sistemaoperativo= sistemaop_recibida,
+                                    id_empleado =Empleados.objects.get(id_empleado = propietario_recibida),estado=estado_recibida, activo="A", modelocargador = cargador_recibido)
+                    if registroCompu:
+                        registroCompu.save()
+                        
+                        registros = Equipos.objects.count()
+                        
+                        
+                        
+                        registroAntiguiedad = Renovacion_Equipos(id_equipo = Equipos.objects.get(id_equipo =  registros), fecha_compra = fecha_normal, fecha_renov = fecha_renovacion)
+                        registroAntiguiedad.save()
+                        id_sistemas = request.session['idSesion']
+                
+                        fecha = datetime.now()
+                        equipo= tipo_recibido + " " + marca_recibido + " " + modelo_recibida
+                        texto= "Se agregó al equipo " + equipo 
+                        registroBitacora= Bitacora(id_empleado=Empleados.objects.get(id_empleado=id_sistemas), tabla = "Equipos", id_objeto= registros, operacion=texto, fecha_hora= fecha)
+                        registroBitacora.save()
+                        
+                return render(request,"Equipos/agregarEquipos.html", {"estaEnAgregarEquipos ": estaEnAgregarEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "compuCon": compuCon, "textoCompu":textoCompu, 
+                                                                      "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+
+
+
+
+
+
 
         return render(request, "Sistemas/Mouses/agregarMouses.html", {"estaEnAgregarMouses":estaEnAgregarMouses,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
     else:
