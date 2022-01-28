@@ -47,7 +47,7 @@ Agregar Mouses | Custom System
                 </h2>
             </div>
             <div class="body">
-                <form id="form_validation" action="/agregarInsumos/" enctype="multipart/form-data" method="POST">
+                <form id="form_validation" action="/agregarMouses/" enctype="multipart/form-data" method="POST">
                     {% csrf_token %}
                     <div class="row clearfix">
                         <div class="col-md-4">
@@ -56,7 +56,7 @@ Agregar Mouses | Custom System
                                 <span class="input-group-addon">
                                     <i class="material-icons">copyright</i>
                                 </span>
-                                <select class="form-control show-tick" name="marcas">
+                                <select class="form-control show-tick" name="marcaMouse">
                                     <option value="Acteck">Acteck</option>
                                     <option value="Logitech">Logitech</option>
                                     <option value="Steren">Steren</option>
@@ -73,7 +73,7 @@ Agregar Mouses | Custom System
                                 </span>
                                 <div class="form-line">
                                     <input type="text" class="form-control date" placeholder="Ingresar Modelo"
-                                        name="modelo" maxlength="50" required>
+                                        name="modeloMouse" maxlength="30" required>
                                 </div>
                             </div>
                         </div>
@@ -84,10 +84,10 @@ Agregar Mouses | Custom System
                                 <span class="input-group-addon">
                                     <i class="material-icons">network_wifi</i>
                                 </span>
-                                <select class="form-control show-tick" name="tipo">
+                                <select class="form-control show-tick" name="tipoCon">
                                     
-                                    <option value="alambrico">Alámbrico</option>
-                                    <option value="inalambrico">Inalámbrico</option>
+                                    <option value="A">Alámbrico</option>
+                                    <option value="I">Inalámbrico</option>
                                 </select>
                             </div>
                         </div>
@@ -133,11 +133,11 @@ Agregar Mouses | Custom System
                                     <i class="material-icons">computer</i>
                                 </span>
                                 <select class="form-control show-tick" name="equipo">
-                                    <option value="Sin equipo">Sin equipo</option>
-                                    {% for impresoras in datosImpresoras %}
-                                    <option value="{{impresoras.id_impresora}}">{{impresoras.marca}}
-                                        {{impresoras.modelo}}</option>
+                                    <option value="SinEquipo">Sin equipo</option>
+                                    {% for equipo in equipos %}
+                                    <option value="{{equipo.id_equipo}}">#{{equipo.id_equipo}} - {{equipo.tipo}} {{equipo.marca}} {{equipo.modelo}}</option>
                                     {% endfor %}
+                                    
                                 </select>
                             </div>
                         </div>
@@ -150,31 +150,20 @@ Agregar Mouses | Custom System
 
                     <button type="submit"
                         class="btn btn-warning m-t-15 waves-effect animate__animated animate__flipInX"><i
-                            class="material-icons">opacity</i> Guardar Mouse</button>
+                            class="material-icons">mouse</i> Guardar Mouse</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-{% if error %}
-<script type="text/javascript">
-    swal({
-        icon: 'error',
-        title: 'Algo salio mal..',
-        text: ' {{mensaje}}',
-        footer: '<span style="color: red!important"> Corrige los datos a ingresar! </span>',
-        width: '40%'
-    });
-</script>
-{% endif %}
 
-{% if guardado %}
+{% if registroMouseCompletado %}
 <script type="text/javascript">
     swal({
         icon: 'success',
         title: 'Wuu..!',
-        text: ' {{mensaje}}',
+        text: ' {{texto}}',
         footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
         width: '40%'
     });
