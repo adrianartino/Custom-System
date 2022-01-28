@@ -11,7 +11,7 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 
 #Importación de modelos
-from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Encuestas, Preguntas, Respuestas,Mouses
+from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Encuestas, Preguntas, Respuestas,Mouses, Teclados
 
 #Librería para manejar archivos en Python
 from django.core.files.base import ContentFile
@@ -8019,14 +8019,64 @@ def verTeclados(request):
         nombreCompleto = nombre + " " + apellidos
         
         foto = fotoAdmin(request)
-        
-        
-        
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
 
-        return render(request, "Sistemas/Teclados/verTeclados.html", {"estaEnVerTeclados":estaEnVerTeclados,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+        #arreglos para almacenar teclados activos e inactivos
+
+        tecladosActivos = []
+        tecladosStock = []
+
+
+        #LISTA DE TODOS LOS TECLADOS 
+        teclados = Teclados.objects.all()
+
+        #obtener los datos de cada uno de los teclados
+
+        for tecla in teclados:
+            idTeclado = str(tecla.id_teclado)
+            tipoCon = tecla.conexion
+            marcaTeclado = tecla.marca
+            modeloTeclado = tecla.modelo
+            estadoTeclado = tecla.estado
+            fotoTeclado = tecla.foto
+            equipoPertenece = str(tecla.id_equipo_id)
+            activoTeclado = tecla.activo
+
+            if activoTeclado == "A":
+                #obtener los datos del equipo al que pertenece
+                equipoDatos = Equipos.objects.filter(id_equipo = int(equipoPertenece))
+                for dato in equipoDatos:
+                    idEquipo = str(dato.id_equipo)
+                    tipo = dato.tipo
+                    marca = dato.marca
+                    modelo = dato.modelo
+
+                    infoEquipo = "#"+ " " + idEquipo + " " + tipo + " " + marca + " " + modelo
+
+                    #Obtener los datos del empleado al que pertenece
+                    idPropietario = str(dato.id_empleado_id)
+                    datosEmpleado = Empleados.objects.filter(id_empleado= int(idPropietario))
+                    for datos in datosEmpleado:
+                        propietario = str(datos.id_empleado)
+                        nombres = datos.nombre
+                        apellido = datos.apellidos
+
+                    infoPropietario = "#" + " " + propietario + " " + nombres + " " + apellido
+                
+                tecladosActivos.append([idTeclado, tipoCon, marcaTeclado, modeloTeclado, estadoTeclado, fotoTeclado, infoEquipo, infoPropietario])
+
+            #si esta en stock (inactivo)
+
+            if activoTeclado == "I":
+                tecladosStock.append([idTeclado, tipoCon, marcaTeclado, modeloTeclado, estadoTeclado, fotoTeclado])
+
+
+
+
+        return render(request, "Sistemas/Teclados/verTeclados.html", {"estaEnVerTeclados":estaEnVerTeclados,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,
+                                                                    "tecladosActivos": tecladosActivos, "tecladosStock": tecladosStock})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -8035,6 +8085,7 @@ def agregarTeclados(request):
     if "idSesion" in request.session:
 
         estaEnAgregarTeclados = True
+        registroTecladoCompleto = False
         id_admin=request.session["idSesion"]
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
@@ -8043,14 +8094,47 @@ def agregarTeclados(request):
         nombreCompleto = nombre + " " + apellidos
         
         foto = fotoAdmin(request)
-        
-        
-        
+
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
 
-        return render(request, "Sistemas/Teclados/agregarTeclados.html", {"estaEnAgregarTeclados":estaEnAgregarTeclados,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+        #Carga de todos los equipos para el select
+        equipos = Equipos.objects.all()
+        
+        #Si se le dio clic al botón de Guardar tecldo
+        if request.method == "POST":
+            
+            marcaTeclado = request.POST['marcaTeclado']
+            modeloTeclado = request.POST['modeloTeclado']
+            tipoConexion = request.POST['conexionTeclado']
+            estadoTeclado = request.POST['estadoTeclado']
+            imagenTeclado = request.FILES.get('imagenTeclado')
+            equipoTeclado = request.POST['equipoTeclado']
+            
+            #Si el teclado fue guardado sin equipo..
+            if equipoTeclado == "SinEquipo":
+                registroTeclado = Teclados(conexion = tipoConexion, marca = marcaTeclado, modelo = modeloTeclado, 
+                                       estado = estadoTeclado, foto = imagenTeclado, activo = "I")
+                registroTeclado.save()
+            
+            #Si el teclado se guardó con un equipo...
+            elif equipoTeclado != "SinEquipo":
+                registroTeclado = Teclados(conexion = tipoConexion, marca = marcaTeclado, modelo = modeloTeclado, 
+                                       estado = estadoTeclado, foto = imagenTeclado, id_equipo = Equipos.objects.get(id_equipo = equipoTeclado),activo = "A")
+                registroTeclado.save()
+            
+            #Variables para el mensaje
+            if registroTeclado:
+                registroTecladoCompleto = True
+                texto  = "Se ha registrado el teclado "+ marcaTeclado + " " + modeloTeclado
+                
+            return render(request, "Sistemas/Teclados/agregarTeclados.html", {"estaEnAgregarTeclados":estaEnAgregarTeclados,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto, "equipos":equipos, 
+                                                                          "registroTecladoCompleto":registroTecladoCompleto, "texto":texto})
+
+
+        return render(request, "Sistemas/Teclados/agregarTeclados.html", {"estaEnAgregarTeclados":estaEnAgregarTeclados,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto, "equipos":equipos, 
+                                                                          "registroTecladoCompleto":registroTecladoCompleto})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     

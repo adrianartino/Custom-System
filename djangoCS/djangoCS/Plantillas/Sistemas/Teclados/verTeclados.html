@@ -123,30 +123,41 @@ Teclados | Custom System
                             </tr>
                         </tfoot>
                         <tbody class="animate__animated animate__backInDown">
-                            {% for empleado, area in lista %}
+                            {% for tecla in tecladosActivos %}
                             <tr>
-                                <td>{{empleado.id_empleado}}</td>
-                                <td>{{empleado.nombre}}</td>
-                                <td>{{empleado.apellidos}}</td>
+                                <td>{{tecla.0}}</td>
+                                {% if tecla.1 == "A" %}
+                                <td>Alámbrico</td>
+                                {% elif tecla.1 == "I" %}
+                                <td>Inalámbrico</td>
+                                {% endif %}
+                                <td>{{tecla.2}}</td>
+                                <td>{{tecla.3}}</td>
+                                {% if tecla.4 == "activoFuncional" %}
+                                <td ><label class="label bg-green">Activo Funcional</label></td>
+                                {% endif %}
+
                                 <td>
                                     <center>
-                                        <img src="{{empleado.imagen_empleado.url}}" width="60%" alt="empleado">
+                                        <img src="{{tecla.5.url}}" width="60%" alt="teclado">
                                     </center>
                                 </td>
-                                <td> <label class="{{area.1}}">{{area.0}}</label> </td>
-                                <td>{{empleado.puesto}}</td>
-                                <td>{{empleado.correo}}</td>
+                                {% if tecla.6 == " " %}
+                                <td>Sin equipo</td>
+                                {% else %}
+
                                 <td>
-                                    <form action="/correoContra/" method="POST">{% csrf_token %}
-                                        <input type="hidden" name="idEmpleadoContra" value="{{empleado.id_empleado}}">
-                                        <center>
-                                            <button type="submit" class="btn bg-indigo waves-effect " data-toggle="tooltip" data-placement="bottom"
-                                            title="Se enviará un correo electrónico con la contraseña solicitada.">
-                                                <i class="material-icons">contact_mail</i> Solicitar Contraseña
-                                            </button>
-                                        </center>
-                                    </form>
+                                    <div>
+                                        <label class="label bg-orange">{{tecla.6}}</label>
+                                    </div>
+                                    <div>
+                                        <label class="label bg-teal">{{tecla.7}}</label>
+                                    </div>
+                                {% endif %}
+                                    
                                 </td>
+                               
+                             
                                 <form action="/editarEmpleado/" method="POST">{% csrf_token %}
                                     <th>
                                         <input type="hidden" name="idEmpleadoEditar" value="{{empleado.id_empleado}}">
@@ -236,23 +247,23 @@ Teclados | Custom System
                             </tr>
                         </tfoot>
                         <tbody>
-                            {% for empleado, area in lista1 %}
+                            {% for teclado in tecladosStock %}
                             <tr>
-                                <td>{{empleado.id_empleado}}</td>
-                                <td>{{empleado.nombre}}</td>
-                                <td>{{empleado.apellidos}}</td>
+                                <td>{{teclado.0}}</td>
+                                <td>{{teclado.1}}</td>
+                                <td>{{teclado.2}}</td>
+                                <td>{{teclado.3}}</td>
+                                <td>{{teclado.4}}</td>
                                 <td>
                                     <center>
-                                        <img src="{{empleado.imagen_empleado.url}}" width="60%" alt="empleado">
+                                        <img src="{{teclado.5.url}}" width="60%" alt="teclado">
                                     </center>
                                 </td>
-                                <td> <label class="{{area.1}}">{{area.0}}</label> </td>
-                                <td>{{empleado.puesto}}</td>
-                                <td>{{empleado.correo}}</td>
+                              
                                 <th>
                                     <center>
                                         <button type="button" class="btn bg-green waves-effect" data-toggle="modal"
-                                            data-target="#{{empleado.id_empleado}}">
+                                            data-target="#{{teclado.0}}">
                                             <i class="material-icons">upgrade</i>
                                         </button>
                                     </center>

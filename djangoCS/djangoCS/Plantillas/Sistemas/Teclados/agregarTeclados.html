@@ -47,7 +47,7 @@ Agregar Teclados | Custom System
                 </h2>
             </div>
             <div class="body">
-                <form id="form_validation" action="/agregarInsumos/" enctype="multipart/form-data" method="POST">
+                <form id="form_validation" action="/agregarTeclados/" enctype="multipart/form-data" method="POST">
                     {% csrf_token %}
                     <div class="row clearfix">
                         <div class="col-md-4">
@@ -56,12 +56,14 @@ Agregar Teclados | Custom System
                                 <span class="input-group-addon">
                                     <i class="material-icons">copyright</i>
                                 </span>
-                                <select class="form-control show-tick" name="marcas">
-                                    <option value="Acteck">Acteck</option>
-                                    <option value="Logitech">Logitech</option>
+                                <select class="form-control show-tick" name="marcaTeclado">
+                                    <option value="K.Mex">K.Mex</option>
+                                    <option value="HP">HP</option>
                                     <option value="Steren">Steren</option>
-                                    <option value="Gasy Line">Gasy Line</option>
+                                    <option value="Easy Line">Easy Line</option>
                                     <option value="Perfect Choice">Perfect Choice</option>
+                                    <option value="DELL">DELL</option>
+                                    <option value="Manhattan">Manhattan</option>
                                 </select>
                             </div>
                         </div>
@@ -75,7 +77,7 @@ Agregar Teclados | Custom System
                                 </span>
                                 <div class="form-line">
                                     <input type="text" class="form-control date" placeholder="Ingresar Modelo"
-                                        name="modelo" maxlength="50" required>
+                                        name="modeloTeclado" maxlength="50" required>
                                 </div>
                             </div>
                         </div>
@@ -86,10 +88,10 @@ Agregar Teclados | Custom System
                                 <span class="input-group-addon">
                                     <i class="material-icons">network_wifi</i>
                                 </span>
-                                <select class="form-control show-tick" name="impresora">
+                                <select class="form-control show-tick" name="conexionTeclado">
                                     
-                                    <option value="alambrico">Alámbrico</option>
-                                    <option value="inalambrico">Inalámbrico</option>
+                                    <option value="A">Alámbrico</option>
+                                    <option value="I">Inalámbrico</option>
                                 </select>
                             </div>
                         </div>
@@ -104,7 +106,7 @@ Agregar Teclados | Custom System
                                 <span class="input-group-addon">
                                     <i class="material-icons">build</i>
                                 </span>
-                                <select class="form-control show-tick" name="colores">
+                                <select class="form-control show-tick" name="estadoTeclado">
                                     <option value="activoFuncional">Activo Funcional</option>
                                     <option value="stockUsado">En Stock Usado</option>
                                     <option value="stockNuevo">En Stock Nuevo</option>
@@ -124,7 +126,7 @@ Agregar Teclados | Custom System
                                     <i class="material-icons">add_photo_alternate</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="file" name="imagenCartucho" id="txtimagen">
+                                    <input type="file" name="imagenTeclado" id="txtimagen">
                                 </div>
                             </div>
                         </div>
@@ -134,11 +136,10 @@ Agregar Teclados | Custom System
                                 <span class="input-group-addon">
                                     <i class="material-icons">computer</i>
                                 </span>
-                                <select class="form-control show-tick" name="impresora">
+                                <select class="form-control show-tick" name="equipoTeclado">
                                     <option value="Sin equipo">Sin equipo</option>
-                                    {% for impresoras in datosImpresoras %}
-                                    <option value="{{impresoras.id_impresora}}">{{impresoras.marca}}
-                                        {{impresoras.modelo}}</option>
+                                    {% for equipo in equipos %}
+                                    <option value="{{equipo.id_equipo}}">#{{equipo.id_equipo}} - {{equipo.tipo}} {{equipo.marca}} {{equipo.modelo}}</option>
                                     {% endfor %}
                                 </select>
                             </div>
@@ -152,31 +153,21 @@ Agregar Teclados | Custom System
 
                     <button type="submit"
                         class="btn btn-warning m-t-15 waves-effect animate__animated animate__flipInX"><i
-                            class="material-icons">opacity</i> Guardar Teclado</button>
+                            class="material-icons">keyboard</i> Guardar Teclado</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-{% if error %}
-<script type="text/javascript">
-    swal({
-        icon: 'error',
-        title: 'Algo salio mal..',
-        text: ' {{mensaje}}',
-        footer: '<span style="color: red!important"> Corrige los datos a ingresar! </span>',
-        width: '40%'
-    });
-</script>
-{% endif %}
 
-{% if guardado %}
+
+{% if registroTecladoCompleto %}
 <script type="text/javascript">
     swal({
         icon: 'success',
         title: 'Wuu..!',
-        text: ' {{mensaje}}',
+        text: ' {{texto}}',
         footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
         width: '40%'
     });
