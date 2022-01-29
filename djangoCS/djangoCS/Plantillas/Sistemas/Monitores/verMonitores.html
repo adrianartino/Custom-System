@@ -121,49 +121,58 @@ Monitores | Custom System
                             </tr>
                         </tfoot>
                         <tbody class="animate__animated animate__backInDown">
-                            {% for empleado, area in lista %}
+                            {% for monitor in monitoresActivos %}
                             <tr>
-                                <td>{{empleado.id_empleado}}</td>
-                                <td>{{empleado.nombre}}</td>
-                                <td>{{empleado.apellidos}}</td>
+                                <td>{{monitor.0}}</td>
+
+                                
+                                <td>{{monitor.1}}</td>
+                                <td>{{monitor.2}}</td>
+
+                                {% if monitor.3 == "activoFuncional" %}
+                                <td ><label class="label bg-green">Activo Funcional</label></td>
+                                {% endif %}
+
                                 <td>
                                     <center>
-                                        <img src="{{empleado.imagen_empleado.url}}" width="60%" alt="empleado">
+                                        <img src="{{monitor.4.url}}" width="60%" alt="empleado">
                                     </center>
                                 </td>
-                                <td> <label class="{{area.1}}">{{area.0}}</label> </td>
-                                <td>{{empleado.puesto}}</td>
-                                <td>{{empleado.correo}}</td>
+
+                                {% if monitor.5 == "" %}
+                                <td>Sin equipo</td>
+                                {% else %}
                                 <td>
-                                    <form action="/correoContra/" method="POST">{% csrf_token %}
-                                        <input type="hidden" name="idEmpleadoContra" value="{{empleado.id_empleado}}">
+                                    <div>
+                                        <label class="label bg-orange">{{monitor.5}}</label>
+                                    </div>
+                                    <div>
+                                        <label class="label bg-teal">{{monitor.6}}</label>
+                                    </div>
+                                {% endif %}
+
+                                <td>
+                                    <form action="/editarMonitor/" method="POST">{% csrf_token %}
+                                        <input type="hidden" name="idMonitorEditar" value="{{monitor.0}}">
                                         <center>
-                                            <button type="submit" class="btn bg-indigo waves-effect " data-toggle="tooltip" data-placement="bottom"
-                                            title="Se enviará un correo electrónico con la contraseña solicitada.">
-                                                <i class="material-icons">contact_mail</i> Solicitar Contraseña
+                                            <button type="submit" class="btn btn-warning waves-effect">
+                                                    <i class="material-icons">edit</i>
                                             </button>
                                         </center>
                                     </form>
                                 </td>
-                                <form action="/editarEmpleado/" method="POST">{% csrf_token %}
-                                    <th>
-                                        <input type="hidden" name="idEmpleadoEditar" value="{{empleado.id_empleado}}">
-                                        <center>
-                                            <button type="submit" class="btn btn-warning waves-effect">
-                                                <i class="material-icons">edit</i>
-                                            </button>
-                                        </center>
-
-                                    </th>
-                                </form>
+                                
 
                                 <th>
-                                    <center>
-                                        <button type="button" class="btn bg-red waves-effect" data-toggle="modal"
-                                            data-target="#{{empleado.id_empleado}}">
-                                            <i class="material-icons">cancel</i>
-                                        </button>
-                                    </center>
+                                    <form action="/editarEmpleado/" method="POST">{% csrf_token %}
+                                        <input type="hidden" name="idEmpleadoEditar" value="{{mouse.0}}">
+                                        <center>
+                                            <button type="button" class="btn bg-red waves-effect" data-toggle="modal"
+                                                    data-target="#{{empleado.id_empleado}}">
+                                                    <i class="material-icons">cancel</i>
+                                            </button>
+                                        </center>
+                                    </form>
                                 </th>
                             </tr>
                             {% endfor %}
@@ -232,27 +241,37 @@ Monitores | Custom System
                             </tr>
                         </tfoot>
                         <tbody>
-                            {% for empleado, area in lista1 %}
+                            {% for monitor in monitoresStock %}
                             <tr>
-                                <td>{{empleado.id_empleado}}</td>
-                                <td>{{empleado.nombre}}</td>
-                                <td>{{empleado.apellidos}}</td>
+                                <td>{{monitor.0}}</td>
+
+                                
+                                
+                                <td>{{monitor.2}}</td>
+                                <td>{{monitor.3}}</td>
+
+                                {% if monitor.4 == "stockUsado" %}
+                                <td ><label class="label bg-orange">Usado</label></td>
+                                {% elif monitor.4 == "stockNuevo" %}
+                                <td ><label class="label bg-green">Nuevo</label></td>
+                                {% elif monitor.4 == "basura" %}
+                                <td ><label class="label bg-red">Basura</label></td>
+                                {% endif %}
+
                                 <td>
                                     <center>
-                                        <img src="{{empleado.imagen_empleado.url}}" width="60%" alt="empleado">
+                                        <img src="{{monitor.5.url}}" width="60%" alt="empleado">
                                     </center>
                                 </td>
-                                <td> <label class="{{area.1}}">{{area.0}}</label> </td>
-                                <td>{{empleado.puesto}}</td>
-                                <td>{{empleado.correo}}</td>
-                                <th>
+                                <td>
                                     <center>
                                         <button type="button" class="btn bg-green waves-effect" data-toggle="modal"
-                                            data-target="#{{empleado.id_empleado}}">
+                                            data-target="#{{monitor.0}}">
                                             <i class="material-icons">upgrade</i>
                                         </button>
                                     </center>
-                                </th>
+                                </td>
+                                
                             </tr>
                             {% endfor %}
                         </tbody>

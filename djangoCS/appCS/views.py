@@ -11,7 +11,7 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 
 #Importación de modelos
-from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Encuestas, Preguntas, Respuestas,Mouses, Teclados
+from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Encuestas, Preguntas, Respuestas,Mouses, Teclados, Monitores
 
 #Librería para manejar archivos en Python
 from django.core.files.base import ContentFile
@@ -8159,8 +8159,49 @@ def verMonitores(request):
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
+        
+        #Listas a utilizar
+        monitoresActivos = []
+        monitoresStock = []
+        
+        #Lista de todos los mouses
+        listaMonitores = Monitores.objects.all()
+        
+        for monitor in listaMonitores:
+            idMonitor = str(monitor.id_monitor)
+            marca = monitor.marca
+            modelo = monitor.modelo
+            estado = monitor.estado
+            fotoMouse = monitor.foto
+            idEquipo = str(monitor.id_equipo_id)
+            activo = monitor.activo
+            
+            if activo == "A":
+                #sacar info de equipo ya que el mouse se encuentra activo
+                infoEquipo = Equipos.objects.filter(id_equipo = int(idEquipo))
+                for dato in infoEquipo:
+                    idEquipo = str(dato.id_equipo)
+                    tipo = dato.tipo
+                    marcapc = dato.marca
+                    modelopc = dato.modelo 
+                    
+                    modeloEquipo = "#"+idEquipo + " " + tipo + " " + marcapc + " " + modelopc
+                    
+                    #datos Empleado de equipo
+                    idEmpleado = dato.id_empleado_id
+                    infoEmpleado = Empleados.objects.filter(id_empleado = idEmpleado)
+                    for datoEmpleado in infoEmpleado:
+                        nombre = datoEmpleado.nombre
+                        apellidos = datoEmpleado.apellidos
+                    empleado = nombre + " " + apellidos
+                    
+                monitoresActivos.append([idMonitor, marca, modelo, estado, fotoMouse, modeloEquipo, empleado])
+            #No tiene un equipo asignado, puede variar el estado..
+            
+            if activo == "I":
+                monitoresStock.append([idMonitor, marca, modelo, estado, fotoMouse])
 
-        return render(request, "Sistemas/Monitores/verMonitores.html", {"estaEnVerMonitores":estaEnVerMonitores,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+        return render(request, "Sistemas/Monitores/verMonitores.html", {"estaEnVerMonitores":estaEnVerMonitores,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto, "monitoresActivos":monitoresActivos, "monitoresStock":monitoresStock})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -8183,8 +8224,43 @@ def agregarMonitores(request):
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
+        
+        #consulta equipos
+        equipos = Equipos.objects.all()
+        
+        #Si se le dio clic al botón de Guardar Monitor
+        if request.method == "POST":
+            
+            marcaMonitor = request.POST['marcaMonitor']
+            modeloMonitor = request.POST['modeloMonitor']
+            estadoMonitor = request.POST['estadoMonitor']
+            imagenMonitor = request.FILES.get('imagenMonitor')
+            equipoMonitor = request.POST['equipoMonitor']
+            
+            #Si el mouse fue guardado sin equipo..
+            if equipoMonitor == "SinEquipo":
+                registroMonitor = Monitores(marca = marcaMonitor, modelo = modeloMonitor, 
+                                       estado = estadoMonitor, foto = imagenMonitor, activo = "I")
+                registroMonitor.save()
+            
+            #Si el mouse se guardó con un equipo...
+            elif equipoMonitor != "SinEquipo":
+                registroMonitor = Monitores(marca = marcaMonitor, modelo = modeloMonitor, 
+                                       estado = estadoMonitor, foto = imagenMonitor, id_equipo = Equipos.objects.get(id_equipo = equipoMonitor),activo = "A")
+                registroMonitor.save()
+            
+            #Variables para el mensaje
+            if registroMonitor:
+                registroMonitorCompletado = True
+                texto  = "Se ha registrado el monitor "+ marcaMonitor + " " + modeloMonitor
+                
+            return render(request, "Sistemas/Monitores/agregarMonitores.html", {"estaEnAgregarMonitores":estaEnAgregarMonitores,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto, 
+                                                                            "equipos":equipos, "registroMonitorCompletado":registroMonitorCompletado, "texto":texto})
 
-        return render(request, "Sistemas/Monitores/agregarMonitores.html", {"estaEnAgregarMonitores":estaEnAgregarMonitores,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+        
+
+        return render(request, "Sistemas/Monitores/agregarMonitores.html", {"estaEnAgregarMonitores":estaEnAgregarMonitores,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto, 
+                                                                            "equipos":equipos})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
