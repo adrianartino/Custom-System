@@ -47,36 +47,22 @@ Agregar Teléfonos | Custom System
                 </h2>
             </div>
             <div class="body">
-                <form id="form_validation" action="/agregarInsumos/" enctype="multipart/form-data" method="POST">
+                <form id="form_validation" action="/agregarTelefonos/" enctype="multipart/form-data" method="POST">
                     {% csrf_token %}
                     <div class="row clearfix">
-                        <div class="col-md-4">
-                            <label for="email_address"><span style="color: #078F68;">* </span>Ubicación/Departamento:</label>
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="material-icons">copyright</i>
-                                </span>
-                                <select class="form-control show-tick" name="marcas">
-                                    <option value="HP">HP</option>
-                                    <option value="XEROX">XEROX</option>
-                                    <option value="SAMSUNG">SAMSUNG</option>
-                                    <option value="EPSON">EPSON</option>
-                                    <option value="LEÓN">LEÓN</option>
-                                </select>
-                            </div>
-                        </div>
+                       
                         <div class="col-md-4">
                             <label for="email_address"><span style="color: #078F68;">* </span>Encargado:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
-                                    <i class="material-icons">copyright</i>
+                                    <i class="material-icons">assignment_ind</i>
                                 </span>
-                                <select class="form-control show-tick" name="marcas">
-                                    <option value="HP">HP</option>
-                                    <option value="XEROX">XEROX</option>
-                                    <option value="SAMSUNG">SAMSUNG</option>
-                                    <option value="EPSON">EPSON</option>
-                                    <option value="LEÓN">LEÓN</option>
+                                <select class="form-control show-tick" name="propietario">
+                                    <option value="Sin encargado">Sin encargado</option>
+                                    {% for enca in empleados %}
+                                    <option value="{{enca.id_empleado}}">"#"{{enca.id_empleado}} {{enca.nombre}} {{enca.apellidos}}
+                                        </option>
+                                    {% endfor %}
                                 </select>
                             </div>
                         </div>
@@ -86,14 +72,28 @@ Agregar Teléfonos | Custom System
                             <label for="email_address"><span style="color: #078F68;">* </span>Tipo de conexión:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
-                                    <i class="material-icons">copyright</i>
+                                    <i class="material-icons">rss_feed</i>
                                 </span>
-                                <select class="form-control show-tick" name="marcas">
-                                    <option value="HP">HP</option>
-                                    <option value="XEROX">XEROX</option>
-                                    <option value="SAMSUNG">SAMSUNG</option>
-                                    <option value="EPSON">EPSON</option>
-                                    <option value="LEÓN">LEÓN</option>
+                                <select class="form-control show-tick" name="conexion">
+                                    
+                                    <option value="A">Alámbrico</option>
+                                    <option value="I">Inalámbrico</option>
+                                  
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Marca:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">branding_watermark</i>
+                                </span>
+                                <select class="form-control show-tick" name="marcaTel">
+                                    <option value="STEREN">STEREN</option>
+                                    <option value="TELMEX">TELMEX</option>
+                                    <option value="Panasonic">Panasonic</option>
+                                   
+                                    
                                 </select>
                             </div>
                         </div>
@@ -103,14 +103,26 @@ Agregar Teléfonos | Custom System
 
                     </div>
                     <div class="row clearfix">
-
-                        <div class="col-md-3">
-                            <label for="email_address"><span style="color: #078F68;">* </span>Marca:</label>
+                       
+                        <div class="col-md-4">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Modelo:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
-                                    <i class="material-icons">build</i>
+                                    <i class="material-icons">filter_b_and_w</i>
                                 </span>
-                                <select class="form-control show-tick" name="colores">
+                                <div class="form-line">
+                                    <input type="text" class="form-control date" placeholder="Ingresar Modelo"
+                                        name="modeloTel" maxlength="50" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Estado:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">priority_high</i>
+                                </span>
+                                <select class="form-control show-tick" name="estadoTel">
                                     <option value="activoFuncional">Activo Funcional</option>
                                     <option value="stockUsado">En Stock Usado</option>
                                     <option value="stockNuevo">En Stock Nuevo</option>
@@ -119,22 +131,6 @@ Agregar Teléfonos | Custom System
                                 </select>
                             </div>
                         </div>
-
-                        <div class="col-md-4">
-                            <label for="email_address"><span style="color: #078F68;">* </span>Modelo:</label>
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="material-icons">branding_watermark</i>
-                                </span>
-                                <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar Modelo"
-                                        name="modelo" maxlength="50" required>
-                                </div>
-                            </div>
-                        </div>
-
-
-
                         <div class="col-md-4">
                             <label for="email_address"><span style="color: #078F68;">* </span>Imagen de
                                 teléfono:</label>
@@ -143,25 +139,44 @@ Agregar Teléfonos | Custom System
                                     <i class="material-icons">add_photo_alternate</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="file" name="imagenCartucho" id="txtimagen">
+                                    <input type="file" name="imagenTel" id="txtimagen">
                                 </div>
                             </div>
                         </div>
-                        
-                    </div>
+                 </div>
+
                     <div class="row clearfix">
-                        <div class="col-md-3">
+
+                        
+                        <div class="col-md-4">
                             <label for="email_address"><span style="color: #078F68;">* </span>Extensión:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
-                                    <i class="material-icons">computer</i>
+                                    <i class="material-icons">phone_in_talk</i>
                                 </span>
-                                <select class="form-control show-tick" name="impresora">
-                                    <option value="Sin equipo">Sin equipo</option>
-                                    {% for impresoras in datosImpresoras %}
-                                    <option value="{{impresoras.id_impresora}}">{{impresoras.marca}}
-                                        {{impresoras.modelo}}</option>
-                                    {% endfor %}
+                                <select class="form-control show-tick" name="extensiones">
+                                    <option value="Ninguna">Ninguna</option>
+                                    <option value="101">101</option>
+                                    <option value="101">102</option>
+                                    <option value="103">103</option>
+                                    <option value="104">104</option>
+                                    <option value="105">105</option>
+                                    <option value="106">106</option>
+                                    <option value="107">107</option>
+                                    <option value="108">108</option>
+                                    <option value="109">109</option>
+                                    <option value="110">110</option>
+                                    <option value="111">111</option>
+                                    <option value="112">112</option>
+                                    <option value="113">113</option>
+                                    <option value="114">114</option>
+                                    <option value="115">115</option>
+                                    <option value="116">116</option>
+                                    <option value="117">117</option>
+                                    <option value="118">118</option>
+                                    <option value="119">119</option>
+                                    <option value="120">120</option>
+                                    
                                 </select>
                             </div>
                         </div>
@@ -169,20 +184,22 @@ Agregar Teléfonos | Custom System
                             <label for="email_address"><span style="color: #078F68;">* </span>Nodo:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
-                                    <i class="material-icons">branding_watermark</i>
+                                    <i class="material-icons">power</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar Modelo"
-                                        name="modelo" maxlength="50" required>
+                                    <input type="text" class="form-control date" placeholder="Ingresar nodo"
+                                        name="nodo" maxlength="50" >
                                 </div>
                             </div>
                         </div>
+                        
                     </div>
+                 
 
 
                     <button type="submit"
                         class="btn btn-warning m-t-15 waves-effect animate__animated animate__flipInX"><i
-                            class="material-icons">opacity</i> Guardar Teléfono</button>
+                            class="material-icons">call</i> Guardar Teléfono</button>
                 </form>
             </div>
         </div>
@@ -201,12 +218,12 @@ Agregar Teléfonos | Custom System
 </script>
 {% endif %}
 
-{% if guardado %}
+{% if registroTelefonoCompleto %}
 <script type="text/javascript">
     swal({
         icon: 'success',
         title: 'Wuu..!',
-        text: ' {{mensaje}}',
+        text: ' {{texto}}',
         footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
         width: '40%'
     });

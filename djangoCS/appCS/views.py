@@ -11,7 +11,7 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 
 #Importación de modelos
-from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Encuestas, Preguntas, Respuestas,Mouses, Teclados, Monitores
+from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Encuestas, Preguntas, Respuestas,Mouses, Teclados, Monitores, Telefonos
 
 #Librería para manejar archivos en Python
 from django.core.files.base import ContentFile
@@ -5637,7 +5637,7 @@ def reporteInsumosRequisicion(request):
     if "idSesion" in request.session:    
         
     
-        insumos = Cartuchos.objects.filter(cantidad__in=[0,1])
+        insumos = Cartuchos.objects.filter(cantidad__in=[0,1], id_impresora__in =[1,2,3,5])
         
         numero_insumos = 0
         for insumo in insumos:
@@ -5659,7 +5659,7 @@ def reporteInsumosRequisicion(request):
         #QUITAR ESTO PARA OTRA HOJA
         #crear el http response con pdf
         respuesta = HttpResponse(content_type='application/pdf')
-        respuesta['Content-Disposition'] = 'attachment; filename=Requisicion Insumos'+str(datetime.today().strftime('%Y-%m-%d'))+'.pdf'
+        respuesta['Content-Disposition'] = 'attachment; filename=Insumos Faltantes'+str(datetime.today().strftime('%Y-%m-%d'))+'.pdf'
         #Crear objeto PDF 
         buffer =BytesIO()
         c = canvas.Canvas(buffer, pagesize=letter)
@@ -5670,7 +5670,7 @@ def reporteInsumosRequisicion(request):
         for hoja2 in range(division):
             
             #HASTA AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
-            insumos= Cartuchos.objects.filter(cantidad__in=[0,1]) #Dolo los insumos que tengan en su cantidad 1 o 0.
+            insumos= Cartuchos.objects.filter(cantidad__in=[0,1], id_impresora__in =[1,2,3,5]) #Dolo los insumos que tengan en su cantidad 1 o 0.
             
             
             ids =[]
@@ -5720,7 +5720,7 @@ def reporteInsumosRequisicion(request):
                         
                     
                 #solo 9 empleados
-                listaInsumos = zip(ids, marcas, modelos, cantidades, numseries, colores, urls_imagenes, impresoras)
+                listaInsumos = zip(ids, marcas, modelos, cantidades, numseries, colores, urls_imagenes, impresoras, cantidades_compras)
                 
                 contadorHojas = 5
                 if contadorInsumosXHoja == 9:
@@ -5764,7 +5764,7 @@ def reporteInsumosRequisicion(request):
                         
                     
                 #solo 9 empleados
-                listaInsumos = zip(ids, marcas, modelos, cantidades, numseries, colores, urls_imagenes, impresoras)
+                listaInsumos = zip(ids, marcas, modelos, cantidades, numseries, colores, urls_imagenes, impresoras, cantidades_compras)
                 
                 contadorHojas = 4
                 if contadorInsumosXHoja == 9:
@@ -5808,7 +5808,7 @@ def reporteInsumosRequisicion(request):
                         
                     
                 #solo 9 empleados
-                listaInsumos = zip(ids, marcas, modelos, cantidades, numseries, colores, urls_imagenes, impresoras)
+                listaInsumos = zip(ids, marcas, modelos, cantidades, numseries, colores, urls_imagenes, impresoras,  cantidades_compras)
                 
                 contadorHojas = 3
                 if contadorInsumosXHoja == 9:
@@ -5841,10 +5841,17 @@ def reporteInsumosRequisicion(request):
                         marcas.append(insumo.marca)
                         modelos.append(insumo.modelo)
                         cantidades.append(insumo.cantidad)
-                        if insumo.cantidad == 0:
-                            compra_req = "2 cartuchos"
-                        if insumo.cantidad == 1:
-                            compra_req = "1 cartucho"
+                        if idimpresora == 3:
+                            if insumo.cantidad == 0:
+                                compra_req = "3 cartuchos"
+                            if insumo.cantidad == 1:
+                                compra_req = "2 cartucho"
+                        else:
+                            if insumo.cantidad == 0:
+                                compra_req = "2 cartuchos"
+                            if insumo.cantidad == 1:
+                                compra_req = "1 cartucho"
+
                         cantidades_compras.append(compra_req)
                         numseries.append(insumo.nuserie)
                         colores.append(insumo.color)
@@ -5884,7 +5891,7 @@ def reporteInsumosRequisicion(request):
             c.setFillColor(color_guinda)
             
             c.setFont('Helvetica-Bold', 12)
-            c.drawString(400,750, "REQUISICIÓN DE INSUMOS")
+            c.drawString(400,750, "INSUMOS FALTANTES")
             color_negro="#030305"
             c.setFillColor(color_negro)
             c.setFont('Helvetica-Bold', 10)
@@ -5902,7 +5909,7 @@ def reporteInsumosRequisicion(request):
             #titulo
             c.setFont('Helvetica-Bold', 22)
             
-            c.drawString(200,660, 'Requisición de Insumos.')
+            c.drawString(200,660, 'Insumos Faltantes.')
  
             #header de tabla
             styles = getSampleStyleSheet()
@@ -8280,14 +8287,61 @@ def verTelefonos(request):
         nombreCompleto = nombre + " " + apellidos
         
         foto = fotoAdmin(request)
-        
-        
-        
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
 
-        return render(request, "Sistemas/Telefonos/verTelefonos.html", {"estaEnVerTelefonos":estaEnVerTelefonos,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+        #arreglos telefonos en stock y activos
+        telActivos = []
+        telStock = []
+        #obtener lista de todos los telefonos
+
+        telefonosTotales = Telefonos.objects.all()
+        for tel in telefonosTotales:
+            idTel = str(tel.id_telefono)
+            idEmpl = str(tel.id_empleado_id)
+            con = tel.conexion
+            marcaT = tel.marca
+            modeloT = tel.modelo
+            estadoT = tel.estado
+            fotoT = tel.foto
+            extension = tel.extension
+            nodo = tel.nodo
+            activo = tel.activo
+
+            if activo == "A":
+                encargado = Empleados.objects.filter(id_empleado = str(idEmpl))
+                for e in encargado:
+                    idE = str(e.id_empleado)
+                    nombres = e.nombre
+                    apellidosE = e.apellidos
+                    areaE = str(e.id_area_id)
+
+                    encargadoNombre = idE + " " + nombres + " " + apellidosE 
+
+                areasT = Areas.objects.filter(id_area = areaE)
+                for a in areasT:
+                    nombreA = a.nombre
+                    color = a. color
+
+                areaEncargado = nombreA + " " + color
+
+                telActivos.append([idTel,encargadoNombre,  con, marcaT, modeloT, estadoT, fotoT, extension, nodo])
+
+                listas = zip (telActivos, areasT)
+
+            if activo == "I":
+                telStock.append([idTel, con, marcaT, modeloT, estadoT, fotoT])
+
+        
+
+
+
+
+
+
+        return render(request, "Sistemas/Telefonos/verTelefonos.html", {"estaEnVerTelefonos":estaEnVerTelefonos,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,
+        "telActivos":telActivos , "listas":listas, "telStock":telStock})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -8296,6 +8350,7 @@ def agregarTelefonos(request):
     if "idSesion" in request.session:
 
         estaEnAgregarTelefonos = True
+        registroTelefonoCompleto = False
         id_admin=request.session["idSesion"]
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
@@ -8304,14 +8359,50 @@ def agregarTelefonos(request):
         nombreCompleto = nombre + " " + apellidos
         
         foto = fotoAdmin(request)
-        
-        
-        
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
 
-        return render(request, "Sistemas/Telefonos/agregarTelefonos.html", {"estaEnAgregarTelefonos":estaEnAgregarTelefonos,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+     
+        #Carga de todos los empleados para el select
+        empleados = Empleados.objects.all()
+        
+        #Si se le dio clic al botón de Guardar tecldo
+        if request.method == "POST":
+            
+           
+            encargadoRecibido = request.POST['propietario']
+            conexionRecibido = request.POST['conexion']
+            marcaRecibido = request.POST['marcaTel']
+            modeloRecibido = request.POST['modeloTel']
+            estadoRecibido = request.POST['estadoTel']
+            imagenRecibido = request.FILES.get('imagenTel')
+            extensionRecibido = request.POST['extensiones']
+            nodoRecibido = request.POST['nodo']
+
+            if encargadoRecibido == "Sin encargado":
+                if extensionRecibido == "Ninguna":
+                    if nodoRecibido == "":
+                        registroTelefono = Telefonos(conexion = conexionRecibido, marca = marcaRecibido, modelo = modeloRecibido, estado = estadoRecibido, foto = imagenRecibido,
+                        nodo = "Sin nodo", activo = "I" )
+                        registroTelefono.save()
+
+            elif encargadoRecibido != "Sin encargado":
+                registroTelefono = Telefonos(id_empleado = Empleados.objects.get(id_empleado = encargadoRecibido), conexion = conexionRecibido, marca = marcaRecibido, modelo = modeloRecibido,
+                estado= estadoRecibido, foto = imagenRecibido, extension = extensionRecibido, nodo = nodoRecibido, activo = "A")
+                registroTelefono.save()
+
+            if registroTelefono:
+                registroTelefonoCompleto = True
+                texto  = "Se ha registrado el teléfono "+ marcaRecibido + " " + modeloRecibido
+                
+            return render(request, "Sistemas/Telefonos/agregarTelefonos.html", {"estaEnAgregarTelefonos":estaEnAgregarTelefonos,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto, 
+                                                                          "registroTelefonoCompleto":registroTelefonoCompleto, "texto":texto})
+
+
+
+        return render(request, "Sistemas/Telefonos/agregarTelefonos.html", {"estaEnAgregarTelefonos":estaEnAgregarTelefonos,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,
+         "empleados":empleados, "registroTelefonoCompleto":registroTelefonoCompleto})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -8328,14 +8419,50 @@ def extensionesTel(request):
         nombreCompleto = nombre + " " + apellidos
         
         foto = fotoAdmin(request)
-        
-        
-        
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
 
-        return render(request, "Sistemas/Telefonos/extensiones.html", {"estaEnExtensionesTelefonos":estaEnExtensionesTelefonos,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+         #arreglos telefonos en stock y activos
+        telActivos = []
+       
+        #obtener lista de todos los telefonos
+
+        telefonosTotales = Telefonos.objects.all()
+        for tel in telefonosTotales:
+            idTel = str(tel.id_telefono)
+            idEmpl = str(tel.id_empleado_id)
+            con = tel.conexion
+            marcaT = tel.marca
+            modeloT = tel.modelo
+            estadoT = tel.estado
+            fotoT = tel.foto
+            extension = tel.extension
+            nodo = tel.nodo
+            activo = tel.activo
+
+            if activo == "A":
+                encargado = Empleados.objects.filter(id_empleado = str(idEmpl))
+                for e in encargado:
+                    idE = str(e.id_empleado)
+                    nombres = e.nombre
+                    apellidosE = e.apellidos
+                    areaE = str(e.id_area_id)
+                    puestoE = e.puesto
+
+                    encargadoNombre = nombres + " " + apellidosE 
+
+                areasT = Areas.objects.filter(id_area = areaE)
+             
+
+                telActivos.append([idTel,encargadoNombre,  con, marcaT, modeloT, estadoT, fotoT, extension, nodo])
+
+                listas = zip (telActivos, areasT, encargado)
+
+
+
+        return render(request, "Sistemas/Telefonos/extensiones.html", {"estaEnExtensionesTelefonos":estaEnExtensionesTelefonos,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,
+        "listas":listas, "encargado": encargado})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -8353,14 +8480,16 @@ def agregarDiscosDuros(request):
         nombreCompleto = nombre + " " + apellidos
         
         foto = fotoAdmin(request)
-        
-        
-        
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
 
-        return render(request, "discosDuros/agregarDiscosDuros.html", {"estaEnAgregarDiscosDuros":estaEnAgregarDiscosDuros,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+        #empleados en select
+        empleados = Empleados.objects.all()
+
+
+        return render(request, "discosDuros/agregarDiscosDuros.html", {"estaEnAgregarDiscosDuros":estaEnAgregarDiscosDuros,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,
+        "empleados": empleados})
     else:
         return redirect ('/login/')
 

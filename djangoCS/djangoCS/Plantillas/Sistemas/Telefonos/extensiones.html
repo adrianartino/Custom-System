@@ -81,51 +81,30 @@ Extensiones | Custom System
 
                 </div>
                 <div class="row">
+                    {% for tel, area, puestos in listas %}
                     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                        <div class="info-box bg-pink hover-zoom-effect">
+                      
+                        <div class="info-box {{area.color}} hover-zoom-effect">
                             <div class="icon">
-                                <i class="material-icons">email</i>
+                                <i class="material-icons">call</i>
                             </div>
                             <div class="content">
-                                <div class="text">Calidad <span>Guadalupe Perez</span></div>
-                                <div class="number">#101</div>
+                                <div class="text"> <span>{{tel.1}}</span></div>
+                              
+                                <div  style="padding-top: 3% !important;">
+                                    {{puestos.puesto}}
+                                </div>
+                                <br>
+                                <div class="number" style="font-size: 200% !important; padding-bottom: 2% !important;">#{{tel.7}}</div>
                             </div>
                         </div>
+                      
     
                     </div>
-                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                        <div class="info-box bg-blue hover-zoom-effect">
-                            <div class="icon">
-                                <i class="material-icons">devices</i>
-                            </div>
-                            <div class="content">
-                                <div class="text">CPU USAGE</div>
-                                <div class="number">92%</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                        <div class="info-box bg-light-blue hover-zoom-effect">
-                            <div class="icon">
-                                <i class="material-icons">access_alarm</i>
-                            </div>
-                            <div class="content">
-                                <div class="text">ALARM</div>
-                                <div class="number">07:00 AM</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                        <div class="info-box bg-cyan hover-zoom-effect">
-                            <div class="icon">
-                                <i class="material-icons">gps_fixed</i>
-                            </div>
-                            <div class="content">
-                                <div class="text">LOCATION</div>
-                                <div class="number">Turkey</div>
-                            </div>
-                        </div>
-                    </div>
+                    {% endfor %}
+                    
+                   
+                    
                     
                 </div>
 

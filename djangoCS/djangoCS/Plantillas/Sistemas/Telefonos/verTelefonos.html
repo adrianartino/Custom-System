@@ -104,8 +104,9 @@ Teléfonos | Custom System
                                 <th>Tipo de Conexión</th>
                                 <th>Marca</th>
                                 <th>Modelo</th>
-                                <th>Fotografía</th>
                                 <th>Estado</th>
+                                <th>Fotografía</th>
+                           
                                 <th>Nodo</th>
                                 <th>Editar</th>
                                 <th>Baja</th>
@@ -118,39 +119,46 @@ Teléfonos | Custom System
                                 <th>Encargado</th>
                                 <th>Tipo de Conexión</th>
                                 <th>Marca</th>
+                                <th>Estado</th>
                                 <th>Modelo</th>
                                 <th>Fotografía</th>
-                                <th>Estado</th>
+                             
                                 <th>Nodo</th>
                                 <th>Editar</th>
                                 <th>Baja</th>
                             </tr>
                         </tfoot>
                         <tbody class="animate__animated animate__backInDown">
-                            {% for empleado, area in lista %}
+                            {% for tel, area in listas %}
                             <tr>
-                                <td>{{empleado.id_empleado}}</td>
-                                <td>{{empleado.nombre}}</td>
-                                <td>{{empleado.apellidos}}</td>
+                                <td>{{tel.0}}</td>
+                                <td>
+                                    <div>
+                                        <label class="label bg-orange">{{tel.1}}</label>
+                                    </div>
+                                    <div>
+                                        <label class="{{area.color}}">{{area.nombre}}</label>
+                                    </div>
+                                </td>
+                                {% if tel.2 == "A" %}
+                                <td>Alámbrico</td>
+                                {% else %}
+                                <td>Inalámbrico</td>
+                                {% endif %}
+                                <td>{{tel.3}}</td>
+                                <td>{{tel.4}}</td>
+                                {% if tel.5 == "activoFuncional" %}
+                                <td ><label class="label bg-green">Activo Funcional</label></td>
+                                {% endif %}
                                 <td>
                                     <center>
-                                        <img src="{{empleado.imagen_empleado.url}}" width="60%" alt="empleado">
+                                        <img src="{{tel.6.url}}" width="60%" alt="empleado">
                                     </center>
                                 </td>
-                                <td> <label class="{{area.1}}">{{area.0}}</label> </td>
-                                <td>{{empleado.puesto}}</td>
-                                <td>{{empleado.correo}}</td>
-                                <td>
-                                    <form action="/correoContra/" method="POST">{% csrf_token %}
-                                        <input type="hidden" name="idEmpleadoContra" value="{{empleado.id_empleado}}">
-                                        <center>
-                                            <button type="submit" class="btn bg-indigo waves-effect " data-toggle="tooltip" data-placement="bottom"
-                                            title="Se enviará un correo electrónico con la contraseña solicitada.">
-                                                <i class="material-icons">contact_mail</i> Solicitar Contraseña
-                                            </button>
-                                        </center>
-                                    </form>
-                                </td>
+                               
+                                <td>{{tel.7}}</td>
+                             
+                               
                                 <form action="/editarEmpleado/" method="POST">{% csrf_token %}
                                     <th>
                                         <input type="hidden" name="idEmpleadoEditar" value="{{empleado.id_empleado}}">
@@ -223,6 +231,7 @@ Teléfonos | Custom System
                                 <th>Tipo de Conexión</th>
                                 <th>Marca</th>
                                 <th>Modelo</th>
+                                <th>Estado</th>
                                 <th>Fotografía</th>
                                 <th>Alta</th>
                             </tr>
@@ -233,24 +242,29 @@ Teléfonos | Custom System
                                 <th>Tipo de Conexión</th>
                                 <th>Marca</th>
                                 <th>Modelo</th>
+                                <th>Estado</th>
                                 <th>Fotografía</th>
                                 <th>Alta</th>
                             </tr>
                         </tfoot>
                         <tbody>
-                            {% for empleado, area in lista1 %}
+                            {% for tel in telStock %}
                             <tr>
-                                <td>{{empleado.id_empleado}}</td>
-                                <td>{{empleado.nombre}}</td>
-                                <td>{{empleado.apellidos}}</td>
+                                <td>{{tel.0}}</td>
+                                {% if tel.1 == "I"%}
+                                <td>Inalámbrico</td>
+                                {% else %}
+                                <td>Alámbrico</td>
+                                {% endif %}
+                                <td>{{tel.2}}</td>
+                                <td>{{tel.3}}</td>
+                                <td>{{tel.4}}</td>
                                 <td>
                                     <center>
-                                        <img src="{{empleado.imagen_empleado.url}}" width="60%" alt="empleado">
+                                        <img src="{{tel.5.url}}" width="60%" alt="empleado">
                                     </center>
                                 </td>
-                                <td> <label class="{{area.1}}">{{area.0}}</label> </td>
-                                <td>{{empleado.puesto}}</td>
-                                <td>{{empleado.correo}}</td>
+                                
                                 <th>
                                     <center>
                                         <button type="button" class="btn bg-green waves-effect" data-toggle="modal"

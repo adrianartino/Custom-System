@@ -157,15 +157,22 @@ Agregar Discos Duros | Custom System
                                 <span class="input-group-addon">
                                     <i class="material-icons">person</i>
                                 </span>
-                                <select id="empleadosDiscos" class="form-control show-tick" name="empleados" onchange="mostrarSeleccion()">
-                                    <option value="0" selected disabled>Seleccione empleado</option>
-                                    <option value="1">Marcos Adrian Guerrero Artiño</option>
-                                    <option value="2">Blanca Gaeta Talamantes</option>
+                                /* id="empleadosDiscos" */
+                                <select multiple id="myid" class="form-control show-tick" name="empleados" onchange="mostrarSeleccion()" >
+                                   
+                                    <option value="Ninguno" selected>Ninguno</option>
+                                    {% for emple in empleados %}
+                                    <option value="{{emple.id_empleado}}">{{emple.nombre}} {{emple.apellidos}}</option>
+                                   
+                                    {% endfor %}
                                 </select>
                             </div>
                         </div>
 
                     </div>
+                    <div class="row">
+                        <span class="mostrar"></span>
+                    <div>
 
                     <div id="listaEmpleados">
                         
@@ -214,15 +221,28 @@ Agregar Discos Duros | Custom System
 
 {% block estilosJs %}
 <script>
+    function displayVals() {
+     
+      var multipleValues = $( "#myid" ).val() || [];
+      if (multipleValues == "Ninguno"){
+          $(".mostrar").html( "<b>Multiple:</b> " + multipleValues);
+      } else {
+          $(".mostrar").html( "<br> <b>Multiple:</b> " + multipleValues);
+      }
+    }
+    $("select").change(displayVals);
+    displayVals();
+</script>
+<script>
     function mostrarSeleccion()
     {
         /* Para obtener el valor */
-        var valor = document.getElementById("empleadosDiscos").value;
+        var valor = document.getElementById("myid").value;
         //alert(cod);
 
         //document.getElementById('cont1').innerHTML='Párrafo de texto';
         /* Para obtener el texto */
-        var combo = document.getElementById("empleadosDiscos");
+        var combo = document.getElementById("myid");
         var selected = combo.options[combo.selectedIndex].text; 
         alert(valor);
         
