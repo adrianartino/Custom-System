@@ -53,11 +53,12 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'djangoCS.urls'
+plantillas = os.path.join(BASE_DIR, 'djangoCS/Plantillas')
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['C:/Users/Sistemas/Desktop/systema/Custom-System/djangoCS/djangoCS/Plantillas'],
+        'DIRS': [plantillas],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -136,7 +137,7 @@ EMAIL_HOST = 'mail.customco.com.mx'
 EMAIL_USE_TLS = True
 EMAIL_PORT =  587
 EMAIL_HOST_USER = 'sistemas@customco.com.mx'
-EMAIL_HOST_PASSWORD = 'j[S1m7=_cvhS'
+EMAIL_HOST_PASSWORD = '$W$PGs@zu=91'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

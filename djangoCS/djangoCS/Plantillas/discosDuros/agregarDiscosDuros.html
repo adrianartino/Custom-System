@@ -53,7 +53,7 @@ Agregar Discos Duros | Custom System
                 </h2>
             </div>
             <div class="body">
-                <form id="form_validation" action="/agregarInsumos/" enctype="multipart/form-data" method="POST">
+                <form id="form_validation" action="/agregarDiscosDuros/" enctype="multipart/form-data" method="POST">
                     {% csrf_token %}
                     <div class="row clearfix">
                         <div class="col-md-3">
@@ -62,7 +62,7 @@ Agregar Discos Duros | Custom System
                                 <span class="input-group-addon">
                                     <i class="material-icons">merge_type</i>
                                 </span>
-                                <select class="form-control show-tick" name="marcas">
+                                <select class="form-control show-tick" name="tipoDisco">
                                     <option value="HDD">HDD</option>
                                     <option value="SSD">SSD</option>
                                 </select>
@@ -78,7 +78,7 @@ Agregar Discos Duros | Custom System
                                 <span class="input-group-addon">
                                     <i class="material-icons">copyright</i>
                                 </span>
-                                <select class="form-control show-tick" name="marcas">
+                                <select class="form-control show-tick" name="marcasDisco">
                                     <option value="Seagate">Seagate</option>
                                     <option value="Toshiba">Toshiba</option>
                                     <option value="Western Digital">Western Digital</option>
@@ -98,7 +98,7 @@ Agregar Discos Duros | Custom System
                                 </span>
                                 <div class="form-line">
                                     <input type="text" class="form-control date" placeholder="Ingresar GB"
-                                        name="modelo" maxlength="50" required>
+                                        name="capacidadAlm" maxlength="50" required>
                                 </div>
                             </div>
                         </div>
@@ -109,7 +109,7 @@ Agregar Discos Duros | Custom System
                                 <span class="input-group-addon">
                                     <i class="material-icons">check</i>
                                 </span>
-                                <select class="form-control show-tick" name="marcas">
+                                <select class="form-control show-tick" name="estadoDisco">
                                     <option value="Usado Funcional">Usado Funcional</option>
                                     <option value="Nuevo">Nuevo</option>
                                     <option value="Mal estado/basura">Mal estado/basura</option>
@@ -121,13 +121,13 @@ Agregar Discos Duros | Custom System
                     </div>
                     <div class="row clearfix">
 
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label for="email_address"><span style="color: #bcc0bf;">* </span>Dimensiones:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">format_size</i>
                                 </span>
-                                <select class="form-control show-tick" name="marcas">
+                                <select class="form-control show-tick" name="dimensiones">
                                     <option value="M 2.2">M 2.2</option>
                                     <option value="M2 de 2 pines">M2 de 2 pines</option>
                                     <option value="M2 de 3 pines">M2 de 3 pines</option>
@@ -146,44 +146,54 @@ Agregar Discos Duros | Custom System
                                 </span>
                                 <div class="form-line">
                                     <input type="text" class="form-control date" placeholder="Ingresar GB"
-                                        name="modelo" maxlength="50" required>
+                                        name="almacenamientoUso" maxlength="50" >
                                 </div>
                             </div>
                         </div>
-
-                        <div class="col-md-6">
-                            <label for="email_address"><span style="color: #bcc0bf;">* </span>Empleados con datos en disco:</label>
+                        <div class="col-md-3">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Número de empleados con resplado:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
-                                    <i class="material-icons">person</i>
+                                    <i class="material-icons">accessibility</i>
                                 </span>
-                                /* id="empleadosDiscos" */
-                                <select multiple id="myid" class="form-control show-tick" name="empleados" onchange="mostrarSeleccion()" >
-                                   
-                                    <option value="Ninguno" selected>Ninguno</option>
-                                    {% for emple in empleados %}
-                                    <option value="{{emple.id_empleado}}">{{emple.nombre}} {{emple.apellidos}}</option>
-                                   
-                                    {% endfor %}
-                                </select>
+                                <div class="form-line">
+                                    <input type="text" class="form-control date" onkeypress="return validaNumericos(event)" placeholder="Número de empleados con respaldo"
+                                        name="numeroEmpleadosRespaldo" maxlength="50" id="numeroEmpleados" >
+                                </div>
                             </div>
                         </div>
+                        
+                            <div class="col-md-2">
+                                <button type="submit"
+                                class="btn bg-pink m-t-15 waves-effect animate__animated animate__flipInX" id="discoNuevo" ><i
+                                    class="material-icons" >save</i> Agregar disco duro</button>
+                                
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button"
+                                class="btn bg-pink m-t-15 waves-effect animate__animated animate__flipInX" id="generarEmpleados" onclick="generadorEmpleados()"><i
+                                    class="material-icons" >account_circle</i> Agregar empleados</button>
+                            </div>
+                       
+
+                       
 
                     </div>
-                    <div class="row">
-                        <span class="mostrar"></span>
-                    <div>
-
-                    <div id="listaEmpleados">
+                   
+                    <div class="row clearfix" id="empleadosDiscos">
                         
+
+
+                    </div>
+                    <div  id="botonGuardar">
+                    <br>
+                   
                     </div>
                     
 
 
 
-                    <button type="submit"
-                        class="btn btn-warning m-t-15 waves-effect animate__animated animate__flipInX"><i
-                            class="material-icons">save</i> Guardar Disco Duro</button>
+                    
 
                     
                 </form>
@@ -204,12 +214,12 @@ Agregar Discos Duros | Custom System
 </script>
 {% endif %}
 
-{% if guardado %}
+{% if discoGuardado %}
 <script type="text/javascript">
     swal({
         icon: 'success',
         title: 'Wuu..!',
-        text: ' {{mensaje}}',
+        text: ' {{discoGuardadoTexto}}',
         footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
         width: '40%'
     });
@@ -220,35 +230,54 @@ Agregar Discos Duros | Custom System
 {% endblock %}
 
 {% block estilosJs %}
-<script>
-    function displayVals() {
-     
-      var multipleValues = $( "#myid" ).val() || [];
-      if (multipleValues == "Ninguno"){
-          $(".mostrar").html( "<b>Multiple:</b> " + multipleValues);
-      } else {
-          $(".mostrar").html( "<br> <b>Multiple:</b> " + multipleValues);
-      }
-    }
-    $("select").change(displayVals);
-    displayVals();
-</script>
-<script>
-    function mostrarSeleccion()
-    {
-        /* Para obtener el valor */
-        var valor = document.getElementById("myid").value;
-        //alert(cod);
 
-        //document.getElementById('cont1').innerHTML='Párrafo de texto';
-        /* Para obtener el texto */
-        var combo = document.getElementById("myid");
-        var selected = combo.options[combo.selectedIndex].text; 
-        alert(valor);
-        
-        document.getElementById('listaEmpleados').innerHTML='<H1>Empleados Agregados</H1><input type="text" value="'+selected+'"">';
-    }
+<script>
+    
+  
 
+
+var empleados = document.getElementById('numeroEmpleados');
+
+var boton = document.getElementById('generarEmpleados');
+var btnGuardar = document.getElementById('botonGuardar');
+
+
+var respaldos = document.getElementById('empleadosDiscos');
+var botonGuardarSolodisco = document.getElementById('discoNuevo');
+
+
+
+function generadorEmpleados(){
+    var cantidadEmpleados = parseInt(empleados.value);
+  
+    var contenido ="";
+    var empleado ="";
+    botonGuardarSolodisco.style.display = "none";
+   
+ 
+    
+   //alert(cantidades);
+   for (let empleados = 0; empleados < cantidadEmpleados; empleados++) {
+    // Se ejecuta 5 veces, con valores del paso 0 al 4.
+    var contador = empleados +1;
+    var contadorTexto = contador.toString();
+    empleado = "empleado" + contadorTexto;
+   
+   contenido = contenido + ' <div class="col-md-12"><label for="email_address"><span style="color: #bcc0bf;">* </span>Empleado '+ contadorTexto +': </label><div class="input-group"><span class="input-group-addon"><i class="material-icons">account_box</i></span><select class="form-control show-tick" name="' + empleado + '">{% for empleado in empleados %}<option value="{{empleado.id_empleado}}">{{empleado.nombre}} {{empleado.apellidos}}</option>{% endfor %}</select></div></div>';
+  }
+   respaldos.innerHTML = contenido; 
+
+   
+
+  
+
+  
+   empleados.setAttribute('readonly', true);
+
+   boton.style.display = "none";
+  
+   btnGuardar.innerHTML = ' <button type="submit" class="btn bg-indigo m-t-15 waves-effect animate__animated animate__flipInX"><i class="material-icons">save</i> Agregar disco duro</button>';
+}
 
 
 

@@ -11,7 +11,7 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 
 #Importación de modelos
-from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Encuestas, Preguntas, Respuestas,Mouses, Teclados, Monitores, Telefonos
+from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Encuestas, Preguntas, Respuestas,Mouses, Teclados, Monitores, Telefonos, DiscosDuros, EmpleadosDiscosDuros
 
 #Librería para manejar archivos en Python
 from django.core.files.base import ContentFile
@@ -8486,6 +8486,70 @@ def agregarDiscosDuros(request):
 
         #empleados en select
         empleados = Empleados.objects.all()
+        #Si se le dio clic al botón de Guardar tecldo
+        if request.method == "POST":
+            
+           
+            tipoRecibido = request.POST['tipoDisco']
+            marcaRecibido = request.POST['marcasDisco']
+            almacenamientoRecibido = request.POST['capacidadAlm']
+            estadoRecibido = request.POST['estadoDisco']
+            dimensionRecibido = request.POST['dimensiones']
+            usoRecibido = request.POST['almacenamientoUso']
+            numrespaldosRecibido = request.POST['numeroEmpleadosRespaldo']
+            empleado = "empleado"
+            if usoRecibido != "":
+                almLibre = int(almacenamientoRecibido) - int(usoRecibido)
+           
+            idEmpleado = 0
+            listaEmpleados=[]
+            idsEmpleados =[]
+           
+            
+            
+            
+           
+
+            if numrespaldosRecibido == "":
+                if usoRecibido == "":
+                    #registro disco
+                    registroDisco = DiscosDuros(tipo = tipoRecibido, marca = marcaRecibido, capacidad = almacenamientoRecibido, dimension = dimensionRecibido, estado = estadoRecibido
+                ,  alm_libre = almacenamientoRecibido)
+                    registroDisco.save()
+                else:
+                    #registro disco
+                    registroDisco = DiscosDuros(tipo = tipoRecibido, marca = marcaRecibido, capacidad = almacenamientoRecibido, dimension = dimensionRecibido, alm_uso = usoRecibido, estado = estadoRecibido,
+                    alm_libre = almLibre)
+                    registroDisco.save()
+
+            
+            elif numrespaldosRecibido != "":
+                for empleadosRes in range(int(numrespaldosRecibido)):
+                    idEmpleado= idEmpleado + 1
+                
+                    nameEmpleado = empleado + str(idEmpleado)
+                    
+                    textoNombreEmpleado = request.POST[nameEmpleado]
+                    idsEmpleados.append(idEmpleado)
+                    listaEmpleados.append(textoNombreEmpleado)
+                #registro disco
+                registroDisco = DiscosDuros(tipo = tipoRecibido, marca = marcaRecibido, capacidad = almacenamientoRecibido, dimension = dimensionRecibido, alm_uso = usoRecibido, estado = estadoRecibido,
+                alm_libre = almLibre)
+                registroDisco.save()
+                if registroDisco:
+                    registrarDiscoID = DiscosDuros.objects.count()
+                    for empleadod in idsEmpleados:
+                        registroEmpleadoDisco = EmpleadosDiscosDuros(id_empleado = Empleados.objects.get(id_empleado= empleadod), id_disco = DiscosDuros.objects.get(id_disco=registrarDiscoID))
+                        registroEmpleadoDisco.save()
+            
+
+            
+            discoGuardado = True
+            discoGuardadoTexto = "El disco duro" + tipoRecibido + " " + marcaRecibido + " fue guardado con éxito!"
+
+            
+            return render(request, "discosDuros/agregarDiscosDuros.html", {"estaEnAgregarDiscosDuros":estaEnAgregarDiscosDuros,"id_admin":id_admin, "discoGuardado":discoGuardado, "discoGuardadoTexto":discoGuardadoTexto,"nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,
+                "empleados": empleados})
 
 
         return render(request, "discosDuros/agregarDiscosDuros.html", {"estaEnAgregarDiscosDuros":estaEnAgregarDiscosDuros,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,
