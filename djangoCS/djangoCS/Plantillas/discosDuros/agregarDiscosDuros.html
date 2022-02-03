@@ -28,6 +28,8 @@ Agregar Discos Duros | Custom System
 
 <!-- Bootstrap DatePicker Css -->
 <link href={% static 'panel/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css' %} rel="stylesheet" />
+<!-- Wait Me Css -->
+<link href={% static 'panel/plugins/waitme/waitMe.css' %} rel="stylesheet" />
 
 <!-- Bootstrap Select Css -->
 <link href={% static 'panel/plugins/bootstrap-select/css/bootstrap-select.css' %} rel="stylesheet" />
@@ -181,6 +183,7 @@ Agregar Discos Duros | Custom System
                     </div>
                    
                     <div class="row clearfix" id="empleadosDiscos">
+                       
                         
 
 
@@ -252,6 +255,7 @@ function generadorEmpleados(){
   
     var contenido ="";
     var empleado ="";
+    var fecha = "";
     botonGuardarSolodisco.style.display = "none";
    
  
@@ -262,8 +266,10 @@ function generadorEmpleados(){
     var contador = empleados +1;
     var contadorTexto = contador.toString();
     empleado = "empleado" + contadorTexto;
+    fecha = "fecha_respaldo" + contadorTexto
+    
    
-   contenido = contenido + ' <div class="col-md-12"><label for="email_address"><span style="color: #bcc0bf;">* </span>Empleado '+ contadorTexto +': </label><div class="input-group"><span class="input-group-addon"><i class="material-icons">account_box</i></span><select class="form-control show-tick" name="' + empleado + '">{% for empleado in empleados %}<option value="{{empleado.id_empleado}}">{{empleado.nombre}} {{empleado.apellidos}}</option>{% endfor %}</select></div></div>';
+   contenido = contenido + ' <div class="col-md-8"><label for="email_address"><span style="color: #bcc0bf;">* </span>Empleado '+ contadorTexto +': </label><div class="input-group"><span class="input-group-addon"><i class="material-icons">account_box</i></span><select class="form-control show-tick" name="' + empleado + '">{% for empleado in empleados %}<option value="{{empleado.id_empleado}}">{{empleado.nombre}} {{empleado.apellidos}}</option>{% endfor %}</select></div></div><div class="col-md-4"><h2 class="card-inside-title"><span style="color: #078F68;">* </span>Fecha de Compra:</h2><div class="input-group"><span class="input-group-addon"><i class="material-icons">date_range</i></span><div class="form-line" id="bs_datepicker_container"><input type="date" class="form-control" name="' + fecha + '" required></div></div></div>';
   }
    respaldos.innerHTML = contenido; 
 
@@ -346,6 +352,11 @@ function generadorEmpleados(){
 
 <!-- Waves Effect Plugin Js -->
 <script src={% static 'panel/plugins/node-waves/waves.js' %}></script>
+<!-- Autosize Plugin Js -->
+<script src={% static 'panel/plugins/autosize/autosize.js' %}></script>
+
+<!-- Moment Plugin Js -->
+<script src={% static 'panel/plugins/momentjs/moment.js' %}></script>
 
 <!-- Bootstrap Material Datetime Picker Plugin Js -->
 <script src={% static 'panel/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js' %}>
@@ -368,6 +379,7 @@ function generadorEmpleados(){
 
 <!-- Custom Js -->
 <script src={% static 'panel/js/admin.js' %}></script>
+<script src={% static 'panel/js/pages/forms/basic-form-elements.js' %}></script>
 <script src={% static 'panel/js/pages/tables/jquery-datatable.js' %}></script>
 <script src={% static 'panel/js/pages/forms/advanced-form-elements.js' %}></script>
 

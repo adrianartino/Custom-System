@@ -11,7 +11,7 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 
 #Importación de modelos
-from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Encuestas, Preguntas, Respuestas,Mouses, Teclados, Monitores, Telefonos, DiscosDuros, EmpleadosDiscosDuros
+from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Encuestas, Preguntas, Respuestas,Mouses, Teclados, Monitores, Telefonos, DiscosDuros, EmpleadosDiscosDuros, MemoriasUSB
 
 #Librería para manejar archivos en Python
 from django.core.files.base import ContentFile
@@ -8497,13 +8497,16 @@ def agregarDiscosDuros(request):
             dimensionRecibido = request.POST['dimensiones']
             usoRecibido = request.POST['almacenamientoUso']
             numrespaldosRecibido = request.POST['numeroEmpleadosRespaldo']
+       
             empleado = "empleado"
+            fecha = "fecha_respaldo"
             if usoRecibido != "":
                 almLibre = int(almacenamientoRecibido) - int(usoRecibido)
            
             idEmpleado = 0
             listaEmpleados=[]
             idsEmpleados =[]
+            fechas = []
            
             
             
@@ -8528,18 +8531,23 @@ def agregarDiscosDuros(request):
                     idEmpleado= idEmpleado + 1
                 
                     nameEmpleado = empleado + str(idEmpleado)
+                    nameFecha = fecha + str(idEmpleado)
                     
                     textoNombreEmpleado = request.POST[nameEmpleado]
+                    fechaRecibido = request.POST[nameFecha]
+                    fechas.append(fechaRecibido)
                     idsEmpleados.append(idEmpleado)
                     listaEmpleados.append(textoNombreEmpleado)
+
+                lista = zip(idsEmpleados, fechas)
                 #registro disco
                 registroDisco = DiscosDuros(tipo = tipoRecibido, marca = marcaRecibido, capacidad = almacenamientoRecibido, dimension = dimensionRecibido, alm_uso = usoRecibido, estado = estadoRecibido,
                 alm_libre = almLibre)
                 registroDisco.save()
                 if registroDisco:
                     registrarDiscoID = DiscosDuros.objects.count()
-                    for empleadod in idsEmpleados:
-                        registroEmpleadoDisco = EmpleadosDiscosDuros(id_empleado = Empleados.objects.get(id_empleado= empleadod), id_disco = DiscosDuros.objects.get(id_disco=registrarDiscoID))
+                    for empleadod, fecha in lista:
+                        registroEmpleadoDisco = EmpleadosDiscosDuros(id_empleado = Empleados.objects.get(id_empleado= empleadod), id_disco = DiscosDuros.objects.get(id_disco=registrarDiscoID), fecha = fecha)
                         registroEmpleadoDisco.save()
             
 
@@ -8570,14 +8578,55 @@ def verDiscosDuros(request):
         nombreCompleto = nombre + " " + apellidos
         
         foto = fotoAdmin(request)
-        
-        
-        
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
 
-        return render(request, "discosDuros/verDiscosDuros.html", {"estaEnVerDiscosDuros":estaEnVerDiscosDuros,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+      
+        discosSiRespaldos = []
+
+
+        #lista de todos los discos duros
+        totaldiscos = DiscosDuros.objects.all()
+        for disco in totaldiscos:
+            idDisco = int(disco.id_disco)
+         
+            discosRespaldos = EmpleadosDiscosDuros.objects.filter(id_disco_id = idDisco)
+
+            if discosRespaldos:
+                empleadosEnDisco = []
+                fechasDisco = []
+                datosEmpleado = ""
+                for respa in discosRespaldos:
+                   
+                
+                    empleados = respa.id_empleado_id
+                    fecha = respa.fecha
+
+                    datosEmpleadosRespaldos = Empleados.objects.filter(id_empleado = empleados)
+
+                    for empleado in datosEmpleadosRespaldos:
+                        ids = str (empleado.id_empleado)
+                        nombres = empleado.nombre
+                        apellido = empleado.apellidos
+
+                        datosEmpleado = ids + " " + nombres + " " + apellido 
+                    empleadosEnDisco.append(datosEmpleado)
+                    fechasDisco.append(fecha)
+                discosSiRespaldos.append([empleadosEnDisco,fechasDisco])
+            else:
+                discosSiRespaldos.append("n")
+
+        lista = zip (totaldiscos, discosSiRespaldos)
+
+        
+
+
+
+        
+
+        return render(request, "discosDuros/verDiscosDuros.html", {"estaEnVerDiscosDuros":estaEnVerDiscosDuros,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,
+        "lista": lista})
     else:
     
         return redirect ('/login/')
@@ -8589,6 +8638,7 @@ def agregarUSB(request):
     if "idSesion" in request.session:
     
         estaEnAgregarUSB= True
+        guardadoUSB = False
         id_admin=request.session["idSesion"]
         nombre = request.session['nombres']
         apellidos = request.session['apellidos']
@@ -8597,14 +8647,35 @@ def agregarUSB(request):
         nombreCompleto = nombre + " " + apellidos
         
         foto = fotoAdmin(request)
-        
-        
-        
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
 
-        return render(request, "memoriasUSB/agregarUSB.html", {"estaEnAgregarUSB":estaEnAgregarUSB,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+        if request.method == "POST":
+            marcaRecibido = request.POST['marca']
+            modeloRecibido = request.POST['modelo']
+            capaRecibido = int (request.POST['capacidad'])
+            cantRecibido = int (request.POST['cantidad'])
+
+            if modeloRecibido == "":
+                registroUSB = MemoriasUSB(marca = marcaRecibido , capacidad = capaRecibido, cantidadStock = cantRecibido)
+                registroUSB.save()
+            else:
+                registroUSB = MemoriasUSB(marca = marcaRecibido , modelo = modeloRecibido, capacidad = capaRecibido, cantidadStock = cantRecibido)
+                registroUSB.save()
+
+            if registroUSB:
+                guardadoUSB = True 
+                texto = "La memoria USB " + " " + marcaRecibido + " " + modeloRecibido + " se agregó con éxito!"
+            
+            return render(request, "memoriasUSB/agregarUSB.html", {"estaEnAgregarUSB":estaEnAgregarUSB,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,
+        "guardadoUSB": guardadoUSB, "texto": texto})
+            
+
+
+
+        return render(request, "memoriasUSB/agregarUSB.html", {"estaEnAgregarUSB":estaEnAgregarUSB,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,
+        "guardadoUSB": guardadoUSB})
     else:
         return redirect ('/login/')
 
@@ -8621,17 +8692,72 @@ def verUSB(request):
         nombreCompleto = nombre + " " + apellidos
         
         foto = fotoAdmin(request)
-        
-        
-        
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
 
-        return render(request, "memoriasUSB/verUSB.html", {"estaEnVerUSB":estaEnVerUSB,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+        memorias = MemoriasUSB.objects.all()
+
+        if "idUsbActualizado" in request.session:
+            usbActualizado=True
+            textoActualizado= request.session['idUsbActualizado']
+            del request.session["idUsbActualizado"]
+            
+            return render(request, "memoriasUSB/verUSB.html", {"estaEnVerUSB":estaEnVerUSB,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,
+        "memorias": memorias, "usbActualizado":usbActualizado, "textoActualizado":textoActualizado})    
+
+
+
+        return render(request, "memoriasUSB/verUSB.html", {"estaEnVerUSB":estaEnVerUSB,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,
+        "memorias": memorias})
     else:
     
         return redirect ('/login/')
+
+
+def actualizarUSB(request):
+    
+    if "idSesion" in request.session:
+    
+        Insumos = True
+        estaEnVerInsumos = True
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        nombreCompleto = nombre + " " + apellidos
+        
+        
+        if request.method == "POST":
+            
+            id_usb_recibido = request.POST['idUsb']
+            cantida_recibida = request.POST['cantidadUsb']
+            
+            datosUSB = MemoriasUSB.objects.filter(id_usb=id_usb_recibido)
+            
+            for dato in datosUSB:
+                marca = dato.marca
+                modelo = dato.modelo
+                
+                
+    
+            
+            actualizar = MemoriasUSB.objects.filter(id_usb=id_usb_recibido).update(cantidadStock=cantida_recibida)
+            
+            if actualizar:
+                if modelo != "":
+                
+                    textoUSB = "Se ha actualizado el stock de la memoria USB  "+ marca+" "+ modelo  + " con éxito!"
+                        
+                    request.session['idUsbActualizado'] = textoUSB
+                else: 
+                    textoUSB = "Se ha actualizado el stock de la memoria USB  "+ marca + " con éxito!"
+                        
+                    request.session['idUsbActualizado'] = textoUSB
+            
+            return redirect('/verUSB/')
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
     
     
 def agregarPrestamos(request):
@@ -8647,14 +8773,14 @@ def agregarPrestamos(request):
         nombreCompleto = nombre + " " + apellidos
         
         foto = fotoAdmin(request)
-        
-        
-        
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
 
-        return render(request, "prestamos/agregarPrestamo.html", {"estaEnAgregarPrestamo":estaEnAgregarPrestamo,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+        empleados = Empleados.objects.filter(activo = "A")
+
+        return render(request, "prestamos/agregarPrestamo.html", {"estaEnAgregarPrestamo":estaEnAgregarPrestamo,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,
+        "empleados": empleados})
     else:
         return redirect ('/login/')
 

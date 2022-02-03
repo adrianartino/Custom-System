@@ -47,7 +47,7 @@ Agregar memorias USB | Custom System
                 </h2>
             </div>
             <div class="body">
-                <form id="form_validation" action="/agregarInsumos/" enctype="multipart/form-data" method="POST">
+                <form id="form_validation" action="/agregarUSB/" enctype="multipart/form-data" method="POST">
                     {% csrf_token %}
                     <div class="row clearfix">
                         <div class="col-md-6">
@@ -56,7 +56,7 @@ Agregar memorias USB | Custom System
                                 <span class="input-group-addon">
                                     <i class="material-icons">copyright</i>
                                 </span>
-                                <select class="form-control show-tick" name="marcas">
+                                <select class="form-control show-tick" name="marca">
                                     <option value="ADATA">ADATA</option>
                                     <option value="SanDisk">SanDisk</option>
                                     <option value="KINGSTON">KINGSTON</option>
@@ -73,7 +73,7 @@ Agregar memorias USB | Custom System
                                 </span>
                                 <div class="form-line">
                                     <input type="text" class="form-control date" placeholder="Ingresar Modelo"
-                                        name="modelo" maxlength="50" required>
+                                        name="modelo" maxlength="50" >
                                 </div>
                             </div>
                         </div>
@@ -90,12 +90,12 @@ Agregar memorias USB | Custom System
                                 <span class="input-group-addon">
                                     <i class="material-icons">hourglass_full</i>
                                 </span>
-                                <select class="form-control show-tick" name="colores">
-                                    <option value="dosGB">2 GB</option>
-                                    <option value="cuatroGB">4 GB</option>
-                                    <option value="ochoGB">8 GB</option>
-                                    <option value="diesiseisGB">16 GB</option>
-                                    <option value="treintadosGB">32 GB</option>
+                                <select class="form-control show-tick" name="capacidad">
+                                    <option value="2">2 GB</option>
+                                    <option value="4">4 GB</option>
+                                    <option value="8">8 GB</option>
+                                    <option value="16">16 GB</option>
+                                    <option value="32">32 GB</option>
                                     
                                 </select>
                             </div>
@@ -112,7 +112,7 @@ Agregar memorias USB | Custom System
                                 </span>
                                 <div class="form-line">
                                     <input type="text" class="form-control date" placeholder="Ingresar cantidad"
-                                        name="modelo" maxlength="50" required>
+                                        name="cantidad" maxlength="50" required>
                                 </div>
                             </div>
                         </div>
@@ -144,12 +144,12 @@ Agregar memorias USB | Custom System
 </script>
 {% endif %}
 
-{% if guardado %}
+{% if guardadoUSB %}
 <script type="text/javascript">
     swal({
         icon: 'success',
         title: 'Wuu..!',
-        text: ' {{mensaje}}',
+        text: ' {{texto}}',
         footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
         width: '40%'
     });

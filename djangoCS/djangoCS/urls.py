@@ -116,6 +116,7 @@ urlpatterns = [
     
     path("agregarUSB/", views.agregarUSB),
     path("verUSB/", views.verUSB),
+    path('actualizarUSB/', views.actualizarUSB),
     
     path("agregarPrestamos/", views.agregarPrestamos),
     path("verPrestamos/", views.verPrestamos),

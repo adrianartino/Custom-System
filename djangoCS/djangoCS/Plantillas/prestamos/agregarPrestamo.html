@@ -69,11 +69,11 @@ Agregar Prestamo | Custom System
                                 <span class="input-group-addon">
                                     <i class="material-icons">badge</i>
                                 </span>
-                                <select class="form-control show-tick" name="propietario">
-                                    <option value="nopropietario">Sin propietario</option>
-                                    {% for propietario in info_empleados %}
-                                    <option value="{{propietario.id_empleado}}">{{propietario.nombre}}
-                                        {{propietario.apellidos}}</option>
+                                <select class="form-control show-tick" name="solicitante">
+                                    
+                                    {% for e in empleados %}
+                                    <option value="{{e.id_empleado}}">{{e.nombre}}
+                                        {{e.apellidos}}</option>
 
                                     {% endfor %}
                                 </select>
@@ -85,13 +85,19 @@ Agregar Prestamo | Custom System
                                 <span class="input-group-addon">
                                     <i class="material-icons">badge</i>
                                 </span>
-                                <select class="form-control show-tick" name="propietario">
-                                    <option value="nopropietario">Sin propietario</option>
-                                    {% for propietario in info_empleados %}
-                                    <option value="{{propietario.id_empleado}}">{{propietario.nombre}}
-                                        {{propietario.apellidos}}</option>
+                                <select class="form-control show-tick" id="tabla" name="clasificacion">
+                                  
+                                    <option value="null" selected>No ha seleccionado clasificación</option>
+                                    <option value="impresoras" >Impresoras</option>
+                                    <option value="Computadoras">Computadoras</option>
+                                    <option value="DiscosDuros">Discos Duros</option>
+                                    <option value="Monitores">Monitores</option>
+                                    <option value="Teclados">Teclados</option>
+                                    <option value="Mouses">Mouses</option>
+                                    <option value="Teléfonos">Teléfonos</option>
+                                    <option value="MemoriaUSB" >Memoria USB</option>
 
-                                    {% endfor %}
+                                  
                                 </select>
                             </div>
                         </div>
@@ -103,11 +109,10 @@ Agregar Prestamo | Custom System
                                 </span>
                                 <select class="form-control show-tick" name="propietario">
                                     <option value="nopropietario">Sin propietario</option>
-                                    {% for propietario in info_empleados %}
-                                    <option value="{{propietario.id_empleado}}">{{propietario.nombre}}
-                                        {{propietario.apellidos}}</option>
+                                 
+                                   
 
-                                    {% endfor %}
+                                 
                                 </select>
                             </div>
                         </div>
@@ -309,6 +314,15 @@ Agregar Prestamo | Custom System
 
 {% block estilosJs %}
 <script>
+
+    var clas = document.getElementById('tabla');
+
+    
+
+
+
+
+
     function save() {
         var canvas = document.getElementById('draw-canvas');
         var inputVacio = document.getElementById('my_hidden');

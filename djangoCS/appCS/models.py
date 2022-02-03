@@ -235,6 +235,7 @@ class DiscosDuros (models.Model):
 class EmpleadosDiscosDuros (models.Model):
     id_empleado = models.ForeignKey(Empleados, on_delete=models.CASCADE)
     id_disco = models.ForeignKey(DiscosDuros, on_delete=models.CASCADE)
+    fecha = models.DateField(null=True)
 
 class MemoriasUSB (models.Model):
     id_usb = models.AutoField(primary_key=True)

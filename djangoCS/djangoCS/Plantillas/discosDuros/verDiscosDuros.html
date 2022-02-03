@@ -87,14 +87,15 @@ Discos Duros | Custom System
                                 <th>Tipo</th>
                                 <th>Marca</th>
                                
-                                <th>Capacidad de almacenamiento</th>
+                                <th  style=" width: 8px;">Capacidad de almacenamiento</th>
                                 <th>Dimensión</th>
-                                <th>Almacenamiento en uso</th>
+                                <th style=" width: 8px;">Almacenamiento en uso</th>
                                 <th>Almacenamiento libre</th>
                                 <th>Empleados con respaldos</th>
+                                <th>Fechas respaldos</th>
                                 <th>Estado</th>
                                 <th>Editar</th>
-                                <th>Baja</th>
+                               
 
 
 
@@ -111,48 +112,75 @@ Discos Duros | Custom System
                                 <th>Almacenamiento en uso</th>
                                 <th>Almacenamiento libre</th>
                                 <th>Empleados con respaldos</th>
+                                <th>Fechas respaldos</th>
                                 <th>Estado</th>
                                 <th>Editar</th>
-                                <th>Baja</th>
+                              
 
 
 
                             </tr>
                         </tfoot>
                         <tbody class="animate__animated animate__backInDown">
-                            {% for equipo, empleado in lista %}
+                            {% for disco, empleado in lista %}
                             <tr>
                                 <th>
-                                    <form action="/infoEquipo/" method="POST">{% csrf_token %}
+                                   
 
 
                                         <center>
                                             <input type="text" style="border: none; background: none;" name="idEquipo"
-                                                value="{{equipo.id_equipo}}" readonly size="1">
-                                            <button type="submit" class="btn  waves-effect"
-                                                style="background-color: #0A77F9;">
-                                                <i class="material-icons" style="color: white;">visibility</i>
-                                            </button>
+                                                value="{{disco.id_disco}}" readonly size="1">
+                                           
                                         </center>
                                         <br>
-                                    </form>
+                                
                                 </th>
-                                <th>{{equipo.tipo}}</th>
-                                <th>{{equipo.marca}}</th>
-                                <th>{{equipo.modelo}}</th>
-                                <th>{{equipo.color}}</th>
+                                <th>{{disco.tipo}}</th>
+                                <th>{{disco.marca}}</th>
+                                <th>{{disco.capacidad}}</th>
+                                <th>{{disco.dimension}}</th>
+                                {% if disco.alm_uso == "" %}
+                                <th>Sin datos</th>
+                                {% else %}
+                                <th>{{disco.alm_uso}}</th>
+                                {% endif %}
+                                {% if disco.alm_libre == "" %}
+                                <th><label class="label bg-black">{{disco.capacidad}}</label></th>
+                                {% else %}
+                                <th><label class="label bg-black">{{disco.alm_libre}}</label></th>
+                                {% endif %}
+                                {% if empleado == "n" %}
+                                <th>Sin respaldos</th>
+                                {% else %}
+                                
                                 <th>
-                                    <center>
-                                        <img src="{{equipo.imagen.url}}" width="40%" alt="lap">
-                                    </center>
+                                    {% for e in empleado.0 %}
+                                    <div>
+                                        <label class="label bg-teal">{{e}}</label>
+                                    </div>
+                                    {% endfor %}
                                 </th>
-                                <th>{{equipo.memoriaram}}</th>
-                                <th>{{equipo.procesador}}</th>
-                                <th>{{equipo.sistemaoperativo}}</th>
-                                <th>{{equipo.modelocargador}}</th>
-                                <th>{{empleado.0}} {{empleado.1}}</th>
-                                <th><label class="{{empleado.3}}">{{empleado.2}}</label></th>
-                                <th>{{equipo.estado}}</th>
+                                <th>
+                                    {% for f in empleado.1 %}
+                                    <div>
+                                        <label class="label bg-indigo">{{f}}</label>
+                                    </div>
+                                    {% endfor %}
+                                </th>
+
+                                {% endif %}
+                                {% if disco.estado == "Nuevo" %}
+                                <th ><label class="label bg-green">Nuevo</label></th>
+                                {% elif disco.estado == "Usado Funcional" %}
+                                <td><label class="label bg-blue">Usado Funcional</label></td>
+                                {% elif disco.estado == "Mal estado/basura" %}
+                                <td><label class="label bg-red">Mal estado/basura</label></td>
+                                {% endif %}
+
+                            
+                             
+                             
 
                                 <th>
                                     <form action="/editarEquipo/" method="POST">{% csrf_token %}
@@ -165,30 +193,12 @@ Discos Duros | Custom System
                                         </center>
                                         <br>
                                     </form>
-                                    <form action="/DescargarPDF/" method="POST">{% csrf_token %}
-
-                                        <input type="hidden" name="idEquipopdf" value="{{equipo.id_equipo}}">
-
-                                        <center>
-                                            <button type="submit" class="btn bg-red waves-effect">
-                                                <i class="material-icons">picture_as_pdf</i>
-                                            </button>
-                                        </center>
-
-                                    </form>
+                                    
 
                                 </th>
 
 
-                                <th>
-                                    <center>
-                                        <button type="button" class="btn bg-red waves-effect" data-toggle="modal"
-                                            data-target="#{{equipo.id_equipo}}">
-                                            <i class="material-icons">cancel</i>
-                                        </button>
-                                    </center>
-
-                                </th>
+                                
                             </tr>
                             {% endfor %}
                         </tbody>

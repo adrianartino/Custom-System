@@ -45,17 +45,7 @@ Memorias USB | Custom System
                     <small style="color: #790C05;">Vista de listado de memorias USB de la empresa.</small>
                 </h2>
                 <br>
-                <label for="email_address">Filtro de estatus de equipos:</label>
-                <div class="input-group">
-                    <span class="input-group-addon">
-                        <i class="material-icons">build</i>
-                    </span>
-                    <select class="form-control show-tick" id="filtroEquipo" onchange="cambioFiltro();">
-                        <option>En uso</option>
-                        <option>De baja</option>
-
-                    </select>
-                </div>
+                
 
             </div>
             <div class="body" id="divActivos">
@@ -116,75 +106,55 @@ Memorias USB | Custom System
                             </tr>
                         </tfoot>
                         <tbody class="animate__animated animate__backInDown">
-                            {% for equipo, empleado in lista %}
+                            {% for m in memorias %}
                             <tr>
                                 <th>
                                     <form action="/infoEquipo/" method="POST">{% csrf_token %}
 
 
                                         <center>
-                                            <input type="text" style="border: none; background: none;" name="idEquipo"
-                                                value="{{equipo.id_equipo}}" readonly size="1">
-                                            <button type="submit" class="btn  waves-effect"
-                                                style="background-color: #0A77F9;">
-                                                <i class="material-icons" style="color: white;">visibility</i>
-                                            </button>
+                                            <input type="text" style="border: none; background: none;" name="idMem"
+                                                value="{{m.id_usb}}" readonly size="1">
+                                           
                                         </center>
                                         <br>
                                     </form>
                                 </th>
-                                <th>{{equipo.tipo}}</th>
-                                <th>{{equipo.marca}}</th>
-                                <th>{{equipo.modelo}}</th>
-                                <th>{{equipo.color}}</th>
-                                <th>
-                                    <center>
-                                        <img src="{{equipo.imagen.url}}" width="40%" alt="lap">
-                                    </center>
+                                
+                                <th>{{m.marca}}</th>
+
+                                {% if m.modelo == "" %}
+                                <th><span class="label bg-red">Sin modelo</span></th>
+                                {% else %}
+                                <th><span class="label bg-green">{{m.modelo}}</span></th>
+                                {% endif %}
+
+                                {% if m.capacidad == 2 %}
+                                <th> <span class="label bg-blue">{{m.capacidad}} GB</span> </th>
+                                {% elif m.capacidad == 4 %}
+                                <th><span class="label bg-orange">{{m.capacidad}} GB</span></th>
+                                {% elif m.capacidad == 8 %}
+                                <th><span class="label bg-yellow">{{m.capacidad}} GB</span></th>
+                                {% elif m.capacidad == 16 %}
+                                <th><span class="label bg-cyan">{{m.capacidad}} GB</span></th>
+                                {% elif m.capacidad == 32 %}
+                                <th> <span class="label bg-pink">{{m.capacidad}} GB</span></th>
+                                {% endif %}
+                              
+                                
+                                <th>{{m.cantidadStock}}
+                                    <button type="button"
+                                    class="btn bg-red btn-circle waves-effect waves-circle waves-float"
+                                    data-toggle="modal" data-target="#{{m.id_usb}}">
+                                    <i class="material-icons">usb</i>
                                 </th>
-                                <th>{{equipo.memoriaram}}</th>
-                                <th>{{equipo.procesador}}</th>
-                                <th>{{equipo.sistemaoperativo}}</th>
-                                <th>{{equipo.modelocargador}}</th>
-                                <th>{{empleado.0}} {{empleado.1}}</th>
-                                <th><label class="{{empleado.3}}">{{empleado.2}}</label></th>
-                                <th>{{equipo.estado}}</th>
+                                
+                                
 
-                                <th>
-                                    <form action="/editarEquipo/" method="POST">{% csrf_token %}
-                                        <input type="hidden" name="idEquipo" value="{{equipo.id_equipo}}">
-
-                                        <center>
-                                            <button type="submit" class="btn btn-warning waves-effect">
-                                                <i class="material-icons">edit</i>
-                                            </button>
-                                        </center>
-                                        <br>
-                                    </form>
-                                    <form action="/DescargarPDF/" method="POST">{% csrf_token %}
-
-                                        <input type="hidden" name="idEquipopdf" value="{{equipo.id_equipo}}">
-
-                                        <center>
-                                            <button type="submit" class="btn bg-red waves-effect">
-                                                <i class="material-icons">picture_as_pdf</i>
-                                            </button>
-                                        </center>
-
-                                    </form>
-
-                                </th>
+                                
 
 
-                                <th>
-                                    <center>
-                                        <button type="button" class="btn bg-red waves-effect" data-toggle="modal"
-                                            data-target="#{{equipo.id_equipo}}">
-                                            <i class="material-icons">cancel</i>
-                                        </button>
-                                    </center>
-
-                                </th>
+                               
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -193,135 +163,7 @@ Memorias USB | Custom System
                 <br>
 
             </div>
-            <div class="body" id="divInactivos">
-                <div class="row clear-fix">
-                    <div class="col-xs-12 col-sm-1">
-                        <form action="/reporteEquiposActivos/" method="POST">{% csrf_token %}
-                            <input type="hidden" name="activo" value="I">
-                            <button type="submit" class="btn bg-red waves-effect animate__animated animate__flipInX"
-                                data-toggle="tooltip" data-placement="bottom"
-                                title="Descargar reporte Equipos de baja en PDF.">
-                                <i class="material-icons">picture_as_pdf</i>
-                                <span>PDF</span>
-                            </button>
-                        </form>
-                    </div>
-                    <div class="col-xs-12 col-sm-1">
-                        <form action="/xlEquipos/" method="POST">{% csrf_token %}
-                            <input type="hidden" name="activo" value="I">
-                            <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
-                                data-toggle="tooltip" data-placement="bottom"
-                                title="Descargar reporte Equipos de baja en Excel.">
-                                <i class="material-icons">grid_on</i>
-                                <span>Excel</span>
-                            </button>
-                        </form>
-                    </div>
-                    <div class="col-xs-12 col-sm-4">
-                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarEquipos/">Agregar
-                            Equipo</a>
-                    </div>
-
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped table-hover dataTable js-exportable ">
-                        <thead>
-                            <tr style="background-color: #E05D5D; color:black">
-                                <th>ID Equipo</th>
-                                <th>Tipo</th>
-                                <th>Marca</th>
-                                <th>Modelo</th>
-                                <th>Color</th>
-                                <th>Imagen</th>
-                                <th>Memoria RAM</th>
-                                <th>Procesador</th>
-                                <th>Sistema Operativo</th>
-                                <th>Cargador</th>
-                                <th>Estado</th>
-                                <th>Alta</th>
-
-
-
-                            </tr>
-                        </thead>
-                        <tfoot>
-                            <tr>
-                                <th>ID Equipo</th>
-                                <th>Tipo</th>
-                                <th>Marca</th>
-                                <th>Modelo</th>
-                                <th>Color</th>
-                                <th>Imagen</th>
-                                <th>Memoria RAM</th>
-                                <th>Procesador</th>
-                                <th>Sistema Operativo</th>
-                                <th>Cargador</th>
-                                <th>Estado</th>
-
-                                <th>Alta</th>
-
-
-                            </tr>
-                        </tfoot>
-                        <tbody>
-                            {% for equipoIna in equiposInactivos %}
-                            <tr>
-                                <form action="/DescargarPDF/" method="POST">{% csrf_token %}
-                                    <th>
-                                        <input type="text" style="border: none; background: none;" name="idEquipopdf"
-                                            value="{{equipoIna.id_equipo}}" readonly size="1">
-
-                                        <center>
-                                            <button type="submit" class="btn bg-red waves-effect">
-                                                <i class="material-icons">picture_as_pdf</i>
-                                            </button>
-                                        </center>
-
-                                    </th>
-                                </form>
-                                <th>{{equipoIna.tipo}}</th>
-                                <th>{{equipoIna.marca}}</th>
-                                <th>{{equipoIna.modelo}}</th>
-                                <th>{{equipoIna.color}}</th>
-                                <th>
-                                    <center>
-                                        <img src="{{equipoIna.imagen.url}}" width="60%" alt="lap">
-                                    </center>
-                                </th>
-                                <th>{{equipoIna.memoriaram}}</th>
-                                <th>{{equipoIna.procesador}} </th>
-                                <th>{{equipoIna.sistemaoperativo}}</th>
-                                <th>{{equipoIna.modelocargador}}</th>
-
-                                <th>{{equipoIna.estado}}</th>
-
-                                <th>
-
-
-                                    <center>
-                                        <button type="button" class="btn bg-green waves-effect" data-toggle="modal"
-                                            data-target="#{{equipoIna.id_equipo}}">
-                                            <i class="material-icons">upgrade</i>
-                                        </button>
-                                    </center>
-
-                                </th>
-
-
-
-
-                            </tr>
-                            {% endfor %}
-
-
-
-                        </tbody>
-                    </table>
-
-                </div>
-                <br>
-
-            </div>
+        
 
         </div>
     </div>
@@ -329,52 +171,75 @@ Memorias USB | Custom System
 
 </div>
 
-{% for equipo, empleado in lista2 %}
+
+
+{% for usb in memorias %}
 <!-- Default Size -->
-<div class="modal fade" id="{{equipo.id_equipo}}" tabindex="-1" role="dialog">
+<div class="modal fade" id="{{usb.id_usb}}" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
-        <div class="modal-content" style="border-radius: 16px;">
+        <div class="modal-content">
             <div class="modal-header">
                 <center>
-                    <h1 style="color: crimson; font-family: 'Oswald', sans-serif;">DAR DE BAJA EQUIPO <i
-                            class="material-icons" style="color:black; font-size:100%">get_app</i></h1>
+                    <h1 style="color: #EAA72A; font-family: 'Oswald', sans-serif;">Actualizar Stock USB's <i
+                            class="material-icons" style="color:black; font-size:100%">usb</i></h1>
                     <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
 
                 </center>
             </div>
             <div class="modal-body">
-                <form action="/bajaEquipo/" method="POST">{% csrf_token %}
+                <form action="/actualizarUSB/" method="POST">{% csrf_token %}
                     <div class="body table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr class="bg-teal">
-                                    <th>Imagen</th>
-                                    <th>Marca</th>
-                                    <th>Modelo</th>
-                                    <th>Propietario</th>
-                                </tr>
-                            </thead>
+                      
+
+                    
+                        <table class="table" >
+                       
+                                <thead>
+                                    <tr class="bg-teal">
+                                    
+                                        <th width = "50">Marca</th>
+                                        {% if usb.modelo == "" %}
+                                        <th>SIN MODELO</th>
+                                        {% else %}
+                                        <th>{{usb.modelo}}</th>
+                                        {% endif %}
+
+                                     
+                                
+                                    </tr>
+                                </thead>
+                       
                             <tbody>
                                 <tr>
-                                    <th> <img src="{{equipo.imagen.url}}" width="150" height="200" alt="lap"></th>
-                                    <td style="color: black;">{{equipo.marca}}</td>
-                                    <td style="color: black;">{{equipo.modelo}}</td>
-                                    <th style="color: black;">{{empleado.0}} {{empleado.1}}</th>
+                                    
+                                  
+                                    <td></td>
+                                    <td></td>
+                                    
+                                    
                                 </tr>
-
+                                <tr>
+                                  
+                                    <td>
+                                        <h3><span class="label bg-blue-grey">Stock Disponible:</span></h3>
+                                    </td>
+                                    <td><br><input type="number" value="{{usb.cantidadStock}}" min="0" max="100" step="1"
+                                            name="cantidadUsb" /></td>
+                                  
+                                </tr>
 
                             </tbody>
                         </table>
+                     
 
 
 
                     </div>
                     <center>
-                        <input type="hidden" value="{{equipo.id_equipo}}" name="idEquipoBaja">
-                        <h3 style="color: black;">Seguro que desea dar de baja al equipo?</h3>
-                        <button type="submit" class="btn bg-red waves-effect">
-                            <i class="material-icons">cancel</i>
-                            <span>DAR DE BAJA</span>
+                        <input type="hidden" value="{{usb.id_usb}}" name="idUsb">
+                        <button type="submit" class="btn btn-info waves-effect">
+                            <i class="material-icons">save</i>
+                            <span>Guardar Cambios</span>
                         </button>
                     </center>
                 </form>
@@ -382,84 +247,14 @@ Memorias USB | Custom System
         </div>
     </div>
 </div>
-
-{% endfor %}
-
-{% for equipoIna in equiposInactivos %}
-<!-- Default Size -->
-<div class="modal fade" id="{{equipoIna.id_equipo}}" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content" style="border-radius: 16px;">
-            <div class="modal-header">
-                <center>
-                    <h1 style="color: green; font-family: 'Oswald', sans-serif;">DAR DE ALTA EQUIPO <i
-                            class="material-icons" style="color:black; font-size:100%">upgrade</i></h1>
-                    <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
-
-                </center>
-            </div>
-            <div class="modal-body">
-                <form action="/altaEquipo/" method="POST">{% csrf_token %}
-                    <div class="body table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr class="bg-teal">
-                                    <th>Imagen</th>
-                                    <th>Marca</th>
-                                    <th>Modelo</th>
-
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th> <img src="{{equipoIna.imagen.url}}" width="150" height="200" alt="lap"></th>
-                                    <td style="color: black;">{{equipoIna.marca}}</td>
-                                    <td style="color: black;">{{equipoIna.modelo}}</td>
-
-                                </tr>
-
-
-                            </tbody>
-                        </table>
-
-
-
-                    </div>
-                    <center>
-                        <input type="hidden" value="{{equipoIna.id_equipo}}" name="idEquipoAlta">
-                        <h3 style="color: black;">Seguro que desea dar de alta al equipo?</h3>
-                        <h4>Se le asignará un propietario despues de dar de alta en la opción editar equipo</h4>
-                        <button type="submit" class="btn bg-green waves-effect">
-                            <i class="material-icons">upgrade</i>
-                            <span>DAR DE ALTA</span>
-                        </button>
-                    </center>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
 {% endfor %}
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-{% if bajaEquipo %}
-<script type="text/javascript">
-    swal({
-        icon: 'error',
-        title: 'Wuu..!',
-        text: ' {{bajaExito}}',
-        footer: '<span style="color: red!important"> Vuelve a navegar por Custom System! </span>',
-        width: '40%'
-
-    });
-</script>
-{% endif %}
-{% if altaEquipo %}
+{% if usbActualizado %}
 <script type="text/javascript">
     swal({
         icon: 'success',
         title: 'Wuu..!',
-        text: ' {{altaExito}}',
+        text: ' {{textoActualizado}}',
         footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
         width: '40%'
     });
@@ -540,6 +335,7 @@ Memorias USB | Custom System
 <script src={% static 'panel/js/admin.js' %}></script>
 <script src={% static 'panel/js/pages/ui/tooltips-popovers.js' %}></script>
 <script src={% static 'panel/js/pages/tables/jquery-datatable.js' %}></script>
+<script src={% static 'panel/js/pages/ui/modals.js' %}></script>
 
 <!-- Demo Js -->
 <script src={% static 'panel/js/demo.js' %}></script>
