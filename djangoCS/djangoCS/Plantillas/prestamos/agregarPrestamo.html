@@ -80,39 +80,146 @@ Agregar Prestamo | Custom System
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <label for="email_address"><span style="color: #078F68;">* </span>Clasificación:</label>
+                            <label><span style="color: #078F68;">* </span>Clasificación:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">badge</i>
                                 </span>
                                 <select class="form-control show-tick" id="tabla" name="clasificacion">
                                   
-                                    <option value="null" selected>No ha seleccionado clasificación</option>
-                                    <option value="impresoras" >Impresoras</option>
-                                    <option value="Computadoras">Computadoras</option>
+                                    <option value="otro" selected>Otro equipo</option>
+                                    <option value="Impresoras" >Impresoras</option>
+                                    <option value="Equipos">Computadoras</option>
                                     <option value="DiscosDuros">Discos Duros</option>
                                     <option value="Monitores">Monitores</option>
                                     <option value="Teclados">Teclados</option>
                                     <option value="Mouses">Mouses</option>
-                                    <option value="Teléfonos">Teléfonos</option>
-                                    <option value="MemoriaUSB" >Memoria USB</option>
+                                    <option value="Telefonos">Teléfonos</option>
+                                    <option value="MemoriasUSB" >Memoria USB</option>
 
                                   
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <label for="email_address"><span style="color: #078F68;">* </span>Equipo/Material:</label>
+
+                        <div id="inputOtro" class="col-md-4">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Ingresar otro:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
-                                    <i class="material-icons">badge</i>
+                                    <i class="material-icons">stars</i>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" class="form-control date" placeholder="Ingresar equipo prestado"
+                                        maxlength="50" name="procesador" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="selectImpresoras" class="col-md-4 " style="display: none;" >
+                            <label ><span style="color: #078F68;">* </span>Selección de impresora:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">print</i>
                                 </span>
                                 <select class="form-control show-tick" name="propietario">
-                                    <option value="nopropietario">Sin propietario</option>
-                                 
-                                   
+                                    {% for impresora in impresoras %}
+                                    <option value="{{impresora.id_impresora}}"># {{impresora.id_impresora}} - {{impresora.marca}} {{impresora.modelo}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
 
-                                 
+                        <div id="selectComputadoras" class="col-md-4 " style="display: none;" >
+                            <label ><span style="color: #078F68;">* </span>Selección de equipo:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">computer</i>
+                                </span>
+                                <select class="form-control show-tick" name="propietario">
+                                    {% for pc in computadoras %}
+                                    <option value="{{pc.id_equipo}}"># {{pc.id_equipo}} - {{pc.marca}} {{pc.modelo}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div id="selectDiscosduros" class="col-md-4 " style="display: none;" >
+                            <label ><span style="color: #078F68;">* </span>Selección de disco duro:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">save</i>
+                                </span>
+                                <select class="form-control show-tick" name="propietario">
+                                    {% for disco in discosDuros %}
+                                    <option value="{{disco.id_disco}}"># {{disco.id_disco}} - {{disco.tipo}} {{disco.marca}} - {{disco.alm_libre}} GB libres</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div id="selectMonitores" class="col-md-4 " style="display: none;" >
+                            <label ><span style="color: #078F68;">* </span>Selección de monitor:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">desktop_mac</i>
+                                </span>
+                                <select class="form-control show-tick" name="propietario">
+                                    {% for monitor in monitores %}
+                                    <option value="{{monitor.id_monitor}}"># {{monitor.id_monitor}} - {{monitor.marca}} {{monitor.modelo}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div id="selectTeclados" class="col-md-4 " style="display: none;" >
+                            <label ><span style="color: #078F68;">* </span>Selección de teclado:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">keyboard</i>
+                                </span>
+                                <select class="form-control show-tick" name="propietario">
+                                    {% for teclado in teclados %}
+                                    <option value="{{teclado.id_teclado}}"># {{teclado.id_teclado}} - {{teclado.marca}} {{teclado.modelo}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div id="selectMouses" class="col-md-4 " style="display: none;" >
+                            <label ><span style="color: #078F68;">* </span>Selección de mouse:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">mouse</i>
+                                </span>
+                                <select class="form-control show-tick" name="propietario">
+                                    {% for mouse in mouses %}
+                                    <option value="{{mouse.id_mouse}}"># {{mouse.id_mouse}} - {{mouse.marca}} {{mouse.modelo}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div id="selectTelefonos" class="col-md-4 " style="display: none;" >
+                            <label ><span style="color: #078F68;">* </span>Selección de teléfono:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">local_phone</i>
+                                </span>
+                                <select class="form-control show-tick" name="propietario">
+                                    {% for tel in telefonos %}
+                                    <option value="{{tel.id_telefono}}"># {{tel.id_telefono}} - {{tel.marca}} {{tel.modelo}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div id="selectUsb" class="col-md-4 " style="display: none;" >
+                            <label ><span style="color: #078F68;">* </span>Selección de usb:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">usb</i>
+                                </span>
+                                <select class="form-control show-tick" name="propietario">
+                                    {% for memoria in memoriasUsb %}
+                                    <option value="{{memoria.id_telefono}}"># {{memoria.id_telefono}} - {{memoria.marca}} {{memoria.modelo}} {{memoria.capacidad}} GB</option>
+                                    {% endfor %}
                                 </select>
                             </div>
                         </div>
@@ -131,10 +238,10 @@ Agregar Prestamo | Custom System
                             <label for="email_address"><span style="color: #078F68;">* </span>Cantidad:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
-                                    <i class="material-icons">memory</i>
+                                    <i class="material-icons">format_list_numbered</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar procesador"
+                                    <input type="text" class="form-control date" placeholder="Cantidad"
                                         maxlength="50" name="procesador" required>
                                 </div>
                             </div>
@@ -162,27 +269,15 @@ Agregar Prestamo | Custom System
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-2">
-                            <label for="email_address"><span style="color: #078F68;">* </span>Estatus:</label>
+                        
+                        <div class="col-md-6">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Condiciones de entrega prestamo:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
-                                    <i class="material-icons">build</i>
-                                </span>
-                                <select class="form-control show-tick" name="estado">
-                                    <option value="No aplica devolución">No aplica devolución</option>
-                                    <option value="No devuelto">No devuelto</option>
-                                    <option value="Devuelto">Devuelto</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="email_address"><span style="color: #078F68;">* </span>Condiciones de prestamo:</label>
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="material-icons">memory</i>
+                                    <i class="material-icons">done</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar procesador"
+                                    <input type="text" class="form-control date" placeholder="Ingresar condiciones de entrega"
                                         maxlength="50" name="procesador" required>
                                 </div>
                             </div>
@@ -223,9 +318,11 @@ Agregar Prestamo | Custom System
                             </div>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <input type="button" class="button" id="draw-submitBtn" value="Crear Imagen"></input>
-                                    <input type="button" class="button" id="draw-clearBtn" value="Borrar Canvas"></input>
-
+                                    <button type="button" class="btn btn-success m-t-15 waves-effect" id="draw-submitBtn">Crear imagen</button>
+                                    <button type="button" class="btn bg-red m-t-15 waves-effect" id="draw-clearBtn">Borrar canvas</button>
+                                    
+                                    <br><br>
+                                    <center>
                                     <label>Color</label>
                                     <input type="color" id="color">
                                     <div>
@@ -233,6 +330,8 @@ Agregar Prestamo | Custom System
                                         <label>Tamaño Puntero</label>
                                         <input type="range" id="puntero" min="1" default="1" max="5" width="10%">
                                     </div>
+                                    </center>
+                                    
 
 
 
@@ -244,7 +343,7 @@ Agregar Prestamo | Custom System
                             <div class="row">
                                 <div class="col-md-8">
                                     <textarea id="draw-dataUrl" class="form-control"
-                                        rows="5">Para los que saben que es esto:</textarea>
+                                        rows="5">Draw Data aqui:</textarea>
                                 </div>
                             </div>
                             <br />
@@ -315,8 +414,129 @@ Agregar Prestamo | Custom System
 {% block estilosJs %}
 <script>
 
+    //Obtener id de selects
     var clas = document.getElementById('tabla');
+    var inputOtro = document.getElementById('inputOtro');
+    var selectImpresoras = document.getElementById('selectImpresoras');
+    var selectComputadoras = document.getElementById('selectComputadoras');
+    var selectDiscosduros = document.getElementById('selectDiscosduros');
+    var selectMonitores = document.getElementById('selectMonitores');
+    var selectTeclados = document.getElementById('selectTeclados');
+    var selectMouses = document.getElementById('selectMouses');
+    var selectTelefonos = document.getElementById('selectTelefonos');
+    var selectUsb = document.getElementById('selectUsb');
 
+
+    //Obtener el valor de select de clasificación
+    clas.onchange = (event) => {
+        var inputText = event.target.value;
+        console.log(inputText);
+        
+        if (inputText === "otro"){
+            selectImpresoras.style.display = "none";
+            selectComputadoras.style.display = "none";
+            selectDiscosduros.style.display = "none";
+            selectMonitores.style.display = "none";
+            selectTeclados.style.display = "none";
+            selectMouses.style.display = "none";
+            selectTelefonos.style.display = "none";
+            selectUsb.style.display = "none";
+            inputOtro.style.display = "block";
+            
+        }else if (inputText === "Impresoras"){
+            inputOtro.style.display = "none";
+            selectComputadoras.style.display = "none";
+            selectDiscosduros.style.display = "none";
+            selectMonitores.style.display = "none";
+            selectTeclados.style.display = "none";
+            selectMouses.style.display = "none";
+            selectTelefonos.style.display = "none";
+            selectUsb.style.display = "none";
+            selectImpresoras.style.display = "block";
+
+        }else if (inputText === "Equipos"){
+            inputOtro.style.display = "none";
+            selectImpresoras.style.display = "none";
+            selectDiscosduros.style.display = "none";
+            selectMonitores.style.display = "none";
+            selectTeclados.style.display = "none";
+            selectMouses.style.display = "none";
+            selectTelefonos.style.display = "none";
+            selectUsb.style.display = "none";
+            selectComputadoras.style.display = "block";
+
+        }else if (inputText === "DiscosDuros"){
+            inputOtro.style.display = "none";
+            selectImpresoras.style.display = "none";
+            selectComputadoras.style.display = "none";
+            selectMonitores.style.display = "none";
+            selectTeclados.style.display = "none";
+            selectMouses.style.display = "none";
+            selectTelefonos.style.display = "none";
+            selectUsb.style.display = "none";
+            selectDiscosduros.style.display = "block";
+
+        }else if (inputText === "Monitores"){
+            inputOtro.style.display = "none";
+            selectImpresoras.style.display = "none";
+            selectComputadoras.style.display = "none";
+            selectDiscosduros.style.display = "none";
+            selectTeclados.style.display = "none";
+            selectMouses.style.display = "none";
+            selectTelefonos.style.display = "none";
+            selectUsb.style.display = "none";
+            selectMonitores.style.display = "block";
+
+        }else if (inputText === "Teclados"){
+            inputOtro.style.display = "none";
+            selectImpresoras.style.display = "none";
+            selectComputadoras.style.display = "none";
+            selectDiscosduros.style.display = "none";
+            selectMonitores.style.display = "none";
+            selectMouses.style.display = "none";
+            selectTelefonos.style.display = "none";
+            selectUsb.style.display = "none";
+            selectTeclados.style.display = "block";
+
+        }else if (inputText === "Mouses"){
+            inputOtro.style.display = "none";
+            selectImpresoras.style.display = "none";
+            selectComputadoras.style.display = "none";
+            selectDiscosduros.style.display = "none";
+            selectMonitores.style.display = "none";
+            selectTeclados.style.display = "none";
+            selectTelefonos.style.display = "none";
+            selectUsb.style.display = "none";
+            selectMouses.style.display = "block";
+
+        }
+        else if (inputText === "Telefonos"){
+            inputOtro.style.display = "none";
+            selectImpresoras.style.display = "none";
+            selectComputadoras.style.display = "none";
+            selectDiscosduros.style.display = "none";
+            selectMonitores.style.display = "none";
+            selectTeclados.style.display = "none";
+            selectMouses.style.display = "none";
+            selectUsb.style.display = "none";
+            selectTelefonos.style.display = "block";
+
+        }
+        else if (inputText === "MemoriasUSB"){
+            inputOtro.style.display = "none";
+            selectImpresoras.style.display = "none";
+            selectComputadoras.style.display = "none";
+            selectDiscosduros.style.display = "none";
+            selectMonitores.style.display = "none";
+            selectTeclados.style.display = "none";
+            selectTelefonos.style.display = "none";
+            selectMouses.style.display = "none";
+            selectUsb.style.display = "block";
+
+        }
+    
+    
+    }
     
 
 

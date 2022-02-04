@@ -9,6 +9,7 @@ from django.http import response
 from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.shortcuts import redirect
+from django.db.models import Q
 
 #Importación de modelos
 from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Encuestas, Preguntas, Respuestas,Mouses, Teclados, Monitores, Telefonos, DiscosDuros, EmpleadosDiscosDuros, MemoriasUSB
@@ -8776,11 +8777,40 @@ def agregarPrestamos(request):
         cartuchosNoti = notificacionInsumos()
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
-
-        empleados = Empleados.objects.filter(activo = "A")
-
+        
+        #Empleados para select de empleados
+        empleados = Empleados.objects.filter(activo = "A", correo__icontains = "@customco.com.mx")
+        
+        #Impresoras para select de impresoras
+        impresoras = Impresoras.objects.all()
+        
+        #Computadoras para select de computadoras
+        query = Q(estado='Funcional')
+        query.add(Q(estado='Reparación'), Q.OR)
+        query.add(Q(activo='I'), Q.AND)
+        computadoras = Equipos.objects.filter(query)
+        
+        #Discos Duros.
+        discosDuros = DiscosDuros.objects.all()
+        
+        #Monitores
+        monitores = Monitores.objects.all() #Inactivos solamente
+        
+        #Teclados
+        teclados = Teclados.objects.all() #Inactivos solamente
+        
+        #Mouses
+        mouses = Mouses.objects.all() #Inactivos solamente
+        
+        #Teléfonos
+        telefonos = Telefonos.objects.all()#Inactivos solamente
+        
+        #USB
+        memoriasUsb = MemoriasUSB.objects.all()
+        
         return render(request, "prestamos/agregarPrestamo.html", {"estaEnAgregarPrestamo":estaEnAgregarPrestamo,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,
-        "empleados": empleados})
+        "empleados": empleados, "impresoras":impresoras, "computadoras":computadoras, "discosDuros":discosDuros, 
+        "monitores":monitores, "teclados":teclados, "mouses":mouses, "telefonos":telefonos, "memoriasUsb":memoriasUsb})
     else:
         return redirect ('/login/')
 
