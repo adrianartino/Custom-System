@@ -110,7 +110,7 @@ Agregar Prestamo | Custom System
                                 </span>
                                 <div class="form-line">
                                     <input type="text" class="form-control date" placeholder="Ingresar equipo prestado"
-                                        maxlength="50" name="procesador" required>
+                                        maxlength="50" name="otroEquipo" required>
                                 </div>
                             </div>
                         </div>
@@ -121,7 +121,7 @@ Agregar Prestamo | Custom System
                                 <span class="input-group-addon">
                                     <i class="material-icons">print</i>
                                 </span>
-                                <select class="form-control show-tick" name="propietario">
+                                <select class="form-control show-tick" name="impresora">
                                     {% for impresora in impresoras %}
                                     <option value="{{impresora.id_impresora}}"># {{impresora.id_impresora}} - {{impresora.marca}} {{impresora.modelo}}</option>
                                     {% endfor %}
@@ -135,7 +135,7 @@ Agregar Prestamo | Custom System
                                 <span class="input-group-addon">
                                     <i class="material-icons">computer</i>
                                 </span>
-                                <select class="form-control show-tick" name="propietario">
+                                <select class="form-control show-tick" name="equipo">
                                     {% for pc in computadoras %}
                                     <option value="{{pc.id_equipo}}"># {{pc.id_equipo}} - {{pc.marca}} {{pc.modelo}}</option>
                                     {% endfor %}
@@ -149,7 +149,7 @@ Agregar Prestamo | Custom System
                                 <span class="input-group-addon">
                                     <i class="material-icons">save</i>
                                 </span>
-                                <select class="form-control show-tick" name="propietario">
+                                <select class="form-control show-tick" name="discoduro">
                                     {% for disco in discosDuros %}
                                     <option value="{{disco.id_disco}}"># {{disco.id_disco}} - {{disco.tipo}} {{disco.marca}} - {{disco.alm_libre}} GB libres</option>
                                     {% endfor %}
@@ -163,7 +163,7 @@ Agregar Prestamo | Custom System
                                 <span class="input-group-addon">
                                     <i class="material-icons">desktop_mac</i>
                                 </span>
-                                <select class="form-control show-tick" name="propietario">
+                                <select class="form-control show-tick" name="monitor">
                                     {% for monitor in monitores %}
                                     <option value="{{monitor.id_monitor}}"># {{monitor.id_monitor}} - {{monitor.marca}} {{monitor.modelo}}</option>
                                     {% endfor %}
@@ -177,7 +177,7 @@ Agregar Prestamo | Custom System
                                 <span class="input-group-addon">
                                     <i class="material-icons">keyboard</i>
                                 </span>
-                                <select class="form-control show-tick" name="propietario">
+                                <select class="form-control show-tick" name="teclado">
                                     {% for teclado in teclados %}
                                     <option value="{{teclado.id_teclado}}"># {{teclado.id_teclado}} - {{teclado.marca}} {{teclado.modelo}}</option>
                                     {% endfor %}
@@ -190,7 +190,7 @@ Agregar Prestamo | Custom System
                                 <span class="input-group-addon">
                                     <i class="material-icons">mouse</i>
                                 </span>
-                                <select class="form-control show-tick" name="propietario">
+                                <select class="form-control show-tick" name="mouse">
                                     {% for mouse in mouses %}
                                     <option value="{{mouse.id_mouse}}"># {{mouse.id_mouse}} - {{mouse.marca}} {{mouse.modelo}}</option>
                                     {% endfor %}
@@ -203,7 +203,7 @@ Agregar Prestamo | Custom System
                                 <span class="input-group-addon">
                                     <i class="material-icons">local_phone</i>
                                 </span>
-                                <select class="form-control show-tick" name="propietario">
+                                <select class="form-control show-tick" name="telefono">
                                     {% for tel in telefonos %}
                                     <option value="{{tel.id_telefono}}"># {{tel.id_telefono}} - {{tel.marca}} {{tel.modelo}}</option>
                                     {% endfor %}
@@ -216,7 +216,7 @@ Agregar Prestamo | Custom System
                                 <span class="input-group-addon">
                                     <i class="material-icons">usb</i>
                                 </span>
-                                <select class="form-control show-tick" name="propietario">
+                                <select class="form-control show-tick" name="usb">
                                     {% for memoria in memoriasUsb %}
                                     <option value="{{memoria.id_telefono}}"># {{memoria.id_telefono}} - {{memoria.marca}} {{memoria.modelo}} {{memoria.capacidad}} GB</option>
                                     {% endfor %}
@@ -241,7 +241,7 @@ Agregar Prestamo | Custom System
                                     <i class="material-icons">format_list_numbered</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Cantidad"
+                                    <input type="text" class="form-control date" placeholder="Cantidad" name="cantidad"
                                         maxlength="50" name="procesador" required>
                                 </div>
                             </div>
@@ -365,8 +365,6 @@ Agregar Prestamo | Custom System
                                 {% for empleados in datosEmpleado %}
                                 <input type="hidden" name="idEmpleado" value="{{empleados.id_empleado}}">
                                 {% endfor %}
-                                <button type="submit" class="btn btn-success m-t-15 waves-effect" onclick="save()"><i
-                                        class="material-icons">save</i> Guardar</button>
 
 
                             </form>
@@ -380,7 +378,7 @@ Agregar Prestamo | Custom System
                         <br>
                         <button type="submit"
                             class="btn btn-warning m-t-15 waves-effect animate__animated animate__flipInX"><i
-                                class="material-icons">laptop_mac</i> Guardar Equipo</button>
+                                class="material-icons">assignment_turned_in</i> Realizar Préstamo</button>
                 </form>
             </div>
         </div>

@@ -8808,6 +8808,43 @@ def agregarPrestamos(request):
         #USB
         memoriasUsb = MemoriasUSB.objects.all()
         
+        #Clic en botón Realizar préstamo.
+        if request.method == "POST":
+            
+            empleadoSolicitante = request.POST['solicitante']
+            tabla = request.POST['clasificacion']
+            
+            if tabla == "otro":
+                id_producto = ""
+                otro = request.POST['otroEquipo']
+            else:
+                otro = ""
+                equipoAPrestar = ""
+                if tabla == "Impresoras":
+                    equipoAPrestar = request.POST['impresora']
+                elif tabla == "Equipos":
+                    equipoAPrestar = request.POST['equipo']
+                elif tabla == "DiscosDuros":
+                    equipoAPrestar = request.POST['discoduro']
+                elif tabla == "Monitores":
+                    equipoAPrestar = request.POST['monitor']
+                elif tabla == "Teclados":
+                    equipoAPrestar = request.POST['teclado']
+                elif tabla == "Mouses":
+                    equipoAPrestar = request.POST['mouse']
+                elif tabla == "Telefonos":
+                    equipoAPrestar = request.POST['telefono']
+                elif tabla == "MemoriasUSB":
+                    equipoAPrestar = request.POST['usb']
+                    
+            cantidad = request.POST['cantidad']
+            
+            
+                
+                
+                    
+        
+        
         return render(request, "prestamos/agregarPrestamo.html", {"estaEnAgregarPrestamo":estaEnAgregarPrestamo,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,
         "empleados": empleados, "impresoras":impresoras, "computadoras":computadoras, "discosDuros":discosDuros, 
         "monitores":monitores, "teclados":teclados, "mouses":mouses, "telefonos":telefonos, "memoriasUsb":memoriasUsb})
