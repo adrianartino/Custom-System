@@ -260,7 +260,7 @@ class PrestamosSistemas (models.Model):
     fecha_entrega = models.DateField(null=True)
     condiciones = models.CharField(max_length=100, null=True)
     firma_devolucion = models.ImageField(upload_to="firmasPrestamos2", null = True)
-    estatus = CharField(max_length=20)
+    estatus = models.CharField(max_length=20, null=True)
 
     def __str__(self):
         return self.id_prestamo

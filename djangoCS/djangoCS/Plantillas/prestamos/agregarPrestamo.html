@@ -42,6 +42,13 @@ Agregar Prestamo | Custom System
 
 <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
 <link href={% static 'panel/css/themes/all-themes.css' %} rel="stylesheet" />
+<style>
+    canvas {
+        width: 500px;
+        height: 300px;
+        background-color: #faf6f6;
+    }
+</style>
 
 <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
 
@@ -60,7 +67,7 @@ Agregar Prestamo | Custom System
 
             </div>
             <div class="body">
-                <form action="/agregarEquipos/" enctype="multipart/form-data" method="POST">{% csrf_token %}
+                <form action="/agregarPrestamos/" enctype="multipart/form-data" method="POST">{% csrf_token %}
                     <div class="row clearfix">
 
                         <div class="col-md-4">
@@ -70,7 +77,7 @@ Agregar Prestamo | Custom System
                                     <i class="material-icons">badge</i>
                                 </span>
                                 <select class="form-control show-tick" name="solicitante">
-                                    
+
                                     {% for e in empleados %}
                                     <option value="{{e.id_empleado}}">{{e.nombre}}
                                         {{e.apellidos}}</option>
@@ -86,18 +93,18 @@ Agregar Prestamo | Custom System
                                     <i class="material-icons">badge</i>
                                 </span>
                                 <select class="form-control show-tick" id="tabla" name="clasificacion">
-                                  
+
                                     <option value="otro" selected>Otro equipo</option>
-                                    <option value="Impresoras" >Impresoras</option>
+                                    <option value="Impresoras">Impresoras</option>
                                     <option value="Equipos">Computadoras</option>
                                     <option value="DiscosDuros">Discos Duros</option>
                                     <option value="Monitores">Monitores</option>
                                     <option value="Teclados">Teclados</option>
                                     <option value="Mouses">Mouses</option>
                                     <option value="Telefonos">Teléfonos</option>
-                                    <option value="MemoriasUSB" >Memoria USB</option>
+                                    <option value="MemoriasUSB">Memoria USB</option>
 
-                                  
+
                                 </select>
                             </div>
                         </div>
@@ -110,124 +117,132 @@ Agregar Prestamo | Custom System
                                 </span>
                                 <div class="form-line">
                                     <input type="text" class="form-control date" placeholder="Ingresar equipo prestado"
-                                        maxlength="50" name="otroEquipo" required>
+                                        maxlength="50" name="otroEquipo" >
                                 </div>
                             </div>
                         </div>
 
-                        <div id="selectImpresoras" class="col-md-4 " style="display: none;" >
-                            <label ><span style="color: #078F68;">* </span>Selección de impresora:</label>
+                        <div id="selectImpresoras" class="col-md-4 " style="display: none;">
+                            <label><span style="color: #078F68;">* </span>Selección de impresora:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">print</i>
                                 </span>
                                 <select class="form-control show-tick" name="impresora">
                                     {% for impresora in impresoras %}
-                                    <option value="{{impresora.id_impresora}}"># {{impresora.id_impresora}} - {{impresora.marca}} {{impresora.modelo}}</option>
+                                    <option value="{{impresora.id_impresora}}"># {{impresora.id_impresora}} -
+                                        {{impresora.marca}} {{impresora.modelo}}</option>
                                     {% endfor %}
                                 </select>
                             </div>
                         </div>
 
-                        <div id="selectComputadoras" class="col-md-4 " style="display: none;" >
-                            <label ><span style="color: #078F68;">* </span>Selección de equipo:</label>
+                        <div id="selectComputadoras" class="col-md-4 " style="display: none;">
+                            <label><span style="color: #078F68;">* </span>Selección de equipo:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">computer</i>
                                 </span>
                                 <select class="form-control show-tick" name="equipo">
                                     {% for pc in computadoras %}
-                                    <option value="{{pc.id_equipo}}"># {{pc.id_equipo}} - {{pc.marca}} {{pc.modelo}}</option>
+                                    <option value="{{pc.id_equipo}}"># {{pc.id_equipo}} - {{pc.marca}} {{pc.modelo}}
+                                    </option>
                                     {% endfor %}
                                 </select>
                             </div>
                         </div>
 
-                        <div id="selectDiscosduros" class="col-md-4 " style="display: none;" >
-                            <label ><span style="color: #078F68;">* </span>Selección de disco duro:</label>
+                        <div id="selectDiscosduros" class="col-md-4 " style="display: none;">
+                            <label><span style="color: #078F68;">* </span>Selección de disco duro:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">save</i>
                                 </span>
                                 <select class="form-control show-tick" name="discoduro">
                                     {% for disco in discosDuros %}
-                                    <option value="{{disco.id_disco}}"># {{disco.id_disco}} - {{disco.tipo}} {{disco.marca}} - {{disco.alm_libre}} GB libres</option>
+                                    <option value="{{disco.id_disco}}"># {{disco.id_disco}} - {{disco.tipo}}
+                                        {{disco.marca}} - {{disco.alm_libre}} GB libres</option>
                                     {% endfor %}
                                 </select>
                             </div>
                         </div>
 
-                        <div id="selectMonitores" class="col-md-4 " style="display: none;" >
-                            <label ><span style="color: #078F68;">* </span>Selección de monitor:</label>
+                        <div id="selectMonitores" class="col-md-4 " style="display: none;">
+                            <label><span style="color: #078F68;">* </span>Selección de monitor:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">desktop_mac</i>
                                 </span>
                                 <select class="form-control show-tick" name="monitor">
                                     {% for monitor in monitores %}
-                                    <option value="{{monitor.id_monitor}}"># {{monitor.id_monitor}} - {{monitor.marca}} {{monitor.modelo}}</option>
+                                    <option value="{{monitor.id_monitor}}"># {{monitor.id_monitor}} - {{monitor.marca}}
+                                        {{monitor.modelo}}</option>
                                     {% endfor %}
                                 </select>
                             </div>
                         </div>
 
-                        <div id="selectTeclados" class="col-md-4 " style="display: none;" >
-                            <label ><span style="color: #078F68;">* </span>Selección de teclado:</label>
+                        <div id="selectTeclados" class="col-md-4 " style="display: none;">
+                            <label><span style="color: #078F68;">* </span>Selección de teclado:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">keyboard</i>
                                 </span>
                                 <select class="form-control show-tick" name="teclado">
                                     {% for teclado in teclados %}
-                                    <option value="{{teclado.id_teclado}}"># {{teclado.id_teclado}} - {{teclado.marca}} {{teclado.modelo}}</option>
+                                    <option value="{{teclado.id_teclado}}"># {{teclado.id_teclado}} - {{teclado.marca}}
+                                        {{teclado.modelo}}</option>
                                     {% endfor %}
                                 </select>
                             </div>
                         </div>
-                        <div id="selectMouses" class="col-md-4 " style="display: none;" >
-                            <label ><span style="color: #078F68;">* </span>Selección de mouse:</label>
+                        <div id="selectMouses" class="col-md-4 " style="display: none;">
+                            <label><span style="color: #078F68;">* </span>Selección de mouse:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">mouse</i>
                                 </span>
                                 <select class="form-control show-tick" name="mouse">
                                     {% for mouse in mouses %}
-                                    <option value="{{mouse.id_mouse}}"># {{mouse.id_mouse}} - {{mouse.marca}} {{mouse.modelo}}</option>
+                                    <option value="{{mouse.id_mouse}}"># {{mouse.id_mouse}} - {{mouse.marca}}
+                                        {{mouse.modelo}}</option>
                                     {% endfor %}
                                 </select>
                             </div>
                         </div>
-                        <div id="selectTelefonos" class="col-md-4 " style="display: none;" >
-                            <label ><span style="color: #078F68;">* </span>Selección de teléfono:</label>
+                        <div id="selectTelefonos" class="col-md-4 " style="display: none;">
+                            <label><span style="color: #078F68;">* </span>Selección de teléfono:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">local_phone</i>
                                 </span>
                                 <select class="form-control show-tick" name="telefono">
                                     {% for tel in telefonos %}
-                                    <option value="{{tel.id_telefono}}"># {{tel.id_telefono}} - {{tel.marca}} {{tel.modelo}}</option>
+                                    <option value="{{tel.id_telefono}}"># {{tel.id_telefono}} - {{tel.marca}}
+                                        {{tel.modelo}}</option>
                                     {% endfor %}
                                 </select>
                             </div>
                         </div>
-                        <div id="selectUsb" class="col-md-4 " style="display: none;" >
-                            <label ><span style="color: #078F68;">* </span>Selección de usb:</label>
+                        <div id="selectUsb" class="col-md-4 " style="display: none;">
+                            <label><span style="color: #078F68;">* </span>Selección de usb:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">usb</i>
                                 </span>
                                 <select class="form-control show-tick" name="usb">
                                     {% for memoria in memoriasUsb %}
-                                    <option value="{{memoria.id_telefono}}"># {{memoria.id_telefono}} - {{memoria.marca}} {{memoria.modelo}} {{memoria.capacidad}} GB</option>
+                                    <option value="{{memoria.id_telefono}}"># {{memoria.id_telefono}} -
+                                        {{memoria.marca}} {{memoria.modelo}} {{memoria.capacidad}} GB</option>
                                     {% endfor %}
                                 </select>
                             </div>
                         </div>
-                        
-                     
-                        
 
-                    
+
+
+
+
                     </div>
 
 
@@ -253,8 +268,8 @@ Agregar Prestamo | Custom System
                                     <i class="material-icons">date_range</i>
                                 </span>
                                 <div class="form-line" id="bs_datepicker_container">
-                                    <input type="text" class="form-control" name="fecha_compra"
-                                        placeholder="Seleccionar fecha" required>
+                                    <input type="text" class="form-control" name="fecha" placeholder="Seleccionar fecha"
+                                        required>
                                 </div>
                             </div>
                         </div>
@@ -265,153 +280,102 @@ Agregar Prestamo | Custom System
                                     <i class="material-icons">build</i>
                                 </span>
                                 <div class="switch">
-                                    <label>NO<input type="checkbox" name="respuesta" checked><span class="lever switch-col-red"></span>SI</label>
+                                    <label>NO<input type="checkbox" name="devolucion" checked><span
+                                            class="lever switch-col-red"></span>SI</label>
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="col-md-6">
-                            <label for="email_address"><span style="color: #078F68;">* </span>Condiciones de entrega prestamo:</label>
+                            <label for="email_address"><span style="color: #078F68;">* </span>Condiciones de entrega
+                                prestamo:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">done</i>
                                 </span>
                                 <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar condiciones de entrega"
-                                        maxlength="50" name="procesador" required>
+                                    <input type="text" class="form-control date"
+                                        placeholder="Ingresar condiciones de entrega" maxlength="50" name="condiciones"
+                                        required>
                                 </div>
                             </div>
                         </div>
-                       
-                      
-                       
+
+
+
 
                     </div>
 
 
-                    
+
+
                     <div class="row clearfix">
-                        
-                        
-
-                       
-
-
-                    </div>
-                    <div class="row clearfix" >
 
                         <center>
+                            <h2>{{fecha}}</h2>
                             <h2>Ingresar Firma Electrónica</h2>
+                            <div style="width: 550px;
+                            height: 350px;
+                            background-color: black;">
+                                <div>
+                                    <label for=""></label>
+                                </div>
+                                <canvas id="pizarra"></canvas>
+        
+                            </div>
+        
+                            <div>
+                                <button type="button" class="btn btn-warning m-t-15 waves-effect" onclick="limpiar()"><i
+                                        class="material-icons">delete_sweep</i> Limpiar</button>
+                                <br><br>
+                              
+                                  
+                                    <input type="hidden" name="canvasData" id="my_hidden">
+                                  
+        
+        
+                             
+                            </div>
+                            <br>
+                           
+        
+        
                         </center>
                       
-                    
-
-                        <label for=""></label>
-                        <div class="contenedor" id="margenDIV1">
-
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <canvas id="draw-canvas" width="500" height="250">
-                                        No tienes un buen navegador.
-                                    </canvas>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <button type="button" class="btn btn-success m-t-15 waves-effect" id="draw-submitBtn">Crear imagen</button>
-                                    <button type="button" class="btn bg-red m-t-15 waves-effect" id="draw-clearBtn">Borrar canvas</button>
-                                    
-                                    <br><br>
-                                    <center>
-                                    <label>Color</label>
-                                    <input type="color" id="color">
-                                    <div>
-                                        <br>
-                                        <label>Tamaño Puntero</label>
-                                        <input type="range" id="puntero" min="1" default="1" max="5" width="10%">
-                                    </div>
-                                    </center>
-                                    
-
-
-
-                                </div>
-
-                            </div>
-
-                            <br />
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <textarea id="draw-dataUrl" class="form-control"
-                                        rows="5">Draw Data aqui:</textarea>
-                                </div>
-                            </div>
-                            <br />
-                            <div class="contenedor">
-                                <div class="col-md-12">
-                                    <img id="draw-image" src="" alt="Tu Imagen aparecera Aqui!" />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id="margenDIV1">
-
-                            <br><br>
-                            <form action="/guardarImagen/" method="POST" id="form1">{% csrf_token %}
-                                <input type="hidden" name="canvasData" id="my_hidden">
-                                {% for equipo in datosEquipo %}
-                                <input type="hidden" name="idEquipo" value="{{equipo.id_equipo}}">
-                                {% endfor %}
-                                {% for empleados in datosEmpleado %}
-                                <input type="hidden" name="idEmpleado" value="{{empleados.id_empleado}}">
-                                {% endfor %}
-
-
-                            </form>
-                        </div>
+        
+                      
                     </div>
 
 
 
 
 
-                        <br>
-                        <button type="submit"
-                            class="btn btn-warning m-t-15 waves-effect animate__animated animate__flipInX"><i
-                                class="material-icons">assignment_turned_in</i> Realizar Préstamo</button>
+                    <br>
+                    <button type="submit"  onclick="save()"
+                        class="btn btn-warning m-t-15 waves-effect animate__animated animate__flipInX"><i
+                            class="material-icons">assignment_turned_in</i> Realizar Préstamo</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-{% if compuSin %}
+{% if prestamo %}
 <script type="text/javascript">
     swal({
         icon: 'success',
         title: 'Wujuu..',
-        text: ' {{textoCompu}}',
+        text: ' {{texto}}',
         footer: '<span style="color: green!important"> Sigue navegando por Custom System! </span>',
         width: '40%'
     });
 </script>
 {% endif %}
-{% if compuCon %}
-<script type="text/javascript">
-    swal({
-        icon: 'success',
-        title: 'Wujuu..',
-        text: ' {{textoCompu}}',
-        footer: '<span style="color: green!important"> Sigue navegando por Custom System! </span>',
-        width: '40%'
-    });
-</script>
-{% endif %}
+
 {% endblock %}
 
 {% block estilosJs %}
 <script>
-
     //Obtener id de selects
     var clas = document.getElementById('tabla');
     var inputOtro = document.getElementById('inputOtro');
@@ -429,8 +393,8 @@ Agregar Prestamo | Custom System
     clas.onchange = (event) => {
         var inputText = event.target.value;
         console.log(inputText);
-        
-        if (inputText === "otro"){
+
+        if (inputText === "otro") {
             selectImpresoras.style.display = "none";
             selectComputadoras.style.display = "none";
             selectDiscosduros.style.display = "none";
@@ -440,8 +404,8 @@ Agregar Prestamo | Custom System
             selectTelefonos.style.display = "none";
             selectUsb.style.display = "none";
             inputOtro.style.display = "block";
-            
-        }else if (inputText === "Impresoras"){
+
+        } else if (inputText === "Impresoras") {
             inputOtro.style.display = "none";
             selectComputadoras.style.display = "none";
             selectDiscosduros.style.display = "none";
@@ -452,7 +416,7 @@ Agregar Prestamo | Custom System
             selectUsb.style.display = "none";
             selectImpresoras.style.display = "block";
 
-        }else if (inputText === "Equipos"){
+        } else if (inputText === "Equipos") {
             inputOtro.style.display = "none";
             selectImpresoras.style.display = "none";
             selectDiscosduros.style.display = "none";
@@ -463,7 +427,7 @@ Agregar Prestamo | Custom System
             selectUsb.style.display = "none";
             selectComputadoras.style.display = "block";
 
-        }else if (inputText === "DiscosDuros"){
+        } else if (inputText === "DiscosDuros") {
             inputOtro.style.display = "none";
             selectImpresoras.style.display = "none";
             selectComputadoras.style.display = "none";
@@ -474,7 +438,7 @@ Agregar Prestamo | Custom System
             selectUsb.style.display = "none";
             selectDiscosduros.style.display = "block";
 
-        }else if (inputText === "Monitores"){
+        } else if (inputText === "Monitores") {
             inputOtro.style.display = "none";
             selectImpresoras.style.display = "none";
             selectComputadoras.style.display = "none";
@@ -485,7 +449,7 @@ Agregar Prestamo | Custom System
             selectUsb.style.display = "none";
             selectMonitores.style.display = "block";
 
-        }else if (inputText === "Teclados"){
+        } else if (inputText === "Teclados") {
             inputOtro.style.display = "none";
             selectImpresoras.style.display = "none";
             selectComputadoras.style.display = "none";
@@ -496,7 +460,7 @@ Agregar Prestamo | Custom System
             selectUsb.style.display = "none";
             selectTeclados.style.display = "block";
 
-        }else if (inputText === "Mouses"){
+        } else if (inputText === "Mouses") {
             inputOtro.style.display = "none";
             selectImpresoras.style.display = "none";
             selectComputadoras.style.display = "none";
@@ -507,8 +471,7 @@ Agregar Prestamo | Custom System
             selectUsb.style.display = "none";
             selectMouses.style.display = "block";
 
-        }
-        else if (inputText === "Telefonos"){
+        } else if (inputText === "Telefonos") {
             inputOtro.style.display = "none";
             selectImpresoras.style.display = "none";
             selectComputadoras.style.display = "none";
@@ -519,8 +482,7 @@ Agregar Prestamo | Custom System
             selectUsb.style.display = "none";
             selectTelefonos.style.display = "block";
 
-        }
-        else if (inputText === "MemoriasUSB"){
+        } else if (inputText === "MemoriasUSB") {
             inputOtro.style.display = "none";
             selectImpresoras.style.display = "none";
             selectComputadoras.style.display = "none";
@@ -532,172 +494,142 @@ Agregar Prestamo | Custom System
             selectUsb.style.display = "block";
 
         }
-    
-    
+
+
     }
-    
 
 
 
 
 
+
+   
+</script>
+<script>
     function save() {
-        var canvas = document.getElementById('draw-canvas');
+        var canvas = document.getElementById('pizarra');
         var inputVacio = document.getElementById('my_hidden');
         inputVacio.value = canvas.toDataURL();
         document.forms["form1"].submit();
     }
 
-    (function () { // Comenzamos una funcion auto-ejecutable
+    function limpiar() {
+        let miCanvas = document.querySelector('#pizarra');
+        let lineas = [];
+        let correccionX = 0;
+        let correccionY = 0;
+        let pintarLinea = false;
+        // Marca el nuevo punto
+        let nuevaPosicionX = 0;
+        let nuevaPosicionY = 0;
 
-        // Obtenenemos un intervalo regular(Tiempo) en la pamtalla
-        window.requestAnimFrame = (function (callback) {
-            return window.requestAnimationFrame ||
-                window.webkitRequestAnimationFrame ||
-                window.mozRequestAnimationFrame ||
-                window.oRequestAnimationFrame ||
-                window.msRequestAnimaitonFrame ||
-                function (callback) {
-                    window.setTimeout(callback, 1000 / 60);
-                    // Retrasa la ejecucion de la funcion para mejorar la experiencia
-                };
-        })();
+        let posicion = miCanvas.getBoundingClientRect()
+        correccionX = posicion.x;
+        correccionY = posicion.y;
 
-        // Traemos el canvas mediante el id del elemento html
-        var canvas = document.getElementById("draw-canvas");
-        var ctx = canvas.getContext("2d");
+        miCanvas.width = 500;
+        miCanvas.height = 300;
 
 
-        // Mandamos llamar a los Elemetos interactivos de la Interfaz HTML
-        var drawText = document.getElementById("draw-dataUrl");
-        var drawImage = document.getElementById("draw-image");
-        var clearBtn = document.getElementById("draw-clearBtn");
-        var submitBtn = document.getElementById("draw-submitBtn");
-        clearBtn.addEventListener("click", function (e) {
-            // Definimos que pasa cuando el boton draw-clearBtn es pulsado
-            clearCanvas();
-            drawImage.setAttribute("src", "");
-        }, false);
-        // Definimos que pasa cuando el boton draw-submitBtn es pulsado
-        submitBtn.addEventListener("click", function (e) {
-            var dataUrl = canvas.toDataURL();
-            drawText.innerHTML = dataUrl;
-            drawImage.setAttribute("src", dataUrl);
-        }, false);
+    }
+    //======================================================================
+    // VARIABLES
+    //======================================================================
+    let miCanvas = document.querySelector('#pizarra');
+    let lineas = [];
+    let correccionX = 0;
+    let correccionY = 0;
+    let pintarLinea = false;
+    // Marca el nuevo punto
+    let nuevaPosicionX = 0;
+    let nuevaPosicionY = 0;
 
-        // Activamos MouseEvent para nuestra pagina
-        var drawing = false;
-        var mousePos = {
-            x: 0,
-            y: 0
-        };
-        var lastPos = mousePos;
-        canvas.addEventListener("mousedown", function (e) {
-            /*
-              Mas alla de solo llamar a una funcion, usamos function (e){...}
-              para mas versatilidad cuando ocurre un evento
-            */
-            var tint = document.getElementById("color");
-            var punta = document.getElementById("puntero");
-            console.log(e);
-            drawing = true;
-            lastPos = getMousePos(canvas, e);
-        }, false);
-        canvas.addEventListener("mouseup", function (e) {
-            drawing = false;
-        }, false);
-        canvas.addEventListener("mousemove", function (e) {
-            mousePos = getMousePos(canvas, e);
-        }, false);
+    let posicion = miCanvas.getBoundingClientRect()
+    correccionX = posicion.x;
+    correccionY = posicion.y;
 
-        // Activamos touchEvent para nuestra pagina
-        canvas.addEventListener("touchstart", function (e) {
-            mousePos = getTouchPos(canvas, e);
-            console.log(mousePos);
-            e.preventDefault(); // Prevent scrolling when touching the canvas
-            var touch = e.touches[0];
-            var mouseEvent = new MouseEvent("mousedown", {
-                clientX: touch.clientX,
-                clientY: touch.clientY
-            });
-            canvas.dispatchEvent(mouseEvent);
-        }, false);
-        canvas.addEventListener("touchend", function (e) {
-            e.preventDefault(); // Prevent scrolling when touching the canvas
-            var mouseEvent = new MouseEvent("mouseup", {});
-            canvas.dispatchEvent(mouseEvent);
-        }, false);
-        canvas.addEventListener("touchleave", function (e) {
-            // Realiza el mismo proceso que touchend en caso de que el dedo se deslice fuera del canvas
-            e.preventDefault(); // Prevent scrolling when touching the canvas
-            var mouseEvent = new MouseEvent("mouseup", {});
-            canvas.dispatchEvent(mouseEvent);
-        }, false);
-        canvas.addEventListener("touchmove", function (e) {
-            e.preventDefault(); // Prevent scrolling when touching the canvas
-            var touch = e.touches[0];
-            var mouseEvent = new MouseEvent("mousemove", {
-                clientX: touch.clientX,
-                clientY: touch.clientY
-            });
-            canvas.dispatchEvent(mouseEvent);
-        }, false);
+    miCanvas.width = 500;
+    miCanvas.height = 300;
 
-        // Get the position of the mouse relative to the canvas
-        function getMousePos(canvasDom, mouseEvent) {
-            var rect = canvasDom.getBoundingClientRect();
-            /*
-              Devuelve el tamaño de un elemento y su posición relativa respecto
-              a la ventana de visualización (viewport).
-            */
-            return {
-                x: mouseEvent.clientX - rect.left,
-                y: mouseEvent.clientY - rect.top
-            };
-        }
+    //======================================================================
+    // FUNCIONES
+    //======================================================================
 
-        // Get the position of a touch relative to the canvas
-        function getTouchPos(canvasDom, touchEvent) {
-            var rect = canvasDom.getBoundingClientRect();
-            console.log(touchEvent);
-            /*
-              Devuelve el tamaño de un elemento y su posición relativa respecto
-              a la ventana de visualización (viewport).
-            */
-            return {
-                x: touchEvent.touches[0].clientX - rect.left, // Popiedad de todo evento Touch
-                y: touchEvent.touches[0].clientY - rect.top
-            };
-        }
+    /**
+     * Funcion que empieza a dibujar la linea
+     */
+    function empezarDibujo() {
+        pintarLinea = true;
+        lineas.push([]);
+    };
 
-        // Draw to the canvas
-        function renderCanvas() {
-            if (drawing) {
-                var tint = document.getElementById("color");
-                var punta = document.getElementById("puntero");
-                ctx.strokeStyle = tint.value;
-                ctx.beginPath();
-                ctx.moveTo(lastPos.x, lastPos.y);
-                ctx.lineTo(mousePos.x, mousePos.y);
-                console.log(punta.value);
-                ctx.lineWidth = punta.value;
-                ctx.stroke();
-                ctx.closePath();
-                lastPos = mousePos;
+    /**
+     * Funcion que guarda la posicion de la nueva línea
+     */
+    function guardarLinea() {
+        lineas[lineas.length - 1].push({
+            x: nuevaPosicionX,
+            y: nuevaPosicionY
+        });
+    }
+
+    /**
+     * Funcion dibuja la linea
+     */
+    function dibujarLinea(event) {
+        event.preventDefault();
+        if (pintarLinea) {
+            let ctx = miCanvas.getContext('2d')
+            // Estilos de linea
+            ctx.lineJoin = ctx.lineCap = 'round';
+            ctx.lineWidth = 5;
+            // Color de la linea
+            ctx.strokeStyle = '#000000';
+            // Marca el nuevo punto
+            if (event.changedTouches == undefined) {
+                // Versión ratón
+                nuevaPosicionX = event.layerX;
+                nuevaPosicionY = event.layerY;
+            } else {
+                // Versión touch, pantalla tactil
+                nuevaPosicionX = event.changedTouches[0].pageX - correccionX;
+                nuevaPosicionY = event.changedTouches[0].pageY - correccionY;
             }
+            // Guarda la linea
+            guardarLinea();
+            // Redibuja todas las lineas guardadas
+            ctx.beginPath();
+            lineas.forEach(function (segmento) {
+                ctx.moveTo(segmento[0].x, segmento[0].y);
+                segmento.forEach(function (punto, index) {
+                    ctx.lineTo(punto.x, punto.y);
+                });
+            });
+            ctx.stroke();
         }
+    }
 
-        function clearCanvas() {
-            canvas.width = canvas.width;
-        }
+    /**
+     * Funcion que deja de dibujar la linea
+     */
+    function pararDibujar() {
+        pintarLinea = false;
+        lineas = [];
+        guardarLinea();
+    }
 
-        // Allow for animation
-        (function drawLoop() {
-            requestAnimFrame(drawLoop);
-            renderCanvas();
-        })();
+    //======================================================================
+    // EVENTOS
+    //======================================================================
 
-    })();
+    // Eventos raton
+    miCanvas.addEventListener('mousedown', empezarDibujo, false);
+    miCanvas.addEventListener('mousemove', dibujarLinea, false);
+    miCanvas.addEventListener('mouseup', pararDibujar, false);
+
+    // Eventos pantallas táctiles
+    miCanvas.addEventListener('touchstart', empezarDibujo, false);
+    miCanvas.addEventListener('touchmove', dibujarLinea, false);
 </script>
 <script>
     function soloLetras(e) {

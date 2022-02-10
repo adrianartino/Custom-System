@@ -12,7 +12,7 @@ from django.shortcuts import redirect
 from django.db.models import Q
 
 #Importación de modelos
-from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Encuestas, Preguntas, Respuestas,Mouses, Teclados, Monitores, Telefonos, DiscosDuros, EmpleadosDiscosDuros, MemoriasUSB
+from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Encuestas, Preguntas, Respuestas,Mouses, Teclados, Monitores, Telefonos, DiscosDuros, EmpleadosDiscosDuros, MemoriasUSB, PrestamosSistemas
 
 #Librería para manejar archivos en Python
 from django.core.files.base import ContentFile
@@ -8810,16 +8810,17 @@ def agregarPrestamos(request):
         
         #Clic en botón Realizar préstamo.
         if request.method == "POST":
-            
+            estatus = ""
             empleadoSolicitante = request.POST['solicitante']
             tabla = request.POST['clasificacion']
             
             if tabla == "otro":
-                id_producto = ""
+                equipoAPrestar = ""
                 otro = request.POST['otroEquipo']
             else:
                 otro = ""
                 equipoAPrestar = ""
+                
                 if tabla == "Impresoras":
                     equipoAPrestar = request.POST['impresora']
                 elif tabla == "Equipos":
@@ -8838,13 +8839,45 @@ def agregarPrestamos(request):
                     equipoAPrestar = request.POST['usb']
                     
             cantidad = request.POST['cantidad']
+            fecha_prestamo = request.POST['fecha']
+            fecha_separada = fecha_prestamo.split("/") #29   06    2018            2018     29   06
+            fecha_normal = fecha_separada[2] + "-" + fecha_separada[0] + "-" + fecha_separada[1]
+            canvasLargo = request.POST['canvasData']
+            format, imgstr = canvasLargo.split(';base64,')
+            ext = format.split('/')[-1]
+            archivo = ContentFile(base64.b64decode(imgstr), name= str(empleadoSolicitante) + '.' + ext)
+            condiciones = request.POST['condiciones']
+
+            if request.POST.get('devolucion', False): #Checkeado
+                devolucion = "S"
+            elif request.POST.get('devolucion', True): #No checkeado
+                devolucion = "N"
+            
+            if devolucion == "S":
+                estatus = "Prestamo"
+            elif devolucion == "N":
+                estatus = "Finalizado"
+
+            registroPrestamo = PrestamosSistemas(id_empleado = Empleados.objects.get(id_empleado = empleadoSolicitante), tabla = tabla, id_producto = equipoAPrestar, otro = otro, cantidad = cantidad, fecha_prestamo = fecha_normal,
+            firma_entrega = archivo ,devolucion = devolucion, condiciones = condiciones, estatus = estatus)
+
+            registroPrestamo.save()
+
+            if registroPrestamo:
+                prestamo = True
+                texto ="El prestamo ha sido creado satisfactoriamente"
+            
+            return render(request, "prestamos/agregarPrestamo.html", {"estaEnAgregarPrestamo":estaEnAgregarPrestamo,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,
+            "empleados": empleados, "impresoras":impresoras, "computadoras":computadoras, "discosDuros":discosDuros, 
+            "monitores":monitores, "teclados":teclados, "mouses":mouses, "telefonos":telefonos, "memoriasUsb":memoriasUsb, "prestamo": prestamo, "texto": texto})
+            
             
             
                 
                 
                     
         
-        
+    
         return render(request, "prestamos/agregarPrestamo.html", {"estaEnAgregarPrestamo":estaEnAgregarPrestamo,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,
         "empleados": empleados, "impresoras":impresoras, "computadoras":computadoras, "discosDuros":discosDuros, 
         "monitores":monitores, "teclados":teclados, "mouses":mouses, "telefonos":telefonos, "memoriasUsb":memoriasUsb})
@@ -8866,27 +8899,30 @@ def verPrestamos(request):
         mantenimientosNoti = notificacionLimpiezas()
         numeroNoti = numNoti()
         foto = fotoAdmin(request)
+
+        prestamosNOaplicaDev = PrestamosSistemas.objects.filter(devolucion__icontains = "N")
+        prestamosSINdevolver = PrestamosSistemas.objects.filter(devolucion__icontains = "S", estatus__icontains = "Prestamo")
+        prestamosSIdevolvueltos = PrestamosSistemas.objects.filter(devolucion__icontains = "S", estatus__icontains = "Finalizado")
         
-        equiposActivos = Equipos.objects.filter(activo__icontains= "A")
-        equiposInactivos = Equipos.objects.filter(activo__icontains= "I")
+
         
-        #empleados Actvos
-        empleadosEnActivos = []
-        datosAreasEnActivos = []
+        #prestamos no aplica devolucion
+        
+        empleadosNoAplica = []
+        datosCompletosEmpleadosNoAplica = []
     
         
-        for equipos in equiposActivos:
+        for prestamos in prestamosNOaplicaDev:
                 
-            empleadosEnActivos.append(equipos.id_empleado_id)
+            empleadosNoAplica.append(prestamos.id_empleado_id)
             
         
             #areasEnActivos = ["1"]
             
-        for id in empleadosEnActivos:
-            if id == None:
-                datosAreasEnActivos.append(["", "", "", ""])
+        for id in empleadosNoAplica:
+          
                 
-            elif id != None:
+            if id != None:
                 datosEmpleado = Empleados.objects.filter(id_empleado = id) #["1", "Sistemas", "rojo"]
                 
                 if datosEmpleado:
@@ -8901,10 +8937,80 @@ def verPrestamos(request):
                                 nombreArea = dato.nombre
                                 color = dato.color
             
-                datosAreasEnActivos.append([nombreEmpleado, apellidosEmpleado, nombreArea, color])
+                datosCompletosEmpleadosNoAplica.append([nombreEmpleado, apellidosEmpleado, nombreArea, color])
             
-        lista = zip(equiposActivos, datosAreasEnActivos)
-        lista2=zip(equiposActivos, datosAreasEnActivos)
+        lista = zip(prestamosNOaplicaDev, datosCompletosEmpleadosNoAplica)
+
+        #prestamos que aun no se devuelven
+        
+        empleadosQuenoHanDevuelto = []
+        datosCompletosEmpleadosQueAunNoHanDevuelto = []
+    
+        
+        for prestamo in prestamosSINdevolver:
+                
+            empleadosQuenoHanDevuelto.append(prestamo.id_empleado_id)
+            
+        
+            #areasEnActivos = ["1"]
+            
+        for ids in empleadosQuenoHanDevuelto:
+          
+                
+            if ids != None:
+                datosEmpleados = Empleados.objects.filter(id_empleado = ids) #["1", "Sistemas", "rojo"]
+                
+                if datosEmpleados:
+                    for datos in datosEmpleado:
+                        nombreEmpleados = datos.nombre
+                        apellidosEmpleados = datos.apellidos
+                        areaEmpleados = datos.id_area_id
+                        datosAreas = Areas.objects.filter(id_area=areaEmpleados)
+                        
+                        if datosAreas:
+                            for datos in datosAreas:
+                                nombreAreas = datos.nombre
+                                colors = datos.color
+            
+                datosCompletosEmpleadosQueAunNoHanDevuelto.append([nombreEmpleados, apellidosEmpleados, nombreAreas, colors])
+            
+        lista2 = zip(prestamosSINdevolver, datosCompletosEmpleadosQueAunNoHanDevuelto)
+
+        #prestamos ya devueltos
+        
+        empleadosQueDevolvieron = []
+        datosCompletosEmpleadosQueDevolvieron = []
+    
+        
+        for presta in prestamosSIdevolvueltos:
+                
+            empleadosQueDevolvieron.append(presta.id_empleado_id)
+            
+        
+            #areasEnActivos = ["1"]
+            
+        for Ids in empleadosQueDevolvieron:
+          
+                
+            if Ids != None:
+                datoEmpleados = Empleados.objects.filter(id_empleado = Ids) #["1", "Sistemas", "rojo"]
+                
+                if datoEmpleados:
+                    for dat in datoEmpleados:
+                        nomEmpleados = dat.nombre
+                        apellEmpleados = dat.apellidos
+                        areaEmplea = dat.id_area_id
+                        datAreas = Areas.objects.filter(id_area=areaEmplea)
+                        
+                        if datAreas:
+                            for da in datAreas:
+                                nomAreas = da.nombre
+                                col = da.color
+            
+                datosCompletosEmpleadosQueDevolvieron.append([nomEmpleados, apellEmpleados, nomAreas, col])
+            
+        lista3 = zip(prestamosSIdevolvueltos, datosCompletosEmpleadosQueDevolvieron)
+       
         
         
         
@@ -8915,8 +9021,8 @@ def verPrestamos(request):
             else:
                 bajaExito= "Se dió de baja el " + request.session["idEquipoBaja"] + " con éxito!"
             del request.session["idEquipoBaja"]
-            return render(request, "Equipos/verEquipos.html", {"estaEnVerPrestamos": estaEnVerPrestamos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "bajaEquipo":
-                bajaEquipo, "bajaExito": bajaExito, "equiposInactivos":equiposInactivos, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "equiposActivos":equiposActivos, "lista2":lista2, "foto":foto})
+            return render(request, "prestamos/verPrestamo.html", {"estaEnVerPrestamos": estaEnVerPrestamos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "bajaEquipo":
+                bajaEquipo, "bajaExito": bajaExito, "prestamosNOaplicaDev":prestamosNOaplicaDev, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti,  "lista2":lista2, "foto":foto})
             
         if "idEquipoAlta" in request.session:
             altaEquipo= True
@@ -8926,11 +9032,11 @@ def verPrestamos(request):
             
                 altaExito= "Se dió de alta el " + request.session["idEquipoAlta"] + " con éxito"
             del request.session["idEquipoAlta"]
-            return render(request, "Equipos/verEquipos.html", {"estaEnVerPrestamos": estaEnVerPrestamos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,
-                                                            "altaEquipo": altaEquipo, "altaExito":altaExito, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti,  "equiposActivos":equiposActivos, "lista2":lista2, "foto":foto})
+            return render(request, "prestamos/verPrestamo.html", {"estaEnVerPrestamos": estaEnVerPrestamos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,
+                                                            "altaEquipo": altaEquipo, "altaExito":altaExito, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "lista2":lista2, "foto":foto})
 
-        return render(request, "prestamos/verPrestamo.html", {"estaEnVerPrestamos": estaEnVerPrestamos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "equiposInactivos":equiposInactivos, 
-                                                           "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti,  "equiposActivos":equiposActivos, "lista2":lista2, "foto":foto})
+        return render(request, "prestamos/verPrestamo.html", {"estaEnVerPrestamos": estaEnVerPrestamos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "prestamosSINdevolver":prestamosSINdevolver, 
+                                                           "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "prestamosNOaplicaDev":prestamosNOaplicaDev, "numeroNoti":numeroNoti,  "prestamosSIdevolvueltos":prestamosSIdevolvueltos, "lista2":lista2,"lista3":lista3, "foto":foto})
 
     else:
         return redirect('/login/') #redirecciona a url de inicio
