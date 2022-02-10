@@ -197,6 +197,59 @@ Equipos | Custom System
                             </tr>
                         </tfoot>
                         <tbody>
+                            {% for prestamo, empleado in lista %}
+                            <tr>
+                               
+                                <th>{{prestamo.id_prestamo}}</th>
+                                <th>{{equipo.marca}}</th>
+                                <th>{{equipo.modelo}}</th>
+                                <th>{{equipo.color}}</th>
+                               
+                                <th>{{equipo.memoriaram}}</th>
+                                <th>{{equipo.procesador}}</th>
+                                <th>{{equipo.sistemaoperativo}}</th>
+                                <th>{{equipo.modelocargador}}</th>
+                                <th>{{empleado.0}} {{empleado.1}}</th>
+                                <th><label class="{{empleado.3}}">{{empleado.2}}</label></th>
+                                <th>{{equipo.estado}}</th>
+
+                                <th>
+                                    <form action="/editarEquipo/" method="POST">{% csrf_token %}
+                                        <input type="hidden" name="idEquipo" value="{{equipo.id_equipo}}">
+
+                                        <center>
+                                            <button type="submit" class="btn btn-warning waves-effect">
+                                                <i class="material-icons">edit</i>
+                                            </button>
+                                        </center>
+                                        <br>
+                                    </form>
+                                    <form action="/DescargarPDF/" method="POST">{% csrf_token %}
+
+                                        <input type="hidden" name="idEquipopdf" value="{{equipo.id_equipo}}">
+
+                                        <center>
+                                            <button type="submit" class="btn bg-red waves-effect">
+                                                <i class="material-icons">picture_as_pdf</i>
+                                            </button>
+                                        </center>
+
+                                    </form>
+
+                                </th>
+
+
+                                <th>
+                                    <center>
+                                        <button type="button" class="btn bg-red waves-effect" data-toggle="modal"
+                                            data-target="#{{equipo.id_equipo}}">
+                                            <i class="material-icons">cancel</i>
+                                        </button>
+                                    </center>
+
+                                </th>
+                            </tr>
+                            {% endfor %}
                          
 
 
