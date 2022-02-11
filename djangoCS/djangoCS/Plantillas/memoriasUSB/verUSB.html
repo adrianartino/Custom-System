@@ -175,9 +175,9 @@ Memorias USB | Custom System
 
 {% for usb in memorias %}
 <!-- Default Size -->
-<div class="modal fade" id="{{usb.id_usb}}" tabindex="-1" role="dialog">
+<div class="modal fade" id="{{usb.id_usb}}" tabindex="-1" role="dialog" >
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
+        <div class="modal-content" style="border-radius: 30px !important;">
             <div class="modal-header">
                 <center>
                     <h1 style="color: #EAA72A; font-family: 'Oswald', sans-serif;">Actualizar Stock USB's <i
@@ -198,11 +198,8 @@ Memorias USB | Custom System
                                     <tr class="bg-teal">
                                     
                                         <th width = "50">Marca</th>
-                                        {% if usb.modelo == "" %}
-                                        <th>SIN MODELO</th>
-                                        {% else %}
-                                        <th>{{usb.modelo}}</th>
-                                        {% endif %}
+                                        <th>Modelo</th>
+                                        
 
                                      
                                 
@@ -211,10 +208,14 @@ Memorias USB | Custom System
                        
                             <tbody>
                                 <tr>
-                                    
+                                    <td>{{usb.marca}}</td>
+                                    {% if usb.modelo == "" %}
+                                    <td>SIN MODELO</td>
+                                    {% else %}
+                                    <td>{{usb.modelo}}</td>
+                                    {% endif %}
                                   
-                                    <td></td>
-                                    <td></td>
+                                    
                                     
                                     
                                 </tr>

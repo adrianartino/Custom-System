@@ -33,6 +33,13 @@ Equipos | Custom System
 
 <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
 <link href={% static 'panel/css/themes/all-themes.css' %} rel="stylesheet" />
+<style>
+    canvas {
+        width: 300px;
+        height: 200px;
+        background-color: #faf6f6;
+    }
+</style>
 {% endblock %}
 
 {% block contenido %}
@@ -93,10 +100,11 @@ Equipos | Custom System
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                         <thead>
-                            <tr style="background-color: #fad60e; color:black">
+                            <tr style="background-color: #4caf50; color:black">
                                 <th>ID Prestamo</th>
                                 <th>Empleado</th>
                                 <th>Equipo prestado</th>
+                                <th>Imagen equipo</th>
                                 <th>Cantidad</th>
                                 <th>Fecha de prestamo</th>
                                 <th>Firma</th>
@@ -113,6 +121,7 @@ Equipos | Custom System
                                 <th>ID Prestamo</th>
                                 <th>Empleado</th>
                                 <th>Equipo prestado</th>
+                                <th>Imagen equipo</th>
                                 <th>Cantidad</th>
                                 <th>Fecha de prestamo</th>
                                 <th>Firma</th>
@@ -124,10 +133,55 @@ Equipos | Custom System
                             </tr>
                         </tfoot>
                         <tbody class="animate__animated animate__backInDown">
+                            {% for prestamo, empleado, clasificacion, foto in lista %}
+                            <tr>
+                               
+                              
+                                <th>{{prestamo.id_prestamo}}</th>
+                                
+                                <th>
+                                    <div>
+                                        <label >{{empleado.0}} {{empleado.1}}</label>
+
+                                    </div>
+                                    <div>
+                                        <label class="{{empleado.3}}">{{empleado.2}}</label>
+
+                                    </div>
+
+                                </th>
+                                <th> {{clasificacion}}</th>
+                                <th> 
+                                    <center>
+                                        <img src="{{foto.url}}" width="40%" alt="lap">
+                                    </center>
+                                </th>
+                                <th>{{prestamo.cantidad}}</th>
+                               
+                                <th>{{prestamo.fecha_prestamo}}</th>
+                                <th>
+                                    <center>
+                                        <img src="{{prestamo.firma_entrega.url}}" width="80%" alt="lap">
+                                    </center>
+                                </th>
+                                <th>{{prestamo.estatus}}</th>
+                                
+                               
+
+                            
+
+
+                              
+                            </tr>
+                            {% endfor %}
                      
                         </tbody>
                     </table>
+
                 </div>
+                {% for x in datosCompletosEmpleadosQueAunNoHanDevuelto %}
+                <label >{{x.0}} {{x.1}} {{x.2}}</label>
+                {% endfor %}
                 <br>
 
             </div>
@@ -164,10 +218,11 @@ Equipos | Custom System
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable ">
                         <thead>
-                            <tr style="background-color: #E05D5D; color:black">
+                            <tr style="background-color: #009688; color:black">
                                 <th>ID Prestamo</th>
                                 <th>Empleado</th>
                                 <th>Equipo prestado</th>
+                                <th>Imagen Equipo</th>
                                 <th>Cantidad</th>
                                 <th>Fecha de prestamo</th>
                                 <th>Firma</th>
@@ -185,6 +240,7 @@ Equipos | Custom System
                                 <th>ID Prestamo</th>
                                 <th>Empleado</th>
                                 <th>Equipo prestado</th>
+                                <th>Imagen Equipo</th>
                                 <th>Cantidad</th>
                                 <th>Fecha de prestamo</th>
                                 <th>Firma</th>
@@ -197,57 +253,53 @@ Equipos | Custom System
                             </tr>
                         </tfoot>
                         <tbody>
-                            {% for prestamo, empleado in lista %}
+                            {% for prestamo, empleado, clasificacion, foto in lista3 %}
                             <tr>
                                
+                              
                                 <th>{{prestamo.id_prestamo}}</th>
-                                <th>{{equipo.marca}}</th>
-                                <th>{{equipo.modelo}}</th>
-                                <th>{{equipo.color}}</th>
-                               
-                                <th>{{equipo.memoriaram}}</th>
-                                <th>{{equipo.procesador}}</th>
-                                <th>{{equipo.sistemaoperativo}}</th>
-                                <th>{{equipo.modelocargador}}</th>
-                                <th>{{empleado.0}} {{empleado.1}}</th>
-                                <th><label class="{{empleado.3}}">{{empleado.2}}</label></th>
-                                <th>{{equipo.estado}}</th>
-
+                                
                                 <th>
-                                    <form action="/editarEquipo/" method="POST">{% csrf_token %}
-                                        <input type="hidden" name="idEquipo" value="{{equipo.id_equipo}}">
+                                    <div>
+                                        <label >{{empleado.0}} {{empleado.1}}</label>
 
-                                        <center>
-                                            <button type="submit" class="btn btn-warning waves-effect">
-                                                <i class="material-icons">edit</i>
-                                            </button>
-                                        </center>
-                                        <br>
-                                    </form>
-                                    <form action="/DescargarPDF/" method="POST">{% csrf_token %}
+                                    </div>
+                                    <div>
+                                        <label class="{{empleado.3}}">{{empleado.2}}</label>
 
-                                        <input type="hidden" name="idEquipopdf" value="{{equipo.id_equipo}}">
-
-                                        <center>
-                                            <button type="submit" class="btn bg-red waves-effect">
-                                                <i class="material-icons">picture_as_pdf</i>
-                                            </button>
-                                        </center>
-
-                                    </form>
+                                    </div>
 
                                 </th>
-
-
+                                <th> {{clasificacion}}</th>
+                                {% if foto == "Sin foto" %}
+                                <th>Sin foto</th>
+                                {% else %}
+                                <th> 
+                                    <center>
+                                        <img src="{{foto.url}}" width="40%" alt="lap">
+                                    </center>
+                                </th>
+                                {% endif %}
+                                <th>{{prestamo.cantidad}}</th>
+                                <th>{{prestamo.fecha_prestamo}}</th>
                                 <th>
                                     <center>
-                                        <button type="button" class="btn bg-red waves-effect" data-toggle="modal"
-                                            data-target="#{{equipo.id_equipo}}">
-                                            <i class="material-icons">cancel</i>
-                                        </button>
+                                        <img src="{{prestamo.firma_entrega.url}}" width="80%" alt="lap">
                                     </center>
-
                                 </th>
+                                <th>{{prestamo.estatus}}</th>
+                                <th>{{prestamo.fecha_entrega}}</th>
+                                <th>{{prestamo.condiciones}}</th>
+                                <th>
+                                    <center>
+                                        <img src="{{prestamo.firma_devolucion.url}}" width="80%" alt="lap">
+                                    </center>
+                                </th>
+                                
+                              
+
+
+                              
                             </tr>
                             {% endfor %}
                          
@@ -295,17 +347,18 @@ Equipos | Custom System
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable ">
                         <thead>
-                            <tr style="background-color: #fff; color:black">
+                            <tr style="background-color: #f44336; color:black">
                                 <th>ID Prestamo</th>
                                 <th>Empleado</th>
                                 <th>Equipo prestado</th>
+                                <th>Imagen equipo</th>
                                 <th>Cantidad</th>
                                 <th>Fecha de prestamo</th>
                                 <th>Firma</th>
                                 <th>Estatus</th>
-                                <th>Fecha de entrega</th>
+                              
                                 <th>Condiciones </th>
-                                <th>Editar </th>
+                                <th>Actualizar </th>
                                
 
 
@@ -317,19 +370,80 @@ Equipos | Custom System
                                 <th>ID Prestamo</th>
                                 <th>Empleado</th>
                                 <th>Equipo prestado</th>
+                                <th>Imagen equipo</th>
                                 <th>Cantidad</th>
                                 <th>Fecha de prestamo</th>
                                 <th>Firma</th>
                                 <th>Estatus</th>
-                                <th>Fecha de entrega</th>
+                               
                                 <th>Condiciones </th>
-                                <th>Editar </th>
+                                <th>Actualizar </th>
                        
 
 
                             </tr>
                         </tfoot>
                         <tbody>
+                            {% for prestamo, empleado, clasificacion, foto in lista2 %}
+                            <tr>
+                               
+                              
+                                <th>{{prestamo.id_prestamo}}</th>
+                                
+                                <th>
+                                    <div>
+                                        <label >{{empleado.0}} {{empleado.1}}</label>
+
+                                    </div>
+                                    <div>
+                                        <label class="{{empleado.3}}">{{empleado.2}}</label>
+
+                                    </div>
+
+                                </th>
+                                <th> {{clasificacion}}</th>
+                                {% if foto == "Sin foto" %}
+                                <th>Sin foto</th>
+                                {% else %}
+                                <th> 
+                                    <center>
+                                        <img src="{{foto.url}}" width="40%" alt="lap">
+                                    </center>
+                                </th>
+                                {% endif %}
+                                <th>{{prestamo.cantidad}}</th>
+                               
+                                <th>{{prestamo.fecha_prestamo}}</th>
+                                <th>
+                                    <center>
+                                        <img src="{{prestamo.firma_entrega.url}}" width="80%" alt="lap">
+                                    </center>
+                                </th>
+                                <th>{{prestamo.estatus}}</th>
+                                
+                                <th>{{prestamo.condiciones}}</th>
+                                
+                               
+
+                                <th>
+                                   
+                                        
+
+                                        <center>
+                                            <button type="button" class="btn bg-green waves-effect" data-toggle="modal" data-target="#{{prestamo.id_prestamo}}">
+                                                <i class="material-icons">update</i>
+                                            </button>
+                                        </center>
+                                        <br>
+                             
+                              
+
+                                </th>
+
+
+                              
+                            </tr>
+                            {% endfor %}
                             
 
 
@@ -347,32 +461,332 @@ Equipos | Custom System
 </div>
 
 
+{% for presta in prestamosSINdevolver %}
+<!-- Default Size -->
+<div class="modal fade" id="{{presta.id_prestamo}}" tabindex="-1" role="dialog" >
+    <div class="modal-dialog modal-lg" role="document" >
+        <div class="modal-content" style="border-radius: 30px !important;">
+            <div class="modal-header">
+                <center>
+                    <h1 style="color: #EAA72A; font-family: 'Oswald', sans-serif;">Actualizar Estatus de Prestamo <i
+                            class="material-icons" style="color:black; font-size:100%">compare_arrows</i></h1>
+                    <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
+
+                </center>
+            </div>
+            <div class="modal-body">
+                <form action="/actualizarPrestamos/" enctype="multipart/form-data" method="POST">{% csrf_token %}
+                    {% for prestamo, empleado, clasificacion, foto in listaModal %}
+                    <div class="body table-responsive">
+                        <table class="table table-bordered table-striped table-hover dataTable  ">
+                            <thead>
+                                <tr style="background-color: #f44336; color:black">
+                                  
+                                    <th>Empleado</th>
+                                    <th>Equipo prestado</th>
+                                    <th>Imagen equipo</th>
+                                    <th>Cantidad</th>
+                                    <th>Fecha de prestamo</th>
+                               
+                            
+                                 
+                                   
+                                   
+    
+    
+    
+                                </tr>
+                            </thead>
+                         
+                            <tbody>
+                               
+                                <tr>
+                                   
+                                  
+                                 
+                                    
+                                    <th>
+                                        <div>
+                                            <label >{{empleado.0}} {{empleado.1}}</label>
+    
+                                        </div>
+                                        <div>
+                                            <label class="{{empleado.3}}">{{empleado.2}}</label>
+    
+                                        </div>
+    
+                                    </th>
+                                    <th> {{clasificacion}}</th>
+                                    {% if foto == "Sin foto" %}
+                                    <th>Sin foto</th>
+                                    {% else %}
+                                    <th> 
+                                        <center>
+                                            <img src="{{foto.url}}" width="40%" alt="lap">
+                                        </center>
+                                    </th>
+                                    {% endif %}
+                                    <th>{{prestamo.cantidad}}</th>
+                                   
+                                    <th>{{prestamo.fecha_prestamo}}</th>
+                                 
+                                       
+                                  
+                                    
+                                   
+    
+                                    
+    
+    
+                                  
+                                </tr>
+                                
+                                
+    
+    
+    
+                            </tbody>
+                        </table>
+
+    
+                      
+
+                    
+                        
+                     
+
+
+
+                    </div>
+                    <br>
+                    <div class="row clearfix">
+                        <div class="col-md-6">
+                            <div>
+                                <center>
+                                    <h2 style="color: #036158; font-family: 'Oswald', sans-serif;">Firma de prestamo</h2>
+                                </center>
+                            </div>
+                            <div>
+                                <center>
+                                    <img src="{{prestamo.firma_entrega.url}}" width="100%" alt="lap">
+                                </center>
+                           
+
+                            </div>
+                            
+
+                        </div>
+                        <div class="col-md-6">
+                            <div>
+                                <center>
+                                    <h2 style="color: #036158; font-family: 'Oswald', sans-serif;">Firma de entrega</h2>
+                                </center>
+                            </div>
+                            <div>
+                                <center>
+                                    <div style="width: 350px;
+                                    height: 250px;
+                                    background-color: black;">
+                                        <div>
+                                            <label for=""></label>
+                                        </div>
+                                        <canvas id="pizarra"></canvas>
+                
+                                    </div>
+                
+                                    <div>
+                                        <button type="button" class="btn btn-warning m-t-15 waves-effect" onclick="limpiar()"><i
+                                                class="material-icons">delete_sweep</i> Limpiar</button>
+                                        <br><br>
+                                    
+                                        
+                                            <input type="hidden" name="canvasData" id="my_hidden">
+                                        
+                
+                
+                                    
+                                    </div>
+                                    
+                                </center>
+                           
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                    {% endfor %}
+                   
+                    <center>
+                        <div>
+                            <label for="email_address"><span style="color: #078F68;">* </span>Condiciones de entrega
+                                prestamo:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">done</i>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" class="form-control date"
+                                        placeholder="Ingresar condiciones de entrega" maxlength="50" name="condiciones" value="{{presta.condiciones}}"
+                                        required>
+                                </div>
+                            </div>
+                        </div>
+                        <h3 style="color: #036158; font-family: 'Oswald', sans-serif;"> Fecha de devolución: <span>{{fechaHoy}}</span></h3> 
+                        <input type="hidden" value="{{presta.id_prestamo}}" name="prestamoActualizar">
+                        <button type="submit" onclick="save()" class="btn btn-info waves-effect" >
+                            <i class="material-icons">save</i>
+                            <span>Finalizar Préstamo</span>
+                        </button>
+                    </center>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
 
 
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-{% if bajaEquipo %}
-<script type="text/javascript">
-    swal({
-        icon: 'error',
-        title: 'Wuu..!',
-        text: ' {{bajaExito}}',
-        footer: '<span style="color: red!important"> Vuelve a navegar por Custom System! </span>',
-        width: '40%'
-
-    });
-</script>
-{% endif %}
-{% if altaEquipo %}
+{% if prestamoFinalizado %}
 <script type="text/javascript">
     swal({
         icon: 'success',
         title: 'Wuu..!',
-        text: ' {{altaExito}}',
+        text: ' {{textoActualizado}}',
         footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
         width: '40%'
     });
 </script>
 {% endif %}
+
+<script>
+    function save() {
+        var canvas = document.getElementById('pizarra');
+        var inputVacio = document.getElementById('my_hidden');
+        inputVacio.value = canvas.toDataURL();
+        document.forms["form1"].submit();
+    }
+
+    function limpiar() {
+        let miCanvas = document.querySelector('#pizarra');
+        let lineas = [];
+        let correccionX = 0;
+        let correccionY = 0;
+        let pintarLinea = false;
+        // Marca el nuevo punto
+        let nuevaPosicionX = 0;
+        let nuevaPosicionY = 0;
+
+        let posicion = miCanvas.getBoundingClientRect()
+        correccionX = posicion.x;
+        correccionY = posicion.y;
+
+        miCanvas.width = 300;
+        miCanvas.height = 200;
+
+
+    }
+    //======================================================================
+    // VARIABLES
+    //======================================================================
+    let miCanvas = document.querySelector('#pizarra');
+    let lineas = [];
+    let correccionX = 0;
+    let correccionY = 0;
+    let pintarLinea = false;
+    // Marca el nuevo punto
+    let nuevaPosicionX = 0;
+    let nuevaPosicionY = 0;
+
+    let posicion = miCanvas.getBoundingClientRect()
+    correccionX = posicion.x;
+    correccionY = posicion.y;
+
+    miCanvas.width = 300;
+    miCanvas.height = 200;
+
+    //======================================================================
+    // FUNCIONES
+    //======================================================================
+
+    /**
+     * Funcion que empieza a dibujar la linea
+     */
+    function empezarDibujo() {
+        pintarLinea = true;
+        lineas.push([]);
+    };
+
+    /**
+     * Funcion que guarda la posicion de la nueva línea
+     */
+    function guardarLinea() {
+        lineas[lineas.length - 1].push({
+            x: nuevaPosicionX,
+            y: nuevaPosicionY
+        });
+    }
+
+    /**
+     * Funcion dibuja la linea
+     */
+    function dibujarLinea(event) {
+        event.preventDefault();
+        if (pintarLinea) {
+            let ctx = miCanvas.getContext('2d')
+            // Estilos de linea
+            ctx.lineJoin = ctx.lineCap = 'round';
+            ctx.lineWidth = 5;
+            // Color de la linea
+            ctx.strokeStyle = '#000000';
+            // Marca el nuevo punto
+            if (event.changedTouches == undefined) {
+                // Versión ratón
+                nuevaPosicionX = event.layerX;
+                nuevaPosicionY = event.layerY;
+            } else {
+                // Versión touch, pantalla tactil
+                nuevaPosicionX = event.changedTouches[0].pageX - correccionX;
+                nuevaPosicionY = event.changedTouches[0].pageY - correccionY;
+            }
+            // Guarda la linea
+            guardarLinea();
+            // Redibuja todas las lineas guardadas
+            ctx.beginPath();
+            lineas.forEach(function (segmento) {
+                ctx.moveTo(segmento[0].x, segmento[0].y);
+                segmento.forEach(function (punto, index) {
+                    ctx.lineTo(punto.x, punto.y);
+                });
+            });
+            ctx.stroke();
+        }
+    }
+
+    /**
+     * Funcion que deja de dibujar la linea
+     */
+    function pararDibujar() {
+        pintarLinea = false;
+        lineas = [];
+        guardarLinea();
+    }
+
+    //======================================================================
+    // EVENTOS
+    //======================================================================
+
+    // Eventos raton
+    miCanvas.addEventListener('mousedown', empezarDibujo, false);
+    miCanvas.addEventListener('mousemove', dibujarLinea, false);
+    miCanvas.addEventListener('mouseup', pararDibujar, false);
+
+    // Eventos pantallas táctiles
+    miCanvas.addEventListener('touchstart', empezarDibujo, false);
+    miCanvas.addEventListener('touchmove', dibujarLinea, false);
+</script>
 <script type="text/javascript">
     function inicio() {
         var div1 = document.getElementById("divDevueltos");

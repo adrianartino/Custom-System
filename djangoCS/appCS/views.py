@@ -8910,11 +8910,139 @@ def verPrestamos(request):
         
         empleadosNoAplica = []
         datosCompletosEmpleadosNoAplica = []
+        equipoPrestadoClasificacion = []
+        fotosEquipos = []
+        
     
         
         for prestamos in prestamosNOaplicaDev:
                 
             empleadosNoAplica.append(prestamos.id_empleado_id)
+
+            if prestamos.tabla == "otro":
+                
+                equipoPrestadoClasificacion.append(prestamos.otro)
+            
+            elif prestamos.tabla != "otro":
+                equipo = prestamos.id_producto
+
+                if prestamos.tabla == "Impresoras":
+                    
+                    datosImpresora= Impresoras.objects.filter(id_impresora = equipo)
+                    for dato in datosImpresora:
+                        marcaI = dato.marca
+                        modeloI = dato.modelo
+                        fotoI = dato.imagen
+                        impresora = marcaI + " " + modeloI
+                    equipoPrestadoClasificacion.append("Impresora " + impresora)
+                    fotosEquipos.append(fotoI)
+                
+                elif prestamos.tabla  == "Equipos":
+                    datosEquipo= Equipos.objects.filter(id_equipo = equipo)
+                    for datos in datosEquipo:
+                        tipoE = datos.tipo
+                        marcaE = datos.marca
+                        modeloE = datos.modelo
+                        fotoE = datos.imagen
+                        equipoC = tipoE + " " + marcaE + " " + modeloE
+                    equipoPrestadoClasificacion.append("Equipo " + equipoC)
+                    fotosEquipos.append(fotoE)
+                    
+                elif prestamos.tabla  == "DiscosDuros":
+                    datosDiscos= DiscosDuros.objects.filter(id_disco = equipo)
+                    for datoD in datosDiscos:
+                        tipoD = datoD.tipo
+                        marcaD = datoD.marca
+                        fotoD = "Sin foto"
+                       
+                        disco = tipoD + " " + marcaD
+                    equipoPrestadoClasificacion.append("Disco Duro " + disco)
+                    fotosEquipos.append(fotoD)
+                  
+                elif prestamos.tabla  == "Monitores":
+                    datosMonitor= Monitores.objects.filter(id_monitor = equipo)
+                    for datoM in datosMonitor:
+                        marcaM = datoM.marca
+                        modeloM = datoM.modelo
+                        fotoM = datoM.foto
+                       
+                        monitor = marcaM + " " + modeloM
+                    equipoPrestadoClasificacion.append("Monitor " + monitor)
+                    fotosEquipos.append(fotoM)
+                   
+                elif prestamos.tabla  == "Teclados":
+                    datosTeclado = Teclados.objects.filter(id_teclado = equipo)
+                    for datoT in datosTeclado:
+                        conexionT = datoT.conexion
+                        marcaT = datoT.marca
+                        modeloT = datoT.modelo
+                        fotoT = datoT.foto
+
+                        if conexionT == "I":
+
+                       
+                            teclado = "Inalámbrico" + " " + marcaT + " " + modeloT
+                        elif conexionT == "A":
+                            teclado = "Alámbrico" + " " + marcaT + " " + modeloT
+                       
+                        
+                    equipoPrestadoClasificacion.append("Teclado " + teclado)
+                    fotosEquipos.append(fotoT)
+                    
+                elif prestamos.tabla  == "Mouses":
+                    datosMouse = Mouses.objects.filter(id_mouse = equipo)
+                    for datoR in datosMouse:
+                        conexionR = datoR.conexion
+                        marcaR = datoR.marca
+                        modeloR = datoR.modelo
+                        fotoR = datoR.foto
+
+                        if conexionR == "I":
+
+                       
+                            raton = "Inalámbrico" + " " + marcaR + " " + modeloR
+                        elif conexionR == "A":
+                            raton = "Alámbrico" + " " + marcaR + " " + modeloR
+
+                    equipoPrestadoClasificacion.append("Mouse " + raton)
+                    fotosEquipos.append(fotoR)
+                   
+                elif prestamos.tabla  == "Telefonos":
+                    datosTelefono = Telefonos.objects.filter(id_telefono = equipo)
+                    for datoTel in datosTelefono:
+                        conexionTel = datoTel.conexion
+                        marcaTel = datoTel.marca
+                        modeloTel = datoTel.modelo
+                        fotoTel = datoTel.foto
+                        if conexionTel == "I":
+
+                            telefono = "Inalámbrico" + " " + marcaTel + " " + modeloTel
+                            
+                        elif conexionTel == "A":
+                            telefono = "Alámbrico" + " " + marcaTel + " " + modeloTel
+                       
+                        
+                    equipoPrestadoClasificacion.append("Teléfono " + telefono)
+                    fotosEquipos.append(fotoTel)
+                    
+                elif prestamos.tabla  == "MemoriasUSB":
+                    datosMemoria = MemoriasUSB.objects.filter(id_usb = equipo)
+                    for datoUSB in datosMemoria:
+                        
+                        marcaUsb = datoUSB.marca
+                        modeloUsb = datoUSB.modelo
+                        capacidadUsb = datoUSB.capacidad
+                        fotoUsb = "Sin foto"
+                       
+                        usb = marcaUsb + " " + modeloUsb + " " + capacidadUsb
+                    equipoPrestadoClasificacion.append("Memoria USB " + usb)
+                    fotosEquipos.append(fotoUsb)
+                   
+            
+
+
+
+            
             
         
             #areasEnActivos = ["1"]
@@ -8939,108 +9067,381 @@ def verPrestamos(request):
             
                 datosCompletosEmpleadosNoAplica.append([nombreEmpleado, apellidosEmpleado, nombreArea, color])
             
-        lista = zip(prestamosNOaplicaDev, datosCompletosEmpleadosNoAplica)
+        lista = zip(prestamosNOaplicaDev, datosCompletosEmpleadosNoAplica,  equipoPrestadoClasificacion, fotosEquipos)
 
         #prestamos que aun no se devuelven
         
         empleadosQuenoHanDevuelto = []
         datosCompletosEmpleadosQueAunNoHanDevuelto = []
+        equipoAunNoHanDevueltoClasificacion = []
+        fotosEquiposAunNoHanDevuelto = []
+
+        for prestaAunNoHanDevuelto in prestamosSINdevolver:
+                
+            empleadosQuenoHanDevuelto.append(prestaAunNoHanDevuelto.id_empleado_id)
+
+            if prestaAunNoHanDevuelto.tabla == "otro":
+                
+                equipoAunNoHanDevueltoClasificacion.append(prestaAunNoHanDevuelto.otro)
+            
+            elif prestaAunNoHanDevuelto.tabla != "otro":
+                equipo1 = prestaAunNoHanDevuelto.id_producto
+
+                if prestaAunNoHanDevuelto.tabla == "Impresoras":
+                    
+                    datosImpresora1= Impresoras.objects.filter(id_impresora = equipo1)
+                    for dato1 in datosImpresora1:
+                        marcaI1 = dato1.marca
+                        modeloI1 = dato1.modelo
+                        fotoI1 = dato1.imagen
+                        impresora1 = marcaI1 + " " + modeloI1
+                    equipoAunNoHanDevueltoClasificacion.append("Impresora " + impresora1)
+                    fotosEquiposAunNoHanDevuelto.append(fotoI1)
+                
+                elif prestaAunNoHanDevuelto.tabla  == "Equipos":
+                    datosEquipo1= Equipos.objects.filter(id_equipo = equipo1)
+                    for datos1 in datosEquipo1:
+                        tipoE1 = datos1.tipo
+                        marcaE1 = datos1.marca
+                        modeloE1 = datos1.modelo
+                        fotoE1 = datos1.imagen
+                        equipoC1 = tipoE1 + " " + marcaE1 + " " + modeloE1
+                    equipoAunNoHanDevueltoClasificacion.append("Equipo " + equipoC1)
+                    fotosEquiposAunNoHanDevuelto.append(fotoE1)
+                    
+                elif prestaAunNoHanDevuelto.tabla  == "DiscosDuros":
+                    datosDiscos1= DiscosDuros.objects.filter(id_disco = equipo1)
+                    for datoD1 in datosDiscos1:
+                        tipoD1 = datoD1.tipo
+                        marcaD1 = datoD1.marca
+                        fotoD1 = "Sin foto"
+                       
+                        disco1 = tipoD1 + " " + marcaD1
+                    equipoAunNoHanDevueltoClasificacion.append("Disco Duro " + disco1)
+                    fotosEquiposAunNoHanDevuelto.append(fotoD1)
+                  
+                elif prestaAunNoHanDevuelto.tabla  == "Monitores":
+                    datosMonitor1= Monitores.objects.filter(id_monitor = equipo1)
+                    for datoM1 in datosMonitor1:
+                        marcaM1 = datoM1.marca
+                        modeloM1= datoM1.modelo
+                        fotoM1 = datoM1.foto
+                       
+                        monitor1 = marcaM1 + " " + modeloM1
+                    equipoAunNoHanDevueltoClasificacion.append("Monitor " + monitor1)
+                    fotosEquiposAunNoHanDevuelto.append(fotoM1)
+                   
+                elif prestaAunNoHanDevuelto.tabla  == "Teclados":
+                    datosTeclado1 = Teclados.objects.filter(id_teclado = equipo1)
+                    for datoT1 in datosTeclado1:
+                        conexionT1 = datoT1.conexion
+                        marcaT1 = datoT1.marca
+                        modeloT1 = datoT1.modelo
+                        fotoT1 = datoT1.foto
+
+                        if conexionT1 == "I":
+
+                       
+                            teclado1 = "Inalámbrico" + " " + marcaT1 + " " + modeloT1
+                        elif conexionT1 == "A":
+                            teclado1 = "Alámbrico" + " " + marcaT1 + " " + modeloT1
+                       
+                        
+                    equipoAunNoHanDevueltoClasificacion.append("Teclado " + teclado1)
+                    fotosEquiposAunNoHanDevuelto.append(fotoT1)
+                    
+                elif prestaAunNoHanDevuelto.tabla  == "Mouses":
+                    datosMouse1 = Mouses.objects.filter(id_mouse = equipo1)
+                    for datoR1 in datosMouse1:
+                        conexionR1 = datoR1.conexion
+                        marcaR1 = datoR1.marca
+                        modeloR1 = datoR1.modelo
+                        fotoR1 = datoR1.foto
+
+                        if conexionR1 == "I":
+
+                       
+                            raton1 = "Inalámbrico" + " " + marcaR1 + " " + modeloR1
+                        elif conexionR1 == "A":
+                            raton1 = "Alámbrico" + " " + marcaR1 + " " + modeloR1
+
+                    equipoAunNoHanDevueltoClasificacion.append("Mouse " + raton1)
+                    fotosEquiposAunNoHanDevuelto.append(fotoR1)
+                   
+                elif prestaAunNoHanDevuelto.tabla  == "Telefonos":
+                    datosTelefono1 = Telefonos.objects.filter(id_telefono = equipo1)
+                    for datoTel1 in datosTelefono1:
+                        conexionTel1 = datoTel1.conexion
+                        marcaTel1 = datoTel1.marca
+                        modeloTel1 = datoTel1.modelo
+                        fotoTel1 = datoTel1.foto
+                        if conexionTel1 == "I":
+
+                            telefono1 = "Inalámbrico" + " " + marcaTel1 + " " + modeloTel1
+                            
+                        elif conexionTel1 == "A":
+                            telefono1 = "Alámbrico" + " " + marcaTel1 + " " + modeloTel1
+                       
+                        
+                    equipoAunNoHanDevueltoClasificacion.append("Teléfono " + telefono1)
+                    fotosEquiposAunNoHanDevuelto.append(fotoTel1)
+                    
+                elif prestaAunNoHanDevuelto.tabla  == "MemoriasUSB":
+                    datosMemoria1 = MemoriasUSB.objects.filter(id_usb = equipo1)
+                    for datoUSB1 in datosMemoria1:
+                        
+                        marcaUsb1 = datoUSB1.marca
+                        modeloUsb1 = datoUSB1.modelo
+                        capacidadUsb1 = datoUSB1.capacidad
+                        fotoUsb1 = "Sin foto"
+                       
+                        usb1 = marcaUsb1 + " " + modeloUsb1 + " " + capacidadUsb1
+                    equipoAunNoHanDevueltoClasificacion.append("Memoria USB " + usb1)
+                    fotosEquiposAunNoHanDevuelto.append(fotoUsb1)
     
         
-        for prestamo in prestamosSINdevolver:
-                
-            empleadosQuenoHanDevuelto.append(prestamo.id_empleado_id)
+   
             
         
-            #areasEnActivos = ["1"]
+           
             
-        for ids in empleadosQuenoHanDevuelto:
+        for ids1 in empleadosQuenoHanDevuelto:
           
                 
-            if ids != None:
-                datosEmpleados = Empleados.objects.filter(id_empleado = ids) #["1", "Sistemas", "rojo"]
+            if ids1 != None:
+                datosEmpleados1 = Empleados.objects.filter(id_empleado = ids1) #["1", "Sistemas", "rojo"]
                 
-                if datosEmpleados:
-                    for datos in datosEmpleado:
-                        nombreEmpleados = datos.nombre
-                        apellidosEmpleados = datos.apellidos
-                        areaEmpleados = datos.id_area_id
-                        datosAreas = Areas.objects.filter(id_area=areaEmpleados)
+                if datosEmpleados1:
+                    for datos in datosEmpleados1:
+                        nombreEmpleados1 = datos.nombre
+                        apellidosEmpleados1 = datos.apellidos
+                        areaEmpleados1 = datos.id_area_id
+                        datosAreas1 = Areas.objects.filter(id_area=areaEmpleados1)
                         
-                        if datosAreas:
-                            for datos in datosAreas:
-                                nombreAreas = datos.nombre
-                                colors = datos.color
+                        if datosAreas1:
+                            for datos in datosAreas1:
+                                nombreAreas1 = datos.nombre
+                                colors1 = datos.color
             
-                datosCompletosEmpleadosQueAunNoHanDevuelto.append([nombreEmpleados, apellidosEmpleados, nombreAreas, colors])
+                datosCompletosEmpleadosQueAunNoHanDevuelto.append([nombreEmpleados1, apellidosEmpleados1, nombreAreas1, colors1])
             
-        lista2 = zip(prestamosSINdevolver, datosCompletosEmpleadosQueAunNoHanDevuelto)
+        lista2 = zip(prestamosSINdevolver, datosCompletosEmpleadosQueAunNoHanDevuelto,  equipoAunNoHanDevueltoClasificacion, fotosEquiposAunNoHanDevuelto)
+        listaModal = zip(prestamosSINdevolver, datosCompletosEmpleadosQueAunNoHanDevuelto,  equipoAunNoHanDevueltoClasificacion, fotosEquiposAunNoHanDevuelto)
 
         #prestamos ya devueltos
         
         empleadosQueDevolvieron = []
         datosCompletosEmpleadosQueDevolvieron = []
+        equipoDevueltoClasificacion = []
+        fotosEquipoDevuelto = []
+
+        for prestaDevuelto in prestamosSIdevolvueltos:
+                
+            empleadosQueDevolvieron.append(prestaDevuelto.id_empleado_id)
+
+            if prestaDevuelto.tabla == "otro":
+                
+                equipoDevueltoClasificacion.append(prestaDevuelto.otro)
+            
+            elif prestaDevuelto.tabla != "otro":
+                equipo2 = prestaDevuelto.id_producto
+
+                if prestaDevuelto.tabla == "Impresoras":
+                    
+                    datosImpresora2= Impresoras.objects.filter(id_impresora = equipo2)
+                    for dato2 in datosImpresora2:
+                        marcaI2 = dato2.marca
+                        modeloI2 = dato2.modelo
+                        fotoI2 = dato2.imagen
+                        impresora2 = marcaI2 + " " + modeloI2
+                    equipoDevueltoClasificacion.append("Impresora " + impresora2)
+                    fotosEquipoDevuelto.append(fotoI2)
+                
+                elif prestaDevuelto.tabla  == "Equipos":
+                    datosEquipo2= Equipos.objects.filter(id_equipo = equipo2)
+                    for datos2 in datosEquipo2:
+                        tipoE2 = datos2.tipo
+                        marcaE2 = datos2.marca
+                        modeloE2 = datos2.modelo
+                        fotoE2 = datos2.imagen
+                        equipoC2 = tipoE2 + " " + marcaE2 + " " + modeloE2
+                    equipoDevueltoClasificacion.append("Equipo " + equipoC2)
+                    fotosEquipoDevuelto.append(fotoE2)
+                    
+                elif prestaDevuelto.tabla  == "DiscosDuros":
+                    datosDiscos2= DiscosDuros.objects.filter(id_disco = equipo2)
+                    for datoD2 in datosDiscos2:
+                        tipoD2 = datoD2.tipo
+                        marcaD2 = datoD2.marca
+                        fotoD2 = "Sin foto"
+                       
+                        disco2 = tipoD2 + " " + marcaD2
+                    equipoDevueltoClasificacion.append("Disco Duro " + disco2)
+                    fotosEquipoDevuelto.append(fotoD2)
+                  
+                elif prestaDevuelto.tabla  == "Monitores":
+                    datosMonitor2= Monitores.objects.filter(id_monitor = equipo2)
+                    for datoM2 in datosMonitor2:
+                        marcaM2 = datoM2.marca
+                        modeloM2= datoM2.modelo
+                        fotoM2 = datoM2.foto
+                       
+                        monitor2 = marcaM2 + " " + modeloM2
+                    equipoDevueltoClasificacion.append("Monitor " + monitor2)
+                    fotosEquipoDevuelto.append(fotoM2)
+                   
+                elif prestaDevuelto.tabla  == "Teclados":
+                    datosTeclado2 = Teclados.objects.filter(id_teclado = equipo2)
+                    for datoT2 in datosTeclado2:
+                        conexionT2 = datoT2.conexion
+                        marcaT2 = datoT2.marca
+                        modeloT2 = datoT2.modelo
+                        fotoT2 = datoT2.foto
+
+                        if conexionT2 == "I":
+
+                       
+                            teclado2 = "Inalámbrico" + " " + marcaT2 + " " + modeloT2
+                        elif conexionT2 == "A":
+                            teclado2 = "Alámbrico" + " " + marcaT2 + " " + modeloT2
+                       
+                        
+                    equipoDevueltoClasificacion.append("Teclado " + teclado2)
+                    fotosEquipoDevuelto.append(fotoT2)
+                    
+                elif prestaDevuelto.tabla  == "Mouses":
+                    datosMouse2 = Mouses.objects.filter(id_mouse = equipo2)
+                    for datoR2 in datosMouse2:
+                        conexionR2 = datoR2.conexion
+                        marcaR2 = datoR2.marca
+                        modeloR2 = datoR2.modelo
+                        fotoR2 = datoR2.foto
+
+                        if conexionR2 == "I":
+
+                       
+                            raton2 = "Inalámbrico" + " " + marcaR2 + " " + modeloR2
+                        elif conexionR1 == "A":
+                            raton2 = "Alámbrico" + " " + marcaR2 + " " + modeloR2
+
+                    equipoDevueltoClasificacion.append("Mouse " + raton2)
+                    fotosEquipoDevuelto.append(fotoR2)
+                   
+                elif prestaDevuelto.tabla  == "Telefonos":
+                    datosTelefono2 = Telefonos.objects.filter(id_telefono = equipo2)
+                    for datoTel2 in datosTelefono2:
+                        conexionTel2 = datoTel2.conexion
+                        marcaTel2 = datoTel2.marca
+                        modeloTel2 = datoTel2.modelo
+                        fotoTel2 = datoTel2.foto
+                        if conexionTel2 == "I":
+
+                            telefono2 = "Inalámbrico" + " " + marcaTel2 + " " + modeloTel2
+                            
+                        elif conexionTel2 == "A":
+                            telefono2 = "Alámbrico" + " " + marcaTel2 + " " + modeloTel2
+                       
+                        
+                    equipoDevueltoClasificacion.append("Teléfono " + telefono2)
+                    fotosEquipoDevuelto.append(fotoTel2)
+                    
+                elif prestaDevuelto.tabla  == "MemoriasUSB":
+                    datosMemoria2 = MemoriasUSB.objects.filter(id_usb = equipo2)
+                    for datoUSB2 in datosMemoria2:
+                        
+                        marcaUsb2 = datoUSB2.marca
+                        modeloUsb2 = datoUSB2.modelo
+                        capacidadUsb2 = datoUSB2.capacidad
+                        fotoUsb2 = "Sin foto"
+                       
+                        usb2 = marcaUsb2 + " " + modeloUsb2 + " " + capacidadUsb2
+                    equipoDevueltoClasificacion.append("Memoria USB " + usb2)
+                    fotosEquipoDevuelto.append(fotoUsb2)
+    
     
         
-        for presta in prestamosSIdevolvueltos:
-                
-            empleadosQueDevolvieron.append(presta.id_empleado_id)
+        
             
         
             #areasEnActivos = ["1"]
             
-        for Ids in empleadosQueDevolvieron:
+        for Idd in empleadosQueDevolvieron:
           
                 
-            if Ids != None:
-                datoEmpleados = Empleados.objects.filter(id_empleado = Ids) #["1", "Sistemas", "rojo"]
+            if Idd != None:
+                datoEmpleados2 = Empleados.objects.filter(id_empleado = Idd) #["1", "Sistemas", "rojo"]
                 
-                if datoEmpleados:
-                    for dat in datoEmpleados:
-                        nomEmpleados = dat.nombre
-                        apellEmpleados = dat.apellidos
-                        areaEmplea = dat.id_area_id
-                        datAreas = Areas.objects.filter(id_area=areaEmplea)
+                if datoEmpleados2:
+                    for dat2 in datoEmpleados2:
+                        nomEmpleados2 = dat2.nombre
+                        apellEmpleados2 = dat2.apellidos
+                        areaEmplea2 = dat2.id_area_id
+                        datAreas2 = Areas.objects.filter(id_area=areaEmplea2)
                         
-                        if datAreas:
-                            for da in datAreas:
-                                nomAreas = da.nombre
-                                col = da.color
+                        if datAreas2:
+                            for da2 in datAreas2:
+                                nomAreas2 = da2.nombre
+                                col2 = da2.color
             
-                datosCompletosEmpleadosQueDevolvieron.append([nomEmpleados, apellEmpleados, nomAreas, col])
+                datosCompletosEmpleadosQueDevolvieron.append([nomEmpleados2, apellEmpleados2, nomAreas2, col2])
             
-        lista3 = zip(prestamosSIdevolvueltos, datosCompletosEmpleadosQueDevolvieron)
+        lista3 = zip(prestamosSIdevolvueltos, datosCompletosEmpleadosQueDevolvieron, equipoDevueltoClasificacion, fotosEquipoDevuelto )
+        fechaHoy = datetime.now()
+
+        if "prestamoFinalizado" in request.session:
+            prestamoFinalizado=True
+            textoActualizado= request.session['prestamoFinalizado']
+            del request.session["prestamoFinalizado"]
+
+            return render(request, "prestamos/verPrestamo.html", {"estaEnVerPrestamos": estaEnVerPrestamos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "prestamosSINdevolver":prestamosSINdevolver, 
+                                                           "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "prestamosNOaplicaDev":prestamosNOaplicaDev, "numeroNoti":numeroNoti,  "prestamosSIdevolvueltos":prestamosSIdevolvueltos, "lista2":lista2,"lista3":lista3, "foto":foto,
+                                                            "equipoPrestadoClasificacion":equipoPrestadoClasificacion,"fechaHoy":fechaHoy, "datosCompletosEmpleadosQueAunNoHanDevuelto": datosCompletosEmpleadosQueAunNoHanDevuelto, "listaModal":listaModal, "prestamoFinalizado":prestamoFinalizado, "textoActualizado":textoActualizado})
+            
+           
        
         
         
         
-        if "idEquipoBaja" in request.session:
-            bajaEquipo=True
-            if "errorBD" in request.session:
-                bajaExito= "Error en la base de datos"
-            else:
-                bajaExito= "Se dió de baja el " + request.session["idEquipoBaja"] + " con éxito!"
-            del request.session["idEquipoBaja"]
-            return render(request, "prestamos/verPrestamo.html", {"estaEnVerPrestamos": estaEnVerPrestamos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "bajaEquipo":
-                bajaEquipo, "bajaExito": bajaExito, "prestamosNOaplicaDev":prestamosNOaplicaDev, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti,  "lista2":lista2, "foto":foto})
-            
-        if "idEquipoAlta" in request.session:
-            altaEquipo= True
-            if "errorBD" in request.session:
-                altaExito= "Error en la base de datos"
-            else:
-            
-                altaExito= "Se dió de alta el " + request.session["idEquipoAlta"] + " con éxito"
-            del request.session["idEquipoAlta"]
-            return render(request, "prestamos/verPrestamo.html", {"estaEnVerPrestamos": estaEnVerPrestamos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,
-                                                            "altaEquipo": altaEquipo, "altaExito":altaExito, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "lista2":lista2, "foto":foto})
+        
 
         return render(request, "prestamos/verPrestamo.html", {"estaEnVerPrestamos": estaEnVerPrestamos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "prestamosSINdevolver":prestamosSINdevolver, 
-                                                           "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "prestamosNOaplicaDev":prestamosNOaplicaDev, "numeroNoti":numeroNoti,  "prestamosSIdevolvueltos":prestamosSIdevolvueltos, "lista2":lista2,"lista3":lista3, "foto":foto})
+                                                           "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "prestamosNOaplicaDev":prestamosNOaplicaDev, "numeroNoti":numeroNoti,  "prestamosSIdevolvueltos":prestamosSIdevolvueltos, "lista2":lista2,"lista3":lista3, "foto":foto,
+                                                            "equipoPrestadoClasificacion":equipoPrestadoClasificacion,"fechaHoy":fechaHoy, "datosCompletosEmpleadosQueAunNoHanDevuelto": datosCompletosEmpleadosQueAunNoHanDevuelto, "listaModal":listaModal})
 
     else:
         return redirect('/login/') #redirecciona a url de inicio
-    
+
+def actualizarPrestamos(request):
+
+    if request.method == "POST":
+
+        idPrestamo = request.POST['prestamoActualizar']
+
+        condiciones = request.POST['condiciones']
+
+        canvasLargo1 = request.POST['canvasData']
+        format1, imgstr1 = canvasLargo1.split(';base64,')
+        ext1 = format1.split('/')[-1]
+        archivo1 = ContentFile(base64.b64decode(imgstr1), name= "imagen" + '.' + ext1)
+        fecha_Hoy = date.today()
+
+        actualizrPrestamo = PrestamosSistemas.objects.get(id_prestamo=idPrestamo)
+        actualizrPrestamo.fecha_entrega = fecha_Hoy
+        actualizrPrestamo.firma_devolucion = archivo1
+        actualizrPrestamo.save()
+
+        actualizar = PrestamosSistemas.objects.filter(id_prestamo=idPrestamo).update( estatus = "Finalizado", condiciones = condiciones)
+            
+        if actualizar:
+            
+            textoPrestamo = "Se ha entregado el material del préstamo  "+ str(idPrestamo) + " con éxito!"
+                        
+            request.session['prestamoFinalizado'] = textoPrestamo
+            
+            return redirect('/verPrestamos/')
+
+
+
   
         
         
