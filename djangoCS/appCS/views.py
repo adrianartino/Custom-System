@@ -1,4 +1,5 @@
 #Librerías
+from glob import escape
 import mimetypes
 import os
 import base64
@@ -7867,9 +7868,16 @@ def verMouses(request):
         #Listas a utilizar
         mousesActivos = []
         mousesStock = []
+        mousesActivosPrestamo = []
+        idsMousesPrestados = []
         
         #Lista de todos los mouses
         listaMouses = Mouses.objects.all()
+        mousesPrestados = PrestamosSistemas.objects.filter(devolucion = "N", tabla = "Mouses")
+        for dato in mousesPrestados:
+            idM = dato.id_producto
+            idsMousesPrestados.append(idM)
+
         
         for mouse in listaMouses:
             idMouse = str(mouse.id_mouse)
@@ -7880,18 +7888,24 @@ def verMouses(request):
             fotoMouse = mouse.foto
             idEquipo = str(mouse.id_equipo_id)
             activo = mouse.activo
+          
+
+            
             
             if activo == "A":
-                #sacar info de equipo ya que el mouse se encuentra activo
+                 #sacar info de equipo ya que el mouse se encuentra activo
+               
                 infoEquipo = Equipos.objects.filter(id_equipo = int(idEquipo))
                 for dato in infoEquipo:
                     idEquipo = str(dato.id_equipo)
                     tipo = dato.tipo
                     marcapc = dato.marca
                     modelopc = dato.modelo 
-                    
+                        
+
+                        
                     modeloEquipo = "#"+idEquipo + " " + tipo + " " + marcapc + " " + modelopc
-                    
+                        
                     #datos Empleado de equipo
                     idEmpleado = dato.id_empleado_id
                     infoEmpleado = Empleados.objects.filter(id_empleado = idEmpleado)
@@ -7899,12 +7913,49 @@ def verMouses(request):
                         nombre = datoEmpleado.nombre
                         apellidos = datoEmpleado.apellidos
                     empleado = nombre + " " + apellidos
-                    
+                        
                 mousesActivos.append([idMouse, conexion, marca, modelo, estado, fotoMouse, modeloEquipo, empleado])
+
+                if idMouse in idsMousesPrestados:
+                    for datos in mousesPrestados:
+                        idsMPres = datos.id_producto
+                        if idMouse == idsMPres:
+                            fechaEn = datos.fecha_prestamo
+                            firmaEn = datos.firma_entrega
+
+                        mousesActivosPrestamo.append([fechaEn,firmaEn])
+                else:
+                    mousesActivosPrestamo.append("Sin prestamo")
+                
+            lista = zip(mousesActivos, mousesActivosPrestamo)
+
+
+                
+
+
             #No tiene un equipo asignado, puede variar el estado..
             
             if activo == "I":
                 mousesStock.append([idMouse, conexion, marca, modelo, estado, fotoMouse])
+        
+        if "idMouseBaja" in request.session:
+            baja = True
+            mensaje = "Se dio de baja al mouse " + request.session['idMouseBaja']
+            del request.session["idMouseBaja"]
+            return render(request, "Sistemas/Mouses/verMouses.html", {"estaEnVerMouses":estaEnVerMouses,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,"mousesActivos":mousesActivos, "mousesStock":mousesStock,
+        "mousesActivosPrestamo":mousesActivosPrestamo, "lista":lista, "mousesPrestados":mousesPrestados, "baja":baja, "mensaje":mensaje})
+
+        if "idMouseAlta" in request.session:
+            alta = True
+            mensaje = "Se dio de alta al mouse " + request.session['idMouseAlta']
+            del request.session["idMouseAlta"]
+            return render(request, "Sistemas/Mouses/verMouses.html", {"estaEnVerMouses":estaEnVerMouses,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,"mousesActivos":mousesActivos, "mousesStock":mousesStock,
+        "mousesActivosPrestamo":mousesActivosPrestamo, "lista":lista, "mousesPrestados":mousesPrestados, "alta":alta, "mensaje":mensaje})
+
+            
+           
+
+     
                 
                     
                     
@@ -7916,11 +7967,101 @@ def verMouses(request):
         
         
 
-        return render(request, "Sistemas/Mouses/verMouses.html", {"estaEnVerMouses":estaEnVerMouses,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,"mousesActivos":mousesActivos, "mousesStock":mousesStock})
+        return render(request, "Sistemas/Mouses/verMouses.html", {"estaEnVerMouses":estaEnVerMouses,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,"mousesActivos":mousesActivos, "mousesStock":mousesStock,
+        "mousesActivosPrestamo":mousesActivosPrestamo, "lista":lista, "mousesPrestados":mousesPrestados})
                                                                   
     else:
         return redirect('/login/') #redirecciona a url de inicio
+
+def bajaMouse(request):
+
+    if "idSesion" in request.session:
     
+        id_empleado_admin = request.session['idSesion']
+        if request.method == "POST":
+        
+            idBaja= request.POST['idMouseBaja']
+            
+            datosMouse = Mouses.objects.filter(id_mouse = idBaja)
+            
+            for dato in datosMouse:
+                idMouse = str(dato.id_mouse)
+                marca = dato.marca
+                modelo = dato.modelo
+                estado = dato.estado
+            
+            nombreCompletoMouse = marca + " " + modelo
+            prestamo =  PrestamosSistemas.objects.filter(id_producto = idBaja)
+
+            actualizacion = Mouses.objects.filter(id_mouse = idMouse).update(activo = "I", estado = estado)
+
+            if actualizacion:
+                    
+                request.session['idMouseBaja'] = nombreCompletoMouse
+                    
+                return redirect('/verMouses/')
+
+            if int(idBaja) in prestamo:
+                mouse = int(idBaja)
+                borrado = PrestamosSistemas.objects.get(id_producto__id_mouse = mouse, tabla = "Mouses")
+                borrado.delete()
+               
+                        
+            else: #No esta esa área en la tabla, agregarlo
+                        #no va aguardar nada
+                nada = True
+  
+            
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+
+   
+def altaMouse(request):
+    if "idSesion" in request.session:
+    
+        id_empleado_admin = request.session['idSesion']
+        if request.method == "POST":
+        
+            idAlta= request.POST['idMouseAlta']
+            idsMousesP =[]
+            datosMouse = Mouses.objects.filter(id_mouse = idAlta)
+            
+            for dato in datosMouse:
+                idMouse = str(dato.id_mouse)
+                marca = dato.marca
+                modelo = dato.modelo
+  
+            nombreCompletoMouse = marca + " " + modelo
+
+            mousesPrestados = PrestamosSistemas.objects.filter(devolucion = "N", tabla = "Mouses")
+            for dato in mousesPrestados:
+                idM = dato.id_producto
+                idsMousesP.append(idM)
+
+                if idMouse in idsMousesP:
+                    for datoM in mousesPrestados:
+                        idMoP = datoM.id_producto
+                        if idMouse == idMoP:
+                            id_emple = int(idMouse.id_empleado)
+
+                        datosEquipo = Equipos.objects.filter(id_empleado = int(id_emple))
+                        for da in datosEquipo:
+                            idsE = da.id_equipo
+
+
+
+            
+            actualizacion = Mouses.objects.filter(id_mouse = idAlta).update(activo = "A", estado = "activoFuncional", id_equipo = int(idsE))
+            if actualizacion:
+            
+                
+            
+                request.session['idMouseAlta'] = nombreCompletoMouse
+                
+                return redirect('/verMouses/')
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+
 def agregarMouses(request):
     
     if "idSesion" in request.session:
@@ -8800,7 +8941,7 @@ def agregarPrestamos(request):
         teclados = Teclados.objects.all() #Inactivos solamente
         
         #Mouses
-        mouses = Mouses.objects.all() #Inactivos solamente
+        mouses = Mouses.objects.filter(activo = "I") #Inactivos solamente
         
         #Teléfonos
         telefonos = Telefonos.objects.all()#Inactivos solamente

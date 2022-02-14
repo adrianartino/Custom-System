@@ -105,6 +105,7 @@ Mouses | Custom System
                                 <th>Estado</th>
                                 <th>Fotografía</th>
                                 <th>Equipo al que pertenece</th>
+                                <th>Prestamo</th>
                                 <th>Editar</th>
                                 <th>Baja</th>
                             </tr>
@@ -118,12 +119,13 @@ Mouses | Custom System
                                 <th>Estado</th>
                                 <th>Fotografía</th>
                                 <th>Equipo al que pertenece</th>
+                                <th>Prestamo</th>
                                 <th>Editar</th>
                                 <th>Baja</th>
                             </tr>
                         </tfoot>
                         <tbody class="animate__animated animate__backInDown">
-                            {% for mouse in mousesActivos %}
+                            {% for mouse, prestado in lista %}
                             <tr>
                                 <td>{{mouse.0}}</td>
 
@@ -138,17 +140,32 @@ Mouses | Custom System
 
                                 {% if mouse.4 == "activoFuncional" %}
                                 <td ><label class="label bg-green">Activo Funcional</label></td>
-                                {% endif %}
-
                                 <td>
                                     <center>
                                         <img src="{{mouse.5.url}}" width="60%" alt="empleado">
                                     </center>
                                 </td>
+                                {% elif prestado.4 == "stockUsado" %}
+                                <td ><label class="label bg-green">Stock Usado</label></td>
+                                <td>
+                                    <center>
+                                        <img src="{{prestado.5.url}}" width="60%" alt="empleado">
+                                    </center>
+                                </td>
+                                {% elif prestado.4 == "stockNuevo" %}
+                                <td ><label class="label bg-green">Stock Nuevo</label></td>
+                                <td>
+                                    <center>
+                                        <img src="{{prestado.5.url}}" width="60%" alt="empleado">
+                                    </center>
+                                </td>
+                                {% endif %}
+
+                              
 
                                 {% if mouse.6 == "" %}
                                 <td>Sin equipo</td>
-                                {% else %}
+                                {% elif mouse.6 != "" %}
                                 <td>
                                     <div>
                                         <label class="label bg-orange">{{mouse.6}}</label>
@@ -156,6 +173,25 @@ Mouses | Custom System
                                     <div>
                                         <label class="label bg-teal">{{mouse.7}}</label>
                                     </div>
+                                
+                               
+                                {% endif %}
+
+                              
+
+                                {% if prestado != "Sin prestamo" %}
+                                <td>
+                                    <div>
+                                        <label class="label bg-green">Con prestamo</label>
+                                    </div>
+                                    <div>
+                                        <label class="label bg-teal">{{prestado.0}}</label>
+                                    </div>
+                                </td>
+
+                                {% elif prestado == "Sin prestamo" %}
+                                <td>No aplica</td>
+                                  
                                 {% endif %}
 
                                 <td>
@@ -171,15 +207,13 @@ Mouses | Custom System
                                 
 
                                 <th>
-                                    <form action="/editarEmpleado/" method="POST">{% csrf_token %}
-                                        <input type="hidden" name="idEmpleadoEditar" value="{{mouse.0}}">
-                                        <center>
-                                            <button type="button" class="btn bg-red waves-effect" data-toggle="modal"
-                                                    data-target="#{{empleado.id_empleado}}">
-                                                    <i class="material-icons">cancel</i>
-                                            </button>
-                                        </center>
-                                    </form>
+                                    <center>
+                                        <button type="button" class="btn bg-red waves-effect" data-toggle="modal"
+                                            data-target="#{{mouse.0}}">
+                                            <i class="material-icons">cancel</i>
+                                        </button>
+                                    </center>
+
                                 </th>
                             </tr>
                             {% endfor %}
@@ -189,7 +223,9 @@ Mouses | Custom System
 
                         </tbody>
                     </table>
+                   
                 </div>
+              
                 <br>
 
 
@@ -298,38 +334,38 @@ Mouses | Custom System
 </div>
 
 
-{% for empleado, area in listaModal1 %}
+{% for mouse in mousesActivos %}
 <!-- Default Size -->
-<div class="modal fade" id="{{empleado.id_empleado}}" tabindex="-1" role="dialog">
+<div class="modal fade" id="{{mouse.0}}" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content" style="border-radius: 16px;">
             <div class="modal-header">
                 <center>
-                    <h1 style="color: crimson; font-family: 'Oswald', sans-serif;">DAR DE BAJA EMPLEADO <i
+                    <h1 style="color: crimson; font-family: 'Oswald', sans-serif;">DAR DE BAJA MOUSE <i
                             class="material-icons" style="color:black; font-size:100%">get_app</i></h1>
                     <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
 
                 </center>
             </div>
             <div class="modal-body">
-                <form action="/bajaEmpleado/" method="POST">{% csrf_token %}
+                <form action="/bajaMouse/" method="POST">{% csrf_token %}
                     <div class="body table-responsive">
                         <table class="table">
                             <thead>
                                 <tr class="bg-teal">
-                                    <th>Nombre</th>
-                                    <th>Apellidos</th>
+                                    <th>Marca</th>
+                                    <th>Modelo</th>
                                     <th>Imagen</th>
-                                    <th>Departamento</th>
+                                    <th>Equipo</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td style="color: black;">{{empleado.nombre}}</td>
-                                    <td style="color: black;">{{empleado.apellidos}}</td>
-                                    <th> <img src="{{empleado.imagen_empleado.url}}" width="120" height="150" alt="lap">
+                                    <td style="color: black;">{{mouse.2}}</td>
+                                    <td style="color: black;">{{mouse.3}}</td>
+                                    <th> <img src="{{mouse.5.url}}" width="120" height="150" alt="lap">
                                     </th>
-                                    <td> <label class="{{area.1}}">{{area.0}}</label> </td>
+                                    <td> <label class="bg-red" >{{mouse.6}}</label> </td>
                                 </tr>
 
 
@@ -340,8 +376,8 @@ Mouses | Custom System
 
                     </div>
                     <center>
-                        <input type="hidden" value="{{empleado.id_empleado}}" name="idEmpleadoBaja">
-                        <h3 style="color: black;">Seguro que desea dar de baja al empleado?</h3>
+                        <input type="hidden" value="{{mouse.0}}" name="idMouseBaja">
+                        <h3 style="color: black;">Seguro que desea dar de baja al mouse?</h3>
                         <button type="submit" class="btn bg-red waves-effect">
                             <i class="material-icons">cancel</i>
                             <span>DAR DE BAJA</span>
@@ -355,38 +391,39 @@ Mouses | Custom System
 
 {% endfor %}
 
-{% for empleado, area in listaModal2 %}
+
+{% for mouse in mousesStock %}
 <!-- Default Size -->
-<div class="modal fade" id="{{empleado.id_empleado}}" tabindex="-1" role="dialog">
+<div class="modal fade" id="{{mouse.0}}" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content" style="border-radius: 16px;">
             <div class="modal-header">
                 <center>
-                    <h1 style="color: green; font-family: 'Oswald', sans-serif;">DAR DE ALTA EMPLEADO <i
+                    <h1 style="color: green; font-family: 'Oswald', sans-serif;">DAR DE ALTA MOUSE <i
                             class="material-icons" style="color:black; font-size:100%">upgrade</i></h1>
                     <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
 
                 </center>
             </div>
             <div class="modal-body">
-                <form action="/altaEmpleado/" method="POST">{% csrf_token %}
+                <form action="/altaMouse/" method="POST">{% csrf_token %}
                     <div class="body table-responsive">
                         <table class="table">
                             <thead>
                                 <tr class="bg-teal">
-                                    <th>Nombre</th>
-                                    <th>Apellidos</th>
+                                    <th>Marca</th>
+                                    <th>Modelo</th>
                                     <th>Imagen</th>
-                                    <th>Departamento</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td style="color: black;">{{empleado.nombre}}</td>
-                                    <td style="color: black;">{{empleado.apellidos}}</td>
-                                    <th> <img src="{{empleado.imagen_empleado.url}}" width="120" height="150" alt="lap">
+                                    <td style="color: black;">{{mouse.2}}</td>
+                                    <td style="color: black;">{{mouse.3}}</td>
+                                    <th> <img src="{{mouse.5.url}}" width="120" height="150" alt="lap">
                                     </th>
-                                    <td> <label class="{{area.1}}">{{area.0}}</label> </td>
+                              
+                                    
                                 </tr>
 
 
@@ -397,8 +434,8 @@ Mouses | Custom System
 
                     </div>
                     <center>
-                        <input type="hidden" value="{{empleado.id_empleado}}" name="idEmpleadoAlta">
-                        <h3 style="color: black;">Seguro que desea dar de alta al empleado?</h3>
+                        <input type="hidden" value="{{mouse.0}}" name="idMouseAlta">
+                        <h3 style="color: black;">Seguro que desea dar de alta al Mouse?</h3>
                         <button type="submit" class="btn bg-green waves-effect">
                             <i class="material-icons">upgrade</i>
                             <span>DAR DE ALTA</span>
@@ -411,6 +448,7 @@ Mouses | Custom System
 </div>
 
 {% endfor %}
+
 
 
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>

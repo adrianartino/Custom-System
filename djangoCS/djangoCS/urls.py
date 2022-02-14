@@ -74,6 +74,8 @@ urlpatterns = [
     path("bajaEquipo/", views.bajaEquipo),
     path("altaImpresora/", views.altaImpresora),
     path("bajaImpresora/", views.bajaImpresora),
+    path("bajaMouse/", views.bajaMouse),
+    path("altaMouse/", views.altaMouse),
     
     path("qrEquipo/", views.qrEquipo),
      path("qrImpresora/", views.qrImpresora),
