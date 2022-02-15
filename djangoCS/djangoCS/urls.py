@@ -66,6 +66,8 @@ urlpatterns = [
     path("editarEmpleadoBd/", views.editarEmpleadoBd),
     path("editarImpresora/", views.editarImpresora),
     path("editarImpresoraBd/", views.editarImpresoraBd),
+    path("editarMouse/", views.editarMouse),
+     path("editarMouseBd/", views.editarMouseBd),
     path("firmarCarta/", views.firmarCarta),
     path("salir/", views.salir, name="salir"),
     path("altaEmpleado/", views.altaEmpleado),

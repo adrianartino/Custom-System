@@ -195,8 +195,8 @@ Mouses | Custom System
                                 {% endif %}
 
                                 <td>
-                                    <form action="/editarEmpleado/" method="POST">{% csrf_token %}
-                                        <input type="hidden" name="idEmpleadoEditar" value="{{mouse.0}}">
+                                    <form action="/editarMouse/" method="POST">{% csrf_token %}
+                                        <input type="hidden" name="idMouseEditar" value="{{mouse.0}}">
                                         <center>
                                             <button type="submit" class="btn btn-warning waves-effect">
                                                     <i class="material-icons">edit</i>

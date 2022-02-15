@@ -7886,7 +7886,11 @@ def verMouses(request):
             modelo = mouse.modelo
             estado = mouse.estado
             fotoMouse = mouse.foto
-            idEquipo = str(mouse.id_equipo_id)
+            if mouse.id_equipo_id == None:
+                tieneequipo = False
+            else:
+                tieneequipo = True
+                idEquipo = mouse.id_equipo_id
             activo = mouse.activo
           
 
@@ -7894,25 +7898,30 @@ def verMouses(request):
             
             if activo == "A":
                  #sacar info de equipo ya que el mouse se encuentra activo
+                if tieneequipo == True:
                
-                infoEquipo = Equipos.objects.filter(id_equipo = int(idEquipo))
-                for dato in infoEquipo:
-                    idEquipo = str(dato.id_equipo)
-                    tipo = dato.tipo
-                    marcapc = dato.marca
-                    modelopc = dato.modelo 
-                        
+                    infoEquipo = Equipos.objects.filter(id_equipo = idEquipo)
+              
+                    for dato in infoEquipo:
+                        idEquipo = str(dato.id_equipo)
+                        tipo = dato.tipo
+                        marcapc = dato.marca
+                        modelopc = dato.modelo 
+                            
 
-                        
-                    modeloEquipo = "#"+idEquipo + " " + tipo + " " + marcapc + " " + modelopc
-                        
-                    #datos Empleado de equipo
-                    idEmpleado = dato.id_empleado_id
-                    infoEmpleado = Empleados.objects.filter(id_empleado = idEmpleado)
-                    for datoEmpleado in infoEmpleado:
-                        nombre = datoEmpleado.nombre
-                        apellidos = datoEmpleado.apellidos
-                    empleado = nombre + " " + apellidos
+                            
+                        modeloEquipo = "#"+idEquipo + " " + tipo + " " + marcapc + " " + modelopc
+                            
+                        #datos Empleado de equipo
+                        idEmpleado = dato.id_empleado_id
+                        infoEmpleado = Empleados.objects.filter(id_empleado = idEmpleado)
+                        for datoEmpleado in infoEmpleado:
+                            nombre = datoEmpleado.nombre
+                            apellidos = datoEmpleado.apellidos
+                        empleado = nombre + " " + apellidos
+                elif tieneequipo == False:
+                    modeloEquipo = "Sin equipo asignado"
+                    empleado = "Sin empleado asignado"
                         
                 mousesActivos.append([idMouse, conexion, marca, modelo, estado, fotoMouse, modeloEquipo, empleado])
 
@@ -7983,17 +7992,21 @@ def bajaMouse(request):
             idBaja= request.POST['idMouseBaja']
             
             datosMouse = Mouses.objects.filter(id_mouse = idBaja)
+            estadoB = ""
             
             for dato in datosMouse:
                 idMouse = str(dato.id_mouse)
                 marca = dato.marca
                 modelo = dato.modelo
                 estado = dato.estado
+                
+            
+
             
             nombreCompletoMouse = marca + " " + modelo
             prestamo =  PrestamosSistemas.objects.filter(id_producto = idBaja)
 
-            actualizacion = Mouses.objects.filter(id_mouse = idMouse).update(activo = "I", estado = estado)
+            actualizacion = Mouses.objects.filter(id_mouse = idMouse).update(activo = "I", estado = "stockUsado", id_equipo = "")
 
             if actualizacion:
                     
@@ -8038,26 +8051,16 @@ def altaMouse(request):
                 idM = dato.id_producto
                 idsMousesP.append(idM)
 
-                if idMouse in idsMousesP:
-                    for datoM in mousesPrestados:
-                        idMoP = datoM.id_producto
-                        if idMouse == idMoP:
-                            id_emple = int(idMouse.id_empleado)
-
-                        datosEquipo = Equipos.objects.filter(id_empleado = int(id_emple))
-                        for da in datosEquipo:
-                            idsE = da.id_equipo
-
-
+      
 
             
-            actualizacion = Mouses.objects.filter(id_mouse = idAlta).update(activo = "A", estado = "activoFuncional", id_equipo = int(idsE))
+            actualizacion = Mouses.objects.filter(id_mouse = idAlta).update(activo = "A", estado = "activoFuncional")
             if actualizacion:
-            
-                
-            
+                            
+                                
+                            
                 request.session['idMouseAlta'] = nombreCompletoMouse
-                
+                                
                 return redirect('/verMouses/')
     else:
         return redirect('/login/') #redirecciona a url de inicio
@@ -8124,7 +8127,373 @@ def agregarMouses(request):
                                                                       "registroMouseCompletado":registroMouseCompletado})
     else:
         return redirect('/login/') #redirecciona a url de inicio
+
     
+def editarMouse(request):
+    
+    if "idSesion" in request.session:
+        
+        estaEnCartasBitacora = True
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        nombreCompleto = nombre + " " + apellidos
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+        foto = fotoAdmin(request)
+        
+        if request.method == "POST":
+            mouseRecibido = request.POST['idMouseEditar']
+            mouseDatos = Mouses.objects.filter(id_mouse=mouseRecibido)
+
+            equipoEmpleados = []
+            for dato in mouseDatos:
+                equipoId= dato.id_equipo_id #2
+                estado = dato.estado
+
+            equiposM = Equipos.objects.filter(id_equipo= equipoId)
+            for equ in equiposM:
+                id_empleadoM = equ.id_empleado_id
+              
+               
+                
+            if equipoId == None:
+
+                estados = ["activoFuncional", "stockUsado", "stockNuevo", "basura"]
+                for es in estados:
+                    if es == estado:
+                        estados.remove(es)
+
+                
+                
+               
+                equiposTotales = Equipos.objects.all()
+                for eT in equiposTotales:
+                    idEq = eT.id_equipo
+                    marcaEq = eT.marca
+                    modeloEq = eT.modelo
+                    idEmpl = eT.id_empleado_id
+                    empleadosTotales = Empleados.objects.filter(id_empleado = idEmpl)
+                    for emple in empleadosTotales:
+                        nombreE = emple.nombre
+                        apellidosE = emple.apellidos
+                    completo = str (idEq) + " " + " " + marcaEq + " " + modeloEq  + "de: " + nombreE + " " + apellidosE
+                    equipoEmpleados.append(completo)
+
+                
+
+                
+                    
+                sinEquipo = True
+                lista = zip(mouseDatos,equipoEmpleados)
+                return render(request, "Editar/editarMouse.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"estados":estados, "mouseRecibido":mouseRecibido, "empleadosTotales":empleadosTotales, "sinEquipo":sinEquipo, 
+                                                                    "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+            else:
+                
+                equiposM = Equipos.objects.filter(id_equipo = equipoId)
+                for eqE in equiposM:
+                    id_empleadoE = eqE.id_empleado_id 
+
+                empleadoDe = Empleados.objects.filter(id_empleado = id_empleadoE)
+                for de in empleadoDe:
+                    nombres = de.nombre
+                    apell = de.apellidos
+                                    
+
+               
+               
+                            
+                estados = ["activoFuncional", "stockUsado", "stockNuevo", "basura"]
+                for es in estados:
+                    if es == estado:
+                        estados.remove(es)
+
+                
+                lista = zip(mouseDatos,equiposM)
+                
+                equipos_totales = Equipos.objects.all()
+                arreglo_ids = []
+                
+                for equi in equipos_totales:
+                    arreglo_ids.append(equi.id_equipo)
+                
+                #[1,2,3]
+                
+                for id in arreglo_ids:
+                    if id == equipoId: #si 2 == 2
+                        arreglo_ids.remove(id)
+                        
+                #[1,3]
+                
+                datos_equipo = []
+                
+                for id in arreglo_ids:
+                    datos = Equipos.objects.filter(id_equipo = id)
+                    for dato in datos:
+                        id_equipo = dato.id_equipo
+                        tipo = dato.tipo
+                        marca = dato.marca
+                        modelo = dato.modelo
+                        foto = dato.imagen
+                        id_empleado = dato.id_empleado_id
+                    datos_equipo.append([id_equipo, tipo, marca,  modelo, foto])    
+
+                    empleados = Empleados.objects.filter(id_empleado = id_empleado)
+                    for em in empleados:
+                        nombree = em.nombre
+                        apellidose = em.apellidos
+
+           
+                
+                
+
+                    
+                        
+                
+            
+            return render(request, "Editar/editarMouse.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista, "estados":estados,  "equiposM":equiposM, "equipos_totales":equipos_totales, "empleadoDe":empleadoDe, "mouseRecibido":mouseRecibido, "datos_equipo":datos_equipo, "empleados":empleados, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+
+        return render(request, "Editar/editarMouse.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+
+   
+def editarMouseBd(request):
+    
+    if "idSesion" in request.session:
+        
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        nombreCompleto = nombre + " " + apellidos
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+        foto = fotoAdmin(request)
+        
+        if request.method == "POST":
+            mouseId = request.POST['idMouse']
+            equipo_actualizar = request.POST['equipo']
+            estado_actualizar = request.POST['estado']
+         
+
+            
+            if equipo_actualizar == "sinEquipo":
+                actualizar = Mouses.objects.filter(id_mouse=mouseId).update( id_equipo_id=None,estado= estado_actualizar, activo="I")
+                
+                
+            elif equipo_actualizar !=  "sinEquipo": 
+                int_equipo = int(equipo_actualizar)
+                actualizar = Mouses.objects.filter(id_mouse=mouseId).update( id_equipo_id=Equipos.objects.get(id_equipo = int_equipo),
+                                                 estado= estado_actualizar, activo="A")
+            
+            if actualizar:
+               
+                datos = Mouses.objects.filter(id_mouse = mouseId)
+                
+                for dato in datos:
+                    conexion = dato.conexion
+                    marca = dato.marca
+                    modelo = dato.modelo
+                    
+                todoMouse = conexion + " " + marca + " " + modelo
+                
+                
+                
+                editado = True
+                textoEdicion = "Se ha editado al mouse " + todoMouse + " con éxito!"
+                id_sistemas = request.session['idSesion']
+                
+               
+                
+
+                mouseRecibido = mouseId
+                mouseDatos = Mouses.objects.filter(id_mouse=mouseRecibido)
+
+                
+                for dato in mouseDatos:
+                    equipoId= dato.id_equipo_id #2
+                    estado = dato.estado
+                    
+                if equipoId == None:
+                    estados = ["activoFuncional", "stockUsado", "stockNuevo", "basura"]
+                    for es in estados:
+                        if es == estado:
+                            estados.remove(es)
+
+                
+                
+               
+                    equiposTotales = Equipos.objects.all()
+                            
+               
+                    
+                        
+                    sinEquipo = True
+                    lista = zip(mouseDatos,equiposTotales)
+                    return render(request, "Editar/editarMouse.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "estados":estados, "mouseRecibido":mouseRecibido, "equiposTotales":equiposTotales, "sinEquipo":sinEquipo, 
+                                                                        "editado":editado, "textoEdicion":textoEdicion, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+                else:
+                    
+                    equiposM = Equipos.objects.filter(id_equipo = equipoId)
+                    for eqE in equiposM:
+                        id_empleadoE = eqE.id_empleado_id 
+
+                    empleadoDe = Empleados.objects.filter(id_empleado = id_empleadoE)
+                    for de in empleadoDe:
+                        nombres = de.nombre
+                        apell = de.apellidos
+
+                    propEq = nombres + " " + apell
+             
+                    estados = ["activoFuncional", "stockUsado", "stockNuevo", "basura"]
+                    for es in estados:
+                        if es == estado:
+                            estados.remove(es)
+
+                    
+                    lista = zip(mouseDatos,equiposM, empleadoDe)
+                    
+                    equipos_totales = Equipos.objects.all()
+                    arreglo_ids = []
+                
+                    for equi in equipos_totales:
+                        arreglo_ids.append(equi.id_equipo)
+                    
+                    #[1,2,3]
+                    
+                    for id in arreglo_ids:
+                        if id == equipoId: #si 2 == 2
+                            arreglo_ids.remove(id)
+                            
+                    #[1,3]
+                    
+                    datos_equipo = []
+                    
+                    for id in arreglo_ids:
+                        datos = Equipos.objects.filter(id_equipo = id)
+                        for dato in datos:
+                            id_equipo = dato.id_equipo
+                            tipo = dato.tipo
+                            marca = dato.marca
+                            modelo = dato.modelo
+                            foto = dato.imagen
+                            id_empleado = dato.id_empleado_id
+                        datos_equipo.append([id_equipo, tipo, marca,  modelo, foto])    
+
+                        empleados = Empleados.objects.filter(id_empleado = id_empleado)
+                     
+
+           
+                  
+                        
+
+                    return render(request, "Editar/editarMouse.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "empleadoDe":empleadoDe, "correo":correo, "lista": lista,  "estados":estados, "equiposM":equiposM, "mouseRecibido":mouseRecibido, "datos_equipo":datos_equipo, 
+                                                                        "editado":editado, "textoEdicion":textoEdicion, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+            else:
+                datos = Mouses.objects.filter(id_mouse = mouseId)
+
+                
+                for dato in datos:
+                    conexion = dato.conexion
+                    marca = dato.marca
+                    modelo = dato.modelo
+                    
+                todoMouse = conexion + " " + marca + " " + modelo
+                
+                
+                editado = True
+                textoEdicion = "Error en la base de datos!"
+               
+             
+                mouseRecibido = mouseId
+                mouseDatos = Mouses.objects.filter(id_mouse=mouseRecibido)
+
+                
+                for dato in mouseDatos:
+                    equipoId= dato.id_equipo_id #2
+                    estadomou = dato.estado
+                    
+                    
+                if equipoId == None:
+                    estados = ["activoFuncional", "stockUsado", "stockNuevo", "basura"]
+                    for es in estados:
+                        if es == estado:
+                            estados.remove(es)
+
+                
+                
+               
+                    equiposTotales = Equipos.objects.all()
+                        
+                    
+                        
+                    sinEquipo = True
+                    lista = zip(mouseDatos,equiposTotales)
+                    return render(request, "Editar/editarMouse.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,"ram": ram,"sistemasOperativos":sistemasOperativos, "equipoRecibido":equipoRecibido, "empleadosTotales":empleadosTotales, "sinPropietario":sinPropietario, 
+                                                                        "editado":editado, "textoEdicion":textoEdicion, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+                else:
+                    
+                    equiposM = Equipos.objects.filter(id_equipo = equipoId)
+                    for eqE in equiposM:
+                        id_empleadoE = eqE.id_empleado_id 
+
+                    empleadoDe = Empleados.objects.filter(id_empleado = id_empleadoE)
+                    for de in empleadoDe:
+                        nombres = de.nombre
+                        apell = de.apellidos
+             
+                    estados = ["activoFuncional", "stockUsado", "stockNuevo", "basura"]
+                    for es in estados:
+                        if es == estado:
+                            estados.remove(es)
+
+                    
+                    lista = zip(mouseDatos,equiposM, empleadoDe)
+                    
+                    equipos_totales = Equipos.objects.all()
+                    arreglo_ids = []
+                
+                    for equi in equipos_totales:
+                        arreglo_ids.append(equi.id_equipo)
+                    
+                    #[1,2,3]
+                    
+                    for id in arreglo_ids:
+                        if id == equipoId: #si 2 == 2
+                            arreglo_ids.remove(id)
+                            
+                    #[1,3]
+                    
+                    datos_equipo = []
+                    
+                    for id in arreglo_ids:
+                        datos = Equipos.objects.filter(id_equipo = id)
+                        for dato in datos:
+                            id_equipo = dato.id_equipo
+                            tipo = dato.tipo
+                            marca = dato.marca
+                            modelo = dato.modelo
+                            foto = dato.imagen
+                            id_empleado = dato.id_empleado_id
+                        datos_equipo.append([id_equipo, tipo, marca,  modelo, foto])    
+
+                        empleados = Empleados.objects.filter(id_empleado = id_empleado)  
+                        
+                            
+                    
+                
+                    return render(request, "Editar/editarMouse.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista, "ram": ram, "sistemasOperativos":sistemasOperativos, "empleado":empleado, "equipoRecibido":equipoRecibido, "datos_empleados":datos_empleados, 
+                                                                        "editado":editado, "textoEdicion":textoEdicion, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+    
+        return render(request,"Editar/editarEmpleado.html", {"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
     
 def correoContra(request):
     
