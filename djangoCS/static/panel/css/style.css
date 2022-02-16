@@ -7888,13 +7888,17 @@ fieldset[disabled] .form-control {
   background-color: #ad1455;
   padding: 30px 0; }
 
+.profile-card{
+  padding-top: 20px !important;
+}
+
 .profile-card .profile-body .image-area {
   text-align: center;
-  margin-top: -50px; }
+  margin-top: -40px; }
   .profile-card .profile-body .image-area img {
     border: 2px solid #F39C12 ;
-    padding: 2px;
-    margin: 2px;
+    padding: 30px !important;
+    margin: 30px !important;
     -webkit-border-radius: 30%;
     -moz-border-radius: 30%;
     -ms-border-radius: 30%;

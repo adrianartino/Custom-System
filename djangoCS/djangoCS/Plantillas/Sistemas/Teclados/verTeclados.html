@@ -105,6 +105,7 @@ Teclados | Custom System
                                 <th>Estado</th>
                                 <th>Fotografía</th>
                                 <th>Equipo al que pertenece</th>
+                                <th>Prestamo</th>
                                 <th>Editar</th>
                                 <th>Baja</th>
                             </tr>
@@ -118,49 +119,64 @@ Teclados | Custom System
                                 <th>Estado</th>
                                 <th>Fotografía</th>
                                 <th>Equipo al que pertenece</th>
+                                <th>Prestamo</th>
                                 <th>Editar</th>
                                 <th>Baja</th>
                             </tr>
                         </tfoot>
                         <tbody class="animate__animated animate__backInDown">
-                            {% for tecla in tecladosActivos %}
+                            {% for activo, prestamo in lista %}
                             <tr>
-                                <td>{{tecla.0}}</td>
-                                {% if tecla.1 == "A" %}
+                                <td>{{activo.0}}</td>
+                                {% if activo.1 == "A" %}
                                 <td>Alámbrico</td>
-                                {% elif tecla.1 == "I" %}
+                                {% elif activo.1 == "I" %}
                                 <td>Inalámbrico</td>
                                 {% endif %}
-                                <td>{{tecla.2}}</td>
-                                <td>{{tecla.3}}</td>
-                                {% if tecla.4 == "activoFuncional" %}
+                                <td>{{activo.2}}</td>
+                                <td>{{activo.3}}</td>
+                                {% if activo.4 == "activoFuncional" %}
                                 <td ><label class="label bg-green">Activo Funcional</label></td>
                                 {% endif %}
 
                                 <td>
                                     <center>
-                                        <img src="{{tecla.5.url}}" width="60%" alt="teclado">
+                                        <img src="{{activo.5.url}}" width="60%" alt="teclado">
                                     </center>
                                 </td>
-                                {% if tecla.6 == " " %}
+                                {% if activo.6 == " " %}
                                 <td>Sin equipo</td>
                                 {% else %}
 
                                 <td>
                                     <div>
-                                        <label class="label bg-orange">{{tecla.6}}</label>
+                                        <label class="label bg-orange">{{activo.6}}</label>
                                     </div>
                                     <div>
-                                        <label class="label bg-teal">{{tecla.7}}</label>
+                                        <label class="label bg-teal">{{activo.7}}</label>
                                     </div>
                                 {% endif %}
                                     
                                 </td>
+                                {% if prestamo != "Sin prestamo" %}
+                                <td>
+                                    <div>
+                                        <label class="label bg-green">Con prestamo</label>
+                                    </div>
+                                    <div>
+                                        <label class="label bg-teal">{{prestamo.0}}</label>
+                                    </div>
+                                </td>
+
+                                {% elif prestamo == "Sin prestamo" %}
+                                <td>No aplica</td>
+                                  
+                                {% endif %}
                                
                              
-                                <form action="/editarEmpleado/" method="POST">{% csrf_token %}
+                                <form action="/editarTeclado/" method="POST">{% csrf_token %}
                                     <th>
-                                        <input type="hidden" name="idEmpleadoEditar" value="{{empleado.id_empleado}}">
+                                        <input type="hidden" name="idTecladoEditar" value="{{activo.0}}">
                                         <center>
                                             <button type="submit" class="btn btn-warning waves-effect">
                                                 <i class="material-icons">edit</i>
@@ -173,7 +189,7 @@ Teclados | Custom System
                                 <th>
                                     <center>
                                         <button type="button" class="btn bg-red waves-effect" data-toggle="modal"
-                                            data-target="#{{empleado.id_empleado}}">
+                                            data-target="#{{activo.0}}">
                                             <i class="material-icons">cancel</i>
                                         </button>
                                     </center>
@@ -232,6 +248,7 @@ Teclados | Custom System
                                 <th>Modelo</th>
                                 <th>Estado</th>
                                 <th>Fotografía</th>
+                            
                                 <th>Alta</th>
                             </tr>
                         </thead>
@@ -243,6 +260,7 @@ Teclados | Custom System
                                 <th>Modelo</th>
                                 <th>Estado</th>
                                 <th>Fotografía</th>
+                            
                                 <th>Alta</th>
                             </tr>
                         </tfoot>
@@ -250,15 +268,32 @@ Teclados | Custom System
                             {% for teclado in tecladosStock %}
                             <tr>
                                 <td>{{teclado.0}}</td>
-                                <td>{{teclado.1}}</td>
+                                {% if teclado.1 == "A" %}
+                                <td>Alámbrico</td>
+                                {% else %}
+                                <td>Inalámbrico</td>
+                                {% endif %}
+
                                 <td>{{teclado.2}}</td>
                                 <td>{{teclado.3}}</td>
-                                <td>{{teclado.4}}</td>
+                                {% if teclado.4 == "activoFuncional" %}
+                                <td><label class="label bg-green">Activo Funcional</label></td>
+                                {% elif teclado.4 == "stockUsado" %}
+                                <td><label class="label bg-orange">En Stock Usado</label></td>
+                                {% elif teclado.4 == "stockNuevo" %}
+                                <td><label class="label bg-blue">En Stock Nuevo</label></td>
+                                {% elif teclado.4 == "basura" %}
+                                <td><label class="label bg-red">Basura</label></td>
+                                {% endif %}
+
+
                                 <td>
                                     <center>
                                         <img src="{{teclado.5.url}}" width="60%" alt="teclado">
                                     </center>
                                 </td>
+
+                             
                               
                                 <th>
                                     <center>
@@ -280,39 +315,38 @@ Teclados | Custom System
     </div>
 </div>
 
-
-{% for empleado, area in listaModal1 %}
+{% for teclado in tecladosActivos %}
 <!-- Default Size -->
-<div class="modal fade" id="{{empleado.id_empleado}}" tabindex="-1" role="dialog">
+<div class="modal fade" id="{{teclado.0}}" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content" style="border-radius: 16px;">
             <div class="modal-header">
                 <center>
-                    <h1 style="color: crimson; font-family: 'Oswald', sans-serif;">DAR DE BAJA EMPLEADO <i
+                    <h1 style="color: crimson; font-family: 'Oswald', sans-serif;">DAR DE BAJA TECLADO <i
                             class="material-icons" style="color:black; font-size:100%">get_app</i></h1>
                     <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
 
                 </center>
             </div>
             <div class="modal-body">
-                <form action="/bajaEmpleado/" method="POST">{% csrf_token %}
+                <form action="/bajaTeclado/" method="POST">{% csrf_token %}
                     <div class="body table-responsive">
                         <table class="table">
                             <thead>
                                 <tr class="bg-teal">
-                                    <th>Nombre</th>
-                                    <th>Apellidos</th>
+                                    <th>Marca</th>
+                                    <th>Modelo</th>
                                     <th>Imagen</th>
-                                    <th>Departamento</th>
+                                    <th>Equipo</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td style="color: black;">{{empleado.nombre}}</td>
-                                    <td style="color: black;">{{empleado.apellidos}}</td>
-                                    <th> <img src="{{empleado.imagen_empleado.url}}" width="120" height="150" alt="lap">
+                                    <td style="color: black;">{{teclado.2}}</td>
+                                    <td style="color: black;">{{teclado.3}}</td>
+                                    <th> <img src="{{teclado.5.url}}" width="120" height="150" alt="lap">
                                     </th>
-                                    <td> <label class="{{area.1}}">{{area.0}}</label> </td>
+                                    <td> <label class="bg-red" >{{teclado.6}}</label> </td>
                                 </tr>
 
 
@@ -323,8 +357,8 @@ Teclados | Custom System
 
                     </div>
                     <center>
-                        <input type="hidden" value="{{empleado.id_empleado}}" name="idEmpleadoBaja">
-                        <h3 style="color: black;">Seguro que desea dar de baja al empleado?</h3>
+                        <input type="hidden" value="{{teclado.0}}" name="idTecladoBaja">
+                        <h3 style="color: black;">Seguro que desea dar de baja al teclado?</h3>
                         <button type="submit" class="btn bg-red waves-effect">
                             <i class="material-icons">cancel</i>
                             <span>DAR DE BAJA</span>
@@ -338,38 +372,39 @@ Teclados | Custom System
 
 {% endfor %}
 
-{% for empleado, area in listaModal2 %}
+
+{% for teclado in tecladosStock %}
 <!-- Default Size -->
-<div class="modal fade" id="{{empleado.id_empleado}}" tabindex="-1" role="dialog">
+<div class="modal fade" id="{{teclado.0}}" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content" style="border-radius: 16px;">
             <div class="modal-header">
                 <center>
-                    <h1 style="color: green; font-family: 'Oswald', sans-serif;">DAR DE ALTA EMPLEADO <i
+                    <h1 style="color: green; font-family: 'Oswald', sans-serif;">DAR DE ALTA Teclado <i
                             class="material-icons" style="color:black; font-size:100%">upgrade</i></h1>
                     <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
 
                 </center>
             </div>
             <div class="modal-body">
-                <form action="/altaEmpleado/" method="POST">{% csrf_token %}
+                <form action="/altaTeclado/" method="POST">{% csrf_token %}
                     <div class="body table-responsive">
                         <table class="table">
                             <thead>
                                 <tr class="bg-teal">
-                                    <th>Nombre</th>
-                                    <th>Apellidos</th>
+                                    <th>Marca</th>
+                                    <th>Modelo</th>
                                     <th>Imagen</th>
-                                    <th>Departamento</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td style="color: black;">{{empleado.nombre}}</td>
-                                    <td style="color: black;">{{empleado.apellidos}}</td>
-                                    <th> <img src="{{empleado.imagen_empleado.url}}" width="120" height="150" alt="lap">
+                                    <td style="color: black;">{{teclado.2}}</td>
+                                    <td style="color: black;">{{teclado.3}}</td>
+                                    <th> <img src="{{teclado.5.url}}" width="120" height="150" alt="lap">
                                     </th>
-                                    <td> <label class="{{area.1}}">{{area.0}}</label> </td>
+                              
+                                    
                                 </tr>
 
 
@@ -380,8 +415,8 @@ Teclados | Custom System
 
                     </div>
                     <center>
-                        <input type="hidden" value="{{empleado.id_empleado}}" name="idEmpleadoAlta">
-                        <h3 style="color: black;">Seguro que desea dar de alta al empleado?</h3>
+                        <input type="hidden" value="{{teclado.0}}" name="idTecladoAlta">
+                        <h3 style="color: black;">Seguro que desea dar de alta al Teclado?</h3>
                         <button type="submit" class="btn bg-green waves-effect">
                             <i class="material-icons">upgrade</i>
                             <span>DAR DE ALTA</span>

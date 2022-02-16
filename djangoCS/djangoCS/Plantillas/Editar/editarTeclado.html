@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block titulo %}
-Editar Mouses
+Editar Teclados
 {% endblock %}
 
 {% block estilos %}
@@ -36,23 +36,23 @@ Editar Mouses
 
 {% block contenido %}
 <div class="row clearfix">
-    {% for mouse, equipoEmple in lista %}
+    {% for teclado, equipoEmple in lista %}
     <div class="col-xs-12 col-sm-3">
         <div class="card profile-card">
           
             <div class="profile-body">
                 <div class="image-area">
-                    <img src="{{mouse.foto.url}}" alt="AdminBSB - Profile Image" width="60%" />
+                    <img src="{{teclado.foto.url}}" alt="AdminBSB - Profile Image" width="60%" />
                 </div>
                 <div class="content-area">
-                    {% if mouse.conexion == "A" %}
+                    {% if teclado.conexion == "A" %}
                     <h4>
-                        Alámbrico {{mouse.marca}} {{mouse.modelo}}</h4>
+                        Alámbrico {{teclado.marca}} {{teclado.modelo}}</h4>
                       
                     {% else %}
                     
                     <h4>
-                        Inalámbrico {{mouse.marca}} {{mouse.modelo}}</h4>
+                        Inalámbrico {{teclado.marca}} {{teclado.modelo}}</h4>
                        
                     {% endif %}
 
@@ -61,8 +61,8 @@ Editar Mouses
             <div class="profile-footer">
                 <ul>
                     <li>
-                        <span>N° de Mouse</span>
-                        <span><label>{{mouse.id_mouse}}</label></span>
+                        <span>N° de Teclado</span>
+                        <span><label>{{teclado.id_teclado}}</label></span>
                     </li>
 
                 </ul>
@@ -70,12 +70,12 @@ Editar Mouses
                     <div>
                         <span style="font-weight: bold;">Equipo Actual</span>
                     </div>
-                    {% for dato in equiposM %}
+                    {% for dato in equiposT %}
                 
                     <div>
                         
                         <span>{{dato.tipo}} {{dato.marca}} {{dato.modelo}}</span>
-                        <img src="{{dato.imagen.url}}" width="50%">
+                        <img src="{{dato.imagen.url}}" width="80%">
 
                     </div>
                    
@@ -120,7 +120,7 @@ Editar Mouses
             </div>
             <div class="body">
 
-                <form id="form_validation" action="/editarMouseBd/" method="POST">{% csrf_token %}
+                <form id="form_validation" action="/editarTecladoBd/" method="POST">{% csrf_token %}
 
                     <div class="row clearfix">
 
@@ -138,8 +138,8 @@ Editar Mouses
                                     <option value="{{q.id_equipo}}">#{{q.id_equipo}} {{q.tipo}} {{q.marca}} {{q.modelo}}</option>
                                     {% endfor %}
                                     {% else %}
-                                    {% for datoM in equiposM %}
-                                    <option value="{{datoM.id_equipo}}">{{datoM.tipo}} {{datoM.marca}} {{datoM.modelo}}  </option>
+                                    {% for datot in equiposT %}
+                                    <option value="{{datot.id_equipo}}">{{datot.tipo}} {{datot.marca}} {{datot.modelo}}  </option>
                                     {% endfor %}
                                     <option value="sinEquipo">Sin equipo</option>
                                     {% for equipo in datos_equipo %}
@@ -160,22 +160,22 @@ Editar Mouses
                                 </span>
 
                                 <select class="form-control show-tick" name="estado">
-                                    {% if mouse.estado == "activoFuncional" %}
+                                    {% if teclado.estado == "activoFuncional" %}
                                     <option value="activoFuncional" selected>Activo Funcional</option>
                                     <option value="stockUsado">En Stock Usado</option>
                                     <option value="stockNuevo">En Stock Nuevo</option>
                                     <option value="basura">Basura</option>
-                                    {% elif mouse.estado == "stockUsado" %}
+                                    {% elif teclado.estado == "stockUsado" %}
                                     <option value="activoFuncional">Activo Funcional</option>
                                     <option value="stockUsado" selected>En Stock Usado</option>
                                     <option value="stockNuevo">En Stock Nuevo</option>
                                     <option value="basura">Basura</option>
-                                    {% elif mouse.estado == "stockNuevo" %}
+                                    {% elif teclado.estado == "stockNuevo" %}
                                     <option value="activoFuncional">Activo Funcional</option>
                                     <option value="stockUsado">En Stock Usado</option>
                                     <option value="stockNuevo" selected>En Stock Nuevo</option>
                                     <option value="basura">Basura</option>
-                                    {% elif mouse.estado == "basura" %}
+                                    {% elif teclado.estado == "basura" %}
                                     <option value="activoFuncional">Activo Funcional</option>
                                     <option value="stockUsado">En Stock Usado</option>
                                     <option value="stockNuevo" >En Stock Nuevo</option>
@@ -196,9 +196,9 @@ Editar Mouses
                     <div class="row clearfix">
                         
                     </div>
-                    <input type="hidden" name="idMouse" value="{{mouse.id_mouse}}">
+                    <input type="hidden" name="idTeclado" value="{{teclado.id_teclado}}">
                     <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i class="material-icons">loop</i>
-                        Actualizar mouse</button>
+                        Actualizar teclado</button>
                 </form>
 
             </div>

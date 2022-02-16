@@ -104,6 +104,7 @@ Monitores | Custom System
                                 <th>Estado</th>
                                 <th>Fotografía</th>
                                 <th>Equipo al que pertenece</th>
+                                <th>Prestamo</th>
                                 <th>Editar</th>
                                 <th>Baja</th>
                             </tr>
@@ -116,12 +117,13 @@ Monitores | Custom System
                                 <th>Estado</th>
                                 <th>Fotografía</th>
                                 <th>Equipo al que pertenece</th>
+                                <th>Prestamo</th>
                                 <th>Editar</th>
                                 <th>Baja</th>
                             </tr>
                         </tfoot>
                         <tbody class="animate__animated animate__backInDown">
-                            {% for monitor in monitoresActivos %}
+                            {% for monitor, prestamo in lista %}
                             <tr>
                                 <td>{{monitor.0}}</td>
 
@@ -150,6 +152,23 @@ Monitores | Custom System
                                         <label class="label bg-teal">{{monitor.6}}</label>
                                     </div>
                                 {% endif %}
+                                
+
+                                {% if prestamo != "Sin prestamo" %}
+                                <td>
+                                    <div>
+                                        <label class="label bg-orange">Con prestamo</label>
+                                    </div>
+                                    <div>
+                                        <label class="label bg-teal">{{prestamo.0}}</label>
+                                    </div>
+
+                                </td>
+                                {% elif prestamo == "Sin prestamo" %}
+                                <td>No aplica</td>
+                                {% endif %}
+
+
 
                                 <td>
                                     <form action="/editarMonitor/" method="POST">{% csrf_token %}
@@ -164,15 +183,12 @@ Monitores | Custom System
                                 
 
                                 <th>
-                                    <form action="/editarEmpleado/" method="POST">{% csrf_token %}
-                                        <input type="hidden" name="idEmpleadoEditar" value="{{mouse.0}}">
-                                        <center>
-                                            <button type="button" class="btn bg-red waves-effect" data-toggle="modal"
-                                                    data-target="#{{empleado.id_empleado}}">
-                                                    <i class="material-icons">cancel</i>
-                                            </button>
-                                        </center>
-                                    </form>
+                                    <center>
+                                        <button type="button" class="btn bg-red waves-effect" data-toggle="modal"
+                                            data-target="#{{monitor.0}}">
+                                            <i class="material-icons">cancel</i>
+                                        </button>
+                                    </center>
                                 </th>
                             </tr>
                             {% endfor %}
@@ -285,38 +301,38 @@ Monitores | Custom System
 </div>
 
 
-{% for empleado, area in listaModal1 %}
+{% for monitor in monitoresActivos %}
 <!-- Default Size -->
-<div class="modal fade" id="{{empleado.id_empleado}}" tabindex="-1" role="dialog">
+<div class="modal fade" id="{{monitor.0}}" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content" style="border-radius: 16px;">
             <div class="modal-header">
                 <center>
-                    <h1 style="color: crimson; font-family: 'Oswald', sans-serif;">DAR DE BAJA EMPLEADO <i
+                    <h1 style="color: crimson; font-family: 'Oswald', sans-serif;">DAR DE BAJA MONITOR <i
                             class="material-icons" style="color:black; font-size:100%">get_app</i></h1>
                     <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
 
                 </center>
             </div>
             <div class="modal-body">
-                <form action="/bajaEmpleado/" method="POST">{% csrf_token %}
+                <form action="/bajaMonitor/" method="POST">{% csrf_token %}
                     <div class="body table-responsive">
                         <table class="table">
                             <thead>
                                 <tr class="bg-teal">
-                                    <th>Nombre</th>
-                                    <th>Apellidos</th>
+                                    <th>Marca</th>
+                                    <th>Modelo</th>
                                     <th>Imagen</th>
-                                    <th>Departamento</th>
+                                    <th>Equipo</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td style="color: black;">{{empleado.nombre}}</td>
-                                    <td style="color: black;">{{empleado.apellidos}}</td>
-                                    <th> <img src="{{empleado.imagen_empleado.url}}" width="120" height="150" alt="lap">
+                                    <td style="color: black;">{{monitor.1}}</td>
+                                    <td style="color: black;">{{monitor.2}}</td>
+                                    <th> <img src="{{monitor.4.url}}" width="120" height="150" alt="lap">
                                     </th>
-                                    <td> <label class="{{area.1}}">{{area.0}}</label> </td>
+                                    <td> <label class="bg-red" >{{monitor.6}}</label> </td>
                                 </tr>
 
 
@@ -327,8 +343,8 @@ Monitores | Custom System
 
                     </div>
                     <center>
-                        <input type="hidden" value="{{empleado.id_empleado}}" name="idEmpleadoBaja">
-                        <h3 style="color: black;">Seguro que desea dar de baja al empleado?</h3>
+                        <input type="hidden" value="{{monitor.0}}" name="idMonitorBaja">
+                        <h3 style="color: black;">Seguro que desea dar de baja al monitor?</h3>
                         <button type="submit" class="btn bg-red waves-effect">
                             <i class="material-icons">cancel</i>
                             <span>DAR DE BAJA</span>
@@ -342,38 +358,39 @@ Monitores | Custom System
 
 {% endfor %}
 
-{% for empleado, area in listaModal2 %}
+
+{% for teclado in tecladosStock %}
 <!-- Default Size -->
-<div class="modal fade" id="{{empleado.id_empleado}}" tabindex="-1" role="dialog">
+<div class="modal fade" id="{{teclado.0}}" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content" style="border-radius: 16px;">
             <div class="modal-header">
                 <center>
-                    <h1 style="color: green; font-family: 'Oswald', sans-serif;">DAR DE ALTA EMPLEADO <i
+                    <h1 style="color: green; font-family: 'Oswald', sans-serif;">DAR DE ALTA Teclado <i
                             class="material-icons" style="color:black; font-size:100%">upgrade</i></h1>
                     <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
 
                 </center>
             </div>
             <div class="modal-body">
-                <form action="/altaEmpleado/" method="POST">{% csrf_token %}
+                <form action="/altaTeclado/" method="POST">{% csrf_token %}
                     <div class="body table-responsive">
                         <table class="table">
                             <thead>
                                 <tr class="bg-teal">
-                                    <th>Nombre</th>
-                                    <th>Apellidos</th>
+                                    <th>Marca</th>
+                                    <th>Modelo</th>
                                     <th>Imagen</th>
-                                    <th>Departamento</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td style="color: black;">{{empleado.nombre}}</td>
-                                    <td style="color: black;">{{empleado.apellidos}}</td>
-                                    <th> <img src="{{empleado.imagen_empleado.url}}" width="120" height="150" alt="lap">
+                                    <td style="color: black;">{{teclado.2}}</td>
+                                    <td style="color: black;">{{teclado.3}}</td>
+                                    <th> <img src="{{teclado.5.url}}" width="120" height="150" alt="lap">
                                     </th>
-                                    <td> <label class="{{area.1}}">{{area.0}}</label> </td>
+                              
+                                    
                                 </tr>
 
 
@@ -384,8 +401,8 @@ Monitores | Custom System
 
                     </div>
                     <center>
-                        <input type="hidden" value="{{empleado.id_empleado}}" name="idEmpleadoAlta">
-                        <h3 style="color: black;">Seguro que desea dar de alta al empleado?</h3>
+                        <input type="hidden" value="{{teclado.0}}" name="idTecladoAlta">
+                        <h3 style="color: black;">Seguro que desea dar de alta al Teclado?</h3>
                         <button type="submit" class="btn bg-green waves-effect">
                             <i class="material-icons">upgrade</i>
                             <span>DAR DE ALTA</span>
