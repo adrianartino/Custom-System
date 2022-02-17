@@ -263,20 +263,20 @@ Monitores | Custom System
 
                                 
                                 
+                                <td>{{monitor.1}}</td>
                                 <td>{{monitor.2}}</td>
-                                <td>{{monitor.3}}</td>
 
-                                {% if monitor.4 == "stockUsado" %}
+                                {% if monitor.3 == "stockUsado" %}
                                 <td ><label class="label bg-orange">Usado</label></td>
-                                {% elif monitor.4 == "stockNuevo" %}
+                                {% elif monitor.3 == "stockNuevo" %}
                                 <td ><label class="label bg-green">Nuevo</label></td>
-                                {% elif monitor.4 == "basura" %}
+                                {% elif monitor.3 == "basura" %}
                                 <td ><label class="label bg-red">Basura</label></td>
                                 {% endif %}
 
                                 <td>
                                     <center>
-                                        <img src="{{monitor.5.url}}" width="60%" alt="empleado">
+                                        <img src="{{monitor.4.url}}" width="60%" alt="empleado">
                                     </center>
                                 </td>
                                 <td>
@@ -359,21 +359,21 @@ Monitores | Custom System
 {% endfor %}
 
 
-{% for teclado in tecladosStock %}
+{% for monitor in monitoresStock %}
 <!-- Default Size -->
-<div class="modal fade" id="{{teclado.0}}" tabindex="-1" role="dialog">
+<div class="modal fade" id="{{monitor.0}}" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content" style="border-radius: 16px;">
             <div class="modal-header">
                 <center>
-                    <h1 style="color: green; font-family: 'Oswald', sans-serif;">DAR DE ALTA Teclado <i
+                    <h1 style="color: green; font-family: 'Oswald', sans-serif;">DAR DE ALTA MONITOR <i
                             class="material-icons" style="color:black; font-size:100%">upgrade</i></h1>
                     <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
 
                 </center>
             </div>
             <div class="modal-body">
-                <form action="/altaTeclado/" method="POST">{% csrf_token %}
+                <form action="/altaMonitor/" method="POST">{% csrf_token %}
                     <div class="body table-responsive">
                         <table class="table">
                             <thead>
@@ -385,9 +385,9 @@ Monitores | Custom System
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td style="color: black;">{{teclado.2}}</td>
-                                    <td style="color: black;">{{teclado.3}}</td>
-                                    <th> <img src="{{teclado.5.url}}" width="120" height="150" alt="lap">
+                                    <td style="color: black;">{{monitor.1}}</td>
+                                    <td style="color: black;">{{monitor.2}}</td>
+                                    <th> <img src="{{monitor.4.url}}" width="120" height="150" alt="lap">
                                     </th>
                               
                                     
@@ -401,8 +401,8 @@ Monitores | Custom System
 
                     </div>
                     <center>
-                        <input type="hidden" value="{{teclado.0}}" name="idTecladoAlta">
-                        <h3 style="color: black;">Seguro que desea dar de alta al Teclado?</h3>
+                        <input type="hidden" value="{{monitor.0}}" name="idMonitorAlta">
+                        <h3 style="color: black;">Seguro que desea dar de alta al monitor?</h3>
                         <button type="submit" class="btn bg-green waves-effect">
                             <i class="material-icons">upgrade</i>
                             <span>DAR DE ALTA</span>

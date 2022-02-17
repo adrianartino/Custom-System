@@ -94,6 +94,7 @@ Discos Duros | Custom System
                                 <th>Empleados con respaldos</th>
                                 <th>Fechas respaldos</th>
                                 <th>Estado</th>
+                                <th>Prestamo</th>
                                 <th>Editar</th>
                                
 
@@ -114,6 +115,7 @@ Discos Duros | Custom System
                                 <th>Empleados con respaldos</th>
                                 <th>Fechas respaldos</th>
                                 <th>Estado</th>
+                                <th>Prestamo</th>
                                 <th>Editar</th>
                               
 
@@ -177,6 +179,25 @@ Discos Duros | Custom System
                                 {% elif disco.estado == "Mal estado/basura" %}
                                 <td><label class="label bg-red">Mal estado/basura</label></td>
                                 {% endif %}
+
+                             
+                                {% for e in discosEnPrestamos %}
+                                
+                               
+                                <th>
+                                  
+                                    <div>
+                                        <label class="{{area.color}}">{{e}}</label>
+                                    </div>
+                                  
+                                </th>
+                          
+                             
+                                
+                             
+                                {% endfor %}
+
+
 
                             
                              

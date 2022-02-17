@@ -1,0 +1,346 @@
+{% extends "Menu/menu.html" %}
+{% load static %}
+
+{% block titulo %}
+Editar Teléfono
+{% endblock %}
+
+{% block estilos %}
+<!-- Favicon-->
+<link rel="icon" href={% static 'images/icons/ra.ico' %} type="image/x-icon">
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
+    type="text/css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+
+<!-- Bootstrap Core Css -->
+<link href={% static 'panel/plugins/bootstrap/css/bootstrap.css' %} rel="stylesheet">
+
+<!-- Waves Effect Css -->
+<link href={% static 'panel/plugins/node-waves/waves.css' %} rel="stylesheet" />
+
+<!-- Animation Css -->
+<link href={% static 'panel/plugins/animate-css/animate.css' %} rel="stylesheet" />
+
+<!-- Bootstrap Select Css -->
+<link href={% static 'panel/plugins/bootstrap-select/css/bootstrap-select.css' %} rel="stylesheet" />
+
+<!-- Custom Css -->
+<link href={% static 'panel/css/style.css' %} rel="stylesheet">
+
+<!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+<link href={% static 'panel/css/themes/all-themes.css' %} rel="stylesheet" />
+
+{% endblock %}
+
+{% block contenido %}
+<div class="row clearfix">
+    {% for telefono, empleados in lista %}
+    <div class="col-xs-12 col-sm-3">
+        <div class="card profile-card">
+            
+            <div class="profile-body">
+                <div class="image-area">
+                    <img src="{{telefono.foto.url}}" alt="AdminBSB - Profile Image" width="60%" />
+                </div>
+                <div class="content-area">
+                    {% if telefono.conexion == "A" %}
+                    <h4>Alámbrico {{telefono.marca}} {{telefono.modelo}}</h4>
+                    {% else %}
+                    <h4>Inalámbrico {{telefono.marca}} {{telefono.modelo}}</h4>
+                    {% endif %}
+
+                </div>
+            </div>
+            <div class="profile-footer">
+                <ul>
+                    <li>
+                        <span>N° de Equipo</span>
+                        <span><label>{{telefono.id_telefono}}</label></span>
+                    </li>
+
+                </ul>
+                <center>
+                    <div>
+                        <span style="font-weight: bold;">Propietario Actual</span>
+                    </div>
+                    {% if sinEmpleado %}
+                    <div>
+                        <span>Sin encargado</span>
+                      
+
+                    </div>
+                    {% else %}
+
+                    {% for e in empleadosTel%}
+            
+                    <div>
+                        <span>{{e.nombre}} {{e.apellidos}}</span>
+                        <img src="{{e.imagen_empleado.url}}" width="50%">
+
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+            
+                </center>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-9">
+        <div class="card">
+            <div class="header">
+                <h2 style="font-family: 'Oswald', sans-serif;">
+                    EDITAR TELÉFONO
+                </h2>
+
+            </div>
+            <div class="body">
+
+                <form id="form_validation" action="/editarTelefonoBd/" method="POST">{% csrf_token %}
+
+                    <div class="row clearfix">
+                        <div class="col-md-6">
+                            <label for="email_address">Nombre Propietario:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">badge</i>
+                                </span>
+
+                                <select class="form-control show-tick" name="propietario">
+                                    {% if sinEmpleado %}
+                                    <option value="sinEmpleado">Sin propietario</option>
+                                    {% for em in empleadosTotales %}
+                                    <option value="{{em.id_empleado}}">#{{em.id_empleado}} {{em.nombre}} {{em.apellidos}}</option>
+                                    {% endfor %}
+                                    {% else %}
+                                    {% for dato in empleadosTel %}
+                                    <option value="{{dato.id_empleado}}">{{dato.nombre}} {{dato.apellidos}}</option>
+                                    {% endfor %}
+                                    <option value="sinEmpleado">Sin propietario</option>
+                                    {% for empleado in datos_empleados %}
+                                    <option value="{{empleado.0}}">#{{empleado.0}} {{empleado.1}} {{empleado.2}}</option>
+                                    {% endfor %}
+                                    {% endif %}
+
+
+                                </select>
+
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="email_address">Extensión:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">trending_up</i>
+                                </span>
+
+                                <select class="form-control show-tick" name="extension">
+                                    {% if sinEmpleado %}
+                                  
+                                    {% for extensionNueva in extension %}
+                                    <option value="{{extensionNueva}}">{{extensionNueva}}</option>
+                                    {% endfor %}
+
+                                    {% else %}
+                                 
+                                    <option value="{{telefono.extension}}">{{telefono.extension}}</option>
+                                 
+                                    
+                                    {% for extensionNueva in extension %}
+                                    <option value="{{extensionNueva}}">{{extensionNueva}}</option>
+                                    {% endfor %}
+                                    {% endif %}
+                                </select>
+
+                            </div>
+                        </div>
+                        
+                      
+                    </div>
+
+
+
+
+
+                    <div class="row clearfix">
+
+                        <div class="col-md-6">
+                            <label for="email_address">Nodo:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">battery_charging_full</i>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" value="{{telefono.nodo}}" class="form-control date"
+                                        placeholder="Ingresar nodo" name="nodo">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="email_address">Estado:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">build</i>
+                                </span>
+
+                                <select class="form-control show-tick" name="estado">
+                                    {% if telefono.estado == "activoFuncional" %}
+                                    <option value="activoFuncional" selected>Activo Funcional</option>
+                                    <option value="stockUsado">En Stock Usado</option>
+                                    <option value="stockNuevo">En Stock Nuevo</option>
+                                    <option value="basura">Basura</option>
+                                    {% elif telefono.estado == "stockUsado" %}
+                                    <option value="activoFuncional">Activo Funcional</option>
+                                    <option value="stockUsado" selected>En Stock Usado</option>
+                                    <option value="stockNuevo">En Stock Nuevo</option>
+                                    <option value="basura">Basura</option>
+                                    {% elif telefono.estado == "stockNuevo" %}
+                                    <option value="activoFuncional">Activo Funcional</option>
+                                    <option value="stockUsado">En Stock Usado</option>
+                                    <option value="stockNuevo" selected>En Stock Nuevo</option>
+                                    <option value="basura">Basura</option>
+                                    {% elif telefono.estado == "basura" %}
+                                    <option value="activoFuncional">Activo Funcional</option>
+                                    <option value="stockUsado">En Stock Usado</option>
+                                    <option value="stockNuevo" >En Stock Nuevo</option>
+                                    <option value="basura" selected>Basura</option>
+                                    {% endif %}
+
+                                </select>
+
+                            </div>
+                        </div>
+
+
+
+                      
+                      
+
+
+                    </div>
+                 
+                    <input type="hidden" name="idTelefono" value="{{telefono.id_telefono}}">
+                    <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i class="material-icons">loop</i>
+                        Actualizar telefono</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    {% endfor %}
+</div>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+{% if editado %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Wujuu..!',
+        text: ' {{textoEdicion}}',
+        footer: '<span style="color: green!important"> Puedes ver los datos actualizados! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
+{% endblock %}
+
+{% block estilosJs %}
+<script>
+    function soloLetras(e) {
+        key = e.keyCode || e.which;
+        tecla = String.fromCharCode(key).toLowerCase();
+        letras = " áéíóúabcdefghijklmnñopqrstuvwxyz";
+        especiales = "8-37-39-46";
+
+        tecla_especial = false
+        for (var i in especiales) {
+            if (key == especiales[i]) {
+                tecla_especial = true;
+                break;
+            }
+        }
+
+        if (letras.indexOf(tecla) == -1 && !tecla_especial) {
+            return false;
+        }
+    }
+
+    function validaNumericos(event) {
+        if (event.charCode >= 48 && event.charCode <= 57) {
+            return true;
+        }
+        return false;
+    }
+
+    function comprobar(obj) {
+        if (obj.checked) {
+            document.getElementById('divActPdf').style.display = "";
+        } else {
+            document.getElementById('divActPdf').style.display = "none";
+        }
+    }
+
+    window.onload = function () {
+        document.getElementById('divActPdf').style.display = "none";
+    }
+</script>
+<!-- Jquery Core Js -->
+<script src={% static 'panel/plugins/jquery/jquery.min.js' %}></script>
+
+<!-- Bootstrap Core Js -->
+<script src={% static 'panel/plugins/bootstrap/js/bootstrap.js' %}></script>
+
+<!-- Select Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-select/js/bootstrap-select.js' %}></script>
+
+<!-- Slimscroll Plugin Js -->
+<script src={% static 'panel/plugins/jquery-slimscroll/jquery.slimscroll.js' %}></script>
+
+<!-- Bootstrap Colorpicker Js -->
+<script src={% static 'panel/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js' %}></script>
+
+<!-- Dropzone Plugin Js -->
+<script src={% static 'panel/plugins/dropzone/dropzone.js' %}></script>
+
+<!-- Input Mask Plugin Js -->
+<script src={% static 'panel/plugins/jquery-inputmask/jquery.inputmask.bundle.js' %}></script>
+
+<!-- Multi Select Plugin Js -->
+<script src={% static 'panel/plugins/multi-select/js/jquery.multi-select.js' %}></script>
+
+<!-- Jquery Spinner Plugin Js -->
+<script src={% static 'panel/plugins/jquery-spinner/js/jquery.spinner.js' %}></script>
+
+<!-- Bootstrap Tags Input Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js' %}></script>
+
+<!-- noUISlider Plugin Js -->
+<script src={% static 'panel/plugins/nouislider/nouislider.js' %}></script>
+
+<!-- Waves Effect Plugin Js -->
+<script src={% static 'panel/plugins/node-waves/waves.js' %}></script>
+
+<!-- Jquery DataTable Plugin Js -->
+<script src={% static 'panel/plugins/jquery-datatable/jquery.dataTables.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.flash.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/jszip.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/pdfmake.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/vfs_fonts.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.html5.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.print.min.js' %}></script>
+
+<!-- Custom Js -->
+<script src={% static 'panel/js/admin.js' %}></script>
+<script src={% static 'panel/js/pages/tables/jquery-datatable.js' %}></script>
+<script src={% static 'panel/js/pages/forms/advanced-form-elements.js' %}></script>
+
+<!-- Demo Js -->
+<script src={% static 'panel/js/demo.js' %}></script>
+
+{% endblock %}

@@ -72,6 +72,8 @@ urlpatterns = [
     path("editarTecladoBd/", views.editarTecladoBd),
     path("editarMonitor/", views.editarMonitor),
     path("editarMonitorBd/", views.editarMonitorBd),
+    path("editarTelefono/", views.editarTelefono),
+    path("editarTelefonoBd/", views.editarTelefonoBd),
     path("firmarCarta/", views.firmarCarta),
     path("salir/", views.salir, name="salir"),
     path("altaEmpleado/", views.altaEmpleado),
@@ -86,6 +88,8 @@ urlpatterns = [
     path("altaTeclado/", views.altaTeclado),
     path("bajaMonitor/", views.bajaMonitor),
     path("altaMonitor/", views.altaMonitor),
+    path("bajaTelefono/", views.bajaTelefono),
+    path("altaTelefono/", views.altaTelefono),
     
     path("qrEquipo/", views.qrEquipo),
      path("qrImpresora/", views.qrImpresora),

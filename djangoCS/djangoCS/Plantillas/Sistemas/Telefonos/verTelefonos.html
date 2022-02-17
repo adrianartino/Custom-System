@@ -108,6 +108,7 @@ Teléfonos | Custom System
                                 <th>Fotografía</th>
                            
                                 <th>Nodo</th>
+                                <th>Prestamo</th>
                                 <th>Editar</th>
                                 <th>Baja</th>
                             </tr>
@@ -124,44 +125,62 @@ Teléfonos | Custom System
                                 <th>Fotografía</th>
                              
                                 <th>Nodo</th>
+                                <th>Prestamo</th>
                                 <th>Editar</th>
                                 <th>Baja</th>
                             </tr>
                         </tfoot>
                         <tbody class="animate__animated animate__backInDown">
-                            {% for tel, area in listas %}
+                            {% for tel, presta in listaT %}
                             <tr>
                                 <td>{{tel.0}}</td>
+
+                                {% if tel.1 == "" %}
+                                <td>Sin encargado</td>
+                                {% else %}
                                 <td>
                                     <div>
                                         <label class="label bg-orange">{{tel.1}}</label>
                                     </div>
                                     <div>
-                                        <label class="{{area.color}}">{{area.nombre}}</label>
+                                        <label class="label bg-blue-grey">En departamento de sistemas</label>
                                     </div>
-                                </td>
+                                {% endif %}
+
                                 {% if tel.2 == "A" %}
                                 <td>Alámbrico</td>
                                 {% else %}
                                 <td>Inalámbrico</td>
                                 {% endif %}
-                                <td>{{tel.3}}</td>
-                                <td>{{tel.4}}</td>
-                                {% if tel.5 == "activoFuncional" %}
+                                <td>{{tel.5}}</td>
+                                <td>{{tel.6}}</td>
+                                {% if tel.7 == "activoFuncional" %}
                                 <td ><label class="label bg-green">Activo Funcional</label></td>
                                 {% endif %}
                                 <td>
                                     <center>
-                                        <img src="{{tel.6.url}}" width="60%" alt="empleado">
+                                        <img src="{{tel.8.url}}" width="60%" alt="empleado">
                                     </center>
                                 </td>
                                
-                                <td>{{tel.7}}</td>
+                                <td>{{tel.10}}</td>
+                                {% if presta != "Sin prestamo" %}
+                                <td>
+                                    <div>
+                                        <label class="label bg-orange">Con prestamo</label>
+                                    </div>
+                                    <div>
+                                        <label class="{{area.color}}">{{presta.0}}</label>
+                                    </div>
+                                </td>
+                                {% elif presta == "Sin prestamo" %}
+                                <td>No aplica</td>
+                                {% endif %}
                              
                                
-                                <form action="/editarEmpleado/" method="POST">{% csrf_token %}
+                                <form action="/editarTelefono/" method="POST">{% csrf_token %}
                                     <th>
-                                        <input type="hidden" name="idEmpleadoEditar" value="{{empleado.id_empleado}}">
+                                        <input type="hidden" name="idTelefonoEditar" value="{{tel.0}}">
                                         <center>
                                             <button type="submit" class="btn btn-warning waves-effect">
                                                 <i class="material-icons">edit</i>
@@ -174,7 +193,7 @@ Teléfonos | Custom System
                                 <th>
                                     <center>
                                         <button type="button" class="btn bg-red waves-effect" data-toggle="modal"
-                                            data-target="#{{empleado.id_empleado}}">
+                                            data-target="#{{tel.0}}">
                                             <i class="material-icons">cancel</i>
                                         </button>
                                     </center>
@@ -258,7 +277,14 @@ Teléfonos | Custom System
                                 {% endif %}
                                 <td>{{tel.2}}</td>
                                 <td>{{tel.3}}</td>
-                                <td>{{tel.4}}</td>
+
+                                {% if tel.4 == "stockUsado" %}
+                                <td ><label class="label bg-orange">Usado</label></td>
+                                {% elif tel.4 == "stockNuevo" %}
+                                <td ><label class="label bg-green">Nuevo</label></td>
+                                {% elif tel.4 == "basura" %}
+                                <td ><label class="label bg-red">Basura</label></td>
+                                {% endif %}
                                 <td>
                                     <center>
                                         <img src="{{tel.5.url}}" width="60%" alt="empleado">
@@ -268,7 +294,7 @@ Teléfonos | Custom System
                                 <th>
                                     <center>
                                         <button type="button" class="btn bg-green waves-effect" data-toggle="modal"
-                                            data-target="#{{empleado.id_empleado}}">
+                                            data-target="#{{tel.0}}">
                                             <i class="material-icons">upgrade</i>
                                         </button>
                                     </center>
@@ -286,38 +312,38 @@ Teléfonos | Custom System
 </div>
 
 
-{% for empleado, area in listaModal1 %}
+{% for telefono in telActivos %}
 <!-- Default Size -->
-<div class="modal fade" id="{{empleado.id_empleado}}" tabindex="-1" role="dialog">
+<div class="modal fade" id="{{telefono.0}}" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content" style="border-radius: 16px;">
             <div class="modal-header">
                 <center>
-                    <h1 style="color: crimson; font-family: 'Oswald', sans-serif;">DAR DE BAJA EMPLEADO <i
+                    <h1 style="color: crimson; font-family: 'Oswald', sans-serif;">DAR DE BAJA TELÉFONO <i
                             class="material-icons" style="color:black; font-size:100%">get_app</i></h1>
                     <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
 
                 </center>
             </div>
             <div class="modal-body">
-                <form action="/bajaEmpleado/" method="POST">{% csrf_token %}
+                <form action="/bajaTelefono/" method="POST">{% csrf_token %}
                     <div class="body table-responsive">
                         <table class="table">
                             <thead>
                                 <tr class="bg-teal">
-                                    <th>Nombre</th>
-                                    <th>Apellidos</th>
+                                    <th>Marca</th>
+                                    <th>Modelo</th>
                                     <th>Imagen</th>
-                                    <th>Departamento</th>
+                                    <th>Empleado</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td style="color: black;">{{empleado.nombre}}</td>
-                                    <td style="color: black;">{{empleado.apellidos}}</td>
-                                    <th> <img src="{{empleado.imagen_empleado.url}}" width="120" height="150" alt="lap">
+                                    <td style="color: black;">{{telefono.5}}</td>
+                                    <td style="color: black;">{{telefono.6}}</td>
+                                    <th> <img src="{{telefono.8.url}}" width="120" height="150" alt="lap">
                                     </th>
-                                    <td> <label class="{{area.1}}">{{area.0}}</label> </td>
+                                    <td> <label class="bg-red" >{{telefono.1}}</label> </td>
                                 </tr>
 
 
@@ -328,8 +354,8 @@ Teléfonos | Custom System
 
                     </div>
                     <center>
-                        <input type="hidden" value="{{empleado.id_empleado}}" name="idEmpleadoBaja">
-                        <h3 style="color: black;">Seguro que desea dar de baja al empleado?</h3>
+                        <input type="hidden" value="{{telefono.0}}" name="idTelefonoBaja">
+                        <h3 style="color: black;">Seguro que desea dar de baja al teléfono?</h3>
                         <button type="submit" class="btn bg-red waves-effect">
                             <i class="material-icons">cancel</i>
                             <span>DAR DE BAJA</span>
@@ -343,38 +369,39 @@ Teléfonos | Custom System
 
 {% endfor %}
 
-{% for empleado, area in listaModal2 %}
+
+{% for tele in telStock %}
 <!-- Default Size -->
-<div class="modal fade" id="{{empleado.id_empleado}}" tabindex="-1" role="dialog">
+<div class="modal fade" id="{{tele.0}}" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content" style="border-radius: 16px;">
             <div class="modal-header">
                 <center>
-                    <h1 style="color: green; font-family: 'Oswald', sans-serif;">DAR DE ALTA EMPLEADO <i
+                    <h1 style="color: green; font-family: 'Oswald', sans-serif;">DAR DE ALTA TELÉFONO <i
                             class="material-icons" style="color:black; font-size:100%">upgrade</i></h1>
                     <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
 
                 </center>
             </div>
             <div class="modal-body">
-                <form action="/altaEmpleado/" method="POST">{% csrf_token %}
+                <form action="/altaTelefono/" method="POST">{% csrf_token %}
                     <div class="body table-responsive">
                         <table class="table">
                             <thead>
                                 <tr class="bg-teal">
-                                    <th>Nombre</th>
-                                    <th>Apellidos</th>
+                                    <th>Marca</th>
+                                    <th>Modelo</th>
                                     <th>Imagen</th>
-                                    <th>Departamento</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td style="color: black;">{{empleado.nombre}}</td>
-                                    <td style="color: black;">{{empleado.apellidos}}</td>
-                                    <th> <img src="{{empleado.imagen_empleado.url}}" width="120" height="150" alt="lap">
+                                    <td style="color: black;">{{tele.2}}</td>
+                                    <td style="color: black;">{{tele.3}}</td>
+                                    <th> <img src="{{tele.5.url}}" width="120" height="150" alt="lap">
                                     </th>
-                                    <td> <label class="{{area.1}}">{{area.0}}</label> </td>
+                              
+                                    
                                 </tr>
 
 
@@ -385,8 +412,8 @@ Teléfonos | Custom System
 
                     </div>
                     <center>
-                        <input type="hidden" value="{{empleado.id_empleado}}" name="idEmpleadoAlta">
-                        <h3 style="color: black;">Seguro que desea dar de alta al empleado?</h3>
+                        <input type="hidden" value="{{tele.0}}" name="idTelefonoAlta">
+                        <h3 style="color: black;">Seguro que desea dar de alta al teléfono?</h3>
                         <button type="submit" class="btn bg-green waves-effect">
                             <i class="material-icons">upgrade</i>
                             <span>DAR DE ALTA</span>
@@ -399,7 +426,6 @@ Teléfonos | Custom System
 </div>
 
 {% endfor %}
-
 
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 {% if alta %}

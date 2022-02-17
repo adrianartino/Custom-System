@@ -4,6 +4,7 @@ import mimetypes
 import os
 import base64
 from io  import BytesIO
+from sre_parse import expand_template
 
 #Renderizado
 from django.http import response
@@ -2623,7 +2624,7 @@ def guardarImagen(request):
         return redirect('/firmarCarta/')
 
     return render(request, "cartaCompromiso/agregarCarta.html",{"estaEnAgregarCarta": estaEnAgregarCarta})
-    
+   
 def editarEquipo(request):
     
     if "idSesion" in request.session:
@@ -8331,6 +8332,16 @@ def editarMouseBd(request):
                         
                     sinEquipo = True
                     lista = zip(mouseDatos,equiposTotales)
+
+                    prestamo =  PrestamosSistemas.objects.filter(id_producto = mouseId)
+
+                    if prestamo:
+                        mouse = int(mouseId)
+                        borrado = PrestamosSistemas.objects.get(id_producto = mouse, tabla = "Mouses")
+                        borrado.delete()    
+                            
+                        return redirect('/verMouses/')
+
                     return render(request, "Editar/editarMouse.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista, "mouseRecibido":mouseRecibido, "equiposTotales":equiposTotales, "sinEquipo":sinEquipo, 
                                                                         "editado":editado, "textoEdicion":textoEdicion, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
                 else:
@@ -8950,6 +8961,15 @@ def editarTecladoBd(request):
                     sinEquipo = True
                     lista = zip(tecladoDatos,equiposTotales)
 
+                    prestamo =  PrestamosSistemas.objects.filter(id_producto = tecladoId)
+
+                    if prestamo:
+                        teclado = int(tecladoId)
+                        borrado = PrestamosSistemas.objects.get(id_producto = teclado, tabla = "Teclados")
+                        borrado.delete()
+                                
+                        return redirect('/verTeclados/')
+
 
                     return render(request, "Editar/editarTeclado.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista, "tecladoRecibido":tecladoRecibido, "equiposTotales":equiposTotales, "sinEquipo":sinEquipo, 
                                                                         "editado":editado, "textoEdicion":textoEdicion, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
@@ -8997,14 +9017,7 @@ def editarTecladoBd(request):
 
                         empleados = Empleados.objects.filter(id_empleado = id_empleado)
                        
-                        prestamo =  PrestamosSistemas.objects.filter(id_producto = tecladoId)
-
-                        if prestamo:
-                            teclado = int(tecladoId)
-                            borrado = PrestamosSistemas.objects.get(id_producto = teclado, tabla = "Teclados")
-                            borrado.delete()
-                            
-                        return redirect('/verTeclados/')
+                        
 
                   
                     return render(request, "Editar/editarTeclado.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "empleadoDe":empleadoDe, "equipos_totales":equipos_totales, "correo":correo, "lista":lista, "equiposT":equiposT, "empleados":empleados, "datos_equipo":datos_equipo, 
@@ -9200,19 +9213,19 @@ def verMonitores(request):
                 monitoresStock.append([idMonitor, marca, modelo, estado, fotoMouse])
 
             
-            if "idMouseBaja" in request.session:
+            if "idMonitorBaja" in request.session:
                 baja = True
-                mensaje = "Se dio de baja al mouse " + request.session['idMouseBaja']
-                del request.session["idMouseBaja"]
-                return render(request, "Sistemas/Mouses/verMouses.html", {"estaEnVerMouses":estaEnVerMouses,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,"mousesActivos":mousesActivos, "mousesStock":mousesStock,
-            "mousesActivosPrestamo":mousesActivosPrestamo, "lista":lista, "mousesPrestados":mousesPrestados, "baja":baja, "mensaje":mensaje})
+                mensaje = "Se dio de baja al monitor " + request.session['idMonitorBaja']
+                del request.session["idMonitorBaja"]
+                return render(request, "Sistemas/Monitores/verMonitores.html", {"estaEnVerMonitores":estaEnVerMonitores,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,"monitoresActivos":monitoresActivos, "monitoresStock":monitoresStock,
+            "monitoresActivosPrestamos":monitoresActivosPrestamos, "lista":lista, "idsMonitoresPrestamos":idsMonitoresPrestamos, "baja":baja, "mensaje":mensaje})
 
-            if "idMouseAlta" in request.session:
+            if "idMonitorBaja" in request.session:
                 alta = True
-                mensaje = "Se dio de alta al mouse " + request.session['idMouseAlta']
-                del request.session["idMouseAlta"]
-                return render(request, "Sistemas/Mouses/verMouses.html", {"estaEnVerMouses":estaEnVerMouses,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,"mousesActivos":mousesActivos, "mousesStock":mousesStock,
-            "mousesActivosPrestamo":mousesActivosPrestamo, "lista":lista, "mousesPrestados":mousesPrestados, "alta":alta, "mensaje":mensaje})
+                mensaje = "Se dio de alta al monitor " + request.session['idMonitorBaja']
+                del request.session["idMonitorBaja"]
+                return render(request, "Sistemas/Monitores/verMonitores.html", {"estaEnVerMonitores":estaEnVerMonitores,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,"monitoresActivos":monitoresActivos, "monitoresStock":monitoresStock,
+            "monitoresActivosPrestamos":monitoresActivosPrestamos, "lista":lista, "idsMonitoresPrestamos":idsMonitoresPrestamos, "alta":alta, "mensaje":mensaje})
 
         return render(request, "Sistemas/Monitores/verMonitores.html", {"estaEnVerMonitores":estaEnVerMonitores,"id_admin":id_admin, "lista":lista, "monitoresActivosPrestamos":monitoresActivosPrestamos, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto, "monitoresActivos":monitoresActivos, "monitoresStock":monitoresStock})
     else:
@@ -9273,33 +9286,33 @@ def altaMonitor(request):
         id_empleado_admin = request.session['idSesion']
         if request.method == "POST":
         
-            idAlta= request.POST['idTecladoAlta']
-            idsTecladoP =[]
-            datosTeclado = Teclados.objects.filter(id_teclado = idAlta)
+            idAlta= request.POST['idMonitorAlta']
+            idsMonitorP =[]
+            datosMonitor = Monitores.objects.filter(id_monitor = idAlta)
             
-            for dato in datosTeclado:
-                idTeclado = str(dato.id_teclado)
+            for dato in datosMonitor:
+                idMonitor = str(dato.id_monitor)
                 marca = dato.marca
                 modelo = dato.modelo
   
-            nombreCompletoTeclado = marca + " " + modelo
+            nombreCompletoMonitor = marca + " " + modelo
 
-            tecladosPrestados = PrestamosSistemas.objects.filter(devolucion = "N", tabla = "Teclados")
-            for dato in tecladosPrestados:
+            monitoresPrestados = PrestamosSistemas.objects.filter(devolucion = "N", tabla = "Monitores")
+            for dato in monitoresPrestados:
                 idT = dato.id_producto
-                idsTecladoP.append(idT)
+                idsMonitorP.append(idT)
 
       
 
             
-            actualizacion = Teclados.objects.filter(id_teclado = idAlta).update(activo = "A", estado = "activoFuncional")
+            actualizacion = Monitores.objects.filter(id_monitor = idMonitor).update(activo = "A", estado = "activoFuncional")
             if actualizacion:
                             
                                 
                             
-                request.session['idTecladoAlta'] = nombreCompletoTeclado
+                request.session['idMonitorAlta'] = nombreCompletoMonitor
                                 
-                return redirect('/verTeclados/')
+                return redirect('/verMonitores/')
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -9523,6 +9536,15 @@ def editarMonitorBd(request):
                     sinEquipo = True
                     lista = zip(monitorDatos,equiposTotales)
 
+                    prestamo =  PrestamosSistemas.objects.filter(id_producto = monitorId)
+
+                    if prestamo:
+                        monitor = int(monitorId)
+                        borrado = PrestamosSistemas.objects.get(id_producto = monitor, tabla = "Monitores")
+                        borrado.delete()
+                            
+                        return redirect('/verMonitores/')
+
 
                     return render(request, "Editar/editarMonitor.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista": lista, "monitorRecibido":monitorRecibido, "equiposTotales":equiposTotales, "sinEquipo":sinEquipo, 
                                                                         "editado":editado, "textoEdicion":textoEdicion, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
@@ -9570,14 +9592,7 @@ def editarMonitorBd(request):
 
                         empleados = Empleados.objects.filter(id_empleado = id_empleado)
                        
-                        prestamo =  PrestamosSistemas.objects.filter(id_producto = monitorId)
-
-                        if prestamo:
-                            monitor = int(monitorId)
-                            borrado = PrestamosSistemas.objects.get(id_producto = monitor, tabla = "Monitores")
-                            borrado.delete()
-                            
-                        return redirect('/verMonitores/')
+                       
 
                   
                     return render(request, "Editar/editarMonitor.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "empleadoDe":empleadoDe, "equipos_totales":equipos_totales, "correo":correo, "lista":lista, "equiposMon":equiposMon, "empleados":empleados, "datos_equipo":datos_equipo, 
@@ -9692,12 +9707,24 @@ def verTelefonos(request):
         #arreglos telefonos en stock y activos
         telActivos = []
         telStock = []
+        telActivosPrestados = []
+        idsTelPrestados = []
         #obtener lista de todos los telefonos
 
         telefonosTotales = Telefonos.objects.all()
+        telefonosPrestados = PrestamosSistemas.objects.filter(devolucion = "N", tabla = "Telefonos")
+        for teP in telefonosPrestados:
+            idTelP = teP.id_producto
+            idsTelPrestados.append(idTelP)
+
+
         for tel in telefonosTotales:
             idTel = str(tel.id_telefono)
-            idEmpl = str(tel.id_empleado_id)
+            if tel.id_empleado_id == None:
+                ConPropietario = False
+            else:
+                ConPropietario = True
+                idEmpl = str(tel.id_empleado_id)
             con = tel.conexion
             marcaT = tel.marca
             modeloT = tel.modelo
@@ -9708,38 +9735,147 @@ def verTelefonos(request):
             activo = tel.activo
 
             if activo == "A":
-                encargado = Empleados.objects.filter(id_empleado = str(idEmpl))
-                for e in encargado:
-                    idE = str(e.id_empleado)
-                    nombres = e.nombre
-                    apellidosE = e.apellidos
-                    areaE = str(e.id_area_id)
 
-                    encargadoNombre = idE + " " + nombres + " " + apellidosE 
+                if ConPropietario == True:
+                    encargado = Empleados.objects.filter(id_empleado = str(idEmpl))
+                    for e in encargado:
+                        idE = str(e.id_empleado)
+                        nombres = e.nombre
+                        apellidosE = e.apellidos
+                        areaE = str(e.id_area_id)
 
-                areasT = Areas.objects.filter(id_area = areaE)
-                for a in areasT:
-                    nombreA = a.nombre
-                    color = a. color
+                        encargadoNombre = idE + " " + nombres + " " + apellidosE 
 
-                areaEncargado = nombreA + " " + color
+                    areasT = Areas.objects.filter(id_area = areaE)
+                    for a in areasT:
+                        nombreA = a.nombre
+                        color = a.color
 
-                telActivos.append([idTel,encargadoNombre,  con, marcaT, modeloT, estadoT, fotoT, extension, nodo])
+                    areaEncargado = nombreA + " " + color
 
-                listas = zip (telActivos, areasT)
+                   
+
+                elif ConPropietario == False:
+                    encargadoNombre = "Sin encargado"
+                    nombreA = "Sin área"
+                    color = ""
+                    extension = "Sin extension"
+                    nodo = "Sin nodo"
+
+                telActivos.append([idTel,encargadoNombre, nombreA, color,   con, marcaT, modeloT, estadoT, fotoT, extension, nodo])
+
+              
+
+                if idTel in idsTelPrestados:
+                    for telP in telefonosPrestados:
+                        idTelPrestado = telP.id_producto
+                        if idTel == idTelPrestado:
+                            fecha = telP.fecha_prestamo
+                            firma = telP.firma_entrega
+
+                        telActivosPrestados.append([fecha, firma])
+                else:
+                    telActivosPrestados.append("Sin prestamo")
+
+                
 
             if activo == "I":
                 telStock.append([idTel, con, marcaT, modeloT, estadoT, fotoT])
 
+            listaT = zip(telActivos, telActivosPrestados)
+
+
+
+
+
+
+        return render(request, "Sistemas/Telefonos/verTelefonos.html", {"estaEnVerTelefonos":estaEnVerTelefonos, "ConPropietario":ConPropietario, "telActivos":telActivos,"telStock":telStock, "telActivosPrestados":telActivosPrestados, "listaT":listaT, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,
+        "telActivos":telActivos, "telStock":telStock})
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+
+
+def bajaTelefono(request):
+
+    if "idSesion" in request.session:
+    
+        id_empleado_admin = request.session['idSesion']
+        if request.method == "POST":
         
+            idBaja= request.POST['idTelefonoBaja']
+            
+            datosTelefono = Telefonos.objects.filter(id_telefono = idBaja)
+            
+            
+            for dato in datosTelefono:
+                idTelefono = str(dato.id_telefono)
+                marca = dato.marca
+                modelo = dato.modelo
+            
+                
+            
 
+            
+            nombreCompletoTelefono = marca + " " + modelo
+           
 
+            actualizacion = Telefonos.objects.filter(id_telefono = idTelefono).update(activo = "I", estado = "stockUsado", nodo = "", extension = "",id_empleado = "")
 
+            if actualizacion:
+                    
+                request.session['idTelefonoBaja'] = nombreCompletoTelefono
+                prestamo =  PrestamosSistemas.objects.filter(id_producto = idBaja)
 
+                if prestamo:
+                    telefono = int(idBaja)
+                    borrado = PrestamosSistemas.objects.get(id_producto = telefono, tabla = "Telefonos")
+                    borrado.delete()
+                    
+                return redirect('/verTelefonos/')
 
+               
+                
+                            
+            
+  
+            
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
 
-        return render(request, "Sistemas/Telefonos/verTelefonos.html", {"estaEnVerTelefonos":estaEnVerTelefonos,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,
-        "telActivos":telActivos , "listas":listas, "telStock":telStock})
+def altaTelefono(request):
+
+    if "idSesion" in request.session:
+    
+        id_empleado_admin = request.session['idSesion']
+        if request.method == "POST":
+        
+            idAlta= request.POST['idTelefonoAlta']
+            idsTelefonoP =[]
+            datosTelefono = Telefonos.objects.filter(id_telefono = idAlta)
+            
+            for dato in datosTelefono:
+                idTelefono = str(dato.id_telefono)
+                marca = dato.marca
+                modelo = dato.modelo
+  
+            nombreCompletoTelefono = marca + " " + modelo
+
+            telefonosPrestados = PrestamosSistemas.objects.filter(devolucion = "N", tabla = "Telefonos")
+            for dato in telefonosPrestados:
+                idT = dato.id_producto
+                idsTelefonoP.append(idT)
+
+      
+
+            
+            actualizacion = Telefonos.objects.filter(id_telefono = idTelefono).update(activo = "A", estado = "activoFuncional")
+            if actualizacion:
+                            
+                                
+                            
+                request.session['idTelefonoAlta'] = nombreCompletoTelefono
+                                
+                return redirect('/verTelefonos/')
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -9803,6 +9939,343 @@ def agregarTelefonos(request):
          "empleados":empleados, "registroTelefonoCompleto":registroTelefonoCompleto})
     else:
         return redirect('/login/') #redirecciona a url de inicio
+
+  
+def editarTelefono(request):
+    if "idSesion" in request.session:
+        
+        estaEnCartasBitacora = True
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        nombreCompleto = nombre + " " + apellidos
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+        foto = fotoAdmin(request)
+        
+        if request.method == "POST":
+            telefonoRecibido = request.POST['idTelefonoEditar']
+            telefonoDatos = Telefonos.objects.filter(id_telefono=telefonoRecibido)
+
+           
+            for dato in telefonoDatos:
+                empleadoId= dato.id_empleado_id #2
+                extensionTel = dato.extension
+           
+
+            empleadosTel = Empleados.objects.filter(id_empleado= empleadoId)
+       
+              
+               
+                
+            if empleadoId == None:
+                extension = ["Ninguna", "101", "102", "103", "104", "105", "106", "107", "108", "109", "110", "111", "112", "113", "114", "115", "116", "117", "118","119","120"]
+                for ex in extension:
+                    if ex == extensionTel:
+                        extension.remove(ex)
+
+
+                empleadosTotales = Empleados.objects.all()
+ 
+                    
+                sinEmpleado = True
+                lista = zip(telefonoDatos,empleadosTotales)
+                return render(request, "Editar/editarTelefono.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "empleadosTel":empleadosTel, "extension":extension, "lista":lista, "telefonoRecibido":telefonoRecibido, "empleadosTotales":empleadosTotales, "sinEmpleado":sinEmpleado, 
+                                                                    "cartuchosNoti":cartuchosNoti, "mantenimientosNoti":mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+            else:
+                
+                empleadosTel = Empleados.objects.filter(id_empleado = empleadoId)
+                extension = ["Ninguna", "101", "102", "103", "104", "105", "106", "107", "108", "109", "110", "111", "112", "113", "114", "115", "116", "117", "118","119","120"]
+                for ex in extension:
+                    if ex == extensionTel:
+                        extension.remove(ex)
+
+                for eqE in empleadosTel:
+                        id_area = eqE.id_area_id 
+
+                areaDe = Areas.objects.filter(id_area = id_area)
+     
+                
+                lista = zip(telefonoDatos,empleadosTel)
+                
+                empleados_totales = Empleados.objects.all()
+                arreglo_ids = []
+                
+                for equi in empleados_totales:
+                    arreglo_ids.append(equi.id_empleado)
+                    
+                    #[1,2,3]
+                    
+                for id in arreglo_ids:
+                     if id == empleadoId: #si 2 == 2
+                        arreglo_ids.remove(id)
+                            
+                    #[1,3]
+                    
+                 
+                datos_empleados = []
+                    
+                for id in arreglo_ids:
+                    datos = Empleados.objects.filter(id_empleado = id)
+                    for dato in datos:
+                        id_empleados = dato.id_empleado
+                        nombres = dato.nombre
+                        apellido = dato.apellidos
+                        foto = dato.imagen_empleado
+                         
+                           
+                    datos_empleados.append([id_empleados, nombres, apellido, foto])    
+
+                        
+                
+            
+            return render(request, "Editar/editarTelefono.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "extension":extension, "correo":correo, "lista":lista, "empleadosTel":empleadosTel, "empleados_totales":empleados_totales, "areaDe":areaDe, "datos_empleados":datos_empleados, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+
+        return render(request, "Editar/editarTelefono.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+
+def editarTelefonoBd(request):
+    if "idSesion" in request.session:
+        
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        nombreCompleto = nombre + " " + apellidos
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+        foto = fotoAdmin(request)
+        
+        if request.method == "POST":
+            telefonoId = request.POST['idTelefono']
+            empleado_actualizar = request.POST['propietario']
+            estado_actualizar = request.POST['estado']
+            nodo_actualizar = request.POST['nodo']
+            extension_actualizar = request.POST['extension']
+         
+
+            
+            if empleado_actualizar == "sinEmpleado":
+                actualizar = Telefonos.objects.filter(id_telefono=telefonoId).update( id_empleado_id=None,estado= estado_actualizar, activo="I", nodo = nodo_actualizar, extension = extension_actualizar)
+                
+                
+            elif empleado_actualizar !=  "sinEmpleado": 
+                int_empleado = int(empleado_actualizar)
+                actualizar = Telefonos.objects.filter(id_telefono=telefonoId).update( id_empleado_id=Empleados.objects.get(id_empleado = int_empleado),
+                                                 estado= estado_actualizar, activo="A", nodo = nodo_actualizar, extension = extension_actualizar)
+            
+            if actualizar:
+               
+                datos = Telefonos.objects.filter(id_telefono = telefonoId)
+            
+
+                
+                for dato in datos:
+               
+                    marca = dato.marca
+                    modelo = dato.modelo
+                    
+                todoTelefono = marca + " " + modelo
+                
+                
+                
+                editado = True
+                textoEdicion = "Se ha editado al teléfono " + todoTelefono + " con éxito!"
+              
+                
+               
+                
+
+                telefonoRecibido = telefonoId
+                telefonoDatos = Telefonos.objects.filter(id_telefono=telefonoRecibido)
+
+                
+                for dato in telefonoDatos:
+                    empleadoId= dato.id_empleado_id #2
+                    extensionTel = dato.extension
+                    
+                if empleadoId == None:
+                    extension = ["Ninguna", "101", "102", "103", "104", "105", "106", "107", "108", "109", "110", "111", "112", "113", "114", "115", "116", "117", "118","119","120"]
+                    for ex in extension:
+                        if ex == extensionTel:
+                            extension.remove(ex)
+                        
+
+                    empleadosTotales = Empleados.objects.all()
+                            
+               
+                    
+                        
+                    sinEmpleado = True
+                    lista = zip(telefonoDatos,empleadosTotales)
+
+                    prestamo =  PrestamosSistemas.objects.filter(id_producto = telefonoId)
+
+                    if prestamo:
+                        telefono = int(telefonoId)
+                        borrado = PrestamosSistemas.objects.get(id_producto = telefono, tabla = "Telefonos")
+                        borrado.delete()
+                            
+                        return redirect('/verTelefonos/')
+
+
+                    return render(request, "Editar/editarTelefono.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo,"extension":extension, "lista": lista, "telefonoRecibido":telefonoRecibido, "equiposTotales":equiposTotales, "sinEmpleado":sinEmpleado, 
+                                                                        "editado":editado, "textoEdicion":textoEdicion, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+                else:
+                    
+                    empleadosTel = Empleados.objects.filter(id_empleado = empleadoId)
+                    extension = ["Ninguna", "101", "102", "103", "104", "105", "106", "107", "108", "109", "110", "111", "112", "113", "114", "115", "116", "117", "118","119","120"]
+                    for ex in extension:
+                        if ex == extensionTel:
+                            extension.remove(ex)
+
+                    for eqE in empleadosTel:
+                        id_area = eqE.id_area_id 
+
+                    areaDe = Areas.objects.filter(id_area = id_area)
+                  
+
+
+                    lista = zip(telefonoDatos, empleadosTel)
+                    
+                    empleados_totales = Empleados.objects.all()
+                    arreglo_ids = []
+                
+                    for equi in empleados_totales:
+                        arreglo_ids.append(equi.id_empleado)
+                    
+                    #[1,2,3]
+                    
+                    for id in arreglo_ids:
+                        if id == empleadoId: #si 2 == 2
+                            arreglo_ids.remove(id)
+                            
+                    #[1,3]
+                    
+                 
+                    datos_empleados = []
+                    
+                    for id in arreglo_ids:
+                        datos = Empleados.objects.filter(id_empleado = id)
+                        for dato in datos:
+                            id_empleados = dato.id_empleado
+                            nombres = dato.nombre
+                            apellido = dato.apellidos
+                            foto = dato.imagen_empleado
+                         
+                           
+                        datos_empleados.append([id_empleados, nombres, apellido, foto])    
+
+                 
+                       
+                       
+
+                  
+                    return render(request, "Editar/editarTelefono.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "areaDe":areaDe, "extension":extension, "empleados_totales":empleados_totales, "correo":correo, "lista":lista, "empleadosTel":empleadosTel, "datos_empleados":datos_empleados, 
+                                                                        "editado":editado, "textoEdicion":textoEdicion, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+            else:
+                datos = Telefonos.objects.filter(id_telefono = telefonoId)
+
+                
+                for dato in datos:
+                 
+                    marca = dato.marca
+                    modelo = dato.modelo
+                    
+                todoTelefono = marca + " " + modelo
+                
+                
+                editado = True
+                textoEdicion = "Error en la base de datos!"
+               
+             
+                telefonoRecibido = telefonoId
+                telefonoDatos = Telefonos.objects.filter(id_telefono=telefonoRecibido)
+
+                
+                for dato in telefonoDatos:
+                    empleadoId= dato.id_empleado_id #2
+                    extensionTel = dato.extension
+                    
+                    
+                if empleadoId == None:
+                    extension = ["Ninguna", "101", "102", "103", "104", "105", "106", "107", "108", "109", "110", "111", "112", "113", "114", "115", "116", "117", "118","119","120"]
+                    for ex in extension:
+                        if ex == extensionTel:
+                            extension.remove(ex)
+                  
+
+                
+                
+               
+                    empleadosTotales = Empleados.objects.all()
+                        
+                    
+                        
+                    sinEmpleado = True
+                    lista = zip(telefonoDatos,empleadosTotales)
+                    return render(request, "Editar/editarTelefono.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto,"extension":extension, "correo":correo, "lista":lista, "telefonoRecibido":telefonoRecibido,  "empleadosTotales":empleadosTotales, "sinEmpleado":sinEmpleado, 
+                                                                        "editado":editado, "textoEdicion":textoEdicion, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+                else:
+                    
+                    empleadosTel = Empleados.objects.filter(id_empleado = empleadoId)
+                    extension = ["Ninguna", "101", "102", "103", "104", "105", "106", "107", "108", "109", "110", "111", "112", "113", "114", "115", "116", "117", "118","119","120"]
+                    for ex in extension:
+                        if ex == extensionTel:
+                            extension.remove(ex)
+
+                    for eqE in empleadosTel:
+                        id_area = eqE.id_area_id 
+
+                    areaDe = Areas.objects.filter(id_area = id_area)
+                  
+
+
+                    lista = zip(telefonoDatos, empleadosTel)
+                    
+                    empleados_totales = Empleados.objects.all()
+                    arreglo_ids = []
+                
+                    for equi in empleados_totales:
+                        arreglo_ids.append(equi.id_empleado)
+                    
+                    #[1,2,3]
+                    
+                    for id in arreglo_ids:
+                        if id == empleadoId: #si 2 == 2
+                            arreglo_ids.remove(id)
+                            
+                    #[1,3]
+                    
+                 
+                    datos_empleados = []
+                    
+                    for id in arreglo_ids:
+                        datos = Empleados.objects.filter(id_empleado = id)
+                        for dato in datos:
+                            id_empleados = dato.id_empleado
+                            nombres = dato.nombre
+                            apellido = dato.apellidos
+                            foto = dato.imagen_empleado
+                         
+                           
+                        datos_empleados.append([id_empleados, nombres, apellido, foto])    
+                       
+                        
+
+                  
+                    return render(request, "Editar/editarTelefono.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "extension":extension,"areaDe":areaDe, "empleados_totales":empleados_totales, "correo":correo, "lista":lista, "empleadosTel":empleadosTel, "datos_empleados":datos_empleados, 
+                                                                        "editado":editado, "textoEdicion":textoEdicion, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+    
+        return render(request,"Editar/editarTelefono.html", {"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+    else:
+        return redirect('/login/') #redirecciona a url de inicio  
     
 def extensionesTel(request):
     
@@ -9982,12 +10455,25 @@ def verDiscosDuros(request):
 
       
         discosSiRespaldos = []
+        discosEnPrestamos = []
+        idsDiscosPrestamos = []
 
 
         #lista de todos los discos duros
         totaldiscos = DiscosDuros.objects.all()
+        discosPrestados = PrestamosSistemas.objects.filter(devolucion = "S", tabla = "DiscosDuros")
+        for d in discosPrestados:
+            idDiscoP = d.id_producto
+            idsDiscosPrestamos.append(idDiscoP)
+
+        
+
         for disco in totaldiscos:
             idDisco = int(disco.id_disco)
+
+            
+
+        
          
             discosRespaldos = EmpleadosDiscosDuros.objects.filter(id_disco_id = idDisco)
 
@@ -10014,17 +10500,29 @@ def verDiscosDuros(request):
                 discosSiRespaldos.append([empleadosEnDisco,fechasDisco])
             else:
                 discosSiRespaldos.append("n")
+            
+        if idDisco in idsDiscosPrestamos:
+                for discosP in discosPrestados:
+                    idDisP = discosP.id_producto
+                    if idDisco == idDisP:
+                        fechad = discosP.fecha_prestamo
+                        empleadoP = discosP.id_empleado_id
 
-        lista = zip (totaldiscos, discosSiRespaldos)
+                    empleadoDatos = Empleados.objects.filter(id_empleado = empleadoP)
+                    for epre in empleadoDatos:
+                        nombrep = epre.nombre
+                        apellidop = epre.apellidos
+                    
+                        discosEnPrestamos.append([fechad, nombrep, apellidop])
+        else:
+            discosEnPrestamos.append("Sin prestamo")
+            
+                    
+        lista = zip(totaldiscos, discosSiRespaldos)          
 
-        
 
-
-
-        
-
-        return render(request, "discosDuros/verDiscosDuros.html", {"estaEnVerDiscosDuros":estaEnVerDiscosDuros,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,
-        "lista": lista})
+        return render(request, "discosDuros/verDiscosDuros.html", {"estaEnVerDiscosDuros":estaEnVerDiscosDuros, "id_admin":id_admin, "discosEnPrestamos":discosEnPrestamos, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,
+        "lista":lista})
     else:
     
         return redirect ('/login/')
