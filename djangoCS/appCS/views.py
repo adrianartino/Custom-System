@@ -1,4 +1,5 @@
 #Librerías
+from cmath import sin
 from glob import escape
 import mimetypes
 import os
@@ -10462,19 +10463,25 @@ def verDiscosDuros(request):
         #lista de todos los discos duros
         totaldiscos = DiscosDuros.objects.all()
         discosPrestados = PrestamosSistemas.objects.filter(devolucion = "S", tabla = "DiscosDuros")
-        for d in discosPrestados:
-            idDiscoP = d.id_producto
-            idsDiscosPrestamos.append(idDiscoP)
+        conPrestamo = True
+        for disP in discosPrestados:
+            iD = disP.id_producto
+            idsDiscosPrestamos.append(iD)
+            if disP.id_empleado_id == None:
+                conPrestamo = False
+                                
+            else:
+                conPrestamo = True
+                idEmpleadoP = disP.id_empleado_id
+              
 
         
-
+       
         for disco in totaldiscos:
             idDisco = int(disco.id_disco)
 
-            
+                
 
-        
-         
             discosRespaldos = EmpleadosDiscosDuros.objects.filter(id_disco_id = idDisco)
 
             if discosRespaldos:
@@ -10482,8 +10489,8 @@ def verDiscosDuros(request):
                 fechasDisco = []
                 datosEmpleado = ""
                 for respa in discosRespaldos:
-                   
-                
+                    
+                    
                     empleados = respa.id_empleado_id
                     fecha = respa.fecha
 
@@ -10498,27 +10505,41 @@ def verDiscosDuros(request):
                     empleadosEnDisco.append(datosEmpleado)
                     fechasDisco.append(fecha)
                 discosSiRespaldos.append([empleadosEnDisco,fechasDisco])
+
+
             else:
                 discosSiRespaldos.append("n")
-            
-        if idDisco in idsDiscosPrestamos:
-                for discosP in discosPrestados:
-                    idDisP = discosP.id_producto
-                    if idDisco == idDisP:
-                        fechad = discosP.fecha_prestamo
-                        empleadoP = discosP.id_empleado_id
 
-                    empleadoDatos = Empleados.objects.filter(id_empleado = empleadoP)
-                    for epre in empleadoDatos:
-                        nombrep = epre.nombre
-                        apellidop = epre.apellidos
-                    
-                        discosEnPrestamos.append([fechad, nombrep, apellidop])
-        else:
-            discosEnPrestamos.append("Sin prestamo")
+            if idDisco in idsDiscosPrestamos:
+                for dis in discosPrestados:
+                    idd = dis.id_producto
+                    if idDisco == idd:
+                        fechad = dis.fecha_prestamo
+                        if dis.id_empleado_id == None:
+                            conPrestamo = False
+                            
+                        else:
+                            conPrestamo = True
+                            idEmpleadoP = dis.id_empleado_id
+
+            if conPrestamo == True:
+
+               
+                         
+
+                discosEnPrestamos = Empleados.objects.filter(id_empleado = idEmpleadoP)
+
+                
+
+            else:
+                discosEnPrestamos = "Sin prestamo"
+
+              
+                
+        
             
                     
-        lista = zip(totaldiscos, discosSiRespaldos)          
+        lista = zip(totaldiscos, discosSiRespaldos, discosEnPrestamos)          
 
 
         return render(request, "discosDuros/verDiscosDuros.html", {"estaEnVerDiscosDuros":estaEnVerDiscosDuros, "id_admin":id_admin, "discosEnPrestamos":discosEnPrestamos, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,
@@ -10526,9 +10547,346 @@ def verDiscosDuros(request):
     else:
     
         return redirect ('/login/')
+
+def editarDisco(request):
+    if "idSesion" in request.session:
+        
+        estaEnCartasBitacora = True
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        nombreCompleto = nombre + " " + apellidos
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+        foto = fotoAdmin(request)
+        
+        if request.method == "POST":
+            idsDIscosPrestados = []
+            discoRecibido = request.POST['idDiscoEditar']
+            discoDatos = DiscosDuros.objects.filter(id_disco=discoRecibido)
+            sinPrestamo = True
+            DiscosenPrestamos = PrestamosSistemas.objects.filter(devolucion = "S", tabla = "DiscosDuros")
+            for disP in DiscosenPrestamos:
+                iD = disP.id_producto
+                idsDIscosPrestados.append(iD)
+                if disP.id_empleado_id == None:
+                    sinPrestamo = True
+                else:
+                    sinPrestamo = False
+                    idEmpleadoP = disP.id_empleado_id
+
+                    
+            empleadosTotales = []
+            if sinPrestamo == True:
+                
+                    
+                    
+
+
+                empleadosTotales = Empleados.objects.all()
+        
+                            
+                        
+
+                        
+                        
+                lista = zip(discoDatos,empleadosTotales)
+                    
+                    
+                    
+
+                return render(request, "Editar/editarDiscoDuro.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo,  "lista":lista, "discoRecibido":discoRecibido, "empleadosTotales":empleadosTotales, "sinPrestamo":sinPrestamo, 
+                                                                        "cartuchosNoti":cartuchosNoti, "mantenimientosNoti":mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+            elif sinPrestamo == False:
+                
+                empleadosDisco = Empleados.objects.filter(id_empleado = idEmpleadoP)
+                
+
+                for eqE in empleadosDisco:
+                        id_area = eqE.id_area_id 
+
+                areaDe = Areas.objects.filter(id_area = id_area)
+     
+                
+                lista = zip(discoDatos,empleadosDisco)
+                
+                empleados_totales = Empleados.objects.all()
+                arreglo_ids = []
+                
+                for equi in empleados_totales:
+                    arreglo_ids.append(equi.id_empleado)
+                    
+                    #[1,2,3]
+                    
+                for id in arreglo_ids:
+                     if id == idEmpleadoP: #si 2 == 2
+                        arreglo_ids.remove(id)
+                            
+                    #[1,3]
+                    
+                 
+                datos_empleados = []
+                    
+                for id in arreglo_ids:
+                    datos = Empleados.objects.filter(id_empleado = id)
+                    for dato in datos:
+                        id_empleados = dato.id_empleado
+                        nombres = dato.nombre
+                        apellido = dato.apellidos
+                        foto = dato.imagen_empleado
+                         
+                           
+                    datos_empleados.append([id_empleados, nombres, apellido, foto])    
+
+                        
+                
+            
+            return render(request, "Editar/editarDiscoDuro.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "empleadosDisco":empleadosDisco, "empleados_totales":empleados_totales, "areaDe":areaDe, "datos_empleados":datos_empleados, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+
+        return render(request, "Editar/editarDiscoDuro.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
     
+
+def editarDiscoBd(request):
+    if "idSesion" in request.session:
+        
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        nombreCompleto = nombre + " " + apellidos
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+        foto = fotoAdmin(request)
+        
+        if request.method == "POST":
+            discoId = request.POST['idDisco']
+            empleadoPrestamo_actualizar = request.POST['propietario']
+            estado_actualizar = request.POST['estado']
+            almacenamientoUso_actualizar = request.POST['almacenamientoUso']
+
+            datosDiscos = DiscosDuros.objects.filter(id_disco = discoId)
+            for datoD in datosDiscos:
+                capAlamacenamiento = datoD.capacidad
+
+            almLibre = capAlamacenamiento - almacenamientoUso_actualizar
+         
+
+            
+            if empleadoPrestamo_actualizar == "sinPrestamo":
+                actualizar = DiscosDuros.objects.filter(id_disco=discoId).update(estado= estado_actualizar, alm_uso = almacenamientoUso_actualizar, alm_libre = almLibre)
+                
+                
+            elif empleadoPrestamo_actualizar !=  "sinPrestamo": 
+                actualizar = DiscosDuros.objects.filter(id_disco=discoId).update(estado= estado_actualizar, alm_uso = almacenamientoUso_actualizar, alm_libre = almLibre)
+            
+            if actualizar:
+               
+                datos = DiscosDuros.objects.filter(id_disco = discoId)
+            
+
+                
+                for dato in datos:
+                    tipo = dato.tipo
+                    marca = dato.marca
+                    dimension = dato.dimension
+                    
+                todoDisco = tipo + " " + marca + " " + dimension
+                
+                
+                
+                editado = True
+                textoEdicion = "Se ha editado al disco " + todoDisco + " con éxito!"
+              
+                
+               
+               
+                idsDiscosPrestados = []
+                discoRecibido = discoId
+                discoDatos = DiscosDuros.objects.filter(id_disco=discoRecibido)
+                sinPrestamo = True
+                DiscosenPrestamos = PrestamosSistemas.objects.filter(devolucion = "S", tabla = "DiscosDuros")
+                for disP in DiscosenPrestamos:
+                    iD = disP.id_producto
+                    idsDiscosPrestados.append(iD)
+                    if disP.id_empleado_id == None:
+                        sinPrestamo = True
+                    else:
+                        sinPrestamo = False
+                        idEmpleadoP = disP.id_empleado_id
+
+                    
+
+
+                    
+                if sinPrestamo == True:
+                
+                    
+                    
+
+
+                    empleadosTotales = Empleados.objects.all()
+        
+                            
+                        
+
+                        
+                        
+                    lista = zip(discoDatos,empleadosTotales)
+                    
+                    
+                    
+
+                    return render(request, "Editar/editarDiscoDuro.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo,  "lista":lista, "discoRecibido":discoRecibido, "empleadosTotales":empleadosTotales, "sinPrestamo":sinPrestamo, 
+                                                                        "cartuchosNoti":cartuchosNoti, "editado":editado,"textoEdicion":textoEdicion, "mantenimientosNoti":mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+                elif sinPrestamo == False:
+                
+                    empleadosDisco = Empleados.objects.filter(id_empleado = idEmpleadoP)
+                    
+
+                    for eqE in empleadosDisco:
+                            id_area = eqE.id_area_id 
+
+                    areaDe = Areas.objects.filter(id_area = id_area)
+        
+                    
+                    lista = zip(discoDatos,empleadosDisco)
+                    
+                    empleados_totales = Empleados.objects.all()
+                    arreglo_ids = []
+                    
+                    for equi in empleados_totales:
+                        arreglo_ids.append(equi.id_empleado)
+                        
+                        #[1,2,3]
+                        
+                    for id in arreglo_ids:
+                        if id == idEmpleadoP: #si 2 == 2
+                            arreglo_ids.remove(id)
+                                
+                        #[1,3]
+                        
+                    
+                    datos_empleados = []
+                        
+                    for id in arreglo_ids:
+                        datos = Empleados.objects.filter(id_empleado = id)
+                        for dato in datos:
+                            id_empleados = dato.id_empleado
+                            nombres = dato.nombre
+                            apellido = dato.apellidos
+                            foto = dato.imagen_empleado
+                            
+                            
+                        datos_empleados.append([id_empleados, nombres, apellido, foto])    
+
+                        
+                
+            
+                return render(request, "Editar/editarDiscoDuro.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "empleadosDisco":empleadosDisco, "empleados_totales":empleados_totales, "areaDe":areaDe, "datos_empleados":datos_empleados, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+            else:
+                datos = DiscosDuros.objects.filter(id_disco = discoId)
+
+                
+                for dato in datos:
+                    tipo = dato.tipo
+                    marca = dato.marca
+                    dimension = dato.dimension
+                    
+                todoDisco = tipo + " " + marca + " " + dimension
+                
+                
+                editado = True
+                textoEdicion = "Error en la base de datos!"
+               
+             
+                idsDiscosPrestados = []
+                discoRecibido = discoId
+                discoDatos = DiscosDuros.objects.filter(id_disco=discoRecibido)
+                sinPrestamo = True
+                DiscosenPrestamos = PrestamosSistemas.objects.filter(devolucion = "S", tabla = "DiscosDuros")
+                for disP in DiscosenPrestamos:
+                    iD = disP.id_producto
+                    idsDiscosPrestados.append(iD)
+                    if disP.id_empleado_id == None:
+                        sinPrestamo = True
+                    else:
+                        sinPrestamo = False
+                        idEmpleadoP = disP.id_empleado_id
+
+                    
+
+
+                    
+                if sinPrestamo == True:
+                
+
+
+                    empleadosTotales = Empleados.objects.all()
+        
+
+                        
+                    lista = zip(discoDatos,empleadosTotales)
+
+
+                    return render(request, "Editar/editarDiscoDuro.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "editado":editado,"textoEdicion":textoEdicion, "correo":correo,  "lista":lista, "discoRecibido":discoRecibido, "empleadosTotales":empleadosTotales, "sinPrestamo":sinPrestamo, 
+                                                                        "cartuchosNoti":cartuchosNoti, "mantenimientosNoti":mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+                elif sinPrestamo == False:
+                
+                    empleadosDisco = Empleados.objects.filter(id_empleado = idEmpleadoP)
+                    
+
+                    for eqE in empleadosDisco:
+                            id_area = eqE.id_area_id 
+
+                    areaDe = Areas.objects.filter(id_area = id_area)
+        
+                    
+                    lista = zip(discoDatos,empleadosDisco)
+                    
+                    empleados_totales = Empleados.objects.all()
+                    arreglo_ids = []
+                    
+                    for equi in empleados_totales:
+                        arreglo_ids.append(equi.id_empleado)
+                        
+                        #[1,2,3]
+                        
+                    for id in arreglo_ids:
+                        if id == idEmpleadoP: #si 2 == 2
+                            arreglo_ids.remove(id)
+                                
+                        #[1,3]
+                        
+                    
+                    datos_empleados = []
+                        
+                    for id in arreglo_ids:
+                        datos = Empleados.objects.filter(id_empleado = id)
+                        for dato in datos:
+                            id_empleados = dato.id_empleado
+                            nombres = dato.nombre
+                            apellido = dato.apellidos
+                            foto = dato.imagen_empleado
+                            
+                            
+                        datos_empleados.append([id_empleados, nombres, apellido, foto])    
+
+                        
+                
+            
+                return render(request, "Editar/editarDiscoDuro.html", {"id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "empleadosDisco":empleadosDisco, "empleados_totales":empleados_totales, "areaDe":areaDe, "datos_empleados":datos_empleados, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
     
-    
+        return render(request,"Editar/editarDiscoDuro.html", {"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+    else:
+        return redirect('/login/') #redirecciona a url de inicio   
+
 def agregarUSB(request):
         
     if "idSesion" in request.session:

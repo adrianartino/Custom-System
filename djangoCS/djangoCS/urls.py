@@ -73,7 +73,10 @@ urlpatterns = [
     path("editarMonitor/", views.editarMonitor),
     path("editarMonitorBd/", views.editarMonitorBd),
     path("editarTelefono/", views.editarTelefono),
+    
     path("editarTelefonoBd/", views.editarTelefonoBd),
+    path("editarDisco/", views.editarDisco),
+    path("editarDiscoBd/", views.editarDiscoBd),
     path("firmarCarta/", views.firmarCarta),
     path("salir/", views.salir, name="salir"),
     path("altaEmpleado/", views.altaEmpleado),
