@@ -163,6 +163,7 @@ Discos Duros | Custom System
                                     </div>
                                     {% endfor %}
                                 </th>
+                                {% endif %}
                                 <th>
                                     {% for f in empleado.1 %}
                                     <div>
@@ -171,7 +172,8 @@ Discos Duros | Custom System
                                     {% endfor %}
                                 </th>
 
-                                {% endif %}
+                                
+
                                 {% if disco.estado == "Nuevo" %}
                                 <th ><label class="label bg-green">Nuevo</label></th>
                                 {% elif disco.estado == "Usado Funcional" %}
@@ -185,7 +187,10 @@ Discos Duros | Custom System
                                 <th>
                                   
                                     <div>
-                                        <label>{{pres.nombre}} {{pres.apellidos}}</label>
+                                        <label class="label bg-red" >{{pres.0}}</label>
+                                    </div>
+                                    <div>
+                                        <label class="label bg-pink">{{pres.1}}</label>
                                     </div>
                                   
                                 </th>

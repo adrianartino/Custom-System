@@ -36,25 +36,26 @@ Editar Disco Duro
 
 {% block contenido %}
 <div class="row clearfix">
-    {% for disco, empleados in lista %}
+    {% for dato in discoDatos %}
     <div class="col-xs-12 col-sm-3">
         <div class="card profile-card">
-            
+           
             <div class="profile-body">
                
                 <div class="content-area">
                     <h4>DISCO DURO:</h4>
-                    <h4><label class="label bg-orange">{{disco.tipo}} {{disco.marca}} {{disco.capacidad}}GB  {{disco.dimension}}</label></h4>
+                    <h4><label class="label bg-orange">{{dato.tipo}} {{dato.marca}} {{dato.capacidad}}GB  {{dato.dimension}}</label></h4>
                 
                  
 
                 </div>
             </div>
+          
             <div class="profile-footer">
                 <ul>
                     <li>
                         <span>N° de Disco</span>
-                        <span><label>{{disco.id_disco}}</label></span>
+                        <span><label>{{dato.id_disco}}</label></span>
                     </li>
 
                 </ul>
@@ -82,6 +83,7 @@ Editar Disco Duro
             
                 </center>
             </div>
+          
         </div>
     </div>
 
@@ -99,33 +101,18 @@ Editar Disco Duro
 
                     <div class="row clearfix">
                         <div class="col-md-6">
-                            <label for="email_address">Nombre empleado con prestamo:</label>
+                            <label for="email_address"><span style="color: #078F68;">* </span>Almacenamiento en uso:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
-                                    <i class="material-icons">badge</i>
+                                    <i class="material-icons">hourglass_empty</i>
                                 </span>
-
-                                <select class="form-control show-tick" name="propietario">
-                                    {% if sinPrestamo %}
-                                    <option value="sinPrestamo">Sin prestamo</option>
-                                    {% for em in empleadosTotales %}
-                                    <option value="{{em.id_empleado}}">#{{em.id_empleado}} {{em.nombre}} {{em.apellidos}}</option>
-                                    {% endfor %}
-                                    {% else %}
-                                    {% for dato in empleadosDisco %}
-                                    <option value="{{dato.id_empleado}}">{{dato.nombre}} {{dato.apellidos}}</option>
-                                    {% endfor %}
-                                    <option value="sinPrestamo">Sin prestamo</option>
-                                    {% for empleado in datos_empleados %}
-                                    <option value="{{empleado.0}}">#{{empleado.0}} {{empleado.1}} {{empleado.2}}</option>
-                                    {% endfor %}
-                                    {% endif %}
-
-
-                                </select>
-
+                                <div class="form-line">
+                                    <input type="text" class="form-control date" placeholder="Ingresar GB"
+                                        name="almacenamientoUso" maxlength="50" >
+                                </div>
                             </div>
                         </div>
+                   
                         <div class="col-md-6">
                             <label for="email_address">Estado:</label>
                             <div class="input-group">
@@ -134,17 +121,17 @@ Editar Disco Duro
                                 </span>
 
                                 <select class="form-control show-tick" name="estado">
-                                    {% if disco.estado == "Usado Funcional" %}
+                                    {% if dato.estado == "Usado Funcional" %}
                                     <option value="Usado Funcional" selected>Usado Funcional</option>
                                     <option value="Nuevo">Nuevo</option>
                                     <option value="Mal estado/basura">Basura</option>
                                     
-                                    {% elif disco.estado == "Nuevo" %}
+                                    {% elif dato.estado == "Nuevo" %}
                                     <option value="Usado Funcional">Usado Funcional</option>
                                     <option value="Nuevo" selected>Nuevo</option>
                                     <option value="Mal estado/basura">Basura</option>
                                     
-                                    {% elif disco.estado == "Mal estado/basura" %}
+                                    {% elif dato.estado == "Mal estado/basura" %}
                                     <option value="Usado Funcional">Usado Funcional</option>
                                     <option value="Nuevo" >Nuevo</option>
                                     <option value="Mal estado/basura" selected>Basura</option>
@@ -166,26 +153,88 @@ Editar Disco Duro
 
 
 
-                    <div class="row clearfix">
+                        <div class="header">
+                            <h2 style="font-family: 'Oswald', sans-serif;">
+                                Empleados con respaldo:
+                            </h2>
+                        </div>
+                        {% if discoTieneRespaldo %}
+                       
+                        {% for empleado in idsEmpleadosRespaldo %}
+                        <div class="row clearfix">   
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="material-icons">hourglass_full</i>
+                                        </span>
+                                        <input type="hidden" value="{{empleado.0}}" name="empleadoRespaldo">
+                                        <div class="form-line">
 
-                        <div class="col-md-5">
-                            <label for="email_address"><span style="color: #078F68;">* </span>Almacenamiento en uso:</label>
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="material-icons">hourglass_empty</i>
-                                </span>
-                                <div class="form-line">
-                                    <input type="text" class="form-control date" placeholder="Ingresar GB"
-                                        name="almacenamientoUso" maxlength="50" >
+                                            <input type="text" value="{{empleado.1}} {{empleado.2}}" class="form-control date" placeholder="Ingresar GB"
+                                                name="nombreEmpleado" maxlength="50" required readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="material-icons">date_range</i>
+                                        </span>
+                                        <div class="form-line" >
+                                            <input type="text" value="{{empleado.3}}" class="form-control date" placeholder="Ingresar GB"
+                                            name="nombreEmpleado" maxlength="50" required readonly>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                              
+                                <div class="col-md-3">
+                                    <input type="checkbox"
+                                            id="md_checkbox_{{empleado.0}}"
+                                            class="filled-in chk-col-cyan" checked name="empleado{{empleado.0}}" />
+                                    <label
+                                            for="md_checkbox_{{empleado.0}}">{{empleado.nombre}}Sigue con respaldo?
+
+                                            </label>
+
+                                </div>
+
+                          
+                      
+                        </div>
+                        {% endfor %}
+                     
+                        {% endif %}
+                        <div class="row clearfix">
+                            <div class="col-md-6">
+                                <label for="email_address"><span style="color: #078F68;">* </span>Número de empleados a respaldar:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <i class="material-icons">accessibility</i>
+                                    </span>
+                                    <div class="form-line">
+                                        <input type="text" class="form-control date" onkeypress="return validaNumericos(event)" placeholder="Número de empleados con respaldo"
+                                            name="numeroEmpleadosRespaldo" maxlength="50" id="numeroEmpleados" >
+                                    </div>
                                 </div>
                             </div>
+                            <div class="col-md-3">
+                                <button type="button"
+                                class="btn bg-pink m-t-15 waves-effect animate__animated animate__flipInX" id="generarEmpleados" onclick="generadorEmpleados()"><i
+                                    class="material-icons" >account_circle</i>Editar empleados respaldos</button>
                         </div>
-                        <div class="col-md-3">
-                            <button type="button"
-                            class="btn bg-pink m-t-15 waves-effect animate__animated animate__flipInX" id="generarEmpleados" onclick="generadorEmpleados()"><i
-                                class="material-icons" >account_circle</i>Editar empleados respaldos</button>
+                        
                             
+                        <div class="row clearfix" id="empleadosDiscos">
+                       
+                        
+
+
                         </div>
+                       
+
+                        
 
 
 
@@ -204,8 +253,8 @@ Editar Disco Duro
             </div>
         </div>
     </div>
-
-    {% endfor %}
+{% endfor %}
+  
 </div>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 {% if editado %}
@@ -222,7 +271,55 @@ Editar Disco Duro
 {% endblock %}
 
 {% block estilosJs %}
+
 <script>
+    
+var empleados = document.getElementById('numeroEmpleados');
+
+var boton = document.getElementById('generarEmpleados');
+
+
+
+var respaldos = document.getElementById('empleadosDiscos');
+
+
+
+
+function generadorEmpleados(){
+    var cantidadEmpleados = parseInt(empleados.value);
+  
+    var contenido ="";
+    var empleado ="";
+    var fecha = "";
+   
+   
+ 
+    
+   //alert(cantidades);
+   for (let empleados = 0; empleados < cantidadEmpleados; empleados++) {
+    // Se ejecuta 5 veces, con valores del paso 0 al 4.
+    var contador = empleados +1;
+    var contadorTexto = contador.toString();
+    empleado = "empleado" + contadorTexto;
+    fecha = "fecha_respaldo" + contadorTexto
+    
+   
+   contenido = contenido + ' <div class="col-md-8"><label for="email_address"><span style="color: #bcc0bf;">* </span>Empleado '+ contadorTexto +': </label><div class="input-group"><span class="input-group-addon"><i class="material-icons">account_box</i></span><select class="form-control show-tick" name="' + empleado + '">{% for empleado in empleadosTotales %}<option value="{{empleado.id_empleado}}">{{empleado.nombre}} {{empleado.apellidos}}</option>{% endfor %}</select></div></div><div class="col-md-4"><h2 class="card-inside-title"><span style="color: #078F68;">* </span>Fecha de Compra:</h2><div class="input-group"><span class="input-group-addon"><i class="material-icons">date_range</i></span><div class="form-line" id="bs_datepicker_container"><input type="date" class="form-control" name="' + fecha + '" required></div></div></div>';
+  }
+   respaldos.innerHTML = contenido; 
+
+   
+
+  
+
+  
+   empleados.setAttribute('readonly', true);
+
+   
+  
+  
+}
+
     function soloLetras(e) {
         key = e.keyCode || e.which;
         tecla = String.fromCharCode(key).toLowerCase();
