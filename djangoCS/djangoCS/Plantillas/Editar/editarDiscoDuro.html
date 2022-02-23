@@ -161,9 +161,12 @@ Editar Disco Duro
                         {% if discoTieneRespaldo %}
                        
                         {% for empleado in idsEmpleadosRespaldo %}
+                        
+                        
+                        
                         <div class="row clearfix">   
                                 <div class="col-md-6">
-                                    <div class="input-group">
+                                    <div class="input-group" id="respaldoNombre">
                                         <span class="input-group-addon">
                                             <i class="material-icons">hourglass_full</i>
                                         </span>
@@ -176,7 +179,7 @@ Editar Disco Duro
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <div class="input-group">
+                                    <div class="input-group" id="respaldoFecha">
                                         <span class="input-group-addon">
                                             <i class="material-icons">date_range</i>
                                         </span>
@@ -188,22 +191,27 @@ Editar Disco Duro
 
                                 </div>
 
-                              
+                               
                                 <div class="col-md-3">
                                     <input type="checkbox"
                                             id="md_checkbox_{{empleado.0}}"
-                                            class="filled-in chk-col-cyan" checked name="empleado{{empleado.0}}" />
+                                            class="filled-in chk-col-cyan" checked name="empleado{{empleado.0}}" value="respaldo{{empleado.0}}" onchange="comprobar(this)" />
                                     <label
                                             for="md_checkbox_{{empleado.0}}">{{empleado.nombre}}Sigue con respaldo?
 
                                             </label>
 
                                 </div>
-
+                       
                           
                       
                         </div>
+                        
+                       
+                  
                         {% endfor %}
+                       
+              
                      
                         {% endif %}
                         <div class="row clearfix">
@@ -223,27 +231,27 @@ Editar Disco Duro
                                 <button type="button"
                                 class="btn bg-pink m-t-15 waves-effect animate__animated animate__flipInX" id="generarEmpleados" onclick="generadorEmpleados()"><i
                                     class="material-icons" >account_circle</i>Editar empleados respaldos</button>
-                        </div>
+                            </div>
                         
                             
-                        <div class="row clearfix" id="empleadosDiscos">
-                       
+                            <div class="row clearfix" id="empleadosDiscos">
                         
+                            
+
+
+                            </div>
+                        
+
+                        
+
 
 
                         </div>
-                       
-
-                        
-
-
-
-                    </div>
-                  
+             
                  
-                    <input type="hidden" name="idDisco" value="{{disco.id_disco}}">
+                    <input type="hidden" name="idDisco" value="{{dato.id_disco}}">
                     <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i class="material-icons">loop</i>
-                        Actualizar Disco Duro</button>
+             
                   
                     
                    
@@ -304,7 +312,7 @@ function generadorEmpleados(){
     fecha = "fecha_respaldo" + contadorTexto
     
    
-   contenido = contenido + ' <div class="col-md-8"><label for="email_address"><span style="color: #bcc0bf;">* </span>Empleado '+ contadorTexto +': </label><div class="input-group"><span class="input-group-addon"><i class="material-icons">account_box</i></span><select class="form-control show-tick" name="' + empleado + '">{% for empleado in empleadosTotales %}<option value="{{empleado.id_empleado}}">{{empleado.nombre}} {{empleado.apellidos}}</option>{% endfor %}</select></div></div><div class="col-md-4"><h2 class="card-inside-title"><span style="color: #078F68;">* </span>Fecha de Compra:</h2><div class="input-group"><span class="input-group-addon"><i class="material-icons">date_range</i></span><div class="form-line" id="bs_datepicker_container"><input type="date" class="form-control" name="' + fecha + '" required></div></div></div>';
+   contenido = contenido + ' <div class="col-md-8"><label for="email_address"><span style="color: #bcc0bf;">* </span>Empleado '+ contadorTexto +': </label><div class="input-group"><span class="input-group-addon"><i class="material-icons">account_box</i></span><select class="form-control show-tick" name="' + empleado +  '">{% for empleado in empleadosTotales %}<option value="{{empleado.id_empleado}}">{{empleado.nombre}} {{empleado.apellidos}}</option>{% endfor %}</select></div></div><div class="col-md-4"><h2 class="card-inside-title"><span style="color: #078F68;">* </span>Fecha de Compra:</h2><div class="input-group"><span class="input-group-addon"><i class="material-icons">date_range</i></span><div class="form-line" id="bs_datepicker_container"><input type="date" class="form-control" name="' + fecha + '" required></div></div></div>';
   }
    respaldos.innerHTML = contenido; 
 
@@ -345,19 +353,27 @@ function generadorEmpleados(){
         }
         return false;
     }
+    
+    
+    
+</script>
 
-    function comprobar(obj) {
+<script type="text/javascript">
+
+    var check = document.getElementById('empleado{{empleado.0}}')
+     function comprobar(obj) {
         if (obj.checked) {
-            document.getElementById('divActPdf').style.display = "";
+            document.getElementById('respaldoNombre').style.display = "";
+            document.getElementById('respaldoFecha').style.display = "";
         } else {
-            document.getElementById('divActPdf').style.display = "none";
+            document.getElementById('respaldoNombre').style.display = "none";
+            document.getElementById('respaldoFecha').style.display = "none";
         }
     }
 
-    window.onload = function () {
-        document.getElementById('divActPdf').style.display = "none";
-    }
+
 </script>
+
 <!-- Jquery Core Js -->
 <script src={% static 'panel/plugins/jquery/jquery.min.js' %}></script>
 

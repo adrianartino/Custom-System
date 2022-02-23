@@ -370,6 +370,18 @@ Discos Duros | Custom System
     });
 </script>
 {% endif %}
+
+{% if discoActualizado %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Wuu..!',
+        text: ' {{textoActualizado}}',
+        footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
 <script type="text/javascript">
     function inicio() {
         var div1 = document.getElementById("divInactivos");
