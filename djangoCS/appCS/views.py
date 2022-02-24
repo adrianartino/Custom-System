@@ -357,7 +357,16 @@ def inicio(request):
         lista = zip(cartuchos, impresoras)
         
         #Renovación de equipos
-        equipos_renovacion = Renovacion_Equipos.objects.all()
+      
+        renovacionesActivas = []
+
+        equiposActivos = Equipos.objects.filter(activo = "A")
+        for equipo in equiposActivos:
+            idActivo = equipo.id_equipo
+            renovacionesTodas= Renovacion_Equipos.objects.all()
+            for renovacion in renovacionesTodas:
+                if idActivo == renovacion.id_equipo_id:
+                    renovacionesActivas.append([renovacion.id_equipo_id, renovacion.fecha_compra, renovacion.fecha_renov])
         
         fecha = datetime.now()
         date = fecha.date()
@@ -366,8 +375,8 @@ def inicio(request):
         
         equipos_año = []
         
-        for equipo in equipos_renovacion:
-            fecha_renovacion = equipo.fecha_renov #20 Octubre 2021    -     2021-10-22
+        for equipo in renovacionesActivas:
+            fecha_renovacion = equipo[2] #20 Octubre 2021    -     2021-10-22
             año_renovacion = fecha_renovacion.strftime("%Y")
             if año_renovacion == año:
                 mes_renovacion = fecha_renovacion.strftime("%m") #10
@@ -377,9 +386,9 @@ def inicio(request):
                     resta = int(mes_renovacion) - int(mes)  #1
                 
                     if resta >= 0 and resta <= 2:
-                        id_equipo = equipo.id_equipo_id
-                        fecha_compra = equipo.fecha_compra
-                        fecha_renovacion2 = equipo.fecha_renov
+                        id_equipo = equipo[0]
+                        fecha_compra = equipo[1]
+                        fecha_renovacion2 = equipo[2]
                         
                         datos_equipo = Equipos.objects.filter(id_equipo = int(id_equipo))
                         
@@ -10595,6 +10604,7 @@ def editarDisco(request):
             if respaldosDisco:
                 discoTieneRespaldo = True
                 for respaldo in respaldosDisco:
+                    idFila = respaldo.id
                     idEmpleadoRespaldo = respaldo.id_empleado_id
                     fechaRespaldo = respaldo.fecha
                     datosEmpleados = Empleados.objects.filter(id_empleado = idEmpleadoRespaldo)
@@ -10602,7 +10612,7 @@ def editarDisco(request):
                         nombreER = dato.nombre
                         apellidoER = dato.apellidos
 
-                    idsEmpleadosRespaldo.append([idEmpleadoRespaldo, nombreER, apellidoER, fechaRespaldo])
+                    idsEmpleadosRespaldo.append([idEmpleadoRespaldo, nombreER, apellidoER, fechaRespaldo, idFila])
                     idsEmpleadosRespaldos2.append(idEmpleadoRespaldo)
             else:
                 discoTieneRespaldo = False
@@ -10731,12 +10741,55 @@ def editarDiscoBd(request):
                 else:
                     #registro disco
                     actualizar = DiscosDuros.objects.filter(id_disco = discoId).update(estado = estado_actualizar, alm_libre = almLibre, alm_uso= almacenamientoUso_actualizar)
+
+              
+                respaldosTotales = EmpleadosDiscosDuros.objects.filter(id_disco_id = discoId)
+
+                nombresInputs = []
+                
+                for respaldo in respaldosTotales:
+                    idRespaldo = respaldo.id
+                    nameInput = "respaldo" + str(idRespaldo)
+                    #Condicion para si se mando un nameinput igual, sin validar que sea chequeado o no.. 
+                    #Si se mando algo...
+                    
+                    if request.POST.get(nameInput):
+                        jhjjh=True
+                    else:
+                        registroBorrar = EmpleadosDiscosDuros.objects.get(id = idRespaldo)
+                        registroBorrar.delete()
+
+                   
+                     
+                    
+                            
+                          
+
                     
 
             
             elif numrespaldosRecibido != "":
+
                 
-                empleados = Empleados.objects.all()
+                respaldosTotales = EmpleadosDiscosDuros.objects.filter(id_disco_id = discoId)
+
+                nombresInputs = []
+                
+                for respaldo in respaldosTotales:
+                    idRespaldo = respaldo.id
+                    nameInput = "respaldo" + str(idRespaldo)
+                    #Condicion para si se mando un nameinput igual, sin validar que sea chequeado o no.. 
+                    #Si se mando algo...
+                    
+                    if request.POST.get(nameInput):
+                        jhjjh=True
+                    else:
+                        registroBorrar = EmpleadosDiscosDuros.objects.get(id = idRespaldo)
+                        registroBorrar.delete()
+
+                
+               
+                
 
 
                 for empleadosRes in range(int(numrespaldosRecibido)):
@@ -10764,12 +10817,12 @@ def editarDiscoBd(request):
                     
 
                     actualizar = DiscosDuros.objects.filter(id_disco = discoId).update(estado = estado_actualizar, alm_libre = almLibre, alm_uso= almacenamientoUso_actualizar)
-         
 
+               
+            
       
             
             if actualizar:
-
                 
                
                 datos = DiscosDuros.objects.filter(id_disco = discoId)
@@ -10814,8 +10867,9 @@ def editarDiscoBd(request):
                 textoEdicion = "Error en la base de datos!"
                 discoRecibido = discoId
                 discoDatos = DiscosDuros.objects.filter(id_disco=discoRecibido)
-
-                    
+            texto = ""
+            for name in nombresInputs:     
+                texto += name + " "
             request.session['idDiscoActualizado'] = textoEdicion
             
             return redirect('/verDiscosDuros/')
@@ -10829,7 +10883,7 @@ def editarDiscoBd(request):
             
                 
     
-        return render(request,"Editar/editarDiscoDuro.html", {"id_admin":id_admin, "nombreCompleto":nombreCompleto,"discoDatos":discoDatos, "discoRecibido":discoRecibido, "editado":editado,"textoEdicion":textoEdicion, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+        return render(request,"Editar/editarDiscoDuro.html", {"id_admin":id_admin, "nombresInputs":nombresInputs, "nombreCompleto":nombreCompleto,"discoDatos":discoDatos, "discoRecibido":discoRecibido, "editado":editado,"textoEdicion":textoEdicion, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
     else:
         return redirect('/login/') #redirecciona a url de inicio   
 

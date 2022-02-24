@@ -104,11 +104,11 @@ Editar Disco Duro
                             <label for="email_address"><span style="color: #078F68;">* </span>Almacenamiento en uso:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
-                                    <i class="material-icons">hourglass_empty</i>
+                                    <i class="material-icons">pie_chart</i>
                                 </span>
                                 <div class="form-line">
                                     <input type="text" class="form-control date" placeholder="Ingresar GB"
-                                        name="almacenamientoUso" maxlength="50" >
+                                        name="almacenamientoUso" maxlength="50" value="{{dato.alm_uso}}" required >
                                 </div>
                             </div>
                         </div>
@@ -166,9 +166,9 @@ Editar Disco Duro
                         
                         <div class="row clearfix">   
                                 <div class="col-md-6">
-                                    <div class="input-group" id="respaldoNombre">
+                                    <div class="input-group" id="respaldo{{empleado.4}}">
                                         <span class="input-group-addon">
-                                            <i class="material-icons">hourglass_full</i>
+                                            <i class="material-icons">account_box</i>
                                         </span>
                                         <input type="hidden" value="{{empleado.0}}" name="empleadoRespaldo">
                                         <div class="form-line">
@@ -179,7 +179,7 @@ Editar Disco Duro
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <div class="input-group" id="respaldoFecha">
+                                    <div class="input-group" id="respaldoFecha{{empleado.4}}">
                                         <span class="input-group-addon">
                                             <i class="material-icons">date_range</i>
                                         </span>
@@ -194,10 +194,10 @@ Editar Disco Duro
                                
                                 <div class="col-md-3">
                                     <input type="checkbox"
-                                            id="md_checkbox_{{empleado.0}}"
-                                            class="filled-in chk-col-cyan" checked name="empleado{{empleado.0}}" value="respaldo{{empleado.0}}" onchange="comprobar(this)" />
+                                            id="md_checkbox_{{empleado.4}}"
+                                            class="filled-in chk-col-green" checked name="respaldo{{empleado.4}}" value="respaldo{{empleado.4}}" onchange="comprobar('{{empleado.4}}',this)" />
                                     <label
-                                            for="md_checkbox_{{empleado.0}}">{{empleado.nombre}}Sigue con respaldo?
+                                            for="md_checkbox_{{empleado.4}}">{{empleado.nombre}}Sigue con respaldo?
 
                                             </label>
 
@@ -247,10 +247,14 @@ Editar Disco Duro
 
 
                         </div>
+
+                    <center>
+                        <input type="hidden" name="idDisco" value="{{dato.id_disco}}">
+                        <button type="submit" class="btn bg-teal m-t-15 waves-effect"><i class="material-icons">loop</i>Actualizar disco duro</button>
+                    </center>
              
                  
-                    <input type="hidden" name="idDisco" value="{{dato.id_disco}}">
-                    <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i class="material-icons">loop</i>
+                  
              
                   
                     
@@ -355,19 +359,29 @@ function generadorEmpleados(){
     }
     
     
-    
+
 </script>
 
 <script type="text/javascript">
 
-    var check = document.getElementById('empleado{{empleado.0}}')
-     function comprobar(obj) {
-        if (obj.checked) {
-            document.getElementById('respaldoNombre').style.display = "";
-            document.getElementById('respaldoFecha').style.display = "";
+    
+   
+    function comprobar(idRespaldo, checkbox) {
+        var dividempleado = "respaldo" + idRespaldo.toString();
+        var divfecha = "respaldoFecha" + idRespaldo.toString();
+
+        console.log(dividempleado);
+        console.log(divfecha);
+
+
+
+
+        if (checkbox.checked) {
+            document.getElementById(dividempleado).style.display = "";
+            document.getElementById(divfecha).style.display = "";
         } else {
-            document.getElementById('respaldoNombre').style.display = "none";
-            document.getElementById('respaldoFecha').style.display = "none";
+            document.getElementById(dividempleado).style.display = "none";
+            document.getElementById(divfecha).style.display = "none";
         }
     }
 

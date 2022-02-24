@@ -137,7 +137,7 @@ EMAIL_HOST = 'mail.customco.com.mx'
 EMAIL_USE_TLS = True
 EMAIL_PORT =  587
 EMAIL_HOST_USER = 'sistemas@customco.com.mx'
-EMAIL_HOST_PASSWORD = 'r,htC;q0UtU4'
+EMAIL_HOST_PASSWORD = '+A,K1LO1xGo&'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
