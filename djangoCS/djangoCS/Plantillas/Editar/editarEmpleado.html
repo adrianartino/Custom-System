@@ -39,20 +39,29 @@ Editar Empleado
     {% for empleado in datosEmpleadoEditar %}
     <div class="col-xs-12 col-sm-3">
         <div class="card profile-card">
-            <div class="profile-header" style="background-color: #F39C12 ;"></div>
+        
             <div class="profile-body">
                 <div class="image-area">
                     <img src="{{empleado.imagen_empleado.url}}" alt="AdminBSB - Profile Image" width="40%" />
+                    <br>
                 </div>
+                
                 <div class="content-area">
                     <h4>{{empleado.nombre}} {{empleado.apellidos}}</h4>
                     {% for e in datosEquipos %}
                     <p style="color: black; font-weight: bold;">Equipo: <span style="color: seagreen;">{{e.0}}</span>
                     </p>
                     <img src="{{e.1.url}}" width="35%">
+                    <br>
+                    <br>
                     {% endfor %}
+                    
                 </div>
+
+               
             </div>
+            
+            
             <div class="profile-footer">
                 <ul>
                     <li>

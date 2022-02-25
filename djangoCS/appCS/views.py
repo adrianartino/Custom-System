@@ -4255,7 +4255,7 @@ def reporteRenovacionEq(request):
                     contadorEquipos += 1 #10
                     
                     
-                    if contadorEquipos > 60 and contadorEquipos <=90:
+                    if contadorEquipos > 48 and contadorEquipos <=72:
                         #Obtener solo empleados que quepan en la hoja
                         idRenovacion= datosRenovacion.id_renov_equipo
                         equipo= datosRenovacion.id_equipo_id
@@ -4300,10 +4300,10 @@ def reporteRenovacionEq(request):
                 #solo 9 empleados
                 listaEquipos = zip(ids, equiposRe, propietarios, departamentos, compras, renovaciones )
                 contadorHojas = 4
-                if contadorEquiposxHoja == 30:
-                    high = 600 - ((contadorEquiposxHoja+1) * 16)
+                if contadorEquiposxHoja == 24:
+                    high = 600 - ((contadorEquiposxHoja+1) * 4)
                 else:
-                    high = 600 - (contadorEquiposxHoja * 16)
+                    high = 600 - (contadorEquiposxHoja * 1)
 
             if contadorHojas == 2:
                 contadorEquipos = 0
@@ -4313,7 +4313,7 @@ def reporteRenovacionEq(request):
                     contadorEquipos += 1 #10
                     
                     
-                    if contadorEquipos > 28 and contadorEquipos <= 56:
+                    if contadorEquipos > 24 and contadorEquipos <= 48:
                         #Obtener solo empleados que quepan en la hoja
                         idRenovacion= datosRenovacion.id_renov_equipo
                         equipo= datosRenovacion.id_equipo_id
@@ -4339,15 +4339,15 @@ def reporteRenovacionEq(request):
                                 area = "Sin departamento"
                             else:
                                 
-                                propietarios = Empleados.objects.filter(id_empleado = propietario)
-                                for datosProp in propietarios:
+                                propietariosx = Empleados.objects.filter(id_empleado = propietario)
+                                for datosProp in propietariosx:
                                     nombres = datosProp.nombre
                                     apellidos = datosProp.apellidos
                                     depa = datosProp.id_area_id
                                     datosPropietario= nombres + "" + apellidos
                             
-                                departamentos = Areas.objects.filter(id_area = depa)
-                                for datosArea in departamentos:
+                                departamentosx = Areas.objects.filter(id_area = depa)
+                                for datosArea in departamentosx:
                                     area = datosArea.nombre
                                     color = datosArea.color
                             propietarios.append(datosPropietario)
@@ -4358,20 +4358,20 @@ def reporteRenovacionEq(request):
                 #solo 9 empleados
                 listaEquipos = zip(ids, equiposRe, propietarios, departamentos, compras, renovaciones )
                 contadorHojas = 3
-                if contadorEquiposxHoja == 28:
-                    high = 600 - ((contadorEquiposxHoja+1) * 16)
+                if contadorEquiposxHoja == 24:
+                    high = 600 - ((contadorEquiposxHoja+1) * 4)
                 else:
-                    high = 600 - (contadorEquiposxHoja * 16)
+                    high = 600 - (contadorEquiposxHoja * 1)
             
         
             if contadorHojas == 1:
                 contadorEquipos = 0
                 contadorEquiposxHoja = 0
-                contadorEquipos += 1 #10
+                
                 for datosRenovacion in renovacionEquipos:
-                        
+                    contadorEquipos += 1 #10
     
-                    if contadorEquipos <= 28:
+                    if contadorEquipos <= 24:
                         #Obtener solo empleados que quepan en la hoja
                         idRenovacion= datosRenovacion.id_renov_equipo
                         equipo= datosRenovacion.id_equipo_id
@@ -4416,10 +4416,10 @@ def reporteRenovacionEq(request):
                     #solo 9 empleados
                     listaEquipos = zip(ids, equiposRe, propietarios, departamentos, compras, renovaciones )
                     contadorHojas = 2
-                    if contadorEquiposxHoja == 28:
-                        high = 600 - ((contadorEquiposxHoja+1) * 1)
+                    if contadorEquiposxHoja == 24:
+                        high = 600 - ((contadorEquiposxHoja+1) * 4)
                     else:
-                        high = 600 - (contadorEquiposxHoja * 1)
+                        high = 600 - (contadorEquiposxHoja *1)
 
             base_dir = str(settings.BASE_DIR)
             #nombre de empresa
@@ -5522,9 +5522,9 @@ def reporteRenovacionImp(request):
                     listaImpresoras = zip(ids, modelos, imagenes, departamentos, compras, renovaciones)
                     contadorHojas = 2
                     if contadorImpresorasxHoja == 9:
-                        high = 500 - ((contadorImpresorasxHoja+1) * 1)
+                        high = 280 - ((contadorImpresorasxHoja+1) * 1)
                     else:
-                        high = 500 - (contadorImpresorasxHoja * 1)
+                        high = 280 - (contadorImpresorasxHoja * 1)
                 
                 
 
@@ -6459,19 +6459,19 @@ def pdfInfoEquipo(request):
             c.drawString(200,610, 'Número de equipo: '+str(dato.id_equipo))
             
             c.setFont('Helvetica-Bold', 26)
-            c.drawString(130,580, dato.tipo + " " + dato.marca + " " + dato.modelo)
+            c.drawString(80,580, dato.tipo + " " + dato.marca + " " + dato.modelo)
             
             imagen = str(dato.imagen)  
             
             imagenCompleta = base_dir+"/media/"+imagen 
-            c.drawImage(imagenCompleta, 210,410,width=160,height=160)
+            c.drawImage(imagenCompleta, 210,430,width=160,height=140)
             
             if nombreProp == "Sin propietario":
                 c.setFont('Helvetica-Bold', 20)
                 c.drawString(190,390, "Propietario: " + nombreProp)
             else:
                 c.setFont('Helvetica-Bold', 20)
-                c.drawString(50,390, "Propietario: " + nombreProp)
+                c.drawString(90,390, "Propietario: " + nombreProp)
             
             c.setFont('Helvetica-Bold', 22)
             c.drawString(70,360, "Fecha de Compra")
@@ -6719,9 +6719,9 @@ def pdfInfoEquipo(request):
                 
                 contadorHojas = 2
                 if contadorMantenimientosxHoja == 20:
-                    high = 650 - ((contadorMantenimientosxHoja+1) * 33)
+                    high = 630 - ((contadorMantenimientosxHoja+1) * 33)
                 else:
-                    high = 650 - (contadorMantenimientosxHoja * 33)
+                    high = 630 - (contadorMantenimientosxHoja * 33)
                 
             #Lleno el arreglo de mantenimientos
             
@@ -6947,11 +6947,11 @@ def pdfInfoImpresora(request):
             imagen = str(dato.imagen)  
             
             imagenCompleta = base_dir+"/media/"+imagen 
-            c.drawImage(imagenCompleta, 210,390,width=180,height=180)
+            c.drawImage(imagenCompleta, 240,420,width=150,height=150)
             
             if nombre == "Sin departamento":
                 c.setFont('Helvetica-Bold', 20)
-                c.drawString(190,390, "Departamento: " + nombre)
+                c.drawString(190,370, "Departamento: " + nombre)
             else:
                 c.setFont('Helvetica-Bold', 20)
                 c.drawString(120,390, "Departamento: " + nombre)
@@ -7758,7 +7758,7 @@ def xlRenovacionImpresoras(request):
     datosRenovaviones = []
     cont=0
     for x in renovaciones:
-        cont+=1
+        cont= cont + 1
         datosRenovaviones.append([x.id_impresora_id, listaImpresoras[cont-1], listaDepartamentos[cont-1], 
                              x.fecha_compra, x.fecha_renov])
             
@@ -9831,17 +9831,19 @@ def bajaTelefono(request):
 
             actualizacion = Telefonos.objects.filter(id_telefono = idTelefono).update(activo = "I", estado = "stockUsado", nodo = "", extension = "",id_empleado = "")
 
-            if actualizacion:
+           
                     
-                request.session['idTelefonoBaja'] = nombreCompletoTelefono
-                prestamo =  PrestamosSistemas.objects.filter(id_producto = idBaja)
+            request.session['idTelefonoBaja'] = nombreCompletoTelefono
+            prestamo =  PrestamosSistemas.objects.filter(id_producto = idBaja, tabla = "Telefonos")
 
-                if prestamo:
-                    telefono = int(idBaja)
-                    borrado = PrestamosSistemas.objects.get(id_producto = telefono, tabla = "Telefonos")
-                    borrado.delete()
+            if prestamo:
+                telefono = int(idBaja)
+                borrado = PrestamosSistemas.objects.get(id_producto = telefono, tabla = "Telefonos")
+                borrado.delete()
                     
-                return redirect('/verTelefonos/')
+            return redirect('/verTelefonos/')
+
+                
 
                
                 
@@ -10306,6 +10308,8 @@ def extensionesTel(request):
 
          #arreglos telefonos en stock y activos
         telActivos = []
+        areasT=[]
+        encargado = []
        
         #obtener lista de todos los telefonos
 
@@ -10332,18 +10336,19 @@ def extensionesTel(request):
                     puestoE = e.puesto
 
                     encargadoNombre = nombres + " " + apellidosE 
+                    telActivos.append([idTel,encargadoNombre,  con, marcaT, modeloT, estadoT, fotoT, extension, nodo])
 
                 areasT = Areas.objects.filter(id_area = areaE)
              
 
-                telActivos.append([idTel,encargadoNombre,  con, marcaT, modeloT, estadoT, fotoT, extension, nodo])
+                
 
-                listas = zip (telActivos, areasT, encargado)
+            listas = zip(telActivos, areasT,encargado)
 
 
 
-        return render(request, "Sistemas/Telefonos/extensiones.html", {"estaEnExtensionesTelefonos":estaEnExtensionesTelefonos,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,
-        "listas":listas, "encargado": encargado})
+        return render(request, "Sistemas/Telefonos/extensiones.html", {"estaEnExtensionesTelefonos":estaEnExtensionesTelefonos,"telActivos":telActivos, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,
+        "listas":listas})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -11865,3 +11870,576 @@ def preguntas(request):
     else:
     
         return redirect ('/login/')
+
+    
+def reporteMousesActivos(request):
+    
+    if "idSesion" in request.session:
+    
+        if request.method == "POST":
+
+            activo= request.POST['activo']
+            
+            
+        
+        mouses = Mouses.objects.filter(activo__icontains = activo) #11 empleados
+        
+        numero_mouses = 0
+        for mouse in mouses:
+            numero_mouses +=1
+            
+        if numero_mouses == 0:
+            numero_mouses =1
+        
+        division = numero_mouses // 9 #Resultado 1, sin residuo
+        residuo = numero_mouses%9 #residuo hay 2
+        
+        
+        
+        if residuo == 0:
+            #hojas iguales a division.
+            hojasIguales = True
+            
+        if residuo != 0:
+            division = division + 1   #Número de hojas total. 2
+            
+        #QUITAR ESTO PARA OTRA HOJA
+        #crear el http response con pdf
+        respuesta = HttpResponse(content_type='application/pdf')
+        respuesta['Content-Disposition'] = 'attachment; filename=Reporte Mouses Activos'+str(datetime.today().strftime('%Y-%m-%d'))+'.pdf'
+        #Crear objeto PDF 
+        buffer =BytesIO()
+        c = canvas.Canvas(buffer, pagesize=letter)
+        #HASTA AQUI
+            
+        contadorMouses = 0
+        contadorHojas = 1
+        for hoja2 in range(division):
+            
+            #HASTA AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+            datosMouses= Mouses.objects.filter(activo__icontains=activo) ##1 equipo
+            
+            
+            ids =[]
+            conexiones = []
+            marcas = []
+            modelos = []
+            estados = []
+            urls_imagenes = []
+            equiposPropietarios = []
+            empleadosPropietarios = []
+            base_dir = str(settings.BASE_DIR)
+            
+            if contadorHojas == 5:
+                contadorMouses = 0
+                contadorMousesXHoja = 0
+                for datoM in datosMouses:
+                    
+                    contadorMouses += 1 #10
+                    if contadorMouses > 36 and contadorMouses <=45:
+                        imagen = datoM.foto
+                        urlimagen = base_dir + '/media/' + str(imagen)
+                        img = Image(urlimagen,width=40, height=40)
+                        urls_imagenes.append(img)
+                        
+                        idequipo = datoM.id_equipo_id
+                        if idequipo == None:
+                            equiposPropietarios.append("Sin equipo asignado")
+                            empleadosPropietarios.append("Sin empleado asignado")
+                        else:
+                            info_equipo = Equipos.objects.filter(id_equipo = idequipo)
+                            
+                            for dato in info_equipo:
+                                tipo = dato.tipo
+                                marca = dato.marca
+                                modelo = dato.modelo
+                                empleado = dato.id_empleado_id
+                                nombre_completo = tipo + " " + marca + " " + modelo
+                                equiposPropietarios.append(nombre_completo)
+
+                            
+                        ids.append(str(datoM.id_mouse))
+                        if datoM.conexion == "A":
+                            conexiones.append("Alámbrico")
+                        elif datoM.conexion == "I":
+                            conexiones.append("Inalámbrico")
+                        marcas.append(datoM.marca)
+                        modelos.append(datoM.modelo)
+                        if datoM.estado == "activoFuncional":
+                            estados.append("Activo Funcional")
+                        elif datoM.estado == "stockUsado":
+                            estados.append("Stock Usado")
+                        elif datoM.estado == "stockNuevo":
+                            estados.append("Stock Nuevo")
+                        
+                        
+                        contadorMousesXHoja +=1
+                        
+                    
+                #solo 9 empleados
+                listaMouses = zip(ids, conexiones, marcas, modelos,  estados,urls_imagenes, equiposPropietarios)
+                
+                contadorHojas = 6
+                if contadorMousesXHoja == 9:
+                    high = 600 - ((contadorMousesXHoja+1) * 33)
+                else:
+                    high = 600 - (contadorMousesXHoja * 33)
+            
+            if contadorHojas == 4:
+                contadorMouses = 0
+                contadorMousesXHoja = 0
+                for datoM in datosMouses:
+                    
+                    contadorMouses += 1 #10
+                    if contadorMouses > 27 and contadorMouses <=36:
+                        imagen = datoM.imagen
+                        urlimagen = base_dir + '/media/' + str(imagen)
+                        img = Image(urlimagen,width=40, height=40)
+                        urls_imagenes.append(img)
+                        
+                        idequipo = datoM.id_equipo_id
+                        if idequipo == None:
+                            equiposPropietarios.append("Sin equipo asignado")
+                        else:
+                            info_equipo = Equipos.objects.filter(id_equipo = idequipo)
+                            
+                            for dato in info_equipo:
+                                tipo = dato.tipo
+                                marca = dato.marca
+                                modelo = dato.modelo
+                                nombre_completo = tipo + " " + marca + " " + modelo
+                                equiposPropietarios.append(nombre_completo)
+                            
+                        ids.append(str(datoM.id_mouse))
+                        if datoM.conexion == "A":
+                            conexiones.append("Alámbrico")
+                        elif datoM.conexion == "I":
+                            conexiones.append("Inalámbrico")
+                        marcas.append(datoM.marca)
+                        modelos.append(datoM.modelo)
+                        if datoM.estado == "activoFuncional":
+                            estados.append("Activo Funcional")
+                        elif datoM.estado == "stockUsado":
+                            estados.append("Stock Usado")
+                        elif datoM.estado == "stockNuevo":
+                            estados.append("Stock Nuevo")
+                        
+                        
+                        contadorMousesXHoja +=1
+                        
+                    
+                #solo 9 empleados
+                listaMouses = zip(ids, conexiones, marcas, modelos,  estados,urls_imagenes, equiposPropietarios)
+                
+                contadorHojas = 5
+                if contadorMousesXHoja == 9:
+                    high = 600 - ((contadorMousesXHoja+1) * 33)
+                else:
+                    high = 600 - (contadorMousesXHoja * 33)
+                    
+                    
+            
+            if contadorHojas == 3:
+                contadorMouses = 0
+                contadorMousesXHoja = 0
+                for datoM in datosMouses:
+                    
+                    contadorMouses += 1 #10
+                    if contadorMouses > 18 and contadorMouses <=27:
+                        imagen = datoM.imagen
+                        urlimagen = base_dir + '/media/' + str(imagen)
+                        img = Image(urlimagen,width=40, height=40)
+                        urls_imagenes.append(img)
+                        
+                        idequipo = datoM.id_equipo_id
+                        if idequipo == None:
+                            equiposPropietarios.append("Sin equipo asignado")
+                        else:
+                            info_equipo = Equipos.objects.filter(id_equipo = idequipo)
+                            
+                            for dato in info_equipo:
+                                tipo = dato.tipo
+                                marca = dato.marca
+                                modelo = dato.modelo
+                                nombre_completo = tipo + " " + marca + " " + modelo
+                                equiposPropietarios.append(nombre_completo)
+                            
+                        ids.append(str(datoM.id_mouse))
+                        if datoM.conexion == "A":
+                            conexiones.append("Alámbrico")
+                        elif datoM.conexion == "I":
+                            conexiones.append("Inalámbrico")
+                        marcas.append(datoM.marca)
+                        modelos.append(datoM.modelo)
+                        if datoM.estado == "activoFuncional":
+                            estados.append("Activo Funcional")
+                        elif datoM.estado == "stockUsado":
+                            estados.append("Stock Usado")
+                        elif datoM.estado == "stockNuevo":
+                            estados.append("Stock Nuevo")
+                        
+                        
+                        contadorMousesXHoja +=1
+                        
+                    
+                #solo 9 empleados
+                listaMouses = zip(ids, conexiones, marcas, modelos, estados, urls_imagenes,equiposPropietarios)
+                
+                contadorHojas = 4
+                if contadorMousesXHoja == 9:
+                    high = 600 - ((contadorMousesXHoja+1) * 33)
+                else:
+                    high = 600 - (contadorMousesXHoja * 33)
+                    
+                    
+            
+            if contadorHojas == 2:
+                contadorMouses = 0
+                contadorMousesXHoja = 0
+                for datoM in datosMouses:
+                    
+                    contadorMouses += 1 #10
+                    if contadorMouses > 9 and contadorMouses <=18:
+                        imagen = datoM.imagen
+                        urlimagen = base_dir + '/media/' + str(imagen)
+                        img = Image(urlimagen,width=40, height=40)
+                        urls_imagenes.append(img)
+                        
+                        idequipo = datoM.id_equipo_id
+                        if idequipo == None:
+                            equiposPropietarios.append("Sin equipo asignado")
+                        else:
+                            info_equipo = Equipos.objects.filter(id_equipo = idequipo)
+                            
+                            for dato in info_equipo:
+                                tipo = dato.tipo
+                                marca = dato.marca
+                                modelo = dato.modelo
+                                nombre_completo = tipo + " " + marca + " " + modelo
+                                equiposPropietarios.append(nombre_completo)
+                            
+                        ids.append(str(datoM.id_mouse))
+                        if datoM.conexion == "A":
+                            conexiones.append("Alámbrico")
+                        elif datoM.conexion == "I":
+                            conexiones.append("Inalámbrico")
+                        marcas.append(datoM.marca)
+                        modelos.append(datoM.modelo)
+                        if datoM.estado == "activoFuncional":
+                            estados.append("Activo Funcional")
+                        elif datoM.estado == "stockUsado":
+                            estados.append("Stock Usado")
+                        elif datoM.estado == "stockNuevo":
+                            estados.append("Stock Nuevo")
+                        
+                        
+                        contadorMousesXHoja +=1
+                        
+                    
+                #solo 9 empleados
+                listaMouses = zip(ids, conexiones, marcas, modelos, estados,urls_imagenes, equiposPropietarios)
+                
+                contadorHojas = 3
+                if contadorMousesXHoja == 9:
+                    high = 600 - ((contadorMousesXHoja+1) * 33)
+                else:
+                    high = 600 - (contadorMousesXHoja * 33)
+                    
+                        
+            if contadorHojas == 1:
+                contadorMousesXHoja = 0
+                for datoM in datosMouses:
+                    
+                    contadorMouses += 1 #10
+                    if contadorMouses <= 9:
+                        imagen = datoM.foto
+                        urlimagen = base_dir + '/media/' + str(imagen)
+                        img = Image(urlimagen,width=50, height=50)
+                        urls_imagenes.append(img)
+                        
+                        idequipo = datoM.id_equipo_id
+                        if idequipo == None:
+                            equiposPropietarios.append(["Sin equipo asignado","Sin empleado asignado"] )
+                           
+                        else:
+                            info_equipo = Equipos.objects.filter(id_equipo = idequipo)
+                            
+                            for dato in info_equipo:
+                                tipo = dato.tipo
+                                marca = dato.marca
+                                modelo = dato.modelo
+                                empleadoId = dato.id_empleado_id
+                                nombre_completo = tipo + " " + marca + " " + modelo
+                                
+
+                                datosEmpleados = Empleados.objects.filter(id_empleado = empleadoId)
+                                for e in datosEmpleados:
+                                    nombre = e.nombre
+                                    apellido = e.apellido 
+                                nombreCompletoEmpleado = nombre + " " + apellido
+                          
+                                equiposPropietarios.append([nombre_completo,nombreCompletoEmpleado])
+                            
+                        ids.append(str(datoM.id_mouse))
+                        if datoM.conexion == "A":
+                            conexiones.append("Alámbrico")
+                        elif datoM.conexion == "I":
+                            conexiones.append("Inalámbrico")
+                        marcas.append(datoM.marca)
+                        modelos.append(datoM.modelo)
+                        if datoM.estado == "activoFuncional":
+                            estados.append("Activo Funcional")
+                        elif datoM.estado == "stockUsado":
+                            estados.append("Stock Usado")
+                        elif datoM.estado == "stockNuevo":
+                            estados.append("Stock Nuevo")
+                        
+                        contadorMousesXHoja +=1
+                        
+                    
+                #solo 9 empleados
+                listaMouses = zip(ids, conexiones, marcas, modelos, estados,urls_imagenes, equiposPropietarios)
+                
+                contadorHojas = 2
+                if contadorMousesXHoja == 9:
+                    high = 615 - ((contadorMousesXHoja+1) * 33)
+                else:
+                    high = 615 - (contadorMousesXHoja * 33)
+                
+
+            #nombre de empresa
+            logo = base_dir+'/static/images/logoCustom.PNG'   
+            c.drawImage(logo, 40,700,120,70, preserveAspectRatio=True)
+            
+            c.setFont('Helvetica-Bold', 14)
+            c.drawString(150,750, 'Custom & Co S.A. de C.V.')
+            
+            c.setFont('Helvetica', 8)
+            c.drawString(150,735, 'Allende #646 Sur Colonia Centro, Durango, CP: 35000')
+            
+            c.setFont('Helvetica', 8)
+            c.drawString(150,720, 'RFC: CAC070116IS9')
+            
+            c.setFont('Helvetica', 8)
+            c.drawString(150,705, 'Tel: 8717147716')
+            #fecha
+            hoy=datetime.now()
+            fecha = str(hoy.date())
+            color_guinda="#B03A2E"
+            c.setFillColor(color_guinda)
+            
+            c.setFont('Helvetica-Bold', 12)
+            if activo == "A":
+                c.drawString(380,750, "REPORTE MOUSES ACTIVOS")
+            elif activo == "I":
+                c.drawString(370,750, "REPORTE MOUSES INACTIVOS")
+            color_negro="#030305"
+            c.setFillColor(color_negro)
+            c.setFont('Helvetica-Bold', 10)
+            c.drawString(405,730, "Fecha de impresión: " +fecha)
+            #linea guinda
+            
+            c.setFillColor(color_guinda)
+            c.setStrokeColor(color_guinda)
+            c.line(40,695,560,695)
+            #nombre departamento
+            color_negro="#030305"
+            c.setFillColor(color_negro)
+            c.setFont('Helvetica', 12)
+            c.drawString(405,710, 'Departamento de Sistemas')
+            #titulo
+            c.setFont('Helvetica-Bold', 22)
+            
+            if activo == "A":
+                c.drawString(180,660, 'Reporte Mouses Activos')
+            elif activo == "I":
+                c.drawString(180,660, 'Reporte Mouses Inactivos')
+            
+            #header de tabla
+            styles = getSampleStyleSheet()
+            styleBH =styles["Normal"]
+            styleBH.alignment = TA_CENTER
+            styleBH.fontSize = 9
+            
+            
+            id_mouse = Paragraph('''ID''', styleBH)
+            conexion = Paragraph('''Conexión''', styleBH)
+            marca = Paragraph('''Marca''', styleBH)
+            modelo = Paragraph('''Modelo''', styleBH)
+            estado = Paragraph('''Estado''', styleBH)
+            foto = Paragraph('''Imagen.''', styleBH)
+            
+            
+            propEquipo = Paragraph('''Equipo al que pertenece''', styleBH)
+            filasTabla=[]
+            filasTabla.append([id_mouse, conexion, marca, modelo,estado,foto,propEquipo])
+            #Tabla
+            styleN = styles["BodyText"]
+            styleN.alignment = TA_CENTER
+            styleN.fontSize = 7
+            
+                
+            cont = 0
+            for idm, conexionm, marcam, modelom, estadom, fotom, propEquipom  in listaMouses:
+                campo_mouse = Paragraph(idm, styleN)
+                campo_conexion = Paragraph(conexionm, styleN)
+                campo_marca = Paragraph(marcam, styleN)
+                campo_modelo = Paragraph(modelom, styleN)
+               
+                campo_estado = Paragraph(estadom, styleN)
+                campo_propEquipo = Paragraph(propEquipom[0]  + '''<br/> <br/> '''+ propEquipom[1], styleN)
+                
+                fila = [campo_mouse, campo_conexion, campo_marca, campo_modelo,campo_estado, fotom, campo_propEquipo]
+                filasTabla.append(fila)
+                
+                high= high - 18 
+                
+                
+            #escribir tabla
+            width, height = letter
+            tabla = Table(filasTabla, colWidths=[.9 * cm, 2.5 * cm, 2 * cm, 2.5 * cm, 3 * cm, 2.5 * cm, 5 * cm
+                                               ])
+            tabla.setStyle(TableStyle([
+                ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+                ('BACKGROUND', (0, 0), (-1, 0), '#F5CD04'),
+                ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+            ]))
+            
+            for fila in filasTabla:
+                tabla.setStyle(([
+                ('BACKGROUND', (0, 0), (10,0), colors.crimson),
+                ('TEXTCOLOR',(0,0), (1, 1), colors.whitesmoke)
+            ]))
+            
+            tabla.wrapOn(c, width, height)
+            tabla.drawOn(c, 50, high)
+            
+            #linea guinda
+            color_guinda="#B03A2E"
+            c.setFillColor(color_guinda)
+            c.setStrokeColor(color_guinda)
+            c.line(40,60,560,60)
+            
+            color_negro="#030305"
+            c.setFillColor(color_negro)
+            c.setFont('Helvetica-Bold', 11)
+            c.drawString(170,48, '2021 - Administrador de Custom System. - Versión: 1.0.0 ')
+            
+            #guardar la pagina, y se crea otra en caso de ser necesario
+            c.showPage()
+    
+            #guardar pdf
+            c.save()
+            #obtener valores de bytesIO y esribirlos en la respuesta
+            pdf = buffer.getvalue()
+            buffer.close()
+            respuesta.write(pdf)
+            return respuesta
+        
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+
+    
+def xlMouses(request):
+    if request.method == "POST":
+    
+        activoa= request.POST['activo'] #A o I
+            
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename=Reporte Mouses'+str(datetime.today().strftime('%Y-%m-%d'))+'.xls'
+    
+    #creación de libro de excel
+    libro = xlwt.Workbook(encoding='utf-8')
+    hoja = libro.add_sheet('Equipos')
+    
+    numero_fila = 0
+    estilo_fuente = xlwt.XFStyle()
+    estilo_fuente.font.bold = True
+    
+    columnas = ['Id','Conexión', 'Marca', 'Modelo', 'Estado', 'Equipo asignado','Empleado asignado']
+    for columna in range(len(columnas)):
+        hoja.write(numero_fila, columna, columnas[columna], estilo_fuente)
+        
+    propietariosEquipo = []
+    propietarioEmpleado = []
+    estados = []
+    
+    
+    infoMouses = Mouses.objects.filter(activo = activoa)
+        
+    for mouse in infoMouses:
+        id_equipo = mouse.id_equipo_id
+     
+        
+        if id_equipo == None:
+            nombreEquipo = "Sin equipo asignado"
+            propietarioEm = "Sin propieatrio"
+            
+            
+            propietariosEquipo.append(nombreEquipo)
+            propietarioEmpleado.append(propietarioEm)
+          
+        
+      
+            
+        else:
+            datosEquipo = Equipos.objects.filter(id_equipo = id_equipo)#filtro de los empleados que esten dentro de un area especifica
+            
+            for dato in datosEquipo:
+                tipo = dato.tipo
+                marca = dato.marca
+                modelo = dato.modelo
+                id_emple = dato.id_empledo_id
+                
+                infoEmple = Empleados.objects.filter(id_empleado = id_emple)
+                for dato in infoEmple:
+                    nombre = dato.nombre
+                    apellido = dato.apellidos
+            nombreEquipo = tipo + " " + marca + " " + modelo
+            nombreEmpleado = nombre + " " + apellido
+           
+            
+            propietariosEquipo.append(nombreEquipo)
+            propietarioEmpleado.append(nombreEmpleado)
+        
+        
+           
+        
+    conexiones = []
+    estados = []
+    
+    #lista la lista de propietarios de equipos, incluyendo los que no tienen propietario.
+        
+    mouses = Mouses.objects.filter(activo = activoa)
+    
+    datosMouses = []
+    cont=0
+    for x in mouses:
+        cont+=1
+
+        if x.conexion == "A":
+            conexiones.append("Alámbrico")
+        elif x.conexion == "I":
+            conexiones.append("Inalámbrico")
+
+        if x.estado == "activoFuncional":
+            estados.append("Activo Funcional")
+        elif x.estado == "stockUsado":
+            estados.append("Stock Usado")
+        elif x.estado == "stockNuevo":
+            estados.append("Stock Nuevo")
+
+
+        datosMouses.append([x.id_mouse, conexiones[cont-1], x.marca, x.modelo, estados[cont-1], propietariosEquipo[cont-1], propietarioEmpleado[cont-1], 
+                            ])
+            
+        
+    estilo_fuente = xlwt.XFStyle()
+    for mousito in datosMouses:
+        numero_fila+=1
+        for columna in range(len(mousito)):
+            hoja.write(numero_fila, columna, str(mousito[columna]), estilo_fuente)
+    
+    libro.save(response)
+    return response    
+    #creación 

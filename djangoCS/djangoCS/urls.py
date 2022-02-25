@@ -105,6 +105,7 @@ urlpatterns = [
     path("reporteInsumosRequisicion/", views.reporteInsumosRequisicion),
     path("reporteRenovacionEq/", views.reporteRenovacionEq),
     path("reporteRenovacionImp/", views.reporteRenovacionImp),
+    path("reporteMousesActivos/", views.reporteMousesActivos),
     
     path("pdfInfoEquipo/", views.pdfInfoEquipo),
     path("pdfInfoImpresora/", views.pdfInfoImpresora),
@@ -116,6 +117,7 @@ urlpatterns = [
     path("xlImpresoras/",views.xlImpresoras),
     path("xlRenovacionImpresoras/", views.xlRenovacionImpresoras),
     path("xlInsumos/", views.xlInsumos),
+    path("xlMouses/", views.xlMouses),
     
     path("correoContra/", views.correoContra),
     

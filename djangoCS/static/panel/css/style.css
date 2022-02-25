@@ -7897,7 +7897,7 @@ fieldset[disabled] .form-control {
   margin-top: -40px; }
   .profile-card .profile-body .image-area img {
     border: 2px solid #F39C12 ;
-    padding: 30px !important;
+    padding: 50px !important;
     margin: 30px !important;
     -webkit-border-radius: 30%;
     -moz-border-radius: 30%;
@@ -7913,10 +7913,10 @@ fieldset[disabled] .form-control {
     .profile-card .profile-body .content-area p:last-child {
       font-weight: 600;
       color: #ad1455;
-      margin-top: 5px; }
+      margin-top: 20px; }
 
 .profile-card .profile-footer {
-  padding: 15px; }
+  padding: 1px; }
   .profile-card .profile-footer ul {
     margin: 0;
     padding: 0;

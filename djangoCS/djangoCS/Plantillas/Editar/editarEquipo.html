@@ -39,16 +39,19 @@ Editar Equipos
     {% for equipos, empleados in lista %}
     <div class="col-xs-12 col-sm-3">
         <div class="card profile-card">
-            <div class="profile-header" style="background-color: #F39C12 ;"></div>
+          
             <div class="profile-body">
+
                 <div class="image-area">
-                    <img src="{{equipos.imagen.url}}" alt="AdminBSB - Profile Image" width="70%" />
+                    <img src="{{equipos.imagen.url}}" alt="AdminBSB - Profile Image" width="60%" />
                 </div>
+                <br>
                 <div class="content-area">
                     <h4>{{equipos.tipo}} {{equipos.marca}} {{equipos.modelo}}</h4>
 
                 </div>
             </div>
+            <br>
             <div class="profile-footer">
                 <ul>
                     <li>
@@ -67,6 +70,7 @@ Editar Equipos
                         <img src="{{dato.imagen_empleado.url}}" width="50%">
 
                     </div>
+                    <br>
                     {% endfor %}
                 </center>
             </div>
