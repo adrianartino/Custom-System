@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-gj89t90*$7xaj*q_hw4q*#pl=(-u720cq-_30z^^1ak6lgf&o2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.10.22', '127.0.0.1', '192.168.10.4', '192.168.10.84' ]
+ALLOWED_HOSTS = ['192.168.10.22', '127.0.0.1', '192.168.10.5', '192.168.10.84' ]
 
 
 # Application definition
@@ -81,9 +81,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'customsystem',
-        'USER': 'remotobd',
-        'PASSWORD': 'CustomCo99$',
-        'HOST': '192.168.10.84',
+        'USER': 'remotoCS',
+        'PASSWORD': 'claveforaneaNull22$',
+        'HOST': '192.168.10.5',
         'PORT': '3306',
     }
 }
@@ -137,7 +137,7 @@ EMAIL_HOST = 'mail.customco.com.mx'
 EMAIL_USE_TLS = True
 EMAIL_PORT =  587
 EMAIL_HOST_USER = 'sistemas@customco.com.mx'
-EMAIL_HOST_PASSWORD = '+A,K1LO1xGo&'
+EMAIL_HOST_PASSWORD = 'qen%etz(S9ul'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
