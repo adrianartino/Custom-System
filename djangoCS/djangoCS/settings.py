@@ -81,9 +81,15 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'customsystem',
+<<<<<<< HEAD
         'USER': 'remotoCS',
         'PASSWORD': 'claveforaneaNull22$',
         'HOST': '192.168.10.5',
+=======
+        'USER': 'root',
+        'PASSWORD': 'claveforaneaNull22$',
+        'HOST': 'localhost',
+>>>>>>> e296c55e67cb4af7faa2a52497ddf791cfb99a79
         'PORT': '3306',
     }
 }
@@ -137,7 +143,11 @@ EMAIL_HOST = 'mail.customco.com.mx'
 EMAIL_USE_TLS = True
 EMAIL_PORT =  587
 EMAIL_HOST_USER = 'sistemas@customco.com.mx'
+<<<<<<< HEAD
 EMAIL_HOST_PASSWORD = 'qen%etz(S9ul'
+=======
+EMAIL_HOST_PASSWORD = '9myMKtXA%!9YT'
+>>>>>>> e296c55e67cb4af7faa2a52497ddf791cfb99a79
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
