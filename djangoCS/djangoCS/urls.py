@@ -118,6 +118,9 @@ urlpatterns = [
     path("xlRenovacionImpresoras/", views.xlRenovacionImpresoras),
     path("xlInsumos/", views.xlInsumos),
     path("xlMouses/", views.xlMouses),
+    path("xlTeclados/", views.xlTeclados),
+    path("xlMonitores/", views.xlMonitores),
+    path("xlTelefonos/", views.xlTelefonos),
     
     path("correoContra/", views.correoContra),
     

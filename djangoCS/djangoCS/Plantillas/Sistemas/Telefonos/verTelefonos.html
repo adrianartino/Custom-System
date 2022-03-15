@@ -64,19 +64,9 @@ Teléfonos | Custom System
 
             <div class="body" id="divActivos">
                 <div class="row clear-fix">
+                 
                     <div class="col-xs-12 col-sm-1">
-                        <form action="/reporteEmpleadosActivos/" method="POST">{% csrf_token %}
-                            <input type="hidden" name="activo" value="A">
-                            <button type="submit" class="btn bg-red waves-effect animate__animated animate__flipInX"
-                                data-toggle="tooltip" data-placement="bottom"
-                                title="Descargar reporte Teléfonos Activos en PDF.">
-                                <i class="material-icons">picture_as_pdf</i>
-                                <span>PDF</span>
-                            </button>
-                        </form>
-                    </div>
-                    <div class="col-xs-12 col-sm-1">
-                        <form action="/xlEmpleados/" method="POST">{% csrf_token %}
+                        <form action="/xlTelefonos/" method="POST">{% csrf_token %}
                             <input type="hidden" name="activo" value="A">
                             <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
                                 data-toggle="tooltip" data-placement="bottom"
@@ -143,7 +133,7 @@ Teléfonos | Custom System
                                         <label class="label bg-orange">{{tel.1}}</label>
                                     </div>
                                     <div>
-                                        <label class="label bg-blue-grey">En departamento de sistemas</label>
+                                        <label class="{{tel.3}}">{{tel.2}}</label>
                                     </div>
                                 {% endif %}
 
@@ -213,19 +203,9 @@ Teléfonos | Custom System
             </div>
             <div class="body" id="divInactivos">
                 <div class="row clear-fix">
+               
                     <div class="col-xs-12 col-sm-1">
-                        <form action="/reporteEmpleadosActivos/" method="POST">{% csrf_token %}
-                            <input type="hidden" name="activo" value="I">
-                            <button type="submit" class="btn bg-red waves-effect animate__animated animate__flipInX"
-                                data-toggle="tooltip" data-placement="bottom"
-                                title="Descargar reporte Teléfonos inactivos en PDF.">
-                                <i class="material-icons">picture_as_pdf</i>
-                                <span>PDF</span>
-                            </button>
-                        </form>
-                    </div>
-                    <div class="col-xs-12 col-sm-1">
-                        <form action="/xlEmpleados/" method="POST">{% csrf_token %}
+                        <form action="/xlTelefonos/" method="POST">{% csrf_token %}
                             <input type="hidden" name="activo" value="I">
                             <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
                                 data-toggle="tooltip" data-placement="bottom"
@@ -236,8 +216,8 @@ Teléfonos | Custom System
                         </form>
                     </div>
                     <div class="col-xs-12 col-sm-4">
-                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarEmpleados/">Agregar
-                            Teclado</a>
+                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarTelefonos/">Agregar
+                            Teléfono</a>
                     </div>
 
                 </div>
