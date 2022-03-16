@@ -912,6 +912,7 @@ def infoEquipo(request):
                     else:
                         datosPropietario= Empleados.objects.filter(id_empleado=propietario)
                         for datos in datosPropietario:
+                            idE = datos.id_empleado
                             nombre= datos.nombre
                             apellidos=datos.apellidos
                             nombreEmpleado= nombre + " " + apellidos
@@ -930,14 +931,26 @@ def infoEquipo(request):
                 
                         #sinPropietario es falso
                         mantenimientos= CalendarioMantenimiento.objects.filter(id_equipo_id__id_equipo=id_equipo)
+                        mouses = Mouses.objects.filter(id_equipo = id_equipo)
+                        teclados = Teclados.objects.filter(id_equipo = id_equipo)
+                        monitores = Monitores.objects.filter(id_equipo = id_equipo)
+                        telefonosE = Telefonos.objects.filter(id_empleado = idE)
+
                         
-                        if mantenimientos:
+
+                        
+                        
+                       
+                        if mouses or  mantenimientos or teclados or monitores or telefonosE:
                             return render(request, "Equipos/infoEquipo.html", {"estaEnVerEquipos": estaEnVerEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "datosEquipo":datosEquipo,
                                                             "nombreEmpleado": nombreEmpleado, "nombreArea": nombreArea, "colorArea": colorArea, "compra":compra, "renovar": renovar, "sinPropietario":sinPropietario,
-                                                            "mantenimientos":mantenimientos, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+                                                           "mouses":mouses,"mantenimientos":mantenimientos,"teclados":teclados,"monitores":monitores,"telefonosE":telefonosE, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
                         else:
+                            
                             return render(request, "Equipos/infoEquipo.html", {"estaEnVerEquipos": estaEnVerEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "datosEquipo":datosEquipo,
                                                             "nombreEmpleado": nombreEmpleado, "nombreArea": nombreArea, "colorArea": colorArea, "compra":compra, "renovar": renovar, "sinPropietario":sinPropietario, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+                       
+
             else:
                 
                 noEncontro = True
