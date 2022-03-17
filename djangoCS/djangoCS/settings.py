@@ -137,7 +137,7 @@ EMAIL_HOST = 'mail.customco.com.mx'
 EMAIL_USE_TLS = True
 EMAIL_PORT =  587
 EMAIL_HOST_USER = 'sistemas@customco.com.mx'
-EMAIL_HOST_PASSWORD = 'qen%etz(S9ul'
+EMAIL_HOST_PASSWORD = '(H3qXPAf=}jP'
 
 
 # Default primary key field type
