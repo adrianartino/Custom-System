@@ -6571,6 +6571,87 @@ def pdfInfoEquipo(request):
         tabla.wrapOn(c, width, height)
         tabla.drawOn(c, 40, high)
         
+        #Tabla de periféricos
+        filasTablaPerifericos = []
+        #header de tabla
+        styles = getSampleStyleSheet()
+        styleBH =styles["Normal"]
+        styleBH.alignment = TA_CENTER
+        styleBH.fontSize = 10
+        
+        
+        cabeceraMouse = Paragraph('''Mouse''', styleBH)
+        cabeceraTeclado = Paragraph('''Teclado''', styleBH)
+        cabeceraMonitor = Paragraph('''Monitor''', styleBH)
+        filasTablaPerifericos.append([cabeceraMouse, cabeceraTeclado, cabeceraMonitor])
+        
+        #Sacar información de Mouse, teclado y monitor.
+        mouseCompleto = ""
+        tecladoCompleto = ""
+        monitorCompleto = ""
+        
+        #Mouse
+        datosMouse = Mouses.objects.filter(id_equipo_id__id_equipo = equipo_recibido)
+        if datosMouse:
+            for datoMouse in datosMouse:
+                tipoConexión=""
+                conexionMouse = datoMouse.conexion
+                if conexionMouse == "A":
+                    tipoConexion = "alámbrica"
+                elif conexionMouse == "I":
+                    tipoConexion = "inalámbrica"
+                marcaMouse = datoMouse.marca
+                modeloMouse = datoMouse.modelo
+            mouseCompleto = "Mouse "+ marcaMouse + " modelo "+ modeloMouse + ", conexión " + tipoConexion
+        else:
+            mouseCompleto = "No cuenta con mouse."
+        
+        #Teclado
+        datosTeclado = Teclados.objects.filter(id_equipo_id__id_equipo = equipo_recibido)
+        if datosTeclado:
+            for datoTeclado in datosTeclado:
+                tipoConexionTeclado = ""
+                conexionTeclado = datoTeclado.conexion
+                if conexionTeclado == "A":
+                    tipoConexionTeclado = "alámbrica"
+                elif conexionTeclado == "I":
+                    tipoConexionTeclado = "inalámbrica"
+                marcaTeclado = datoTeclado.marca
+                modeloTeclado = datoTeclado.model
+            tecladoCompleto = "Teclado "+marcaTeclado + " modelo "+modeloTeclado + ", conexión "+tipoConexionTeclado
+        
+        else:
+            tecladoCompleto = "No cuenta con teclado."
+        
+        #Monitor
+        datosMonitor = Monitores.objects.filter(id_equipo_id__id_equipo = equipo_recibido)
+        if datosMonitor:
+            for datoMonitor in datosMonitor:
+                marcaMonitor = datoMonitor.marca
+                modeloMonitor = datoMonitor.modelo
+            monitorCompleto = "Monitor "+marcaMonitor + " modelo "+modeloMonitor
+        else:
+            monitorCompleto = "No cuenta con monitor."
+        
+        
+        
+        mouseTabla = Paragraph(mouseCompleto, styleN)
+        tecladoTabla = Paragraph(tecladoCompleto, styleN)
+        monitorTabla = Paragraph(monitorCompleto, styleN)
+        filasTablaPerifericos.append([mouseTabla, tecladoTabla, monitorTabla])
+        
+        
+        tabla2 = Table(filasTablaPerifericos, colWidths=[5*cm,5*cm,5*cm])
+        tabla2.setStyle(TableStyle([
+            ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+            ('BACKGROUND', (0, 0), (-1, 0), '#F5CD04'),
+            ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+        ]))
+        
+        tabla2.wrapOn(c, width, height)
+        tabla2.drawOn(c, 100, 90)
+        
+        
         #linea guinda
         color_guinda="#B03A2E"
         c.setFillColor(color_guinda)

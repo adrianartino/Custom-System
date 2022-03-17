@@ -172,12 +172,183 @@ Información de Equipo
                             </tbody>
                         </table>
                     </div>
+                    {% if mouses %}
+                    <br>
+                <h1 style="color: black;">Mouse de equipo</h1>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                        <thead>
+                            <tr style="background-color: #2980B9; color:black">
+                                <th>ID</th>
+                                <th>Tipo de conexión</th>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>Estado</th>
+                                <th>Foto</th>
+
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>ID</th>
+                                <th>Tipo de conexión</th>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>Estado</th>
+                                <th>Foto</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            {% for dato in mouses %}
+                            <tr>
+
+                                <th>{{dato.id_mouse}}</th>
+                                <th>
+                                    {% if dato.conexion == "A" %}
+                                    Alámbrico
+                                    {% else %}
+                                    Inalámbrico
+                                    {% endif %}
+                                </th>
+                                <th>{{dato.marca}}</th>
+                                <th>{{dato.modelo}}</th>
+                                {% if dato.estado == "activoFuncional" %}
+                                <th>Activo Funcional</th>
+                                {% elif dato.estado == "stockUsado" %}
+                                <th>Stock Usado</th>
+                                {% elif dato.estado == "stockNuevo" %}
+                                <th>Stock Nuevo</th>
+                                {% elif dato.estado == "basura" %}
+                                <th>Basura</th>
+                                {% endif %}
+                                
+                                
+                                <th>
+                                    <center>
+                                        <img src="{{dato.foto.url}}" width="30%" alt="lap">
+                                    </center>
+                                </th>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+                {% if teclados %}
+                <br>
+                <h1 style="color: black;">Teclado de equipo</h1>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                        <thead>
+                            <tr style="background-color: #E67E22; color:black">
+                                <th>ID</th>
+                                <th>Tipo de conexión</th>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>Estado</th>
+                                <th>Foto</th>
+
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>ID</th>
+                                <th>Tipo de conexión</th>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>Estado</th>
+                                <th>Foto</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            {% for dato in teclados %}
+                            <tr>
+
+                                <th>{{dato.id_teclado}}</th>
+                             
+                                <th>{{dato.conexion}}</th>
+                                <th>{{dato.marca}}</th>
+                                <th>{{dato.modelo}}</th>
+                                {% if dato.estado == "activoFuncional" %}
+                                <th>Activo Funcional</th>
+                                {% elif dato.estado == "stockUsado" %}
+                                <th>Stock Usado</th>
+                                {% elif dato.estado == "stockNuevo" %}
+                                <th>Stock Nuevo</th>
+                                {% elif dato.estado == "basura" %}
+                                <th>Basura</th>
+                                {% endif %}
+                                <th>
+                                    <center>
+                                        <img src="{{dato.foto.url}}" width="30%" alt="lap">
+                                    </center>
+                                </th>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div> 
+                {% endif %} 
+                {% if monitores %}
+                <br>
+                <h1 style="color: black;">Monitor de equipo</h1>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                        <thead>
+                            <tr style="background-color: #E74C3C; color:black">
+                                <th>ID</th>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>Estado</th>
+                                <th>Foto</th>
+
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>ID</th>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>Estado</th>
+                                <th>Foto</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            {% for dato in monitores %}
+                            <tr>
+
+                                <th>{{dato.id_monitor}}</th>
+                                <th>{{dato.marca}}</th>
+                                <th>{{dato.modelo}}</th>
+                                {% if dato.estado == "activoFuncional" %}
+                                <th>Activo Funcional</th>
+                                {% elif dato.estado == "stockUsado" %}
+                                <th>Stock Usado</th>
+                                {% elif dato.estado == "stockNuevo" %}
+                                <th>Stock Nuevo</th>
+                                {% elif dato.estado == "basura" %}
+                                <th>Basura</th>
+                                {% endif %}
+                                <th>
+                                    <center>
+                                        <img src="{{dato.foto.url}}" width="30%" alt="lap">
+                                    </center>
+                                </th>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+                <br>
                     <h1 style="color: black;">Mantenimientos</h1>
 
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                             <thead>
-                                <tr style="background-color: #fad60e; color:black">
+                                <tr style="background-color: #16A085; color:black">
                                     <th>ID Operación</th>
                                     <th>Operación</th>
                                     <th>Fecha</th>
