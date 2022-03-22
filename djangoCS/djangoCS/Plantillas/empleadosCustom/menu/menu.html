@@ -86,45 +86,27 @@
                     <li class="dropdown">
                         <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button">
                             <i class="material-icons">notifications</i>
-                            <span class="label-count">{{numeroNoti}}</span>
+                            <span class="label-count">1</span>
                         </a>
                         <ul class="dropdown-menu">
                             <li class="header">NOTIFICACIONES</li>
                             <li class="body">
                                 <ul class="menu">
-                                    {% for computadora in mantenimientosNoti %}
+                                    
                                     <li>
-                                        <a href="javascript:void(0);">
+                                        <a href="/encuestas/">
                                             <div class="icon-circle bg-deep-orange">
-                                                <i class="material-icons">cleaning_services</i>
+                                                <i class="material-icons">assessment</i>
 
                                             </div>
                                             <div class="menu-info">
-                                                <h4>{{computadora.0}}</h4>
+                                                <h4>Encuesta clima laboral.</h4>
                                                 <p>
-                                                    <i class="material-icons">face</i> {{computadora.1}}
+                                                    <i class="material-icons">date_range</i> Del 21 al 25 de Marzo.
                                                 </p>
                                             </div>
                                         </a>
                                     </li>
-                                    {% endfor %}
-                                    {% for cartucho in cartuchosNoti %}
-                                    <li>
-                                        <a href="javascript:void(0);">
-                                            <div class="icon-circle bg-cyan">
-                                                <i class="material-icons">print</i>
-                                            </div>
-                                            <div class="menu-info">
-                                                <h4>{{cartucho.0}}</h4>
-                                                <p>
-                                                    <i class="material-icons">print_disabled</i> {{cartucho.1}}
-                                                </p>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    {% endfor %}
-
-
 
                                 </ul>
                             </li>

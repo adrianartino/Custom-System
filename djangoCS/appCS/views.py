@@ -2205,7 +2205,7 @@ def agregarCarta(request):
         foto = fotoAdmin(request)
         
         equipos= Equipos.objects.all()
-        empledos=Empleados.objects.filter(activo="A")
+        empledos=Empleados.objects.filter(activo="A", correo__icontains="@customco.com.mx")
         cartas= Carta.objects.all()
         fecha= datetime.now()
         areas=[]
