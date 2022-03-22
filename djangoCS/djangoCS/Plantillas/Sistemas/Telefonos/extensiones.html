@@ -52,28 +52,8 @@ Extensiones | Custom System
 
             <div class="body" id="divActivos">
                 <div class="row clear-fix">
-                    <div class="col-xs-12 col-sm-1">
-                        <form action="/reporteEmpleadosActivos/" method="POST">{% csrf_token %}
-                            <input type="hidden" name="activo" value="A">
-                            <button type="submit" class="btn bg-red waves-effect animate__animated animate__flipInX"
-                                data-toggle="tooltip" data-placement="bottom"
-                                title="Descargar reporte de extensiones de teléfono en PDF.">
-                                <i class="material-icons">picture_as_pdf</i>
-                                <span>PDF</span>
-                            </button>
-                        </form>
-                    </div>
-                    <div class="col-xs-12 col-sm-1">
-                        <form action="/xlEmpleados/" method="POST">{% csrf_token %}
-                            <input type="hidden" name="activo" value="A">
-                            <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
-                                data-toggle="tooltip" data-placement="bottom"
-                                title="Descargar reporte de extensiones de teléfono en Excel.">
-                                <i class="material-icons">grid_on</i>
-                                <span>Excel</span>
-                            </button>
-                        </form>
-                    </div>
+                    
+                  
                     <div class="col-xs-12 col-sm-4">
                         <a class="label bg-blue-grey" style="font-size:small; " href="/agregarTelefonos/">Agregar
                             Teléfono</a>
@@ -81,21 +61,21 @@ Extensiones | Custom System
 
                 </div>
                 <div class="row">
-                    {% for tel, area, puestos in listas %}
+                    {% for ext in telActivos %}
                     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                       
-                        <div class="info-box {{area.color}} hover-zoom-effect">
+                        <div class="info-box {{ext.3}} hover-zoom-effect">
                             <div class="icon">
                                 <i class="material-icons">call</i>
                             </div>
                             <div class="content">
-                                <div class="text"> <span>{{tel.1}}</span></div>
+                                <div class="text"> <span>{{ext.1}}</span></div>
                               
                                 <div  style="padding-top: 3% !important;">
-                                    {{puestos.puesto}}
+                                    {{ext.2}}
                                 </div>
                                 <br>
-                                <div class="number" style="font-size: 200% !important; padding-bottom: 2% !important;">#{{tel.7}}</div>
+                                <div class="number" style="font-size: 200% !important; padding-bottom: 2% !important;">#{{ext.4}}</div>
                             </div>
                         </div>
                       

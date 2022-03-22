@@ -208,6 +208,224 @@ Información de Equipo
                     </table>
                 </div>
                 <br>
+                <h1 style="color: black;">Mouses</h1>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                        <thead>
+                            <tr style="background-color: #fad60e; color:black">
+                                <th>ID</th>
+                                <th>Tipo de conexión</th>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>Estado</th>
+                                <th>Foto</th>
+
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>ID</th>
+                                <th>Tipo de conexión</th>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>Estado</th>
+                                <th>Foto</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            {% for dato in mouses %}
+                            <tr>
+
+                                <th>{{dato.id_mouse}}</th>
+                                <th>{{dato.conexion}}</th>
+                                <th>{{dato.marca}}</th>
+                                <th>{{dato.modelo}}</th>
+                                {% if dato.estado == "activoFuncional" %}
+                                <th>Activo Funcional</th>
+                                {% elif dato.estado == "stockUsado" %}
+                                <th>Stock Usado</th>
+                                {% elif dato.estado == "stockNuevo" %}
+                                <th>Stock Nuevo</th>
+                                {% elif dato.estado == "basura" %}
+                                <th>Basura</th>
+                                {% endif %}
+                                
+                                
+                                <th>
+                                    <center>
+                                        <img src="{{dato.foto.url}}" width="30%" alt="lap">
+                                    </center>
+                                </th>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <br>
+                <h1 style="color: black;">Teclados</h1>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                        <thead>
+                            <tr style="background-color: #fad60e; color:black">
+                                <th>ID</th>
+                                <th>Tipo de conexión</th>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>Estado</th>
+                                <th>Foto</th>
+
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>ID</th>
+                                <th>Tipo de conexión</th>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>Estado</th>
+                                <th>Foto</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            {% for dato in teclados %}
+                            <tr>
+
+                                <th>{{dato.id_teclado}}</th>
+                             
+                                <th>{{dato.conexion}}</th>
+                                <th>{{dato.marca}}</th>
+                                <th>{{dato.modelo}}</th>
+                                {% if dato.estado == "activoFuncional" %}
+                                <th>Activo Funcional</th>
+                                {% elif dato.estado == "stockUsado" %}
+                                <th>Stock Usado</th>
+                                {% elif dato.estado == "stockNuevo" %}
+                                <th>Stock Nuevo</th>
+                                {% elif dato.estado == "basura" %}
+                                <th>Basura</th>
+                                {% endif %}
+                                <th>
+                                    <center>
+                                        <img src="{{dato.foto.url}}" width="30%" alt="lap">
+                                    </center>
+                                </th>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <br>
+                <h1 style="color: black;">Monitores</h1>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                        <thead>
+                            <tr style="background-color: #fad60e; color:black">
+                                <th>ID</th>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>Estado</th>
+                                <th>Foto</th>
+
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>ID</th>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>Estado</th>
+                                <th>Foto</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            {% for dato in monitores %}
+                            <tr>
+
+                                <th>{{dato.id_monitor}}</th>
+                                <th>{{dato.marca}}</th>
+                                <th>{{dato.modelo}}</th>
+                                {% if dato.estado == "activoFuncional" %}
+                                <th>Activo Funcional</th>
+                                {% elif dato.estado == "stockUsado" %}
+                                <th>Stock Usado</th>
+                                {% elif dato.estado == "stockNuevo" %}
+                                <th>Stock Nuevo</th>
+                                {% elif dato.estado == "basura" %}
+                                <th>Basura</th>
+                                {% endif %}
+                                <th>
+                                    <center>
+                                        <img src="{{dato.foto.url}}" width="30%" alt="lap">
+                                    </center>
+                                </th>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <br>
+                <h1 style="color: black;">Teléfono</h1>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                        <thead>
+                            <tr style="background-color: #fad60e; color:black">
+                                <th>ID</th>
+                                <th>Tipo conexión</th>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>Estado</th>
+                                <th>Foto</th>
+                                <th>Extensión</th>
+                                <th>Nodo</th>
+
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>ID</th>
+                                <th>Tipo conexión</th>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>Estado</th>
+                                <th>Foto</th>
+                                <th>Extensión</th>
+                                <th>Nodo</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            {% for dato in telefonosE %}
+                            <tr>
+
+                                <th>{{dato.id_telefono}}</th>
+                                <th>{{dato.conexion}}</th>
+                                <th>{{dato.marca}}</th>
+                                <th>{{dato.modelo}}</th>
+                                {% if dato.estado == "activoFuncional" %}
+                                <th>Activo Funcional</th>
+                                {% elif dato.estado == "stockUsado" %}
+                                <th>Stock Usado</th>
+                                {% elif dato.estado == "stockNuevo" %}
+                                <th>Stock Nuevo</th>
+                                {% elif dato.estado == "basura" %}
+                                <th>Basura</th>
+                                {% endif %}
+                                <th>
+                                    <center>
+                                        <img src="{{dato.foto.url}}" width="30%" alt="lap">
+                                    </center>
+                                </th>
+                                <th>{{dato.extension}}</th>
+                                <th>{{dato.nodo}}</th>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <br>
                 <form action="/pdfInfoEquipo/" method="POST">{% csrf_token %}
                     <label>Descargar PDF </label>
                     <input type="hidden" value="{{datoEquipo.id_equipo}}" name="idequipo">

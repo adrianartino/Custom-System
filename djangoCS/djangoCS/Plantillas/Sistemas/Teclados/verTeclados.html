@@ -64,19 +64,9 @@ Teclados | Custom System
 
             <div class="body" id="divActivos">
                 <div class="row clear-fix">
+                    
                     <div class="col-xs-12 col-sm-1">
-                        <form action="/reporteEmpleadosActivos/" method="POST">{% csrf_token %}
-                            <input type="hidden" name="activo" value="A">
-                            <button type="submit" class="btn bg-red waves-effect animate__animated animate__flipInX"
-                                data-toggle="tooltip" data-placement="bottom"
-                                title="Descargar reporte Teclados Activos en PDF.">
-                                <i class="material-icons">picture_as_pdf</i>
-                                <span>PDF</span>
-                            </button>
-                        </form>
-                    </div>
-                    <div class="col-xs-12 col-sm-1">
-                        <form action="/xlEmpleados/" method="POST">{% csrf_token %}
+                        <form action="/xlTeclados/" method="POST">{% csrf_token %}
                             <input type="hidden" name="activo" value="A">
                             <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
                                 data-toggle="tooltip" data-placement="bottom"
@@ -209,19 +199,9 @@ Teclados | Custom System
             </div>
             <div class="body" id="divInactivos">
                 <div class="row clear-fix">
+                    
                     <div class="col-xs-12 col-sm-1">
-                        <form action="/reporteEmpleadosActivos/" method="POST">{% csrf_token %}
-                            <input type="hidden" name="activo" value="I">
-                            <button type="submit" class="btn bg-red waves-effect animate__animated animate__flipInX"
-                                data-toggle="tooltip" data-placement="bottom"
-                                title="Descargar reporte Teclados inactivos en PDF.">
-                                <i class="material-icons">picture_as_pdf</i>
-                                <span>PDF</span>
-                            </button>
-                        </form>
-                    </div>
-                    <div class="col-xs-12 col-sm-1">
-                        <form action="/xlEmpleados/" method="POST">{% csrf_token %}
+                        <form action="/xlTeclados/" method="POST">{% csrf_token %}
                             <input type="hidden" name="activo" value="I">
                             <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
                                 data-toggle="tooltip" data-placement="bottom"
@@ -232,7 +212,7 @@ Teclados | Custom System
                         </form>
                     </div>
                     <div class="col-xs-12 col-sm-4">
-                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarEmpleados/">Agregar
+                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarTeclados/">Agregar
                             Teclado</a>
                     </div>
 

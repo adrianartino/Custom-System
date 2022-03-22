@@ -15,7 +15,7 @@ from django.shortcuts import redirect
 from reportlab import cmp
 
 #Importación de modelos
-from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Preguntas, Encuestas, Respuestas, EncuestaEmpleadoResuelta
+from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Preguntas, Encuestas, Respuestas, EncuestaEmpleadoResuelta, Mouses, Teclados, Monitores
 
 #Librería para manejar archivos en Python
 from django.core.files.base import ContentFile
@@ -332,15 +332,6 @@ def resultadosEncuestas(request):
                     respuestasFinalizadas.append(respuestaEm)
                     cont = cont +1
                     
-
-
-           
-            
-           
-
-                
-
-            
             contadorSI = 0
             contadorNO = 0
             for respuesta in respuestasFinalizadas:
@@ -611,9 +602,14 @@ def equipo(request):
                     
             #Verificar si tiene mantenimientos.      
             mantenimientos= CalendarioMantenimiento.objects.filter(id_equipo_id__id_equipo=id_equipo)
-            if mantenimientos:
+            mouses = Mouses.objects.filter(id_equipo = id_equipo)
+            teclados = Teclados.objects.filter(id_equipo = id_equipo)
+            monitores = Monitores.objects.filter(id_equipo = id_equipo)
+                        
+            if mouses or  mantenimientos or teclados or monitores:
                 return render(request, "empleadosCustom/miEquipo/verInfoEquipo.html", { "estaEnVerEquipo": estaEnVerEquipo, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
-                "tieneEquipo":tieneEquipo, "datosPropietario":datosPropietario, "nombreEmpleado":nombreEmpleado, "nombreArea":nombreArea, "colorArea":colorArea, "compra":compra, "renovar":renovar, "mantenimientos":mantenimientos, "datosEquipo": datosEquipo,  "rh":rh})
+                "tieneEquipo":tieneEquipo, "datosPropietario":datosPropietario, "nombreEmpleado":nombreEmpleado, "nombreArea":nombreArea, "colorArea":colorArea, "compra":compra, "renovar":renovar, "mantenimientos":mantenimientos, "datosEquipo": datosEquipo,  "rh":rh, 
+                "mouses":mouses,"teclados":teclados,"monitores":monitores})
             else:
                 return render(request, "empleadosCustom/miEquipo/verInfoEquipo.html", { "estaEnVerEquipo": estaEnVerEquipo, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
                 "tieneEquipo":tieneEquipo, "datosPropietario":datosPropietario, "nombreEmpleado":nombreEmpleado,"nombreArea":nombreArea, "colorArea":colorArea, "compra":compra, "renovar":renovar, "datosEquipo": datosEquipo,  "rh":rh})

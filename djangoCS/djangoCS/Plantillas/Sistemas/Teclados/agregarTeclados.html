@@ -136,8 +136,8 @@ Agregar Teclados | Custom System
                                 <span class="input-group-addon">
                                     <i class="material-icons">computer</i>
                                 </span>
-                                <select class="form-control show-tick" name="equipoTeclado">
-                                    <option value="Sin equipo">Sin equipo</option>
+                                <select class="form-control show-tick" name="equipoTec">
+                                    <option value="SinEquipo">Sin equipo</option>
                                     {% for equipo in equipos %}
                                     <option value="{{equipo.id_equipo}}">#{{equipo.id_equipo}} - {{equipo.tipo}} {{equipo.marca}} {{equipo.modelo}}</option>
                                     {% endfor %}

@@ -912,6 +912,7 @@ def infoEquipo(request):
                     else:
                         datosPropietario= Empleados.objects.filter(id_empleado=propietario)
                         for datos in datosPropietario:
+                            idE = datos.id_empleado
                             nombre= datos.nombre
                             apellidos=datos.apellidos
                             nombreEmpleado= nombre + " " + apellidos
@@ -930,14 +931,26 @@ def infoEquipo(request):
                 
                         #sinPropietario es falso
                         mantenimientos= CalendarioMantenimiento.objects.filter(id_equipo_id__id_equipo=id_equipo)
+                        mouses = Mouses.objects.filter(id_equipo = id_equipo)
+                        teclados = Teclados.objects.filter(id_equipo = id_equipo)
+                        monitores = Monitores.objects.filter(id_equipo = id_equipo)
+                        telefonosE = Telefonos.objects.filter(id_empleado = idE)
+
                         
-                        if mantenimientos:
+
+                        
+                        
+                       
+                        if mouses or  mantenimientos or teclados or monitores or telefonosE:
                             return render(request, "Equipos/infoEquipo.html", {"estaEnVerEquipos": estaEnVerEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "datosEquipo":datosEquipo,
                                                             "nombreEmpleado": nombreEmpleado, "nombreArea": nombreArea, "colorArea": colorArea, "compra":compra, "renovar": renovar, "sinPropietario":sinPropietario,
-                                                            "mantenimientos":mantenimientos, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+                                                           "mouses":mouses,"mantenimientos":mantenimientos,"teclados":teclados,"monitores":monitores,"telefonosE":telefonosE, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
                         else:
+                            
                             return render(request, "Equipos/infoEquipo.html", {"estaEnVerEquipos": estaEnVerEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "datosEquipo":datosEquipo,
                                                             "nombreEmpleado": nombreEmpleado, "nombreArea": nombreArea, "colorArea": colorArea, "compra":compra, "renovar": renovar, "sinPropietario":sinPropietario, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+                       
+
             else:
                 
                 noEncontro = True
@@ -6558,6 +6571,87 @@ def pdfInfoEquipo(request):
         tabla.wrapOn(c, width, height)
         tabla.drawOn(c, 40, high)
         
+        #Tabla de periféricos
+        filasTablaPerifericos = []
+        #header de tabla
+        styles = getSampleStyleSheet()
+        styleBH =styles["Normal"]
+        styleBH.alignment = TA_CENTER
+        styleBH.fontSize = 10
+        
+        
+        cabeceraMouse = Paragraph('''Mouse''', styleBH)
+        cabeceraTeclado = Paragraph('''Teclado''', styleBH)
+        cabeceraMonitor = Paragraph('''Monitor''', styleBH)
+        filasTablaPerifericos.append([cabeceraMouse, cabeceraTeclado, cabeceraMonitor])
+        
+        #Sacar información de Mouse, teclado y monitor.
+        mouseCompleto = ""
+        tecladoCompleto = ""
+        monitorCompleto = ""
+        
+        #Mouse
+        datosMouse = Mouses.objects.filter(id_equipo_id__id_equipo = equipo_recibido)
+        if datosMouse:
+            for datoMouse in datosMouse:
+                tipoConexión=""
+                conexionMouse = datoMouse.conexion
+                if conexionMouse == "A":
+                    tipoConexion = "alámbrica"
+                elif conexionMouse == "I":
+                    tipoConexion = "inalámbrica"
+                marcaMouse = datoMouse.marca
+                modeloMouse = datoMouse.modelo
+            mouseCompleto = "Mouse "+ marcaMouse + " modelo "+ modeloMouse + ", conexión " + tipoConexion
+        else:
+            mouseCompleto = "No cuenta con mouse."
+        
+        #Teclado
+        datosTeclado = Teclados.objects.filter(id_equipo_id__id_equipo = equipo_recibido)
+        if datosTeclado:
+            for datoTeclado in datosTeclado:
+                tipoConexionTeclado = ""
+                conexionTeclado = datoTeclado.conexion
+                if conexionTeclado == "A":
+                    tipoConexionTeclado = "alámbrica"
+                elif conexionTeclado == "I":
+                    tipoConexionTeclado = "inalámbrica"
+                marcaTeclado = datoTeclado.marca
+                modeloTeclado = datoTeclado.model
+            tecladoCompleto = "Teclado "+marcaTeclado + " modelo "+modeloTeclado + ", conexión "+tipoConexionTeclado
+        
+        else:
+            tecladoCompleto = "No cuenta con teclado."
+        
+        #Monitor
+        datosMonitor = Monitores.objects.filter(id_equipo_id__id_equipo = equipo_recibido)
+        if datosMonitor:
+            for datoMonitor in datosMonitor:
+                marcaMonitor = datoMonitor.marca
+                modeloMonitor = datoMonitor.modelo
+            monitorCompleto = "Monitor "+marcaMonitor + " modelo "+modeloMonitor
+        else:
+            monitorCompleto = "No cuenta con monitor."
+        
+        
+        
+        mouseTabla = Paragraph(mouseCompleto, styleN)
+        tecladoTabla = Paragraph(tecladoCompleto, styleN)
+        monitorTabla = Paragraph(monitorCompleto, styleN)
+        filasTablaPerifericos.append([mouseTabla, tecladoTabla, monitorTabla])
+        
+        
+        tabla2 = Table(filasTablaPerifericos, colWidths=[5*cm,5*cm,5*cm])
+        tabla2.setStyle(TableStyle([
+            ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+            ('BACKGROUND', (0, 0), (-1, 0), '#F5CD04'),
+            ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+        ]))
+        
+        tabla2.wrapOn(c, width, height)
+        tabla2.drawOn(c, 100, 90)
+        
+        
         #linea guinda
         color_guinda="#B03A2E"
         c.setFillColor(color_guinda)
@@ -8610,7 +8704,7 @@ def agregarTeclados(request):
             tipoConexion = request.POST['conexionTeclado']
             estadoTeclado = request.POST['estadoTeclado']
             imagenTeclado = request.FILES.get('imagenTeclado')
-            equipoTeclado = request.POST['equipoTeclado']
+            equipoTeclado = request.POST['equipoTec']
             
             #Si el teclado fue guardado sin equipo..
             if equipoTeclado == "SinEquipo":
@@ -10159,21 +10253,26 @@ def extensionesTel(request):
                     apellidosE = e.apellidos
                     areaE = str(e.id_area_id)
                     puestoE = e.puesto
-
                     encargadoNombre = nombres + " " + apellidosE 
-                    telActivos.append([idTel,encargadoNombre,  con, marcaT, modeloT, estadoT, fotoT, extension, nodo])
-
                 areasT = Areas.objects.filter(id_area = areaE)
+                for areaTelefono in areasT:
+                    nombreA = areaTelefono.nombre
+                    colorA = areaTelefono.color
+
+
+                    
+                telActivos.append([idTel,encargadoNombre,  nombreA, colorA, extension])
+
+                
              
 
                 
 
-            listas = zip(telActivos, areasT,encargado)
+            
 
 
 
-        return render(request, "Sistemas/Telefonos/extensiones.html", {"estaEnExtensionesTelefonos":estaEnExtensionesTelefonos,"telActivos":telActivos, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,
-        "listas":listas})
+        return render(request, "Sistemas/Telefonos/extensiones.html", {"estaEnExtensionesTelefonos":estaEnExtensionesTelefonos,"telActivos":telActivos, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
@@ -12172,7 +12271,10 @@ def xlMouses(request):
         activoa= request.POST['activo'] #A o I
             
     response = HttpResponse(content_type='application/ms-excel')
-    response['Content-Disposition'] = 'attachment; filename=Reporte Mouses'+str(datetime.today().strftime('%Y-%m-%d'))+'.xls'
+    if activoa == "A":
+        response['Content-Disposition'] = 'attachment; filename=Reporte Mouses-'+str(datetime.today().strftime('%Y-%m-%d'))+'.xls'
+    else:
+        response['Content-Disposition'] = 'attachment; filename=Reporte Mouses Inactivos-'+str(datetime.today().strftime('%Y-%m-%d'))+'.xls'
     
     #creación de libro de excel
     libro = xlwt.Workbook(encoding='utf-8')
@@ -12215,18 +12317,18 @@ def xlMouses(request):
                 tipo = dato.tipo
                 marca = dato.marca
                 modelo = dato.modelo
-                id_emple = dato.id_empledo_id
+                id_emple = dato.id_empleado_id
                 
                 infoEmple = Empleados.objects.filter(id_empleado = id_emple)
                 for dato in infoEmple:
                     nombre = dato.nombre
                     apellido = dato.apellidos
             nombreEquipo = tipo + " " + marca + " " + modelo
-            nombreEmpleado = nombre + " " + apellido
+            propietarioEm = nombre + " " + apellido
            
             
             propietariosEquipo.append(nombreEquipo)
-            propietarioEmpleado.append(nombreEmpleado)
+            propietarioEmpleado.append(propietarioEm)
         
         
            
@@ -12254,10 +12356,11 @@ def xlMouses(request):
             estados.append("Stock Usado")
         elif x.estado == "stockNuevo":
             estados.append("Stock Nuevo")
+        elif x.estado == "basura":
+            estados.append("Basura")
 
 
-        datosMouses.append([x.id_mouse, conexiones[cont-1], x.marca, x.modelo, estados[cont-1], propietariosEquipo[cont-1], propietarioEmpleado[cont-1], 
-                            ])
+        datosMouses.append([x.id_mouse, conexiones[cont-1], x.marca, x.modelo, estados[cont-1], propietariosEquipo[cont-1], propietarioEmpleado[cont-1]])
             
         
     estilo_fuente = xlwt.XFStyle()
@@ -12265,6 +12368,330 @@ def xlMouses(request):
         numero_fila+=1
         for columna in range(len(mousito)):
             hoja.write(numero_fila, columna, str(mousito[columna]), estilo_fuente)
+    
+    libro.save(response)
+    return response    
+    #creación 
+
+def xlTeclados(request):
+    if request.method == "POST":
+    
+        activoa= request.POST['activo'] #A o I
+            
+    response = HttpResponse(content_type='application/ms-excel')
+    if activoa == "A":
+        response['Content-Disposition'] = 'attachment; filename=Reporte Teclados-'+str(datetime.today().strftime('%Y-%m-%d'))+'.xls'
+    else:
+        response['Content-Disposition'] = 'attachment; filename=Reporte Teclados Inactivos-'+str(datetime.today().strftime('%Y-%m-%d'))+'.xls'  
+    
+    #creación de libro de excel
+    libro = xlwt.Workbook(encoding='utf-8')
+    hoja = libro.add_sheet('Equipos')
+    
+    numero_fila = 0
+    estilo_fuente = xlwt.XFStyle()
+    estilo_fuente.font.bold = True
+    
+    columnas = ['Id','Conexión', 'Marca', 'Modelo', 'Estado', 'Equipo asignado','Empleado asignado']
+    for columna in range(len(columnas)):
+        hoja.write(numero_fila, columna, columnas[columna], estilo_fuente)
+        
+    propietariosEquipo = []
+    propietarioEmpleado = []
+    estados = []
+    
+    
+    infoTeclados = Teclados.objects.filter(activo = activoa)
+        
+    for teclado in infoTeclados:
+        id_equipo = teclado.id_equipo_id
+     
+        
+        if id_equipo == None:
+            nombreEquipo = "Sin equipo asignado"
+            propietarioEm = "Sin propieatrio"
+            
+            
+            propietariosEquipo.append(nombreEquipo)
+            propietarioEmpleado.append(propietarioEm)
+          
+        
+      
+            
+        else:
+            datosEquipo = Equipos.objects.filter(id_equipo = id_equipo)#filtro de los empleados que esten dentro de un area especifica
+            
+            for dato in datosEquipo:
+                tipo = dato.tipo
+                marca = dato.marca
+                modelo = dato.modelo
+                id_emple = dato.id_empleado_id
+                
+                infoEmple = Empleados.objects.filter(id_empleado = id_emple)
+                for dato in infoEmple:
+                    nombre = dato.nombre
+                    apellido = dato.apellidos
+            nombreEquipo = tipo + " " + marca + " " + modelo
+            propietarioEm = nombre + " " + apellido
+           
+            
+            propietariosEquipo.append(nombreEquipo)
+            propietarioEmpleado.append(propietarioEm)
+        
+        
+           
+        
+    conexiones = []
+    estados = []
+    
+    #lista la lista de propietarios de equipos, incluyendo los que no tienen propietario.
+        
+    teclados = Teclados.objects.filter(activo = activoa)
+    
+    datosTeclados = []
+    cont=0
+    for x in teclados:
+        cont+=1
+
+        if x.conexion == "A":
+            conexiones.append("Alámbrico")
+        elif x.conexion == "I":
+            conexiones.append("Inalámbrico")
+
+        if x.estado == "activoFuncional":
+            estados.append("Activo Funcional")
+        elif x.estado == "stockUsado":
+            estados.append("Stock Usado")
+        elif x.estado == "stockNuevo":
+            estados.append("Stock Nuevo")
+        elif x.estado == "basura":
+            estados.append("Basura")
+
+
+        datosTeclados.append([x.id_teclado, conexiones[cont-1], x.marca, x.modelo, estados[cont-1], propietariosEquipo[cont-1], propietarioEmpleado[cont-1]])
+            
+        
+    estilo_fuente = xlwt.XFStyle()
+    for tecladito in datosTeclados:
+        numero_fila+=1
+        for columna in range(len(tecladito)):
+            hoja.write(numero_fila, columna, str(tecladito[columna]), estilo_fuente)
+    
+    libro.save(response)
+    return response    
+    #creación 
+
+
+def xlMonitores(request):
+    if request.method == "POST":
+    
+        activoa= request.POST['activo'] #A o I
+            
+    response = HttpResponse(content_type='application/ms-excel')
+    if activoa == "A":
+        response['Content-Disposition'] = 'attachment; filename=Reporte Monitores-'+str(datetime.today().strftime('%Y-%m-%d'))+'.xls'
+    else:
+        response['Content-Disposition'] = 'attachment; filename=Reporte Monitores Inactivos-'+str(datetime.today().strftime('%Y-%m-%d'))+'.xls'
+    
+    #creación de libro de excel
+    libro = xlwt.Workbook(encoding='utf-8')
+    hoja = libro.add_sheet('Equipos')
+    
+    numero_fila = 0
+    estilo_fuente = xlwt.XFStyle()
+    estilo_fuente.font.bold = True
+    
+    columnas = ['Id', 'Marca', 'Modelo', 'Estado', 'Equipo asignado','Empleado asignado']
+    for columna in range(len(columnas)):
+        hoja.write(numero_fila, columna, columnas[columna], estilo_fuente)
+        
+    propietariosEquipo = []
+    propietarioEmpleado = []
+    estados = []
+    
+    
+    infoMonitores = Monitores.objects.filter(activo = activoa)
+        
+    for monitor in infoMonitores:
+        id_equipo = monitor.id_equipo_id
+     
+        
+        if id_equipo == None:
+            nombreEquipo = "Sin equipo asignado"
+            propietarioEm = "Sin propieatrio"
+            
+            
+            propietariosEquipo.append(nombreEquipo)
+            propietarioEmpleado.append(propietarioEm)
+          
+        
+      
+            
+        else:
+            datosEquipo = Equipos.objects.filter(id_equipo = id_equipo)#filtro de los empleados que esten dentro de un area especifica
+            
+            for dato in datosEquipo:
+                tipo = dato.tipo
+                marca = dato.marca
+                modelo = dato.modelo
+                id_emple = dato.id_empleado_id
+                
+                infoEmple = Empleados.objects.filter(id_empleado = id_emple)
+                for dato in infoEmple:
+                    nombre = dato.nombre
+                    apellido = dato.apellidos
+            nombreEquipo = tipo + " " + marca + " " + modelo
+            propietarioEm = nombre + " " + apellido
+           
+            
+            propietariosEquipo.append(nombreEquipo)
+            propietarioEmpleado.append(propietarioEm)
+        
+        
+           
+        
+  
+    estados = []
+    
+    #lista la lista de propietarios de equipos, incluyendo los que no tienen propietario.
+        
+    monitores = Monitores.objects.filter(activo = activoa)
+    
+    datosMonitores = []
+    cont=0
+    for x in monitores:
+        cont+=1
+
+       
+
+        if x.estado == "activoFuncional":
+            estados.append("Activo Funcional")
+        elif x.estado == "stockUsado":
+            estados.append("Stock Usado")
+        elif x.estado == "stockNuevo":
+            estados.append("Stock Nuevo")
+        elif x.estado == "basura":
+            estados.append("Basura")
+
+
+        datosMonitores.append([x.id_monitor, x.marca, x.modelo, estados[cont-1], propietariosEquipo[cont-1], propietarioEmpleado[cont-1]])
+            
+        
+    estilo_fuente = xlwt.XFStyle()
+    for monitorsito in datosMonitores:
+        numero_fila+=1
+        for columna in range(len(monitorsito)):
+            hoja.write(numero_fila, columna, str(monitorsito[columna]), estilo_fuente)
+    
+    libro.save(response)
+    return response    
+    #creación 
+
+
+def xlTelefonos(request):
+    if request.method == "POST":
+    
+        activoa= request.POST['activo'] #A o I
+            
+    response = HttpResponse(content_type='application/ms-excel')
+    if activoa == "A":
+        response['Content-Disposition'] = 'attachment; filename=Reporte Teléfonos-'+str(datetime.today().strftime('%Y-%m-%d'))+'.xls'
+    else:
+        response['Content-Disposition'] = 'attachment; filename=Reporte Teléfonos Inactivos-'+str(datetime.today().strftime('%Y-%m-%d'))+'.xls'
+    
+    #creación de libro de excel
+    libro = xlwt.Workbook(encoding='utf-8')
+    hoja = libro.add_sheet('Equipos')
+    
+    numero_fila = 0
+    estilo_fuente = xlwt.XFStyle()
+    estilo_fuente.font.bold = True
+    
+    columnas = ['Id','Encargado', 'Departamento', 'Tipo de conexión', 'Marca','Modelo','Estado','Nodo', 'Extensión']
+    for columna in range(len(columnas)):
+        hoja.write(numero_fila, columna, columnas[columna], estilo_fuente)
+        
+    departamentos = []
+    encargados = []
+    estados = []
+    
+    
+    infoTelefonos = Telefonos.objects.filter(activo = activoa)
+        
+    for telefono in infoTelefonos:
+        id_empleado = telefono.id_empleado_id
+     
+        
+        if id_empleado == None:
+            empleado = "Sin encargado asignado"
+            area = "Sin departamento"
+            
+            encargados.append(empleado)
+            departamentos.append(area)
+           
+          
+        
+      
+            
+        else:
+            datosEncargado = Empleados.objects.filter(id_empleado = id_empleado)#filtro de los empleados que esten dentro de un area especifica
+            
+            for dato in datosEncargado:
+                nombreEncargado = dato.nombre
+                apellidosEncargado = dato.apellidos
+                depa = dato.id_area_id
+                
+                
+                infoDepa = Areas.objects.filter(id_area = depa)
+                for dato in infoDepa:
+                    nombreA = dato.nombre
+                 
+            empleado = nombreEncargado + " " + apellidosEncargado 
+            area = nombreA 
+           
+            
+            encargados.append(empleado)
+            departamentos.append(area)
+        
+        
+           
+        
+    conexiones = []
+    estados = []
+    
+    #lista la lista de propietarios de equipos, incluyendo los que no tienen propietario.
+        
+    telefonos = Telefonos.objects.filter(activo = activoa)
+    
+    datosTelefonos = []
+    cont=0
+    for x in telefonos:
+        cont+=1
+
+       
+        if x.conexion == "A":
+            conexiones.append("Alámbrico")
+        elif x.conexion == "I":
+            conexiones.append("Inalámbrico")
+
+        if x.estado == "activoFuncional":
+            estados.append("Activo Funcional")
+        elif x.estado == "stockUsado":
+            estados.append("Stock Usado")
+        elif x.estado == "stockNuevo":
+            estados.append("Stock Nuevo")
+        elif x.estado == "basura":
+            estados.append("Basura")
+
+
+        datosTelefonos.append([x.id_telefono,encargados[cont-1], departamentos[cont-1],conexiones[cont-1], x.marca, x.modelo, estados[cont-1],x.nodo,x.extension])
+            
+        
+    estilo_fuente = xlwt.XFStyle()
+    for telefonsito in datosTelefonos:
+        numero_fila+=1
+        for columna in range(len(telefonsito)):
+            hoja.write(numero_fila, columna, str(telefonsito[columna]), estilo_fuente)
     
     libro.save(response)
     return response    
