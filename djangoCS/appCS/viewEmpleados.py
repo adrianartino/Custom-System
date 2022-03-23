@@ -183,6 +183,7 @@ def encuestas(request):
 
         preguntasMultiples = []
         preguntasAbiertas = []
+        preguntasAbiertas2 =[]
         contadorPreguntas = 0
         for pregunta in preguntas:
             id_pregunta = pregunta.id_pregunta
@@ -195,6 +196,7 @@ def encuestas(request):
                 contadorPreguntas = contadorPreguntas +1 
             else:
                 preguntasAbiertas.append([id_pregunta, texto_pregunta])
+                preguntasAbiertas2.append([id_pregunta,texto_pregunta])
                 contadorPreguntas = contadorPreguntas +1 
 
 
@@ -209,7 +211,7 @@ def encuestas(request):
             contadorRespuestas = 0
             for respuesta in empleadoTieneRespuestas:
                 contadorRespuestas = contadorRespuestas + 1
-            return render(request, "empleadosCustom/encuestas/año2022/encuestaEnero.html", {"enAño":enAño, "estaEnEncuesta": estaEnEncuesta, "preguntasMultiples":preguntasMultiples,"preguntasAbiertas":preguntasAbiertas, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
+            return render(request, "empleadosCustom/encuestas/año2022/encuestaEnero.html", {"enAño":enAño, "estaEnEncuesta": estaEnEncuesta, "preguntasMultiples":preguntasMultiples,"preguntasAbiertas":preguntasAbiertas,"preguntasAbiertas2":preguntasAbiertas2, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
             "aunqueseaunapregunta":aunqueseaunapregunta, "contadorPreguntas": contadorPreguntas, "contadorRespuestas":contadorRespuestas, "rh": rh})
 
         #Si el empleado no tiene ninguna pregunta resuelta
@@ -219,7 +221,7 @@ def encuestas(request):
             introduccion = True
         
         
-            return render(request, "empleadosCustom/encuestas/año2022/encuestaEnero.html", {"enAño":enAño, "estaEnEncuesta": estaEnEncuesta, "preguntasMultiples":preguntasMultiples,"preguntasAbiertas":preguntasAbiertas, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
+            return render(request, "empleadosCustom/encuestas/año2022/encuestaEnero.html", {"enAño":enAño, "estaEnEncuesta": estaEnEncuesta, "preguntasMultiples":preguntasMultiples,"preguntasAbiertas":preguntasAbiertas,"preguntasAbiertas2":preguntasAbiertas2, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
             "aunqueseaunapregunta":aunqueseaunapregunta, "contadorPreguntas": contadorPreguntas, "introduccion":introduccion, "rh": rh})
     
     #Si le da al inicio y no hay una sesión iniciada..
