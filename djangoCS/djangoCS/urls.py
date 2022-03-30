@@ -19,6 +19,7 @@ from django.urls import path
 from appCS import views
 from appCS import viewEmpleados
 from django.conf import settings
+from appCS import almacen
 from django.conf.urls.static import static
 
 
@@ -177,7 +178,16 @@ urlpatterns = [
     #Reportes de resultados
     path("pruebaPDF/",viewEmpleados.pruebaPDF),
     path("resultadosMultiples/",viewEmpleados.resultadosMultiples),
-    path("resultadosAbiertas/",viewEmpleados.resultadosAbiertas)
+    path("resultadosAbiertas/",viewEmpleados.resultadosAbiertas),
+    
+    #Almacen
+    path("solicitudesPendientesALM/",almacen.solicitudesPendientesALM),
+    path("historialSolicitudesALM/",almacen.historialSolicitudesALM),
+    path("solicitudesMarcadasALM/",almacen.solicitudesMarcadasALM),
+    path("verHerramientasALM/",almacen.verHerramientasALM),
+    path("agregarHerramientasALM/",almacen.agregarHerramientasALM),
+    path("solicitarHerramientas/",almacen.solicitarHerramientas),
+    path("verMisPrestamos/",almacen.verMisPrestamos),
 
 
 ]

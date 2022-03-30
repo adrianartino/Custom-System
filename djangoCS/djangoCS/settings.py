@@ -137,7 +137,7 @@ EMAIL_HOST = 'mail.customco.com.mx'
 EMAIL_USE_TLS = True
 EMAIL_PORT =  587
 EMAIL_HOST_USER = 'customsystem@customco.com.mx'
-EMAIL_HOST_PASSWORD = 'Mn8y7DKe3v-o'
+EMAIL_HOST_PASSWORD = 'claveforaneaNull22$'
 
 
 

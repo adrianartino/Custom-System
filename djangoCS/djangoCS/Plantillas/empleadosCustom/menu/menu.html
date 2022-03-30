@@ -184,7 +184,242 @@
                         {% endif %}
                     </li>
 
+                    {% if solicitantePrestamo %}
+                    {% if estaEnSolicitarHerramienta %}
+                    <li class="active">
+                        {% else %}
+                    <li>
+                        {% if estaEnVerMisPrestamos %}
+                    <li class="active">
+                        {% else %}
+                    <li>
+                        {% endif %}
+                        {% endif %}
+                        
+                
+                    
+                    
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            {% if estaEnSolicitarHerramienta %}
+                            <i class="material-icons colorAmarilloIcono" >input</i>
+                            <span style="color: #00917C !important;">Préstamos</span>
+                            {% else %}
+                            {% if estaEnVerMisPrestamos %}
+                            <i class="material-icons colorAmarilloIcono" >input</i>
+                            <span style="color: #00917C !important;">Préstamos</span>
+                            {% else %}
+                            
+                            <i class="material-icons colorGrisIcono">input</i>
+                            <span class="colorBlanco">Préstamos</span>
+                            {% endif %}
+                            {% endif %}
+                        
 
+
+                        </a>
+                        <ul class="ml-menu">
+                            {% if estaEnSolicitarHerramienta %}
+                            <li class="active">
+                                {% else %}
+                            <li>
+                                {% endif %}
+                                {% if estaEnSolicitarHerramienta %}
+                                <a href="/solicitarHerramientas/" class="colorTextoSeleccionado">Solicitar Herramienta a almacén</a>
+                                {% else %}
+                                <a  class="colorBlanco" data-toggle="tooltip" data-placement="right"
+                                title="Función aún no disponible.">Solicitar herramienta a almacén</a>
+                            <li>
+                                {% endif %}
+
+                            </li>
+                            {% if estaEnVerMisPrestamos %}
+                            <li class="active">
+                                {% else %}
+                            <li>
+                                {% endif %}
+                                {% if estaEnVerMisPrestamos %}
+                                <a href="/verMisPrestamos/"  class="colorTextoSeleccionado">Ver mis préstamos</a>
+                                {% else %}
+                                <a  class="colorBlanco" data-toggle="tooltip" data-placement="right"
+                                title="Función aún no disponible.">Ver mis préstamos</a>
+                                {% endif %}
+
+                        
+                            
+
+                            </li>
+
+                        </ul>
+                    </li>
+
+                {% endif %}
+
+                {% if almacen %}
+                    
+                    {% if estaEnAlmacen %}
+                    <li class="active">
+                        {% else %}
+                    <li>
+                    {% endif %}
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            
+                            {% if estaEnAlmacen %}
+                            <i class="material-icons colorAmarilloIcono" >local_shipping</i>
+                            <span style="color: #00917C !important;"> Almacén</span>
+                            {% else %}
+                            <i class="material-icons colorGrisIcono">local_shipping</i>
+                            <span class="colorBlanco"> Almacén</span>
+                            {% endif %}
+
+                        </a>
+                        <ul class="ml-menu">
+
+                            
+                            {% if estaEnSolicitudesPendientes %}
+                            <li class="active">
+                                {% else %}
+                            <li>
+                            {% if estaEnHistorialSolicitudes %}
+                            <li class="active">
+                                {% else %}
+                            <li>
+                            {% if estaEnSolicitudesMarcadas %}
+                            <li class="active">
+                                {% else %}
+                            <li>
+                                {% endif %}
+                                {% endif %}
+                                {% endif %}
+
+                                <a href="javascript:void(0);" class="menu-toggle">
+                                    {% if estaEnSolicitudesPendientes %}
+                                    <i class="material-icons" style="color: #336BFF !important;">input</i>
+                                    <span class="colorTextoSeleccionado">Prestamos Herramientas</span>
+                                    {% else %}
+                                    {% if estaEnHistorialSolicitudes %}
+                                    <i class="material-icons" style="color: #336BFF !important;">input</i>
+                                    <span class="colorTextoSeleccionado">Prestamos Herramientas</span>
+                                    {% else %}
+                                    {% if estaEnSolicitudesMarcadas %}
+                                    <i class="material-icons" style="color: #336BFF !important;">input</i>
+                                    <span class="colorTextoSeleccionado">Prestamos Herramientas</span>
+                                    {% else %}
+                                    <i class="material-icons colorGrisIcono">input</i>
+                                    <span class="colorBlanco">Prestamos Herramientas</span>
+                                    {% endif %}
+                                    {% endif %}
+                                    {% endif %}
+                                </a>
+                                <ul class="ml-menu">
+                                    {% if estaEnSolicitudesPendientes %}
+                                    <li class="active">
+                                        {% else %}
+                                    <li>
+                                        {% endif %}
+                                        {% if estaEnSolicitudesPendientes %}
+                                        <a href="/solicitudesPendientesALM/" style="color: #e74c3c !important;">Solicitudes Pendientes</a>
+                                        {% else %}
+
+                                        <a  class="colorBlanco" data-toggle="tooltip" data-placement="right"
+                                        title="Función aún no disponible.">Solicitudes Pendientes</a>
+                                        {% endif %}
+
+                                    </li>
+                                    {% if estaEnHistorialSolicitudes %}
+                                    <li class="active">
+                                        {% else %}
+                                    <li>
+                                        {% endif %}
+                                        {% if estaEnHistorialSolicitudes %}
+                                        <a href="/historialSolicitudesALM/" style="color: #e74c3c !important;">Historial Solicitudes</a>
+                                        {% else %}
+                                        <a  class="colorBlanco" data-toggle="tooltip" data-placement="right"
+                                        title="Función aún no disponible.">Historial Solicitudes</a>
+                                        {% endif %}
+                                    </li>
+                                    {% if estaEnSolicitudesMarcadas %}
+                                    <li class="active">
+                                        {% else %}
+                                    <li>
+                                        {% endif %}
+                                        {% if estaEnSolicitudesMarcadas %}
+                                        <a href="/solicitudesMarcadasALM/" style="color: #e74c3c !important;">Solicitudes Marcadas</a>
+                                        {% else %}
+                                        <a  class="colorBlanco" data-toggle="tooltip" data-placement="right"
+                                        title="Función aún no disponible.">Solicitudes Marcadas</a>
+                                        {% endif %}
+                                    </li>
+
+                                </ul>
+                            </li>
+
+
+
+
+
+
+
+                            {% if estaEnVerHerramientas %}
+                            <li class="active">
+                                {% else %}
+                            <li>
+                            {% if estaEnAgregarHerramientas %}
+                            <li class="active">
+                                {% else %}
+                            <li>
+                            
+                                {% endif %}
+                                {% endif %}
+
+                                <a href="javascript:void(0);" class="menu-toggle">
+                                    {% if estaEnVerHerramientas %}
+                                    <i class="material-icons" style="color: #336BFF !important;">assignment</i>
+                                    <span class="colorTextoSeleccionado">Inventario</span>
+                                    {% else %}
+                                    {% if estaEnAgregarHerramientas %}
+                                    <i class="material-icons" style="color: #336BFF !important;">assignment</i>
+                                    <span class="colorTextoSeleccionado">Inventario</span>
+                                    {% else %}
+                                   
+                                    <i class="material-icons colorGrisIcono">assignment</i>
+                                    <span class="colorBlanco">Inventario</span>
+                                    {% endif %}
+                                    {% endif %}
+                                </a>
+                                <ul class="ml-menu">
+                                    {% if estaEnVerHerramientas %}
+                                    <li class="active">
+                                        {% else %}
+                                    <li>
+                                        {% endif %}
+                                        {% if estaEnVerHerramientas %}
+                                        <a href="/verHerramientasALM/" style="color: #e74c3c !important;">Ver herramientas</a>
+                                        {% else %}
+
+                                        <a  class="colorBlanco" data-toggle="tooltip" data-placement="right"
+                                        title="Función aún no disponible.">Ver herramientas</a>
+                                        {% endif %}
+
+                                    </li>
+                                    {% if estaEnAgregarHerramientas %}
+                                    <li class="active">
+                                        {% else %}
+                                    <li>
+                                        {% endif %}
+                                        {% if estaEnAgregarHerramientas %}
+                                        <a href="/agregarHerramientasALM/" style="color: #e74c3c !important;">Agregar herramientas</a>
+                                        {% else %}
+                                        <a  class="colorBlanco" data-toggle="tooltip" data-placement="right"
+                                        title="Función aún no disponible.">Agregar Herramientas</a>
+                                        {% endif %}
+                                    </li>
+
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    
+                {% endif %}
                     
                     {% if enAño %}
                     <li class="active">

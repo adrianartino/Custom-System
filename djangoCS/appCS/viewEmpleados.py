@@ -146,7 +146,22 @@ def principal(request):
         
             return render(request, "empleadosCustom/inicio/inicio.html", {"estaEnInicio":estaEnInicio,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, 
             "rh": rh})
+         #Agregar a codigo principal
+        if correo == "almacen01@customco.com.mx":
+            almacen = True
+            solicitantePrestamo = True
+            return render(request, "empleadosCustom/inicio/inicio.html", {"estaEnInicio":estaEnInicio,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, 
+            "almacen": almacen, "solicitantePrestamo":solicitantePrestamo})
             
+        empleado = Empleados.objects.filter(id_empleado = id_admin)
+        for dato in empleado:
+            area = dato.id_area_id
+
+        if area == 1 or area ==5 or area == 7 or area == 8 or area == 9 or area == 10:
+            solicitantePrestamo = True
+            return render(request, "empleadosCustom/inicio/inicio.html", {"estaEnInicio":estaEnInicio,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, 
+            "solicitantePrestamo":solicitantePrestamo})
+
         if "recienIniciado" in request.session:
             del request.session['recienIniciado']
             recienIniciado = True
@@ -178,6 +193,20 @@ def encuestas(request):
         else:
             rh= False
 
+        if correo == "almacen01@customco.com.mx":
+            almacen = True
+        else:
+            almacen=False
+
+      
+        empleado = Empleados.objects.filter(id_empleado = id_admin)
+        for dato in empleado:
+            area = dato.id_area_id
+
+        if area == 1 or area ==5 or area == 7 or area == 8 or area == 9 or area == 10:
+            solicitantePrestamo = True
+        else:
+            solicitantePrestamo = False
 
         preguntas = Preguntas.objects.filter(id_encuesta = 1)
 
@@ -199,6 +228,9 @@ def encuestas(request):
                 preguntasAbiertas2.append([id_pregunta,texto_pregunta])
                 contadorPreguntas = contadorPreguntas +1 
 
+        
+        
+
 
 
         #Condicion para saber si el empleado ya contesto algo..
@@ -211,8 +243,20 @@ def encuestas(request):
             contadorRespuestas = 0
             for respuesta in empleadoTieneRespuestas:
                 contadorRespuestas = contadorRespuestas + 1
+
+            porcentajeBarraint = (contadorRespuestas*100)/29
+            porcentajeBarraintDecimales = round(porcentajeBarraint,2)
+            porcentajeBarra = str(porcentajeBarraintDecimales)
+            colorBarra =""
+            if porcentajeBarraintDecimales <= 33:
+                colorBarra = "progress-bar-danger"
+            elif porcentajeBarraintDecimales >33 and porcentajeBarraintDecimales <=66:
+                colorBarra = "progress-bar-warning"
+            elif porcentajeBarraintDecimales >66:
+                colorBarra = "progress-bar-success"
+
             return render(request, "empleadosCustom/encuestas/año2022/encuestaEnero.html", {"enAño":enAño, "estaEnEncuesta": estaEnEncuesta, "preguntasMultiples":preguntasMultiples,"preguntasAbiertas":preguntasAbiertas,"preguntasAbiertas2":preguntasAbiertas2, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
-            "aunqueseaunapregunta":aunqueseaunapregunta, "contadorPreguntas": contadorPreguntas, "contadorRespuestas":contadorRespuestas, "rh": rh})
+            "aunqueseaunapregunta":aunqueseaunapregunta, "contadorPreguntas": contadorPreguntas, "contadorRespuestas":contadorRespuestas, "rh": rh,"almacen":almacen, "solicitantePrestamo":solicitantePrestamo, "porcentajeBarra":porcentajeBarra, "colorBarra":colorBarra})
 
         #Si el empleado no tiene ninguna pregunta resuelta
         else:
@@ -222,7 +266,7 @@ def encuestas(request):
         
         
             return render(request, "empleadosCustom/encuestas/año2022/encuestaEnero.html", {"enAño":enAño, "estaEnEncuesta": estaEnEncuesta, "preguntasMultiples":preguntasMultiples,"preguntasAbiertas":preguntasAbiertas,"preguntasAbiertas2":preguntasAbiertas2, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
-            "aunqueseaunapregunta":aunqueseaunapregunta, "contadorPreguntas": contadorPreguntas, "introduccion":introduccion, "rh": rh})
+            "aunqueseaunapregunta":aunqueseaunapregunta, "contadorPreguntas": contadorPreguntas, "introduccion":introduccion, "rh": rh,"almacen":almacen, "solicitantePrestamo":solicitantePrestamo})
     
     #Si le da al inicio y no hay una sesión iniciada..
     else:
@@ -569,6 +613,19 @@ def equipo(request):
             rh = True
         else:
             rh= False
+        if correo  == "almacen01@customco.com.mx":
+            almacen = True
+        else:
+            almacen= False
+
+        empleado = Empleados.objects.filter(id_empleado = id_admin)
+        for dato in empleado:
+            area = dato.id_area_id
+
+        if area == 1 or area ==5 or area == 7 or area == 8 or area == 9 or area == 10:
+            solicitantePrestamo = True
+        else:
+            solicitantePrestamo = False
 
         #Codigo de info equipos.
         datosEquipo = Equipos.objects.filter(id_empleado =id_admin)
@@ -611,15 +668,15 @@ def equipo(request):
             if mouses or  mantenimientos or teclados or monitores:
                 return render(request, "empleadosCustom/miEquipo/verInfoEquipo.html", { "estaEnVerEquipo": estaEnVerEquipo, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
                 "tieneEquipo":tieneEquipo, "datosPropietario":datosPropietario, "nombreEmpleado":nombreEmpleado, "nombreArea":nombreArea, "colorArea":colorArea, "compra":compra, "renovar":renovar, "mantenimientos":mantenimientos, "datosEquipo": datosEquipo,  "rh":rh, 
-                "mouses":mouses,"teclados":teclados,"monitores":monitores})
+                "mouses":mouses,"teclados":teclados,"monitores":monitores,"almacen":almacen, "solicitantePrestamo":solicitantePrestamo})
             else:
                 return render(request, "empleadosCustom/miEquipo/verInfoEquipo.html", { "estaEnVerEquipo": estaEnVerEquipo, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
-                "tieneEquipo":tieneEquipo, "datosPropietario":datosPropietario, "nombreEmpleado":nombreEmpleado,"nombreArea":nombreArea, "colorArea":colorArea, "compra":compra, "renovar":renovar, "datosEquipo": datosEquipo,  "rh":rh})
+                "tieneEquipo":tieneEquipo, "datosPropietario":datosPropietario, "nombreEmpleado":nombreEmpleado,"nombreArea":nombreArea, "colorArea":colorArea, "compra":compra, "renovar":renovar, "datosEquipo": datosEquipo,  "rh":rh,"almacen":almacen, "solicitantePrestamo":solicitantePrestamo})
                     
         else:
             noTieneEquipo = True
             return render(request, "empleadosCustom/miEquipo/verInfoEquipo.html", { "estaEnVerEquipo": estaEnVerEquipo, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
-            "noTieneEquipo":noTieneEquipo,  "rh":rh})
+            "noTieneEquipo":noTieneEquipo,  "rh":rh,"almacen":almacen, "solicitantePrestamo":solicitantePrestamo})
     
     #Si le da al inicio y no hay una sesión iniciada..
     else:
@@ -644,7 +701,20 @@ def carta(request):
             rh = True
         else:
             rh= False
-        
+        if correo  == "almacen01@customco.com.mx":
+            almacen = True
+        else:
+            almacen= False 
+
+        empleado = Empleados.objects.filter(id_empleado = id_admin)
+        for dato in empleado:
+            area = dato.id_area_id
+
+        if area == 1 or area ==5 or area == 7 or area == 8 or area == 9 or area == 10:
+            solicitantePrestamo = True
+        else:
+            solicitantePrestamo = False
+
         datosRegistro = Carta.objects.filter(id_empleado = id_admin)
         
         empleados=[]
@@ -670,7 +740,7 @@ def carta(request):
         lista1=zip(datosRegistro,empleados,equipos)
         
         
-        return render(request, "empleadosCustom/miEquipo/verCartaResponsiva.html", { "estaEnVerCarta": estaEnVerCarta, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "lista1":lista1,  "rh":rh})
+        return render(request, "empleadosCustom/miEquipo/verCartaResponsiva.html", { "estaEnVerCarta": estaEnVerCarta, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "lista1":lista1,  "rh":rh, "almacen":almacen,"solicitantePrestamo":solicitantePrestamo})
     
     #Si le da al inicio y no hay una sesión iniciada..
     else:
@@ -696,6 +766,20 @@ def directorio(request):
         else:
             rh= False
 
+        if correo  == "almacen01@customco.com.mx":
+            almacen = True
+        else:
+            almacen= False 
+
+        empleado = Empleados.objects.filter(id_empleado = id_admin)
+        for dato in empleado:
+            area = dato.id_area_id
+
+        if area == 1 or area ==5 or area == 7 or area == 8 or area == 9 or area == 10:
+            solicitantePrestamo = True
+        else:
+            solicitantePrestamo = False 
+
         empleadosActivos = Empleados.objects.filter(activo__icontains= "A", correo__icontains = "customco.com.mx")
         
         #empleados Actvos
@@ -718,7 +802,7 @@ def directorio(request):
         lista = zip(empleadosActivos, datosAreasEnActivos)
         
         
-        return render(request, "empleadosCustom/directorioCorreos/verDirectorio.html", { "estaEnVerCorreos": estaEnVerCorreos, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "lista":lista,  "rh":rh})
+        return render(request, "empleadosCustom/directorioCorreos/verDirectorio.html", { "estaEnVerCorreos": estaEnVerCorreos, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "lista":lista,  "rh":rh,"almacen":almacen, "solicitantePrestamo":solicitantePrestamo})
     
     #Si le da al inicio y no hay una sesión iniciada..
     else:
@@ -746,8 +830,21 @@ def documentosAplicablesATodos(request):
         else:
             rh= False
         
+        if correo  == "almacen01@customco.com.mx":
+            almacen = True
+        else:
+            almacen= False 
         
-        return render(request, "empleadosCustom/documentos/aplicablesatodos.html", {"estaEnVerDocumentos":estaEnVerDocumentos, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,  "rh":rh})
+        empleado = Empleados.objects.filter(id_empleado = id_admin)
+        for dato in empleado:
+            area = dato.id_area_id
+
+        if area == 1 or area ==5 or area == 7 or area == 8 or area == 9 or area == 10:
+            solicitantePrestamo = True
+        else:
+            solicitantePrestamo = False 
+        
+        return render(request, "empleadosCustom/documentos/aplicablesatodos.html", {"estaEnVerDocumentos":estaEnVerDocumentos, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,  "rh":rh,"almacen":almacen, "solicitantePrestamo":solicitantePrestamo})
     
     #Si le da al inicio y no hay una sesión iniciada..
     else:
