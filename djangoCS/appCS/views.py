@@ -273,9 +273,9 @@ def inicio(request):
         
         fecha = datetime.now()
         date = fecha.date()
-        año = date.strftime("%Y") #2021
-        mes = date.strftime("%m") #09
-        dia = date.strftime("%d") #23
+        año = date.strftime("%Y") #2022
+        mes = date.strftime("%m") #04
+        dia = date.strftime("%d") #11
         int_dia = int(dia)
         resta_dias= int(dia)+4 #27
         mes_numero = int(fecha.month)
@@ -292,9 +292,9 @@ def inicio(request):
         datosLimpiezas = []
         for limpieza in limpiezas:
             fecha = limpieza.fecha  #23 08 2021
-            año_limpieza = fecha.strftime("%Y") #2021
-            mes_limpieza = fecha.strftime("%m") #08
-            dia_limpieza = fecha.strftime("%d") #23
+            año_limpieza = fecha.strftime("%Y") #2022
+            mes_limpieza = fecha.strftime("%m") #03
+            dia_limpieza = fecha.strftime("%d") #13
             int_dia_limpieza = int(dia_limpieza)
             
             resta = int(mes) - int(mes_limpieza)
@@ -309,33 +309,53 @@ def inicio(request):
                         
                         #si está dentro del mes y 4 días más
                         
-                        if limpieza.operacion == "Limpieza externa - Limpieza interna - ":
-                            id_equipo = limpieza.id_equipo_id
+                        if limpieza.operacion == "Limpieza externa, Limpieza interna":
                             
-                            intEquipo = int(id_equipo)
-                            datosEquipo = Equipos.objects.filter(id_equipo = intEquipo)
                             
-                            for datoEquipo in datosEquipo:
-                                id_empleado = datoEquipo.id_empleado_id
-                                id_equipo = datoEquipo.id_equipo
-                                tipo = datoEquipo.tipo
-                                marca = datoEquipo.marca
-                                modelo = datoEquipo.modelo
+                            if limpieza.id_equipo_id != None :
+                                id_equipo = limpieza.id_equipo_id
+                                intEquipo = int(id_equipo)
+                                datosEquipo = Equipos.objects.filter(id_equipo = intEquipo)
                                 
-                                if id_empleado == None:
-                                    fecha = limpieza.fecha   
-                                    datosLimpiezas.append(["Sin","Propietario",tipo,marca,modelo, fecha])
-                                
-                                else:
+                                for datoEquipo in datosEquipo:
+                                    id_empleado = datoEquipo.id_empleado_id
+                                    id_equipo = datoEquipo.id_equipo
+                                    tipo = datoEquipo.tipo
+                                    marca = datoEquipo.marca
+                                    modelo = datoEquipo.modelo
                                     
-                                    datosEmpleado = Empleados.objects.filter(id_empleado = id_empleado)
+                                    if id_empleado == None:
+                                        fecha = limpieza.fecha   
+                                        datosLimpiezas.append(["Sin","Propietario",tipo,marca,modelo, fecha])
+                                    
+                                    else:
                                         
-                                    for datoEmpleado in datosEmpleado:
-                                        nombree = datoEmpleado.nombre
-                                        apellidose = datoEmpleado.apellidos
+                                        datosEmpleado = Empleados.objects.filter(id_empleado = id_empleado)
+                                            
+                                        for datoEmpleado in datosEmpleado:
+                                            nombree = datoEmpleado.nombre
+                                            apellidose = datoEmpleado.apellidos
+                                            
+                                        fecha = limpieza.fecha   
+                                        datosLimpiezas.append([nombree,apellidose,tipo,marca,modelo, fecha])
                                         
-                                    fecha = limpieza.fecha   
-                                    datosLimpiezas.append([nombree,apellidose,tipo,marca,modelo, fecha])
+                               
+                            else:
+                                id_impresora = limpieza.id_impresora_id
+                                intImpresora = int(id_impresora)
+                                datosImpresora = Impresoras.objects.filter(id_impresora = intImpresora)
+                                
+                                for datoImpresora in datosImpresora:
+                                    id_area = datoImpresora.id_area_id
+                                    id_impresora = datoImpresora.id_impresora
+                           
+                                    marca = datoImpresora.marca
+                                    modelo = datoImpresora.modelo
+                                    
+                                    
+                                            
+                                fecha = limpieza.fecha   
+                                datosLimpiezas.append(["","","",marca,modelo, fecha])
          
         #Datos cartuchos    
         cartuchos = Cartuchos.objects.filter(cantidad=1)
@@ -2074,8 +2094,8 @@ def formularioMant(request):
         numeroNoti = numNoti()
         foto = fotoAdmin(request)
         
-        infoEquipos = Equipos.objects.all()
-        
+        infoEquipos = Equipos.objects.filter(activo = "A")
+        infoImpresoras = Impresoras.objects.filter(activo = "A")
         
         empleadosEquipo= []
         for empleado in infoEquipos:
@@ -2098,59 +2118,101 @@ def formularioMant(request):
         if request.method == "POST":
             
             equipo_recibido = request.POST['equipoProp']
-            operacion_recibido = request.POST.getlist('operacion')
+            impresora_recibido = request.POST['impresora']
+            operacion_recibido = request.POST['operacion']
             descripcion_recibida = request.POST['descripcion']
             fecha=datetime.now()
-            operacionCompleta= ""
-            for operacion in operacion_recibido:
-                operacionCompleta+= operacion+" - "
-                if operacion == "Limpieza externa" or operacion == "Limpieza interna":
-                    
-                    historialEquipo = CalendarioMantenimiento.objects.filter(id_equipo = equipo_recibido)
-                    
-                    if historialEquipo: #Si al equipo ya se le realizó algo..
-                        operacionEquipoExistente = CalendarioMantenimiento.objects.filter(id_equipo = equipo_recibido)
-                        
-                        for dato in operacionEquipoExistente:
-                            operacion = dato.operacion
-                        
-                        
-                        if operacion == "Limpieza externa - Limpieza interna - " or operacion == "Limpieza interna - Limpieza externa - ":
-                            if operacion == "Limpieza externa - Limpieza interna - ":
-                                actualizacion = CalendarioMantenimiento.objects.filter(id_equipo =  equipo_recibido, operacion = "Limpieza externa - Limpieza Interna - ").update(fecha=fecha, observaciones=descripcion_recibida)
-                            if operacion == "Limpieza interna - Limpieza externa - ":
-                                actualizacion = CalendarioMantenimiento.objects.filter(id_equipo =  equipo_recibido, operacion = "Limpieza interna - Limpieza externa - ").update(fecha=fecha, observaciones=descripcion_recibida)
-                            
-                            equipos = Equipos.objects.filter(id_equipo = equipo_recibido)
             
-                            for equipo in equipos:
-                                marca = equipo.marca
-                                modelo = equipo.modelo
+            if equipo_recibido != 'sinEquipo':
+           
+           
+                        
+                historialEquipo = CalendarioMantenimiento.objects.filter(id_equipo = equipo_recibido)
+                        
+                if historialEquipo: #Si al equipo ya se le realizó algo..
+                    
                             
-                            mantExito = True
-                            mensajeMant = "Se ha agregado el mantenimineto realizado a " + marca + " " + modelo + "con propietario " + nombre + " " + apellidos
-                            
-                            return render(request,"Mantenimiento/formularioMant.html",{"estaEnFormulario": estaEnFormulario, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, 
-                                                                                    "lista": lista, "mantExito":mantExito, "mensajeMant":mensajeMant, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti
-                                                                                    , "foto":foto})
                 
-            registro = CalendarioMantenimiento(id_equipo=Equipos.objects.get(id_equipo=equipo_recibido), operacion=operacionCompleta, fecha=fecha, observaciones=descripcion_recibida)
-            registro.save()
-            
-            equipos = Equipos.objects.filter(id_equipo = equipo_recibido)
-            
-            for equipo in equipos:
-                marca = equipo.marca
-                modelo = equipo.modelo
-            
-            mantExito = True
-            mensajeMant = "Se ha agregado el mantenimineto realizado a " + marca + " " + modelo + "con propietario " + nombre + " " + apellidos
-            
-            return render(request,"Mantenimiento/formularioMant.html",{"estaEnFormulario": estaEnFormulario,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, 
-                                                                    "lista": lista, "mantExito":mantExito, "mensajeMant":mensajeMant, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+                    actualizacion = CalendarioMantenimiento.objects.filter(id_equipo =  equipo_recibido).update(fecha=fecha,  observaciones=descripcion_recibida)
+                        
+                    informacionEquipo = Equipos.objects.filter(id_equipo = equipo_recibido)
+                
+                    for equipoInf in informacionEquipo:
+                        marca = equipoInf.marca
+                        modelo = equipoInf.modelo
+                        idEmpleado = equipoInf.id_empleado_id
+                    
+                    datosProp = Empleados.objects.filter(id_empleado = idEmpleado)
+                    
+                    for datosEm in datosProp:
+                        nombreProp = datosEm.nombre
+                        apellidosProp = datosEm.apellidos
+                        
+                    completoPropietario = nombreProp + " " + apellidosProp
+                                
+                    mantExito = True
+                    mensajeMant = "Se ha agregado el mantenimineto realizado a " + marca + " " + modelo + "con propietario " + completoPropietario 
+                                
+                    return render(request,"Mantenimiento/formularioMant.html",{"estaEnFormulario": estaEnFormulario, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, 
+                                                                                        "lista": lista, "mantExito":mantExito, "mensajeMant":mensajeMant, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti
+                                                                                        , "foto":foto, "infoImpresoras":infoImpresoras})
+                    
+                registro = CalendarioMantenimiento(id_equipo=Equipos.objects.get(id_equipo=equipo_recibido), operacion=operacion_recibido, fecha=fecha, observaciones=descripcion_recibida)
+                registro.save()
+                
+                equipos = Equipos.objects.filter(id_equipo = equipo_recibido)
+                
+                for equipo in equipos:
+                    marca = equipo.marca
+                    modelo = equipo.modelo
+                
+                mantExito = True
+                mensajeMant = "Se ha agregado el mantenimineto realizado a " + marca + " " + modelo + "con propietario " + nombre + " " + apellidos
+                
+                return render(request,"Mantenimiento/formularioMant.html",{"estaEnFormulario": estaEnFormulario,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, 
+                                                                        "lista": lista, "mantExito":mantExito, "mensajeMant":mensajeMant, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto, "infoImpresoras":infoImpresoras})
+            elif impresora_recibido != 'sinImpresora':
+           
+           
+                        
+                historialImpresora = CalendarioMantenimiento.objects.filter(id_impresora = impresora_recibido)
+                        
+                if historialImpresora: #Si al equipo ya se le realizó algo..
+                    
+                            
+                
+                    actualizacion = CalendarioMantenimiento.objects.filter(id_impresora =  impresora_recibido).update(fecha=fecha, observaciones=descripcion_recibida)
+                        
+                    informacionImpresora = Impresoras.objects.filter(id_impresora = impresora_recibido)
+                
+                    for impresoraInf in informacionImpresora:
+                        marca = impresoraInf.marca
+                        modelo = impresoraInf.modelo
+                                
+                    mantExito = True
+                    mensajeMant = "Se ha agregado el mantenimineto realizado a " + marca + " " + modelo + "!!!"
+                                
+                    return render(request,"Mantenimiento/formularioMant.html",{"estaEnFormulario": estaEnFormulario, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, 
+                                                                                        "lista": lista, "mantExito":mantExito, "mensajeMant":mensajeMant, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti
+                                                                                        , "foto":foto, "infoImpresoras":infoImpresoras})
+                    
+                registro = CalendarioMantenimiento(id_impresora=Impresoras.objects.get(id_impresora=impresora_recibido), operacion=operacion_recibido, fecha=fecha, observaciones=descripcion_recibida)
+                registro.save()
+                
+                informacionImpresora = Impresoras.objects.filter(id_impresora = impresora_recibido)
+                
+                for impresoraInf in informacionImpresora:
+                    marca = impresoraInf.marca
+                    modelo = impresoraInf.modelo
+                                
+                mantExito = True
+                mensajeMant = "Se ha agregado el mantenimineto realizado a " + marca + " " + modelo + "!!!"
+                
+                return render(request,"Mantenimiento/formularioMant.html",{"estaEnFormulario": estaEnFormulario,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, 
+                                                                        "lista": lista, "mantExito":mantExito, "mensajeMant":mensajeMant, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto, "infoImpresoras":infoImpresoras})
 
         return render(request,"Mantenimiento/formularioMant.html",{"estaEnFormulario": estaEnFormulario, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, 
-                                                                "lista": lista, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+                                                                "lista": lista, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto, "infoImpresoras":infoImpresoras})
     else:
         return redirect('/login/') #redirecciona a url de inicio
     

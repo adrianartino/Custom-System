@@ -40,25 +40,57 @@ Agregar Mantenimiento | Custom System
         <div class="card">
             <div class="header">
                 <h2 style="font-family: 'Oswald', sans-serif;">
-                    MANTENIMINETO A EQUIPOS
+                    MANTENIMINETO A EQUIPOS / IMPRESORAS
                     <small style="color: #790C05;">Formulario para registrar un mantenimiento realizado en el
                         sistema.</small>
                 </h2>
+                <br>
+                <div class="row cleatfix">
+                    <div class="col-md-6">
+                        <div class="col-md-3">
+                            <label style="font-family: 'Oswald', sans-serif;" id="mantEq">Mantenimiento Equipos</label>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="switch">
+                                <label><input type="checkbox" checked id="checkbox"><span class="lever switch-col-teal"></span></label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label style="font-family: 'Oswald', sans-serif;" id="mantImp">Mantenimiento Impresoras</label>
+                        </div>
+                    </div>
+                </div>
 
             </div>
             <div class="body">
                 <form id="form_validation" action="/formularioMant/" method="POST">{% csrf_token %}
                     <div class="row clearfix">
-                        <div class="col-md-6">
+                        <div class="col-md-6" id="divSelectEquipo">
                             <label for="email_address"><span style="color: #078F68;">* </span>Equipo:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="material-icons">computer</i>
                                 </span>
                                 <select class="form-control show-tick" name="equipoProp">
+                                    <option value="sinEquipo">Sin equipo</option>
                                     {% for equipoP, empleado in lista %}
                                     <option value="{{equipoP.id_equipo}}">{{equipoP.marca}} {{equipoP.modelo}}-
                                         {{empleado.0}} {{empleado.1}}</option>
+                                    {% endfor %}
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6" id="divSelectImpresora">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Impresora:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">print</i>
+                                </span>
+                                <select class="form-control show-tick" name="impresora">
+                                    <option value="sinImpresora">Sin impresora</option>
+                                    {% for impresora in infoImpresoras %}
+                                    <option value="{{impresora.id_impresora}}">{{impresora.marca}} {{impresora.modelo}}</option>
                                     {% endfor %}
 
                                 </select>
@@ -71,35 +103,11 @@ Agregar Mantenimiento | Custom System
                                     <i class="material-icons">copyright</i>
                                 </span>
                                 <select class="form-control show-tick" name="operacion" multiple>
-                                    <option value="Limpieza externa" selected>Limpieza externa</option>
-                                    <option value="Limpieza interna">Limpieza interna</option>
-                                    <option value="Instalación de software">Instalación de software</option>
-                                    <option value="Activación de software">Activación de software</option>
-                                    <option value="Respaldo de información">Respaldo de información</option>
-                                    <option value="Reemplazo e instalación de componente">Reemplazo e instalación de
-                                        componente</option>
-                                    <option value="Reparación de componente">Reparación de componente</option>
-                                    <option value="Reparación estética">Reparación estética</option>
-                                    <option value="Reinicio/ Restauración / Reconfiguración">Reinicio/ Restauración /
-                                        Reconfiguración</option>
-                                    <option value="Formateo/ Instalación de sistema">Formateo/ Instalación de sistema
-                                    </option>
-                                    <option value="Problemas de conectividad">Problemas de conectividad</option>
-                                    <option value="Asesoria técnica">Asesoria técnica</option>
-                                    <option value="Otros">Otros</option>
+                                    <option value="Limpieza externa, Limpieza interna" selected>Limpieza externa, Limpieza interna</option>
+                                   
                                 </select>
                             </div>
                         </div>
-
-
-
-
-                    </div>
-
-
-
-
-                    <div class="row clearfix">
                         <div class="col-md-6">
                             <label for="email_address"><span style="color: #078F68;">* </span>Observaciones:</label>
                             <div class="input-group">
@@ -118,6 +126,17 @@ Agregar Mantenimiento | Custom System
 
                             </div>
                         </div>
+
+
+
+
+                    </div>
+
+
+
+
+                    <div class="row clearfix">
+                       
 
 
                     </div>
@@ -175,6 +194,39 @@ Agregar Mantenimiento | Custom System
         }
         return false;
     }
+
+    window.onload = function(){
+        var tituloImpresora = document.getElementById('mantImp');
+        var divEquipo = document.getElementById('divSelectEquipo');
+        var tituloEquipo = document.getElementById("mantEq");
+        var divImpresora = document.getElementById("divSelectImpresora");
+
+        tituloImpresora.style.color = "#32B63E";
+        divEquipo.style.display = "none";
+
+        var checkbox = document.getElementById('checkbox');
+        checkbox.addEventListener("change", validarCheckBox, false);
+
+        function validarCheckBox(){
+            var estadoCheckeado = checkbox.checked;
+            if(estadoCheckeado){
+                tituloImpresora.style.color = "#32B63E";
+                divEquipo.style.display = "none";
+                tituloEquipo.style.color = "#99A3A4 ";
+                divImpresora.style.display ="block";
+            }else{
+                tituloImpresora.style.color = "#99A3A4";
+                divEquipo.style.display = "block";
+                tituloEquipo.style.color = "#32B63E ";
+                divImpresora.style.display ="none";
+            }
+        }
+
+
+
+    }
+
+    
 </script>
 <!-- Jquery Core Js -->
 <script src={% static 'panel/plugins/jquery/jquery.min.js' %}></script>
