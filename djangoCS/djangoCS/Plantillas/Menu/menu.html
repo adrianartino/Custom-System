@@ -1154,14 +1154,14 @@
                         <a href="javascript:void(0);" class="menu-toggle">
                             {% if estaEnCalendario %}
                             <i class="material-icons colorAmarilloIcono" >cleaning_services</i>
-                            <span style="color: #00917C !important;">Mantenimiento/Soporte técnico</span>
+                            <span style="color: #00917C !important;">Mantenimiento</span>
                             {% else %}
                             {% if estaEnFormulario %}
                             <i class="material-icons colorAmarilloIcono" >cleaning_services</i>
-                            <span style="color: #00917C !important;">Mantenimiento/Soporte técnico</span>
+                            <span style="color: #00917C !important;">Mantenimiento</span>
                             {% else %}
                             <i class="material-icons colorGrisIcono">cleaning_services</i>
-                            <span class="colorBlanco">Mantenimiento/Soporte técnico</span>
+                            <span class="colorBlanco">Mantenimiento</span>
                             {% endif %}
                             {% endif %}
                         </a>
@@ -1185,15 +1185,209 @@
                             <li>
                                 {% endif %}
                                 {% if estaEnFormulario %}
-                                <a href="/formularioMant/" class="colorTextoSeleccionado">Formulario de
+                                <a href="/formularioMant/" class="colorTextoSeleccionado">Agregar
                                     mantenimiento</a>
                                 {% else %}
-                                <a href="/formularioMant/" class="colorBlanco">Formulario de mantenimiento</a>
+                                <a href="/formularioMant/" class="colorBlanco">Agregar mantenimiento</a>
                                 {% endif %}
                             </li>
 
                         </ul>
                     </li>
+                    <!-- Soporte Técnico -->
+                    {% if estaEnVerSoportes %}
+                    <li class="active">
+                    {% else %}
+                    <li>
+                    {% if Soportes %}
+                    <li class="active">
+                    {% else %}
+                    <li>
+                    {% if implementaciones %}
+                    <li class="active">
+                    {% else %}
+                    <li>
+                    {% endif %}
+                    {% endif %}
+                    {% endif %}
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            {% if estaEnVerSoportes %}
+                            <i class="material-icons colorAmarilloIcono" >build</i>
+                            <span style="color: #00917C !important;"> Soportes Técnicos</span>
+                            {% else %}
+                            {% if Soportes %}
+                            <i class="material-icons colorAmarilloIcono" >build</i>
+                            <span style="color: #00917C !important;"> Soportes Técnicos</span>
+                            {% else %}
+                            {% if implementaciones %}
+                            <i class="material-icons colorAmarilloIcono" >build</i>
+                            <span style="color: #00917C !important;"> Soportes Técnicos</span>
+                            {% else %}
+                            <i class="material-icons colorGrisIcono">build</i>
+                            <span class="colorBlanco"> Soportes Técnicos</span>
+                            {% endif %}
+                            {% endif %}
+                            {% endif %}
+
+                        </a>
+                        <ul class="ml-menu">
+
+                            {% if estaEnVerSoportes %}
+                            <li class="active">
+                                {% else %}
+                            <li>
+                                {% endif %}
+                                {% if estaEnVerSoportes %}
+                                <a href="/verSoportes/" class="colorTextoSeleccionado">Ver Soportes Técnicos</a>
+                                {% else %}
+                                <a href="/verSoportes/" class="colorBlanco">Ver Soportes Técnicos</a>
+                                {% endif %}
+                            </li>
+
+                            {% if Soportes %}
+                            <li class="active">
+                                {% else %}
+                            <li>
+                                {% if estaEnSoporteEquipos %}
+                            <li class="active">
+                                {% else %}
+                            <li>
+                                {% if estaEnSoporteImpresoras %}
+                            <li class="active">
+                                {% else %}
+                            <li>
+                                {% if estaEnSoporteOtros %}
+                            <li class="active">
+                                {% else %}
+                            <li>
+                                {% endif %}
+                                {% endif %}
+                                {% endif %}
+                                {% endif %}
+
+                                <a href="javascript:void(0);" class="menu-toggle">
+                                    {% if estaEnSoporteEquipos %}
+                                    <i class="material-icons" style="color: #336BFF !important;">offline_pin</i>
+                                    <span class="colorTextoSeleccionado">Agregar Soporte</span>
+                                    {% else %}
+                                    {% if estaEnSoporteImpresoras %}
+                                    <i class="material-icons" style="color: #336BFF !important;">offline_pin</i>
+                                    <span class="colorTextoSeleccionado">Agregar Soporte</span>
+                                    {% else %}
+                                    {% if estaEnSoporteOtros %}
+                                    <i class="material-icons" style="color: #336BFF !important;">offline_pin</i>
+                                    <span class="colorTextoSeleccionado">Agregar Soporte</span>
+                                    {% else %}
+                                    <i class="material-icons colorGrisIcono">offline_pin</i>
+                                    <span class="colorBlanco">Agregar Soporte</span>
+                                    {% endif %}
+                                    {% endif %}
+                                    {% endif %}
+                                </a>
+                                <ul class="ml-menu">
+                                    {% if estaEnSoporteEquipos %}
+                                    <li class="active">
+                                        {% else %}
+                                    <li>
+                                        {% endif %}
+                                        {% if estaEnSoporteEquipos %}
+                                        <a href="/agregarSoporteEquipoComputo/" style="color: #e74c3c !important;">Soporte a equipo</a>
+                                        {% else %}
+
+                                        <a href="/agregarSoporteEquipoComputo/" class="colorBlanco">Soporte a equipo</a>
+                                        {% endif %}
+
+                                    </li>
+                                    {% if estaEnSoporteImpresoras %}
+                                    <li class="active">
+                                        {% else %}
+                                    <li>
+                                        {% endif %}
+                                        {% if estaEnSoporteImpresoras %}
+                                        <a href="/agregarSoporteImpresora/" style="color: #e74c3c !important;">Soporte a impresora</a>
+                                        {% else %}
+                                        <a href="/agregarSoporteImpresora/" class="colorBlanco">Soporte a impresora</a>
+                                        {% endif %}
+                                    </li>
+                                    {% if estaEnSoporteOtros %}
+                                    <li class="active">
+                                        {% else %}
+                                    <li>
+                                        {% endif %}
+                                        {% if estaEnSoporteOtros %}
+                                        <a href="/agregarSoporteOtros/" style="color: #e74c3c !important;">Otro soporte</a>
+                                        {% else %}
+                                        <a href="/agregarSoporteOtros/" class="colorBlanco">Otro soporte</a>
+                                        {% endif %}
+                                    </li>
+
+                                </ul>
+                            </li>
+
+
+                            {% if implementaciones %}
+                            <li class="active">
+                                {% else %}
+                            <li>
+                                {% if estaEnVerImplementaciones %}
+                            <li class="active">
+                                {% else %}
+                            <li>
+                                {% if estaEnAgregarImplementacion %}
+                            <li class="active">
+                                {% else %}
+                            <li>
+                                {% endif %}
+                                {% endif %}
+                                {% endif %}
+
+                                <a href="javascript:void(0);" class="menu-toggle">
+                                    {% if estaEnVerImplementaciones %}
+                                    <i class="material-icons" style="color: #336BFF !important;">assignment</i>
+                                    <span class="colorTextoSeleccionado">Agregar Implementación</span>
+                                    {% else %}
+                                    {% if estaEnAgregarImplementacion %}
+                                    <i class="material-icons" style="color: #336BFF !important;">assignment</i>
+                                    <span class="colorTextoSeleccionado">Agregar Implementación</span>
+                                    {% else %}
+                                    <i class="material-icons colorGrisIcono">assignment</i>
+                                    <span class="colorBlanco">Agregar Implementación</span>
+                                    {% endif %}
+                                    {% endif %}
+                                </a>
+                                <ul class="ml-menu">
+                                    {% if estaEnVerImplementaciones %}
+                                    <li class="active">
+                                        {% else %}
+                                    <li>
+                                        {% endif %}
+                                        {% if estaEnVerImplementaciones %}
+                                        <a href="/verImplementaciones/" style="color: #e74c3c !important;">Ver implementaciones</a>
+                                        {% else %}
+
+                                        <a href="/verImplementaciones/" class="colorBlanco">Ver implementaciones</a>
+                                        {% endif %}
+
+                                    </li>
+                                    {% if estaEnAgregarImplementacion %}
+                                    <li class="active">
+                                        {% else %}
+                                    <li>
+                                        {% endif %}
+                                        {% if estaEnAgregarImplementacion %}
+                                        <a href="/agregarImplementacion/" style="color: #e74c3c !important;">Agregar implementación</a>
+                                        {% else %}
+                                        <a href="/agregarImplementacion/" class="colorBlanco">Agregar implementación</a>
+                                        {% endif %}
+                                    </li>
+                                    
+
+                                </ul>
+                            </li>
+
+                        </ul>
+                    </li>
+                    <!-- Fin de soporte técnico -->
                     {% if estaEnVerCarta %}
                     <li class="active">
                         {% else %}

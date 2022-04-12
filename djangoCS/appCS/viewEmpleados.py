@@ -15,7 +15,7 @@ from django.shortcuts import redirect
 from reportlab import cmp
 
 #Importación de modelos
-from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Preguntas, Encuestas, Respuestas, EncuestaEmpleadoResuelta, Mouses, Teclados, Monitores
+from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Preguntas, Encuestas, Respuestas, EncuestaEmpleadoResuelta, Mouses, Teclados, Monitores, ImplementacionSoluciones
 
 #Librería para manejar archivos en Python
 from django.core.files.base import ContentFile
@@ -152,6 +152,11 @@ def principal(request):
             solicitantePrestamo = True
             return render(request, "empleadosCustom/inicio/inicio.html", {"estaEnInicio":estaEnInicio,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, 
             "almacen": almacen, "solicitantePrestamo":solicitantePrestamo})
+        
+        if correo == "egutierrez@customco.com.mx":
+            subdirector = True
+            return render(request, "empleadosCustom/inicio/inicio.html", {"estaEnInicio":estaEnInicio,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, 
+            "subdirector": subdirector})
             
         empleado = Empleados.objects.filter(id_empleado = id_admin)
         for dato in empleado:
@@ -197,6 +202,11 @@ def encuestas(request):
             almacen = True
         else:
             almacen=False
+
+        if correo == "egutierrez@customco.com.mx":
+            subdirector = True
+        else:
+            subdirector = False
 
       
         empleado = Empleados.objects.filter(id_empleado = id_admin)
@@ -256,7 +266,7 @@ def encuestas(request):
                 colorBarra = "progress-bar-success"
 
             return render(request, "empleadosCustom/encuestas/año2022/encuestaEnero.html", {"enAño":enAño, "estaEnEncuesta": estaEnEncuesta, "preguntasMultiples":preguntasMultiples,"preguntasAbiertas":preguntasAbiertas,"preguntasAbiertas2":preguntasAbiertas2, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
-            "aunqueseaunapregunta":aunqueseaunapregunta, "contadorPreguntas": contadorPreguntas, "contadorRespuestas":contadorRespuestas, "rh": rh,"almacen":almacen, "solicitantePrestamo":solicitantePrestamo, "porcentajeBarra":porcentajeBarra, "colorBarra":colorBarra})
+            "aunqueseaunapregunta":aunqueseaunapregunta, "contadorPreguntas": contadorPreguntas, "contadorRespuestas":contadorRespuestas, "rh": rh,"almacen":almacen, "solicitantePrestamo":solicitantePrestamo, "porcentajeBarra":porcentajeBarra, "colorBarra":colorBarra, "subdirector":subdirector})
 
         #Si el empleado no tiene ninguna pregunta resuelta
         else:
@@ -266,7 +276,7 @@ def encuestas(request):
         
         
             return render(request, "empleadosCustom/encuestas/año2022/encuestaEnero.html", {"enAño":enAño, "estaEnEncuesta": estaEnEncuesta, "preguntasMultiples":preguntasMultiples,"preguntasAbiertas":preguntasAbiertas,"preguntasAbiertas2":preguntasAbiertas2, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
-            "aunqueseaunapregunta":aunqueseaunapregunta, "contadorPreguntas": contadorPreguntas, "introduccion":introduccion, "rh": rh,"almacen":almacen, "solicitantePrestamo":solicitantePrestamo})
+            "aunqueseaunapregunta":aunqueseaunapregunta, "contadorPreguntas": contadorPreguntas, "introduccion":introduccion, "rh": rh,"almacen":almacen, "solicitantePrestamo":solicitantePrestamo, "subdirector":subdirector})
     
     #Si le da al inicio y no hay una sesión iniciada..
     else:
@@ -617,6 +627,11 @@ def equipo(request):
             almacen = True
         else:
             almacen= False
+        
+        if correo == "egutierrez@customco.com.mx":
+            subdirector = True
+        else:
+            subdirector = False
 
         empleado = Empleados.objects.filter(id_empleado = id_admin)
         for dato in empleado:
@@ -668,15 +683,15 @@ def equipo(request):
             if mouses or  mantenimientos or teclados or monitores:
                 return render(request, "empleadosCustom/miEquipo/verInfoEquipo.html", { "estaEnVerEquipo": estaEnVerEquipo, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
                 "tieneEquipo":tieneEquipo, "datosPropietario":datosPropietario, "nombreEmpleado":nombreEmpleado, "nombreArea":nombreArea, "colorArea":colorArea, "compra":compra, "renovar":renovar, "mantenimientos":mantenimientos, "datosEquipo": datosEquipo,  "rh":rh, 
-                "mouses":mouses,"teclados":teclados,"monitores":monitores,"almacen":almacen, "solicitantePrestamo":solicitantePrestamo})
+                "mouses":mouses,"teclados":teclados,"monitores":monitores,"almacen":almacen, "solicitantePrestamo":solicitantePrestamo, "subdirector":subdirector})
             else:
                 return render(request, "empleadosCustom/miEquipo/verInfoEquipo.html", { "estaEnVerEquipo": estaEnVerEquipo, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
-                "tieneEquipo":tieneEquipo, "datosPropietario":datosPropietario, "nombreEmpleado":nombreEmpleado,"nombreArea":nombreArea, "colorArea":colorArea, "compra":compra, "renovar":renovar, "datosEquipo": datosEquipo,  "rh":rh,"almacen":almacen, "solicitantePrestamo":solicitantePrestamo})
+                "tieneEquipo":tieneEquipo, "datosPropietario":datosPropietario, "nombreEmpleado":nombreEmpleado,"nombreArea":nombreArea, "colorArea":colorArea, "compra":compra, "renovar":renovar, "datosEquipo": datosEquipo,  "rh":rh,"almacen":almacen, "solicitantePrestamo":solicitantePrestamo, "subdirector":subdirector})
                     
         else:
             noTieneEquipo = True
             return render(request, "empleadosCustom/miEquipo/verInfoEquipo.html", { "estaEnVerEquipo": estaEnVerEquipo, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
-            "noTieneEquipo":noTieneEquipo,  "rh":rh,"almacen":almacen, "solicitantePrestamo":solicitantePrestamo})
+            "noTieneEquipo":noTieneEquipo,  "rh":rh,"almacen":almacen, "solicitantePrestamo":solicitantePrestamo, "subdirector":subdirector})
     
     #Si le da al inicio y no hay una sesión iniciada..
     else:
@@ -705,6 +720,10 @@ def carta(request):
             almacen = True
         else:
             almacen= False 
+        if correo == "egutierrez@customco.com.mx":
+            subdirector = True
+        else:
+            subdirector = False
 
         empleado = Empleados.objects.filter(id_empleado = id_admin)
         for dato in empleado:
@@ -740,7 +759,7 @@ def carta(request):
         lista1=zip(datosRegistro,empleados,equipos)
         
         
-        return render(request, "empleadosCustom/miEquipo/verCartaResponsiva.html", { "estaEnVerCarta": estaEnVerCarta, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "lista1":lista1,  "rh":rh, "almacen":almacen,"solicitantePrestamo":solicitantePrestamo})
+        return render(request, "empleadosCustom/miEquipo/verCartaResponsiva.html", { "estaEnVerCarta": estaEnVerCarta, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "lista1":lista1,  "rh":rh, "almacen":almacen,"solicitantePrestamo":solicitantePrestamo, "subdirector":subdirector})
     
     #Si le da al inicio y no hay una sesión iniciada..
     else:
@@ -770,6 +789,11 @@ def directorio(request):
             almacen = True
         else:
             almacen= False 
+
+        if correo == "egutierrez@customco.com.mx":
+            subdirector = True
+        else:
+            subdirector = False
 
         empleado = Empleados.objects.filter(id_empleado = id_admin)
         for dato in empleado:
@@ -802,7 +826,7 @@ def directorio(request):
         lista = zip(empleadosActivos, datosAreasEnActivos)
         
         
-        return render(request, "empleadosCustom/directorioCorreos/verDirectorio.html", { "estaEnVerCorreos": estaEnVerCorreos, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "lista":lista,  "rh":rh,"almacen":almacen, "solicitantePrestamo":solicitantePrestamo})
+        return render(request, "empleadosCustom/directorioCorreos/verDirectorio.html", { "estaEnVerCorreos": estaEnVerCorreos, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "lista":lista,  "rh":rh,"almacen":almacen, "solicitantePrestamo":solicitantePrestamo, "subdirector":subdirector})
     
     #Si le da al inicio y no hay una sesión iniciada..
     else:
@@ -835,6 +859,11 @@ def documentosAplicablesATodos(request):
         else:
             almacen= False 
         
+        if correo  == "egutierrez@customco.com.mx":
+            subdirector = True
+        else:
+            subdirector= False 
+        
         empleado = Empleados.objects.filter(id_empleado = id_admin)
         for dato in empleado:
             area = dato.id_area_id
@@ -844,7 +873,7 @@ def documentosAplicablesATodos(request):
         else:
             solicitantePrestamo = False 
         
-        return render(request, "empleadosCustom/documentos/aplicablesatodos.html", {"estaEnVerDocumentos":estaEnVerDocumentos, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,  "rh":rh,"almacen":almacen, "solicitantePrestamo":solicitantePrestamo})
+        return render(request, "empleadosCustom/documentos/aplicablesatodos.html", {"estaEnVerDocumentos":estaEnVerDocumentos, "id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,  "rh":rh,"almacen":almacen, "solicitantePrestamo":solicitantePrestamo, "subdirector":subdirector})
     
     #Si le da al inicio y no hay una sesión iniciada..
     else:
@@ -2203,4 +2232,50 @@ def resultadosAbiertas(request):
 
 
     
+def implementacionesSistemas(request):
+
+    #Si ya hay una sesión iniciada..
+    if "idSesion" in request.session:
+
+        estaEnVerImplementacionesSistemas = True
+        enAño = True
+        estaEnEncuesta = True
+        id_admin=request.session["idSesion"]
+        nombreini = request.session['nombres']
+        apellidosini = request.session['apellidos']
+        correo = request.session['correoSesion']
+        foto = fotoAdmin(request)
+        nombreCompleto = nombreini + " " + apellidosini #Blanca Yesenia Gaeta Talamantes
+        subdirector = True
+        
+        listaImplementaciones = ImplementacionSoluciones.objects.all()
+
+
+        return render(request, "empleadosCustom/direccion/implementacionesSistemas.html",{"estaEnVerImplementacionesSistemas":estaEnVerImplementacionesSistemas,"id_admin":id_admin,
+                                                                                          "nombreini":nombreini,"apellidosini":apellidosini,"correo":correo,"foto":foto,"nombreCompleto":nombreCompleto,"subdirector":subdirector, "listaImplementaciones":listaImplementaciones})
+    else:
+        return redirect("/login/")
     
+    
+def revisarImplementacion(request):
+
+    #Si ya hay una sesión iniciada..
+    if "idSesion" in request.session:
+
+        estaEnVerImplementacionesSistemas = True
+      
+        id_admin=request.session["idSesion"]
+        nombreini = request.session['nombres']
+        apellidosini = request.session['apellidos']
+        correo = request.session['correoSesion']
+        foto = fotoAdmin(request)
+        nombreCompleto = nombreini + " " + apellidosini #Blanca Yesenia Gaeta Talamantes
+        subdirector = True
+        
+        listaImplementaciones = ImplementacionSoluciones.objects.all()
+
+
+        return render(request, "empleadosCustom/direccion/revisarImplementacion.html",{"estaEnVerImplementacionesSistemas":estaEnVerImplementacionesSistemas,"id_admin":id_admin,
+                                                                                          "nombreini":nombreini,"apellidosini":apellidosini,"correo":correo,"foto":foto,"nombreCompleto":nombreCompleto,"subdirector":subdirector, "listaImplementaciones":listaImplementaciones})
+    else:
+        return redirect("/login/")

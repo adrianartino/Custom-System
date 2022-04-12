@@ -1,8 +1,8 @@
-{% extends "Menu/menu.html" %}
+{% extends "empleadosCustom/menu/menu.html" %}
 {% load static %}
 
 {% block titulo %}
-Departamentos | Custom System
+Empleados | Custom System
 {% endblock %}
 
 {% block estilos %}
@@ -13,7 +13,6 @@ Departamentos | Custom System
 <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
     type="text/css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
-
 
 <!-- Bootstrap Core Css -->
 <link href={% static 'panel/plugins/bootstrap/css/bootstrap.css' %} rel="stylesheet">
@@ -27,12 +26,14 @@ Departamentos | Custom System
 <!-- JQuery DataTable Css -->
 <link href={% static 'panel/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css' %} rel="stylesheet">
 
+<!-- Bootstrap Select Css -->
+<link href={% static 'panel/plugins/bootstrap-select/css/bootstrap-select.css' %} rel="stylesheet" />
+
 <!-- Custom Css -->
 <link href={% static 'panel/css/style.css' %} rel="stylesheet">
 
 <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
 <link href={% static 'panel/css/themes/all-themes.css' %} rel="stylesheet" />
-
 {% endblock %}
 
 {% block contenido %}
@@ -41,8 +42,8 @@ Departamentos | Custom System
         <div class="card">
             <div class="header">
                 <h2 style="font-family: 'Oswald', sans-serif;">
-                    MANTENIMIENTOS CUSTOM & CO
-                    <small style="color: #790C05;">Vista de listado de mantenimientos realizados a los equipos de la empresa.</small>
+                    IMPLEMENTACION DE SOLUCIONES CUSTOM & CO
+                    <small style="color: #790C05;">Vista de listado de implementaciones de la empresa.</small>
                 </h2>
                 <br>
 
@@ -69,7 +70,7 @@ Departamentos | Custom System
                     </div>
                     <div class="col-xs-12 col-sm-4">
                         <a class="label bg-blue-grey" style="font-size:small; " href="/agregarAreas/">Agregar
-                            Mantenimiento</a>
+                            Departamento</a>
                     </div>
 
                 </div>
@@ -81,43 +82,90 @@ Departamentos | Custom System
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable ">
                         <thead>
                             <tr style="background-color: #fad60e; color: black;">
-                                <th>Nombre del propietario:</th>
-                                <th>Equipo:</th>
-                                <th>Operación</th>
-                                <th>Observaciones</th>
-                                <th>Última limpieza:</th>
-                                <th>Fecha próxima:</th>
+                                <th>ID implementación</th>
+                                <th>Título Problema</th>
+                                <th>Descripción</th>
+                                <th>Fecha de comienzo</th>
+                                <th>Fecha de finalización</th>
+                                <th>Resuelto</th>
+                                <th>Revisado</th>
+                                <th>Firma de dirección</th>
+                                <th>Comentarios de dirección</th>
+                                <th>Autorizar</th>
+                              
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
-                                <th>Nombre del propietario:</th>
-                                <th>Equipo:</th>
-                                <th>Operación</th>
-                                <th>Observaciones</th>
-                                <th>Última limpieza:</th>
-                                <th>Fecha próxima:</th>
+                                <th>ID implementación</th>
+                                <th>Título Problema</th>
+                                <th>Descripción</th>
+                                <th>Fecha de comienzo</th>
+                                <th>Fecha de finalización</th>
+                                <th>Resuelto</th>
+                                <th>Revisado</th>
+                                <th>Firma de dirección</th>
+                                <th>Comentarios de dirección</th>
+                                <th>Autorizar</th>
+                             
                             </tr>
                         </tfoot>
                         <tbody class="animate__animated animate__backInDown">
-                            {% for fecha, equipoProp, fechaproxima in lista %}
+                            {% for impl in listaImplementaciones %}
                             <tr>
-                                <th>{{equipoProp.0}} {{equipoProp.1}}</th>
-                                <th>{{equipoProp.2}} {{equipoProp.3}}</th>
-                                <th>{{fecha.operacion}}</th>
-                                <th>{{fecha.observaciones}}</th>
-                                <th>{{fecha.fecha}}</th>
-                                {% if fechaproxima == "" %}
-                                <th>No se realizó limpieza</th>
+                                <td>{{impl.id_implementacion}}</td>
+                                <td>{{impl.titulo_problema}}</td>
+                                <td>{{impl.descripcion}}</td>
+                                <td>{{impl.fecha_comienzo}}</td>
+                                <td>{{impl.fecha_terminada}}</td>
+
+                                {% if impl.resuelto == "S" %}
+                                <td> <span class="label bg-green">SI</span> </td>
                                 {% else %}
-                                <th>
-                                    <button type="button" class="btn bg-pink waves-effect">
-                                        <i class="material-icons">date_range</i>
-                                        <span>{{fechaproxima}}</span>
-                                    </button>
-                                </th>
+                                <td><span class="label bg-red">NO</span></td>
                                 {% endif %}
+
+                                {% if impl.revisado == "S" %}
+                                <td> <span class="label bg-green">SI</span> </td>
+                                {% else %}
+                                <td><span class="label bg-red">NO</span></td>
+                                {% endif %}
+
+
+                                {% if impl.firma_direccion == "" %}
+                                <td>En espera de firma</td>
+                                {% else %}
+                                <td>
+                                    <center>
+                                        <img src="{{impl.firma_direccion.url}}" width="75%" alt="lap">
+                                    </center>
+                                </td>
+                                {% endif %}
+
+                                {% if impl.comentarios_direccion == None %}
+                                <td>En espera de comentarios</td>
+                                {% else %}
+                                <td>{{impl.comentarios_direccion}}</td>
+                                {% endif %}
+                                <form action="/revisarImplementacion/" method="POST">{% csrf_token %}
+                                    <th>
+                                        <input type="hidden" name="idImplementacionEditar" value="{{impl.id_implementacion}}">
+                                        <center>
+                                            <button type="submit" class="btn btn-warning waves-effect">
+                                                <i class="material-icons">edit</i>
+                                            </button>
+                                        </center>
+
+                                    </th>
+                                </form>
+                                
+        
+                                
+
+                              
+                            
                             </tr>
+                            
                             {% endfor %}
 
 
@@ -130,8 +178,6 @@ Departamentos | Custom System
         </div>
     </div>
 </div>
-
-
 {% endblock %}
 
 {% block estilosJs %}
@@ -147,6 +193,27 @@ Departamentos | Custom System
 <!-- Slimscroll Plugin Js -->
 <script src={% static 'panel/plugins/jquery-slimscroll/jquery.slimscroll.js' %}></script>
 
+
+<!-- Bootstrap Colorpicker Js -->
+<script src={% static 'panel/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js' %}></script>
+
+<!-- Dropzone Plugin Js -->
+<script src={% static 'panel/plugins/dropzone/dropzone.js' %}></script>
+
+<!-- Input Mask Plugin Js -->
+<script src={% static 'panel/plugins/jquery-inputmask/jquery.inputmask.bundle.js' %}></script>
+
+<!-- Multi Select Plugin Js -->
+<script src={% static 'panel/plugins/multi-select/js/jquery.multi-select.js' %}></script>
+
+<!-- Jquery Spinner Plugin Js -->
+<script src={% static 'panel/plugins/jquery-spinner/js/jquery.spinner.js' %}></script>
+
+<!-- Bootstrap Tags Input Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js' %}></script>
+
+<!-- noUISlider Plugin Js -->
+<script src={% static 'panel/plugins/nouislider/nouislider.js' %}></script>
 <!-- Waves Effect Plugin Js -->
 <script src={% static 'panel/plugins/node-waves/waves.js' %}></script>
 
@@ -165,9 +232,8 @@ Departamentos | Custom System
 <script src={% static 'panel/js/admin.js' %}></script>
 <script src={% static 'panel/js/pages/ui/tooltips-popovers.js' %}></script>
 <script src={% static 'panel/js/pages/tables/jquery-datatable.js' %}></script>
+<script src={% static 'panel/js/pages/forms/advanced-form-elements.js' %}></script>
 
 <!-- Demo Js -->
 <script src={% static 'panel/js/demo.js' %}></script>
-
-
 {% endblock %}

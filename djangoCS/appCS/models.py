@@ -4,6 +4,7 @@ from django.db import models
 from django.db.models.deletion import CASCADE
 from django.forms import CharField
 
+
 # Create your models here.
 class Areas (models.Model):
     id_area=models.AutoField(primary_key=True)
@@ -265,3 +266,33 @@ class PrestamosSistemas (models.Model):
 
     def __str__(self):
         return self.id_prestamo
+    
+class SoportesTecnicos (models.Model):
+    id_soporte = models.AutoField(primary_key = True)
+    id_empleado = models.ForeignKey(Empleados, on_delete=models.CASCADE)
+    fecha_soporte = models.DateField()
+    equipo_soporte = models.CharField(max_length=50, null=True)
+    tabla = models.CharField(max_length=100)
+    operacion = models.CharField(max_length=255)
+    observaciones = models.CharField(max_length=250, null=True)
+    resuelto_interno = models.CharField(max_length=2, null=True)
+    resuelto_proveedor = models.CharField(max_length=50, null=True)
+    
+    def __str__(self):
+        return self.id_soporte
+    
+    
+class ImplementacionSoluciones (models.Model):
+    id_implementacion = models.AutoField(primary_key = True)
+    titulo_problema = models.CharField(max_length=250)
+    descripcion = models.CharField(max_length=250)
+    fecha_comienzo = models.DateField()
+    fecha_terminada = models.DateField()
+    resuelto = models.CharField(max_length=2)
+    revisado = models.CharField(max_length=2)
+    firma_direccion = models.ImageField(upload_to="firmasImplementaciones", null = True)
+    comentarios_direccion =  models.CharField(max_length=250, null=True)
+    
+    
+    def __str__(self):
+        return self.id_implementacion

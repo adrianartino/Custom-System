@@ -642,6 +642,44 @@
 
                         </ul>
                     </li>
+
+                    {% if subdirector %}
+
+                    {% if estaEnVerImplementacionesSistemas %}
+                    <li class="active">
+                    {% else %}
+                    <li>
+                    {% endif %}
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            
+                            {% if estaEnVerImplementacionesSistemas %}
+                            <i class="material-icons colorAmarilloIcono" >device_hub</i>
+                            <span style="color: #00917C !important;">Ver implementaciones</span>
+                            {% else %}
+                            <i class="material-icons colorGrisIcono">device_hub</i>
+                            <span class="colorBlanco">Ver implementaciones</span>
+                            {% endif %}
+                            
+
+                        </a>
+                        <ul class="ml-menu">
+                            {% if estaEnVerImplementacionesSistemas %}
+                            <li class="active">
+                                {% else %}
+                            <li>
+                                {% endif %}
+                                {% if estaEnVerImplementacionesSistemas %}
+                                <a href="/implementacionesSistemas/" class="colorTextoSeleccionado">Ver implementaciones.</a>
+                                {% else %}
+                                <a href="/implementacionesSistemas/" class="colorBlanco">Ver implementaciones.</a>
+                                {% endif %}
+                            </li>
+                            
+
+                        </ul>
+                    </li>
+
+                    {% endif %}
                     
                     
             </div>

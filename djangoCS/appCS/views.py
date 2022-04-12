@@ -15,7 +15,7 @@ from django.shortcuts import redirect
 from django.db.models import Q
 
 #Importación de modelos
-from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Encuestas, Preguntas, Respuestas,Mouses, Teclados, Monitores, Telefonos, DiscosDuros, EmpleadosDiscosDuros, MemoriasUSB, PrestamosSistemas
+from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Encuestas, Preguntas, Respuestas,Mouses, Teclados, Monitores, Telefonos, DiscosDuros, EmpleadosDiscosDuros, MemoriasUSB, PrestamosSistemas, SoportesTecnicos, ImplementacionSoluciones
 
 #Librería para manejar archivos en Python
 from django.core.files.base import ContentFile
@@ -2031,44 +2031,81 @@ def calendarioMant(request):
         #equipos= Equipos.objects.all()
         
         equipoPropietario = []
+        impresoraArea = []
         fechasNuevas=[]
         for equipos in registroEquipos:
-            idEquipo =int (equipos.id_equipo_id)
-            fecha= equipos.fecha
-            operacion = equipos.operacion
-            operaciones_sueltas = operacion.split(" - ") #
+            if equipos.id_equipo_id != None :
+                idEquipo =int (equipos.id_equipo_id)
+                fecha= equipos.fecha
+                operacion = equipos.operacion
+        
+                
             
-            
-            if "Limpieza externa" in operaciones_sueltas or "Limpieza interna" in operaciones_sueltas:
                 nueva_fecha = fecha + relativedelta(months=1)
                 fechasNuevas.append(nueva_fecha)
-            else:
-                fechasNuevas.append("")
-                    
-            
-            
-            equi = Equipos.objects.filter(id_equipo=idEquipo)
+        
+                        
                 
-            for datosEquipo in equi:
-                marca = datosEquipo.marca
-                modelo = datosEquipo.modelo
-                idPropietario = datosEquipo.id_empleado_id
+                
+                equi = Equipos.objects.filter(id_equipo=idEquipo)
                     
-                if idPropietario == None:
-                    equipoPropietario.append(["Sin"," Propietario", marca,modelo])
-                else:
+                for datosEquipo in equi:
+                    marca = datosEquipo.marca
+                    modelo = datosEquipo.modelo
+                    idPropietario = datosEquipo.id_empleado_id
+                        
+                    if idPropietario == None:
+                        equipoPropietario.append(["Sin"," Propietario", marca,modelo])
+                    else:
+                        
+                        datosEmpleado = Empleados.objects.filter(id_empleado = idPropietario)
+                        
+                        for propietario in datosEmpleado:
+                            idPropietario= int(propietario.id_empleado)
+                            prop = Empleados.objects.filter(id_empleado= idPropietario)
+                                
+                            for datosProp in prop:
+                                nombre= datosProp.nombre
+                                apellidos = datosProp.apellidos
+                                
+                        equipoPropietario.append([nombre,apellidos, marca,modelo])
+            else:
+                
+                idImpresora =int (equipos.id_impresora_id)
+                fecha= equipos.fecha
+                operacion = equipos.operacion
+        
+                
+            
+                nueva_fecha = fecha + relativedelta(months=1)
+                fechasNuevas.append(nueva_fecha)
+        
+                        
+                
+                
+                impresora = Impresoras.objects.filter(id_impresora=idImpresora)
                     
-                    datosEmpleado = Empleados.objects.filter(id_empleado = idPropietario)
+                for datosImpresora in impresora:
+                    marca = datosImpresora.marca
+                    modelo = datosImpresora.modelo
+                    idArea = datosImpresora.id_area_id
                     
-                    for propietario in datosEmpleado:
-                        idPropietario= int(propietario.id_empleado)
-                        prop = Empleados.objects.filter(id_empleado= idPropietario)
-                            
-                        for datosProp in prop:
-                            nombre= datosProp.nombre
-                            apellidos = datosProp.apellidos
-                            
-                    equipoPropietario.append([nombre,apellidos, marca,modelo])
+                    if idArea == None:
+                        equipoPropietario.append(["Sin","departamento", marca,modelo])
+                    else:
+                        
+                        datosArea= Areas.objects.filter(id_area = idArea)
+                        
+                        for area in datosArea:
+                            idArea= int(area.id_area)
+                            are = Areas.objects.filter(id_area= idArea)
+                                
+                            for datosA in are:
+                                nombre= datosA.nombre
+                         
+                                
+                        equipoPropietario.append([nombre,"", marca,modelo])
+                
                 
         lista = zip (registroEquipos, equipoPropietario, fechasNuevas)
         
@@ -12758,3 +12795,393 @@ def xlTelefonos(request):
     libro.save(response)
     return response    
     #creación 
+
+def verSoportes(request):
+    if "idSesion" in request.session:
+        
+        estaEnVerSoportes = True
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        
+        nombreCompleto = nombre + " " + apellidos
+        
+        foto = fotoAdmin(request)
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+
+        consultaSoportes = SoportesTecnicos.objects.all()
+        solicitantes = []
+        nombresEquipos = []
+        tipos = []
+        resuelto_internos = []
+        proveedores = []
+
+        for soporte in consultaSoportes:
+            #empleado
+            idEmpleadoSolicitante = soporte.id_empleado_id
+            consultaEmpleado = Empleados.objects.filter(id_empleado = idEmpleadoSolicitante)
+            for dato in consultaEmpleado:
+                nombre = dato.nombre
+                apellidos = dato.apellidos
+
+            nombreCompleto = nombre + " " + apellidos
+
+            solicitantes.append(nombreCompleto)
+
+            #Nombre equipo
+            idEquipoAtendido = soporte.equipo_soporte
+            tabla = soporte.tabla
+
+            if tabla == "Equipos":
+                consultaEquipo = Equipos.objects.filter(id_equipo = int(idEquipoAtendido))
+                for dato in consultaEquipo:
+                    tipoEquipo = dato.tipo
+                    marcaEquipo = dato.marca
+                    modeloEquipo = dato.modelo
+
+                equipoEntero = tipoEquipo + " " + marcaEquipo + " " + modeloEquipo
+                nombresEquipos.append(equipoEntero)
+                tipos.append("Equipo de computo")
+
+            elif tabla == "Impresoras":
+                consultaImpresora = Impresoras.objects.filter(id_impresora = int(idEquipoAtendido))
+                for datoImpresora in consultaImpresora:
+                    marcaImpresora = datoImpresora.marca
+                    modeloImpresora = datoImpresora.modelo
+
+                impresoraEntera = marcaImpresora + " " + modeloImpresora
+                nombresEquipos.append(impresoraEntera)
+                tipos.append("Impresoras")
+
+            elif tabla == "Otros":
+                nombresEquipos.append("No aplica")
+                tipos.append("Otros")
+
+            
+            resueltoInterno = soporte.resuelto_interno
+            if resueltoInterno == "S":
+                resuelto_internos.append("Si")
+                proveedores.append("No aplica")
+            elif resueltoInterno == None:
+                resuelto_internos.append("No")
+                proveedor = soporte.proveedor
+                proveedores.append(proveedor)
+
+
+        lista = zip(consultaSoportes, solicitantes, nombresEquipos, tipos, resuelto_internos, proveedores)
+
+
+
+        return render(request,"SoportesTecnicos/verSoportes.html", {"estaEnVerSoportes": estaEnVerSoportes, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto, "lista":lista, "proveedores":proveedores})
+    else:
+        return redirect('/login/')
+
+def agregarSoporteEquipoComputo(request):
+    if "idSesion" in request.session:
+        
+        soportes = True
+        estaEnSoporteEquipos = True
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        
+        nombreCompleto = nombre + " " + apellidos
+        
+        foto = fotoAdmin(request)
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+        
+        #Lista de equipos para select
+        infoEquipos = Equipos.objects.filter(activo = "A")
+     
+        
+        empleadosEquipo= []
+        for empleado in infoEquipos:
+            idEmpleado = empleado.id_empleado_id
+            
+            if idEmpleado == None:
+                texto = "Sin propietario"
+                empleadosEquipo.append([texto])
+
+            else:
+                empleados = Empleados.objects.filter(id_empleado = idEmpleado)
+
+                for empleadoEquipo in empleados:
+                    nombre = empleadoEquipo.nombre
+                    apellidos = empleadoEquipo.apellidos
+                    empleadosEquipo.append([nombre,apellidos])
+            
+        lista = zip(infoEquipos, empleadosEquipo)
+
+        #Si se le dio clic al botón
+        if request.method == "POST":
+            equipoProp= request.POST['equipoProp']
+            tabla = request.POST['tabla']
+            operaciones = request.POST.getlist('operacion')
+            observaciones = request.POST['descripcion']
+            proveedor = request.POST['proveedor']
+
+            fecha = datetime.now()
+
+            consultaEquipo = Equipos.objects.filter(id_equipo = equipoProp)
+            for dato in consultaEquipo:
+                idEmpleado = dato.id_empleado_id
+
+            
+            
+            todasOperaciones = ""
+            for operacion in operaciones:
+                todasOperaciones += operacion + " - "
+
+            if proveedor == "":
+                resueltoInterno = "S"
+                registroSoporte = SoportesTecnicos(id_empleado = Empleados.objects.get(id_empleado = idEmpleado), fecha_soporte = fecha, 
+            equipo_soporte = equipoProp, tabla = "Equipos", operacion = todasOperaciones,
+            observaciones = observaciones, resuelto_interno = resueltoInterno, resuelto_proveedor="No aplica")
+            else:
+                resueltoInterno = "N"
+                registroSoporte = SoportesTecnicos(id_empleado = Empleados.objects.get(id_empleado = idEmpleado), fecha_soporte = fecha, 
+            equipo_soporte = equipoProp, tabla = "Equipos", operacion = todasOperaciones,
+            observaciones = observaciones, resuelto_interno = resueltoInterno, resuelto_proveedor = proveedor)
+
+            registroSoporte.save()
+
+            if registroSoporte:
+                soporteGuardado = True
+
+                return render(request,"SoportesTecnicos/agregarSoporteEquipoComputo.html", {"Soportes": soportes,"estaEnSoporteEquipos":estaEnSoporteEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto, "lista":lista, "soporteGuardado":soporteGuardado})
+            
+
+    
+
+        return render(request,"SoportesTecnicos/agregarSoporteEquipoComputo.html", {"Soportes": soportes,"estaEnSoporteEquipos":estaEnSoporteEquipos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto, "lista":lista})
+    else:
+        return redirect('/login/')
+
+def agregarSoporteImpresora(request):
+    if "idSesion" in request.session:
+        
+        soportes = True
+        estaEnSoporteImpresora = True
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        
+        nombreCompleto = nombre + " " + apellidos
+        
+        foto = fotoAdmin(request)
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+
+        infoImpresoras = Impresoras.objects.filter(activo = "A")
+
+        areasImpresora= []
+        for impresora in infoImpresoras:
+            idArea = impresora.id_area_id
+            infoArea = Areas.objects.filter(id_area = idArea)
+
+            for dato in infoArea:
+                nombreArea = dato.nombre
+                areasImpresora.append(nombreArea)
+            
+        lista = zip(infoImpresoras, areasImpresora)
+
+        listaEmpleados = Empleados.objects.filter(activo="A")
+        
+        
+        #Si se le dio clic al botón
+        if request.method == "POST":
+            equipo= request.POST['equipoProp']
+            tabla = request.POST['tabla']
+            operaciones = request.POST.getlist('operacion')
+            observaciones = request.POST['descripcion']
+            solicitante = request.POST['solicitante']
+
+            fecha = datetime.now()
+
+            consultaImpresora = Impresoras.objects.filter(id_impresora = equipo)
+            
+
+            
+            
+            todasOperaciones = ""
+            for operacion in operaciones:
+                todasOperaciones += operacion + " - "
+
+            
+            registroSoporte = SoportesTecnicos(id_empleado = Empleados.objects.get(id_empleado = solicitante), fecha_soporte = fecha, 
+            equipo_soporte = equipo, tabla = "Impresoras", operacion = todasOperaciones,
+            observaciones = observaciones, resuelto_interno = "S", resuelto_proveedor = "No aplica")
+           
+
+            registroSoporte.save()
+
+            if registroSoporte:
+                soporteGuardado = True
+
+                return render(request,"SoportesTecnicos/agregarSoporteImpresora.html", {"Soportes": soportes,"estaEnSoporteImpresora":estaEnSoporteImpresora, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto, "lista":lista, "soporteGuardado":soporteGuardado})
+            
+
+
+        return render(request,"SoportesTecnicos/agregarSoporteImpresora.html", {"Soportes": soportes,"estaEnSoporteImpresoras": estaEnSoporteImpresora, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,
+        "lista":lista, "listaEmpleados":listaEmpleados})
+    else:
+        return redirect('/login/')
+
+def agregarSoporteOtros(request):
+    if "idSesion" in request.session:
+        
+        soportes = True
+        estaEnSoporteOtro = True
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        
+        nombreCompleto = nombre + " " + apellidos
+        
+        foto = fotoAdmin(request)
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+
+        listaEmpleados = Empleados.objects.filter(activo="A")
+
+        #Si se le dio clic al botón
+        if request.method == "POST":
+            empleadoSolicitante= request.POST['idEmpeladoSolicitante']
+           
+            operacion = request.POST[('operacion')]
+            observaciones = request.POST['observaciones']
+
+            fecha = datetime.now()
+
+            registroSoporte = SoportesTecnicos(id_empleado = Empleados.objects.get(id_empleado = empleadoSolicitante), fecha_soporte = fecha, 
+            tabla = "Otros", operacion = operacion,
+            observaciones = observaciones, resuelto_interno = "S")
+            
+            registroSoporte.save()
+
+            if registroSoporte:
+                soporteGuardado = True
+
+                return render(request,"SoportesTecnicos/agregarSoporteOtros.html", {"Soportes": soportes,"estaEnSoporteOtros": estaEnSoporteOtro, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,
+        "listaEmpleados":listaEmpleados, "soporteGuardado":soporteGuardado})
+            
+
+
+        return render(request,"SoportesTecnicos/agregarSoporteOtros.html", {"Soportes": soportes,"estaEnSoporteOtros": estaEnSoporteOtro, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,
+        "listaEmpleados":listaEmpleados})
+    else:
+        return redirect('/login/')
+    
+    
+def verImplementaciones(request):
+    
+    if "idSesion" in request.session:
+
+        implementaciones = True
+        estaEnVerImplementaciones = True
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        
+        nombreCompleto = nombre + " " + apellidos
+        
+        foto = fotoAdmin(request)
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+        
+        listaImplementaciones = ImplementacionSoluciones.objects.all()
+        
+
+        return render(request, "Implementaciones/verImplementaciones.html", {"estaEnVerImplementaciones":estaEnVerImplementaciones,"implementaciones":implementaciones,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti
+                                                       , "foto":foto, "listaImplementaciones":listaImplementaciones})
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+
+
+def agregarImplementacion(request):
+    
+    if "idSesion" in request.session:
+
+        implementaciones = True
+        estaEnAgregarImplementacion = True
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+        foto = fotoAdmin(request)
+        
+        nombreCompleto = nombre + " " + apellidos
+        
+        #Si se da clic a un botón
+        if request.method == "POST":
+            tituloProblema = request.POST['tituloProblema']
+            fechaComienzo = request.POST['fechaComienzo']
+            fcomienzo_separada = fechaComienzo.split("/") #29   06    2018            2018     29   06
+            fcomienzo_normal = fcomienzo_separada[2] + "-" + fcomienzo_separada[0] + "-" + fcomienzo_separada[1]
+
+            fechaFinal = request.POST['fechaFinal']
+            ffinal_separada = fechaComienzo.split("/") #29   06    2018            2018     29   06
+            ffinal_normal = ffinal_separada[2] + "-" + ffinal_separada[0] + "-" + ffinal_separada[1]
+
+            descripcion = request.POST['descripcion']
+
+            nameInput = "solucion"
+            
+            if request.POST.get(nameInput, False): #Checkeado
+                solucionado = "N"
+            elif request.POST.get(nameInput, True): #No checkeado
+                solucionado = "S"
+
+            registroImplementacion = ImplementacionSoluciones(titulo_problema = tituloProblema, descripcion = descripcion,
+            fecha_comienzo = fcomienzo_normal, fecha_terminada = ffinal_normal, resuelto = solucionado, revisado = "N")
+            registroImplementacion.save()
+
+            if registroImplementacion:
+                implementacionGuardada = True
+                    
+                #Mandar correo a Edgar para revisión y firma
+                
+                # Obtener el último id de la implementación.
+
+                strUltimaImplementacion = ImplementacionSoluciones.objects.count()
+                ultimaImplementacion = str(strUltimaImplementacion)
+
+                # Mandar correo
+                correo = "auxiliar.sistemas@customco.com.mx"
+                asunto = "CS | Solicitud de revision de Implementación de Solución"
+                plantilla = "Implementaciones/correoimp.html"
+                html_mensaje = render_to_string(plantilla, {"tituloProblema": tituloProblema, "ultimaImplementacion": ultimaImplementacion, "descripcion":descripcion})
+                email_remitente = settings.EMAIL_HOST_USER
+                email_destino = [correo]
+                mensaje = EmailMessage(asunto, html_mensaje, email_remitente, email_destino)
+                mensaje.content_subtype = 'html'
+                mensaje.send()
+                
+
+                return render(request,"Implementaciones/agregarImplementacion.html", {"estaEnAgregarImplementacion": estaEnAgregarImplementacion,"implementaciones":implementaciones, "id_admin":id_admin,
+                                                           "nombreCompleto":nombreCompleto, "correo":correo, 
+                                                          "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto, "implementacionGuardada":implementacionGuardada})
+            
+        
+
+        return render(request,"Implementaciones/agregarImplementacion.html", {"estaEnAgregarImplementacion": estaEnAgregarImplementacion,"implementaciones":implementaciones, "id_admin":id_admin,
+                                                           "nombreCompleto":nombreCompleto, "correo":correo, 
+                                                          "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+

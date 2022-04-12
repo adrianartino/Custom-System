@@ -1,0 +1,327 @@
+{% extends "Menu/menu.html" %}
+{% load static %}
+
+{% block titulo %}
+Agregar Soporte a Equipo de Cómputo | Custom System
+{% endblock %}
+
+{% block estilos %}
+<!-- Favicon-->
+<link rel="icon" href={% static 'images/icons/ra.ico' %} type="image/x-icon">
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
+    type="text/css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+
+<!-- Bootstrap Core Css -->
+<link href={% static 'panel/plugins/bootstrap/css/bootstrap.css' %} rel="stylesheet">
+
+<!-- Waves Effect Css -->
+<link href={% static 'panel/plugins/node-waves/waves.css' %} rel="stylesheet" />
+
+<!-- Animation Css -->
+<link href={% static 'panel/plugins/animate-css/animate.css' %} rel="stylesheet" />
+
+<!-- Bootstrap Select Css -->
+<link href={% static 'panel/plugins/bootstrap-select/css/bootstrap-select.css' %} rel="stylesheet" />
+
+<!-- Custom Css -->
+<link href={% static 'panel/css/style.css' %} rel="stylesheet">
+
+<!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+<link href={% static 'panel/css/themes/all-themes.css' %} rel="stylesheet" />
+
+{% endblock %}
+
+{% block contenido %}
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h2 style="font-family: 'Oswald', sans-serif;">
+                    AGREGAR SOPORTE A EQUIPO DE CÓMPUTO
+                    <small style="color: #790C05;">Formulario para agregar un nuevo empleado al sistema.</small>
+                </h2>
+
+            </div>
+            <div class="body">
+                <form id="form_validation" action="/agregarSoporteEquipoComputo/" enctype="multipart/form-data" method="POST">{% csrf_token %}
+                    <div class="row clearfix">
+                        <div class="col-md-6" id="divSelectEquipo">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Equipo Soporte realizado:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">computer</i>
+                                </span>
+                                <select class="form-control show-tick" name="equipoProp">
+                                  
+                                    {% for equipoP, empleado in lista %}
+                                    <option value="{{equipoP.id_equipo}}">{{equipoP.marca}} {{equipoP.modelo}}-
+                                        {{empleado.0}} {{empleado.1}}</option>
+                                    {% endfor %}
+
+                                </select>
+                                <input type="hidden" value="Equipos" name="tabla" readonly>
+                            </div>
+                        </div>
+                   
+                        <div class="col-md-6">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Operación:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">build</i>
+                                </span>
+                                <select class="form-control show-tick" name="operacion" multiple>
+                                   
+                                    <option value="Instalación de software" selected>Instalación de software</option>
+                                    <option value="Activación de software">Activación de software</option>
+                                    <option value="Configuración de software">Configuración de software</option>
+                                    <option value="Instalación de hardware">Instalación de hardware</option>
+                                    <option value="Reemplazo de harsware">Reemplazo de hardware</option>
+                                    <option value="Reparación de hardware">Reparación de hardware</option>
+                                    <option value="Respaldo de información">Respaldo de información</option>
+                                  
+                                    
+                                    <option value="Reparación estética">Reparación estética</option>
+                                    <option value="Reinicio/ Restauración / Reconfiguración">Reinicio/ Restauración /
+                                        Reconfiguración</option>
+                                    <option value="Formateo/ Instalación de sistema">Formateo/ Instalación de sistema
+                                    </option>
+                                    <option value="Problemas de conectividad">Problemas de conectividad</option>
+                                    <option value="Asesoria técnica">Asesoria técnica</option>
+                                   
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row clearfix">
+
+                        <div class="col-md-6">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Observaciones:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">rate_review</i>
+                                </span>
+
+                                <div class="form-group form-float">
+                                    <div class="form-line">
+                                        <textarea style="border: 1px;" name="descripcion" cols="30" rows="5"
+                                            maxlength="250" class="form-control no-resize" required></textarea>
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                      
+                            <div class="col-md-6">
+                                <div class="row clearfix">
+                                   
+                                    <div class="col-md-3">
+                                        <label style="font-family: 'Oswald', sans-serif;" id="solInt">Solución interna?</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="switch">
+                                            <label>NO  <input type="checkbox" checked id="checkbox"><span class="lever switch-col-teal"></span>  SI</label>
+                                        </div>
+                                    </div>
+                                 
+                                   
+
+                                </div>
+                                <div class="row clearfix">
+                                    <div class="col-md-8" id="divProveedor">
+                                        <label for="email_address">Proveedor:</label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="material-icons">work</i>
+                                            </span>
+                                            <div class="form-line">
+                                                <input type="text" class="form-control date" placeholder="Ingresar Proveedor"
+                                                    maxlength="50" name="proveedor">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                               
+                             
+                            </div>
+                     
+                     
+                    </div>
+                
+
+
+
+                    <button type="submit"
+                        class="btn btn-warning m-t-15 waves-effect animate__animated animate__flipInX"><i
+                            class="material-icons">build</i> Guardar Soporte</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var ojito = document.getElementById("ojoAbierto");
+    ojito.style.display = "none"
+
+    function mostrar_contraseña() {
+        var x = document.getElementById("password");
+        var y = document.getElementById("ojo");
+        var z = document.getElementById("ojoAbierto");
+        if (x.type === "password") {
+            x.type = "text";
+            y.style.display = "none";
+            z.style.display = "";
+            z.style.color = "red";
+        } else {
+            x.type = "password";
+            z.style.display = "none"
+            z.style.color = "gray"
+            y.style.display = "";
+        }
+    }
+    document.getElementById("correo").addEventListener('keyup', borrarEspacios)
+    document.getElementById("pwd").addEventListener('keyup', borrarEspacios)
+
+    function borrarEspacios(e) {
+        let contenido = e.target.value;
+        e.target.value = contenido.replace(" ", "");
+    }
+</script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+{% if soporteGuardado %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Enhorabuena..!',
+        text: ' Soporte guardado satisfactoriamente!',
+        footer: '<span style="color: green!important"> Sigue navegando por Custom System! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
+
+
+{% endblock %}
+
+{% block estilosJs %}
+<script>
+    function soloLetras(e) {
+        key = e.keyCode || e.which;
+        tecla = String.fromCharCode(key).toLowerCase();
+        letras = " áéíóúabcdefghijklmnñopqrstuvwxyzñ";
+        especiales = "8-37-39-46";
+
+        tecla_especial = false
+        for (var i in especiales) {
+            if (key == especiales[i]) {
+                tecla_especial = true;
+                break;
+            }
+        }
+
+        if (letras.indexOf(tecla) == -1 && !tecla_especial) {
+            return false;
+        }
+    }
+
+    function validaNumericos(event) {
+        if (event.charCode >= 48 && event.charCode <= 57) {
+            return true;
+        }
+        return false;
+    }
+    window.onload = function(){
+        var tituloInterna = document.getElementById('solInt');
+        var divProveedor = document.getElementById('divProveedor');
+        var tituloExterna = document.getElementById("solExt");
+      
+
+        tituloInterna.style.color = "#32B63E";
+        divProveedor.style.display = "none";
+
+        var checkbox = document.getElementById('checkbox');
+        checkbox.addEventListener("change", validarCheckBox, false);
+
+        function validarCheckBox(){
+            var estadoCheckeado = checkbox.checked;
+            if(estadoCheckeado){
+                tituloInterna.style.color = "#32B63E";
+                divProveedor.style.display = "none";
+                tituloExterna.style.color = "#99A3A4 ";
+               
+            }else{
+                tituloInterna.style.color = "#99A3A4";
+                divProveedor.style.display = "block";
+                tituloExterna.style.color = "#32B63E ";
+                
+            }
+        }
+
+
+
+    }
+
+    
+</script>
+
+<!-- Jquery Core Js -->
+<script src={% static 'panel/plugins/jquery/jquery.min.js' %}></script>
+
+<!-- Bootstrap Core Js -->
+<script src={% static 'panel/plugins/bootstrap/js/bootstrap.js' %}></script>
+
+<!-- Select Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-select/js/bootstrap-select.js' %}></script>
+
+<!-- Slimscroll Plugin Js -->
+<script src={% static 'panel/plugins/jquery-slimscroll/jquery.slimscroll.js' %}></script>
+
+<!-- Bootstrap Colorpicker Js -->
+<script src={% static 'panel/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js' %}></script>
+
+<!-- Dropzone Plugin Js -->
+<script src={% static 'panel/plugins/dropzone/dropzone.js' %}></script>
+
+<!-- Input Mask Plugin Js -->
+<script src={% static 'panel/plugins/jquery-inputmask/jquery.inputmask.bundle.js' %}></script>
+
+<!-- Multi Select Plugin Js -->
+<script src={% static 'panel/plugins/multi-select/js/jquery.multi-select.js' %}></script>
+
+<!-- Jquery Spinner Plugin Js -->
+<script src={% static 'panel/plugins/jquery-spinner/js/jquery.spinner.js' %}></script>
+
+<!-- Bootstrap Tags Input Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js' %}></script>
+
+<!-- noUISlider Plugin Js -->
+<script src={% static 'panel/plugins/nouislider/nouislider.js' %}></script>
+
+<!-- Waves Effect Plugin Js -->
+<script src={% static 'panel/plugins/node-waves/waves.js' %}></script>
+
+<!-- Jquery DataTable Plugin Js -->
+<script src={% static 'panel/plugins/jquery-datatable/jquery.dataTables.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.flash.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/jszip.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/pdfmake.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/vfs_fonts.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.html5.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.print.min.js' %}></script>
+
+<!-- Custom Js -->
+<script src={% static 'panel/js/admin.js' %}></script>
+<script src={% static 'panel/js/pages/tables/jquery-datatable.js' %}></script>
+<script src={% static 'panel/js/pages/forms/advanced-form-elements.js' %}></script>
+
+<!-- Demo Js -->
+<script src={% static 'panel/js/demo.js' %}></script>
+
+{% endblock %}

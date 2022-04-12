@@ -41,8 +41,8 @@ Departamentos | Custom System
         <div class="card">
             <div class="header">
                 <h2 style="font-family: 'Oswald', sans-serif;">
-                    MANTENIMIENTOS CUSTOM & CO
-                    <small style="color: #790C05;">Vista de listado de mantenimientos realizados a los equipos de la empresa.</small>
+                    SOPORTES TÉCNICOS
+                    <small style="color: #790C05;">Vista de listado de soportes técnicos.</small>
                 </h2>
                 <br>
 
@@ -69,7 +69,7 @@ Departamentos | Custom System
                     </div>
                     <div class="col-xs-12 col-sm-4">
                         <a class="label bg-blue-grey" style="font-size:small; " href="/agregarAreas/">Agregar
-                            Mantenimiento</a>
+                            Soporte Técnico</a>
                     </div>
 
                 </div>
@@ -81,42 +81,48 @@ Departamentos | Custom System
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable ">
                         <thead>
                             <tr style="background-color: #fad60e; color: black;">
-                                <th>Nombre del propietario:</th>
-                                <th>Equipo:</th>
+                                <th>Nombre del solicitante:</th>
+                                <th>Fecha de Soporte</th>
+                                <th>Equipo Soporte</th>
+                                <th>Tipo</th>
                                 <th>Operación</th>
                                 <th>Observaciones</th>
-                                <th>Última limpieza:</th>
-                                <th>Fecha próxima:</th>
+                                <th>Resuelto internamente:</th>
+                                <th>Resuelto con proveedor externo:</th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
-                                <th>Nombre del propietario:</th>
-                                <th>Equipo:</th>
+                                <th>Nombre del solicitante:</th>
+                                <th>Fecha de Soporte</th>
+                                <th>Equipo Soporte</th>
+                                <th>Tipo</th>
                                 <th>Operación</th>
                                 <th>Observaciones</th>
-                                <th>Última limpieza:</th>
-                                <th>Fecha próxima:</th>
+                                <th>Resuelto internamente:</th>
+                                <th>Resuelto con proveedor externo:</th>
                             </tr>
                         </tfoot>
                         <tbody class="animate__animated animate__backInDown">
-                            {% for fecha, equipoProp, fechaproxima in lista %}
+                            {% for consulta, solicitante, nombreEquipo, tipos, resueltoInterno, proveedor in lista %}
                             <tr>
-                                <th>{{equipoProp.0}} {{equipoProp.1}}</th>
-                                <th>{{equipoProp.2}} {{equipoProp.3}}</th>
-                                <th>{{fecha.operacion}}</th>
-                                <th>{{fecha.observaciones}}</th>
-                                <th>{{fecha.fecha}}</th>
-                                {% if fechaproxima == "" %}
-                                <th>No se realizó limpieza</th>
-                                {% else %}
-                                <th>
-                                    <button type="button" class="btn bg-pink waves-effect">
-                                        <i class="material-icons">date_range</i>
-                                        <span>{{fechaproxima}}</span>
-                                    </button>
-                                </th>
+                                <th>{{solicitante}}</th>
+                                <th>{{consulta.fecha_soporte}}</th>
+                                <th>{{nombreEquipo}}</th>
+
+                                {% if tipos == "Equipo de computo" %}
+                                <th><span class="label bg-amber">{{tipos}}</span></th>
+                                {% elif tipos == "Impresoras" %}
+                                <th><span class="label bg-green">{{tipos}}</span></th>
+                                {% elif tipos == "Otros" %}
+                                <th><span class="label bg-teal">{{tipos}}</span></th>
                                 {% endif %}
+                                
+                                <th>{{consulta.operacion}}</th>
+                                <th>{{consulta.observaciones}}</th>
+                                <th>{{resueltoInterno}}</th>
+                                <th>{{proveedor}}</th>
+                                
                             </tr>
                             {% endfor %}
 

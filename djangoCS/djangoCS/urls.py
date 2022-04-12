@@ -188,6 +188,19 @@ urlpatterns = [
     path("agregarHerramientasALM/",almacen.agregarHerramientasALM),
     path("solicitarHerramientas/",almacen.solicitarHerramientas),
     path("verMisPrestamos/",almacen.verMisPrestamos),
+    
+    #soportes tecnicos
+    path("verSoportes/",views.verSoportes),
+    path("agregarSoporteEquipoComputo/",views.agregarSoporteEquipoComputo),
+    path("agregarSoporteImpresora/",views.agregarSoporteImpresora),
+    path("agregarSoporteOtros/",views.agregarSoporteOtros),
+    
+    #Implementacion de soluciones
+    path("verImplementaciones/", views.verImplementaciones),
+    path("agregarImplementacion/", views.agregarImplementacion),
+    
+    path("implementacionesSistemas/", viewEmpleados.implementacionesSistemas),
+    path("revisarImplementacion/", viewEmpleados.revisarImplementacion),
 
 
 ]
