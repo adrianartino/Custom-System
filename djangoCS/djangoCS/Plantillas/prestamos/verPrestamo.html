@@ -369,9 +369,14 @@ Equipos | Custom System
                                         
 
                                         <center>
-                                            <button type="button" class="btn bg-green waves-effect" data-toggle="modal" data-target="#{{prestamo.id_prestamo}}">
-                                                <i class="material-icons">update</i>
-                                            </button>
+                                            <form action="/firmarPrestamoDevolucion/" method="POST"> {% csrf_token %}
+                                                <input type="hidden" name="idPrestamoAFirmar" value="{{prestamo.id_prestamo}}">
+                                                <button type="submit" class="btn bg-green waves-effect" >
+                                                    <i class="material-icons">update</i>
+                                                </button>
+                                            </form>
+
+                                            
                                         </center>
                                         <br>
                              

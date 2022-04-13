@@ -34,6 +34,8 @@ Empleados | Custom System
 
 <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
 <link href={% static 'panel/css/themes/all-themes.css' %} rel="stylesheet" />
+
+
 {% endblock %}
 
 {% block contenido %}
@@ -43,35 +45,23 @@ Empleados | Custom System
             <div class="header">
                 <h2 style="font-family: 'Oswald', sans-serif;">
                     IMPLEMENTACION DE SOLUCIONES CUSTOM & CO
-                    <small style="color: #790C05;">Vista de listado de implementaciones de la empresa.</small>
+                    <small style="color: #790C05;">Vista de listado de implementacion de soluciones del departamento de Sistemas de la empresa.</small>
                 </h2>
                 <br>
 
                 <div class="row clear-fix">
+                    
                     <div class="col-xs-12 col-sm-1">
-                        <form action="/reporteDepartamentos/" method="POST">{% csrf_token %}
-                            <button type="submit" class="btn bg-red waves-effect animate__animated animate__flipInX"
-                                data-toggle="tooltip" data-placement="bottom"
-                                title="Descargar reporte Departamentos en PDF.">
-                                <i class="material-icons">picture_as_pdf</i>
-                                <span>PDF</span>
-                            </button>
-                        </form>
-                    </div>
-                    <div class="col-xs-12 col-sm-1">
-                        <form action="/xlDepartamentos/" method="POST">{% csrf_token %}
+                        <form action="/excelImplementacion/" method="POST">{% csrf_token %}
                             <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
                                 data-toggle="tooltip" data-placement="bottom"
-                                title="Descargar reporte Departamentos en Excel.">
+                                title="Descargar reporte implementación de soluciones en Excel.">
                                 <i class="material-icons">grid_on</i>
                                 <span>Excel</span>
                             </button>
                         </form>
                     </div>
-                    <div class="col-xs-12 col-sm-4">
-                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarAreas/">Agregar
-                            Departamento</a>
-                    </div>
+                    
 
                 </div>
 
@@ -91,7 +81,7 @@ Empleados | Custom System
                                 <th>Revisado</th>
                                 <th>Firma de dirección</th>
                                 <th>Comentarios de dirección</th>
-                                <th>Autorizar</th>
+                                <th>Revisar</th>
                               
                             </tr>
                         </thead>
@@ -106,7 +96,7 @@ Empleados | Custom System
                                 <th>Revisado</th>
                                 <th>Firma de dirección</th>
                                 <th>Comentarios de dirección</th>
-                                <th>Autorizar</th>
+                                <th>Revisar</th>
                              
                             </tr>
                         </tfoot>
@@ -147,29 +137,23 @@ Empleados | Custom System
                                 {% else %}
                                 <td>{{impl.comentarios_direccion}}</td>
                                 {% endif %}
-                                <form action="/revisarImplementacion/" method="POST">{% csrf_token %}
-                                    <th>
-                                        <input type="hidden" name="idImplementacionEditar" value="{{impl.id_implementacion}}">
-                                        <center>
-                                            <button type="submit" class="btn btn-warning waves-effect">
-                                                <i class="material-icons">edit</i>
-                                            </button>
-                                        </center>
 
-                                    </th>
-                                </form>
+                                {% if impl.revisado == "S" %}
+                                <td> <span class="label bg-green">Ya ha sido revisado</span> </td>
+                                {% else %}
+                                <td>
+                                    <form action="/revisarImplementacion/" method="POST" > {% csrf_token %}
+                                        <input type="hidden" value="{{impl.id_implementacion}}" name="idImplemenatcionARevisar">
+                                        <button type="submit" class="btn btn-warning waves-effect" data-toggle="modal"
+                                        data-target="#{{impl.id_implementacion}}">
+                                        <i class="material-icons">edit</i>
+                                    </button>
+                                    </form>
+                                </td>
+                                {% endif %}
                                 
-        
-                                
-
-                              
-                            
                             </tr>
-                            
                             {% endfor %}
-
-
-
                         </tbody>
                     </table>
                 </div>
@@ -177,7 +161,24 @@ Empleados | Custom System
             </div>
         </div>
     </div>
+    
 </div>
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+{% if firmaGuardada %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Enhorabuena..!',
+        text: ' La implementación ha sido revisada satisfactoriamente!',
+        footer: '<span style="color: green!important"> Sigue navegando por Custom System! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
+
+
+
 {% endblock %}
 
 {% block estilosJs %}

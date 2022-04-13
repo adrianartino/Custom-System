@@ -35,18 +35,12 @@
 <link href={% static 'panel/css/themes/all-themes.css' %} rel="stylesheet" />
 
 <link href={% static 'css/firma.css' %} rel="stylesheet" />
-<style>
-    canvas {
-        width: 500px;
-        height: 300px;
-        background-color: #faf6f6;
-    }
-</style>
+
 {% endblock %}
 
 {% block contenido %}
 <div class="row clearfix">
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div >
         <div class="card">
             <div class="header">
                 <h2>
@@ -360,89 +354,71 @@
                         </div>
                     </div>
                 </div>
-                <center>
-                    <h2>Fecha: {{fecha}}</h2>
-                    <img src="{% static 'images/qr4.png' %}" width="10%" alt="qr">
-                    {% if imagen2 %}
-                    <img src="{{imagen.url}}" alt="firma">
-
-
-                    {% else %}
-
-                    <h2>Ingresar Firma Electrónica</h2>
-
-                    <label for=""></label>
-                    <div class="contenedor">
-
-                        <div class="row">
-                            <div class="col-md-12">
-                                <canvas id="draw-canvas" width="620" height="360">
-                                    No tienes un buen navegador.
-                                </canvas>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <input type="button" class="button" id="draw-submitBtn" value="Crear Imagen"></input>
-                                <input type="button" class="button" id="draw-clearBtn" value="Borrar Canvas"></input>
-
-                                <label>Color</label>
-                                <input type="color" id="color">
-                                <div>
-                                    <br>
-                                    <label>Tamaño Puntero</label>
-                                    <input type="range" id="puntero" min="1" default="1" max="5" width="10%">
-                                </div>
-
-
-
-                            </div>
-
-                        </div>
-
-                        <br />
-                        <div class="row">
-                            <div class="col-md-12">
-                                <textarea id="draw-dataUrl" class="form-control"
-                                    rows="5">Para los que saben que es esto:</textarea>
-                            </div>
-                        </div>
-                        <br />
-                        <div class="contenedor">
-                            <div class="col-md-12">
-                                <img id="draw-image" src="" alt="Tu Imagen aparecera Aqui!" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div>
-
-                        <br><br>
-                        <form action="/guardarImagen/" method="POST" id="form1">{% csrf_token %}
-                            <input type="hidden" name="canvasData" id="my_hidden">
-                            {% for equipo in datosEquipo %}
-                            <input type="hidden" name="idEquipo" value="{{equipo.id_equipo}}">
-                            {% endfor %}
-                            {% for empleados in datosEmpleado %}
-                            <input type="hidden" name="idEmpleado" value="{{empleados.id_empleado}}">
-                            {% endfor %}
-                            <button type="submit" class="btn btn-success m-t-15 waves-effect" onclick="save()"><i
-                                    class="material-icons">save</i> Guardar</button>
-
-
-                        </form>
-                    </div>
-                    {% endif %}
-
-
-                </center>
-
+                
 
 
             </div>
         </div>
+        <center>
+            
+
+            <div style="background-color: #fff; background-clip: border-box;
+                border: 1px solid rgba(0, 0, 0, 0.125);
+                border-radius: 0.25rem;">
+                <div class="row clearfix" > 
+                    <center>
+                        <h2>Fecha: {{fecha}}</h2>
+                        <img src="{% static 'images/qr4.png' %}" width="10%" alt="qr">
+                        {% if imagen2 %}
+                        <img src="{{imagen.url}}" alt="firma">
+
+
+                        {% else %}
+                        <h2>Ingresar Condiciones</h2>
+                        <div class="row clearfix">
+                            <div class="col-md-3">
+
+                            </div>
+                            <div class="col-md-6">
+                                <textarea style="border: 1px; border-color:black!important;" name="condiciones" cols="30" rows="5"
+                                                maxlength="400" class="form-control no-resize" required></textarea>
+                            </div>
+                            <div class="col-md-3">
+
+                            </div>
+                        </div>
+                        
+                        <h2>Ingresar Firma de entrega</h2>
+                        <h4>Se solicita integrar una firma de entrega para su historial.</h4>
+                    </center>
+                </div>
+                <br>
+                <center>    
+                    
+                    
+                    <div class="row clearfix">
+                        <button type="button"  onclick="limpiar()"
+                        class="btn btn-success m-t-15 waves-effect animate__animated animate__flipInX">
+                        <i class="material-icons">delete_sweep</i> Limpiar firma</button>
+                        <input type="hidden" name="canvasData" id="my_hidden">
+                    </div>
+                    <div clas="row clearfix">   
+                        <button type="submit"  onclick="save()"
+                        class="btn btn-warning m-t-15 waves-effect animate__animated animate__flipInX">
+                        <i class="material-icons">assignment_turned_in</i> Relizar entrega de préstamo</button>
+                    <div>
+                    <br>
+                </center>
+            
+        
+                {% endif %}
+
+
+        </center>
+            
     </div>
 </div>
+<canvas id="sheet" width="400" height="250" style="border: 1px solid black"></canvas>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 {% if imagen2 %}
@@ -458,164 +434,50 @@
 {% endif %}
 
 <script>
+    
+
+    var canvas = document.getElementById('sheet'), g = canvas.getContext("2d");
+    g.strokeStyle = "hsl(208, 100%, 43%)";
+    g.lineJoin = "round";
+    g.lineWidth = 1;
+    g.filter = "blur(1px)";
+
+    const
+    relPos = pt => [pt.pageX - canvas.offsetLeft, pt.pageY - canvas.offsetTop],
+    drawStart = pt => { with(g) { beginPath(); moveTo.apply(g, pt); stroke(); }},
+    drawMove = pt => { with(g) { lineTo.apply(g, pt); stroke(); }},
+
+    pointerDown = e => drawStart(relPos(e.touches ? e.touches[0] : e)),
+    pointerMove = e => drawMove(relPos(e.touches ? e.touches[0] : e)),
+
+    draw = (method, move, stop) => e => {
+        if(method=="add") pointerDown(e);
+        canvas[method+"EventListener"](move, pointerMove);
+        canvas[method+"EventListener"](stop, g.closePath);
+    };
+
+    canvas.addEventListener("mousedown", draw("add","mousemove","mouseup"));
+    canvas.addEventListener("touchstart", draw("add","touchmove","touchend"));
+    canvas.addEventListener("mouseup", draw("remove","mousemove","mouseup"));
+    canvas.addEventListener("touchend", draw("remove","touchmove","touchend"));
+
+    function limpiar(){
+        g.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
     function save() {
-        var canvas = document.getElementById('draw-canvas');
+        var canvas = document.getElementById('sheet');
         var inputVacio = document.getElementById('my_hidden');
         inputVacio.value = canvas.toDataURL();
         document.forms["form1"].submit();
     }
 
-    (function () { // Comenzamos una funcion auto-ejecutable
+    
 
-        // Obtenenemos un intervalo regular(Tiempo) en la pamtalla
-        window.requestAnimFrame = (function (callback) {
-            return window.requestAnimationFrame ||
-                window.webkitRequestAnimationFrame ||
-                window.mozRequestAnimationFrame ||
-                window.oRequestAnimationFrame ||
-                window.msRequestAnimaitonFrame ||
-                function (callback) {
-                    window.setTimeout(callback, 1000 / 60);
-                    // Retrasa la ejecucion de la funcion para mejorar la experiencia
-                };
-        })();
-
-        // Traemos el canvas mediante el id del elemento html
-        var canvas = document.getElementById("draw-canvas");
-        var ctx = canvas.getContext("2d");
-
-
-        // Mandamos llamar a los Elemetos interactivos de la Interfaz HTML
-        var drawText = document.getElementById("draw-dataUrl");
-        var drawImage = document.getElementById("draw-image");
-        var clearBtn = document.getElementById("draw-clearBtn");
-        var submitBtn = document.getElementById("draw-submitBtn");
-        clearBtn.addEventListener("click", function (e) {
-            // Definimos que pasa cuando el boton draw-clearBtn es pulsado
-            clearCanvas();
-            drawImage.setAttribute("src", "");
-        }, false);
-        // Definimos que pasa cuando el boton draw-submitBtn es pulsado
-        submitBtn.addEventListener("click", function (e) {
-            var dataUrl = canvas.toDataURL();
-            drawText.innerHTML = dataUrl;
-            drawImage.setAttribute("src", dataUrl);
-        }, false);
-
-        // Activamos MouseEvent para nuestra pagina
-        var drawing = false;
-        var mousePos = {
-            x: 0,
-            y: 0
-        };
-        var lastPos = mousePos;
-        canvas.addEventListener("mousedown", function (e) {
-            /*
-              Mas alla de solo llamar a una funcion, usamos function (e){...}
-              para mas versatilidad cuando ocurre un evento
-            */
-            var tint = document.getElementById("color");
-            var punta = document.getElementById("puntero");
-            console.log(e);
-            drawing = true;
-            lastPos = getMousePos(canvas, e);
-        }, false);
-        canvas.addEventListener("mouseup", function (e) {
-            drawing = false;
-        }, false);
-        canvas.addEventListener("mousemove", function (e) {
-            mousePos = getMousePos(canvas, e);
-        }, false);
-
-        // Activamos touchEvent para nuestra pagina
-        canvas.addEventListener("touchstart", function (e) {
-            mousePos = getTouchPos(canvas, e);
-            console.log(mousePos);
-            e.preventDefault(); // Prevent scrolling when touching the canvas
-            var touch = e.touches[0];
-            var mouseEvent = new MouseEvent("mousedown", {
-                clientX: touch.clientX,
-                clientY: touch.clientY
-            });
-            canvas.dispatchEvent(mouseEvent);
-        }, false);
-        canvas.addEventListener("touchend", function (e) {
-            e.preventDefault(); // Prevent scrolling when touching the canvas
-            var mouseEvent = new MouseEvent("mouseup", {});
-            canvas.dispatchEvent(mouseEvent);
-        }, false);
-        canvas.addEventListener("touchleave", function (e) {
-            // Realiza el mismo proceso que touchend en caso de que el dedo se deslice fuera del canvas
-            e.preventDefault(); // Prevent scrolling when touching the canvas
-            var mouseEvent = new MouseEvent("mouseup", {});
-            canvas.dispatchEvent(mouseEvent);
-        }, false);
-        canvas.addEventListener("touchmove", function (e) {
-            e.preventDefault(); // Prevent scrolling when touching the canvas
-            var touch = e.touches[0];
-            var mouseEvent = new MouseEvent("mousemove", {
-                clientX: touch.clientX,
-                clientY: touch.clientY
-            });
-            canvas.dispatchEvent(mouseEvent);
-        }, false);
-
-        // Get the position of the mouse relative to the canvas
-        function getMousePos(canvasDom, mouseEvent) {
-            var rect = canvasDom.getBoundingClientRect();
-            /*
-              Devuelve el tamaño de un elemento y su posición relativa respecto
-              a la ventana de visualización (viewport).
-            */
-            return {
-                x: mouseEvent.clientX - rect.left,
-                y: mouseEvent.clientY - rect.top
-            };
-        }
-
-        // Get the position of a touch relative to the canvas
-        function getTouchPos(canvasDom, touchEvent) {
-            var rect = canvasDom.getBoundingClientRect();
-            console.log(touchEvent);
-            /*
-              Devuelve el tamaño de un elemento y su posición relativa respecto
-              a la ventana de visualización (viewport).
-            */
-            return {
-                x: touchEvent.touches[0].clientX - rect.left, // Popiedad de todo evento Touch
-                y: touchEvent.touches[0].clientY - rect.top
-            };
-        }
-
-        // Draw to the canvas
-        function renderCanvas() {
-            if (drawing) {
-                var tint = document.getElementById("color");
-                var punta = document.getElementById("puntero");
-                ctx.strokeStyle = tint.value;
-                ctx.beginPath();
-                ctx.moveTo(lastPos.x, lastPos.y);
-                ctx.lineTo(mousePos.x, mousePos.y);
-                console.log(punta.value);
-                ctx.lineWidth = punta.value;
-                ctx.stroke();
-                ctx.closePath();
-                lastPos = mousePos;
-            }
-        }
-
-        function clearCanvas() {
-            canvas.width = canvas.width;
-        }
-
-        // Allow for animation
-        (function drawLoop() {
-            requestAnimFrame(drawLoop);
-            renderCanvas();
-        })();
-
-    })();
 </script>
+
+
+
 {% endblock %}
 
 {% block estilosJs %}

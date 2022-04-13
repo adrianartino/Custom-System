@@ -1,8 +1,8 @@
-{% extends "empleadosCustom/menu/menu.html" %}
+{% extends "Menu/menu.html" %}
 {% load static %}
 
 {% block titulo %}
-Revisar implementación
+Firma Entrega Préstamo
 {% endblock %}
 
 {% block estilos %}
@@ -38,11 +38,11 @@ Revisar implementación
 {% block contenido %}
 <div class="row clearfix">
     <div >
-        <form action="/firmarImplementacion/" enctype="multipart/form-data" method="POST">{% csrf_token %}
+        <form action="/actualizarPrestamos/" enctype="multipart/form-data" method="POST">{% csrf_token %}
         <div class="card">
             <div class="header">
                 <h2 style="font-family: 'Oswald', sans-serif;">
-                    REVISIÓN DE IMPLEMENTACIÓN DE SOLUCIONES.
+                    FIRMA DE ENTREGA DE PRESTAMO 
                     <small style="color: #790C05;">Información a revisrar sobre la implemntación de solución realizada por el departamento de Sistemas.</small>
                 </h2>
                 <ul class="header-dropdown m-r--5">
@@ -63,44 +63,41 @@ Revisar implementación
             <div class="body" id="divActivos">
                 
                 
-                    {% for datoImplementacion in datosImplementacion %}
+                    {% for dato in infoPrestamo %}
                     <center>
                         <h1 style="color: black;"> <span style="font-size: 120%;">
 
                                 <i class="material-icons" style="color: rgb(158, 154, 154); font-size: 120%;">build</i>
 
-                    </span>Implementación de solución #{{datoImplementacion.id_implementacion}}</h1>
-                        <h1 style=" color: black;">{{datoImplementacion.titulo_problema}}</h1>
-                        <img src="{% static 'images/custom-png.png' %}" width="15%" alt="lap">
+                    </span>Entrega de Prestamo #{{dato.id_prestamo}}</h1>
+                        <h1 style=" color: black;">{{nombreEquipo}}</h1>
+                        <img src="{{imagen.url}}" width="15%" alt="lap">
 
                         <h3>{{datoImplementacion.descripcion}}</h3>
-                        <h2 style="color: black;">Realizado por: Departamento de sistemas</h2>
+                        <h2 style="color: black;">Prestado a: {{nombreCompletoEmpleado}}</h2>
+                        <h2 style="color: black;">Departamento <span class="{{colorDepartamento}}">{{nombreDepartamento}}</span></h2>
                     </center>
                     <div class="row clearfix">
                         <div class="col-md-6">
                             <center>
-                                <h2 style="color: black;">Fecha de inicio</h2>
+                                <h2 style="color: black;">Fecha de préstamo</h2>
                                 <span style="font-size: 200%;">
                                     <i class="material-icons"
                                         style="color: rgb(42, 141, 17); font-size: 200%;">date_range</i>
 
                                 </span>
-                                <h3 style="color: black;">{{datoImplementacion.fecha_comienzo}}</h3>
+                                <h3 style="color: black;">{{dato.fecha_prestamo}}</h3>
                             </center>
                         </div>
                         <div class="col-md-6">
                             <center>
-                                <h2 style="color: black;">Fecha de solución</h2>
-                                <span style="font-size: 200%;">
-                                    <i class="material-icons"
-                                        style="color: rgb(41, 57, 201);  font-size: 200%;">date_range</i>
-                                </span>
-                                <h3 style="color: black;">{{datoImplementacion.fecha_terminada}}</h3>
+                                <h2 style="color: black;">Firma de Préstamo</h2>
+                                <img src="{{dato.firma_entrega.url}}" width="30%" alt="lap">
                             </center>
                         </div>
                     </div> 
                     
-                    <input type="hidden" name="idImplementacionAFirmar" value="{{datoImplementacion.id_implementacion}}">   
+                    <input type="hidden" name="idPrestamoGuardarFirma" value="{{dato.id_prestamo}}">   
                     {% endfor %}
             </div>
 
@@ -109,45 +106,45 @@ Revisar implementación
             <div style="background-color: #fff; background-clip: border-box;
                 border: 1px solid rgba(0, 0, 0, 0.125);
                 border-radius: 0.25rem;">
-            <div class="row clearfix" > 
-                <center>
-                    <h2>Ingresar Comentario <span class="label bg-blue">(opcional)</span> </h2>
-                    <div class="row clearfix">
-                        <div class="col-md-3">
+                <div class="row clearfix" > 
+                    <center>
+                        <h2>Ingresar Condiciones</h2>
+                        <div class="row clearfix">
+                            <div class="col-md-3">
 
-                        </div>
-                        <div class="col-md-6">
-                            <textarea style="border: 1px; border-color:black!important;" name="comentarios" cols="30" rows="5"
-                                            maxlength="400" class="form-control no-resize"></textarea>
-                        </div>
-                        <div class="col-md-3">
+                            </div>
+                            <div class="col-md-6">
+                                <textarea style="border: 1px; border-color:black!important;" name="condiciones" cols="30" rows="5"
+                                                maxlength="400" class="form-control no-resize" required></textarea>
+                            </div>
+                            <div class="col-md-3">
 
+                            </div>
                         </div>
-                    </div>
-                    
-                    <h2>Ingresar Firma Electrónica</h2>
-                    <h4>Se solicita integrar una firma de revisado por parte de dirección.</h4>
-                </center>
-            </div>
-            <br>
-            <center>    
-                
-                <canvas id="sheet" width="400" height="250" style="border: 1px solid black"></canvas>
-                <div class="row clearfix">
-                    <button type="button"  onclick="limpiar()"
-                    class="btn btn-success m-t-15 waves-effect animate__animated animate__flipInX">
-                    <i class="material-icons">delete_sweep</i> Limpiar firma</button>
-                    <input type="hidden" name="canvasData" id="my_hidden">
+                        
+                        <h2>Ingresar Firma de entrega</h2>
+                        <h4>Se solicita integrar una firma de entrega para su historial.</h4>
+                    </center>
                 </div>
-                <div clas="row clearfix">   
-                    <button type="submit"  onclick="save()"
-                    class="btn btn-warning m-t-15 waves-effect animate__animated animate__flipInX">
-                    <i class="material-icons">assignment_turned_in</i> Realizar Préstamo</button>
-                <div>
                 <br>
-            </center>
+                <center>    
+                    
+                    <canvas id="sheet" width="400" height="250" style="border: 1px solid black"></canvas>
+                    <div class="row clearfix">
+                        <button type="button"  onclick="limpiar()"
+                        class="btn btn-success m-t-15 waves-effect animate__animated animate__flipInX">
+                        <i class="material-icons">delete_sweep</i> Limpiar firma</button>
+                        <input type="hidden" name="canvasData" id="my_hidden">
+                    </div>
+                    <div clas="row clearfix">   
+                        <button type="submit"  onclick="save()"
+                        class="btn btn-warning m-t-15 waves-effect animate__animated animate__flipInX">
+                        <i class="material-icons">assignment_turned_in</i> Relizar entrega de préstamo</button>
+                    <div>
+                    <br>
+                </center>
             
-        </div>
+            </div>
         </form>
         
     </div>

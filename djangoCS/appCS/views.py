@@ -2323,7 +2323,7 @@ def agregarCarta(request):
         areas=[]
         
         
-        compusInactivas = Equipos.objects.filter(id_empleado__isnull=True, estado="Funcional")
+        compusInactivas = Equipos.objects.filter(id_empleado__isnull=True, estado="Funcional", activo = "I")
         
         for empleado in empledos:
             idarea= int(empleado.id_area_id)
@@ -3499,7 +3499,7 @@ def bajaEquipo(request):
             
             equipo = marca + " " + modelo
             
-            actualizacion = Equipos.objects.filter(id_equipo = idBaja).update(activo = "I")
+            actualizacion = Equipos.objects.filter(id_equipo = idBaja).update(activo = "I", id_empleado_id = None)
             
             if actualizacion:
                 
@@ -11088,6 +11088,8 @@ def agregarPrestamos(request):
         
         #USB
         memoriasUsb = MemoriasUSB.objects.all()
+
+        fecha = datetime.now()
         
         #Clic en botón Realizar préstamo.
         if request.method == "POST":
@@ -11150,7 +11152,7 @@ def agregarPrestamos(request):
             
             return render(request, "prestamos/agregarPrestamo.html", {"estaEnAgregarPrestamo":estaEnAgregarPrestamo,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,
             "empleados": empleados, "impresoras":impresoras, "computadoras":computadoras, "discosDuros":discosDuros, 
-            "monitores":monitores, "teclados":teclados, "mouses":mouses, "telefonos":telefonos, "memoriasUsb":memoriasUsb, "prestamo": prestamo, "texto": texto})
+            "monitores":monitores, "teclados":teclados, "mouses":mouses, "telefonos":telefonos, "memoriasUsb":memoriasUsb, "prestamo": prestamo, "texto": texto, "fecha":fecha})
             
             
             
@@ -11161,7 +11163,7 @@ def agregarPrestamos(request):
     
         return render(request, "prestamos/agregarPrestamo.html", {"estaEnAgregarPrestamo":estaEnAgregarPrestamo,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,
         "empleados": empleados, "impresoras":impresoras, "computadoras":computadoras, "discosDuros":discosDuros, 
-        "monitores":monitores, "teclados":teclados, "mouses":mouses, "telefonos":telefonos, "memoriasUsb":memoriasUsb})
+        "monitores":monitores, "teclados":teclados, "mouses":mouses, "telefonos":telefonos, "memoriasUsb":memoriasUsb, "fecha":fecha})
     else:
         return redirect ('/login/')
 
@@ -11692,34 +11694,182 @@ def verPrestamos(request):
     else:
         return redirect('/login/') #redirecciona a url de inicio
 
+def firmarPrestamoDevolucion(request):
+
+    if "idSesion" in request.session:
+
+        estaEnVerPrestamos = True
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        nombreCompleto = nombre + " " + apellidos
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+        foto = fotoAdmin(request)
+
+        if request.method == "POST":
+
+            idPrestamo = request.POST['idPrestamoAFirmar']
+
+            infoPrestamo = PrestamosSistemas.objects.filter(id_prestamo = idPrestamo)
+            
+            
+            nombreDepartamento = ""
+            colorDepartamento = ""
+            nombreCompletoEmpleado = ""
+            nombreEquipo = ""
+            imagenEquipo = ""
+
+            for dato in infoPrestamo:
+                tabla = dato.tabla
+                idequipoPrestamo = dato.id_producto
+
+                if tabla == "otro":
+                    nombreEquipo = dato.otro
+                    imagenEquipo = False
+                elif tabla == "Impresoras":
+                    consultaImpresoras = Impresoras.objects.filter(id_impresora = idequipoPrestamo)
+                    for datoPres in consultaImpresoras:
+                        marca = datoPres.marca
+                        modelo = datoPres.modelo
+                        imagen = datoPres.imagen
+                    nombreEquipo = "Impresora "+marca + " " + modelo
+                    imagenEquipo = imagen
+                elif tabla == "Equipos":
+                    consultaEquipos = Equipos.objects.filter(id_equipo = idequipoPrestamo)
+                    for datoPres in consultaEquipos:
+                        tipo = datoPres.tipo
+                        marca = datoPres.marca
+                        modelo = datoPres.modelo
+                        imagen = datoPres.imagen
+                    nombreEquipo = "Computadora "+tipo+" "+marca + " " + modelo
+                    imagenEquipo = imagen
+                elif tabla == "DiscosDuros":
+                    consultaDiscos = DiscosDuros.objects.filter(id_disco = idequipoPrestamo)
+                    for datoPres in consultaDiscos:
+                        tipo = datoPres.tipo
+                        marca = datoPres.marca
+                        dimension = datoPres.dimension
+                        imagen = False
+                    nombreEquipo = "Disco Duro "+tipo + " " + marca + " " + dimension
+                    imagenEquipo = imagen
+                elif tabla == "Monitores":
+                    consultaMonitores = Monitores.objects.filter(id_monitor = idequipoPrestamo)
+                    for datoPres in consultaMonitores:
+                        marca = datoPres.marca
+                        modelo = datoPres.modelo
+                        imagen = datoPres.foto
+                    nombreEquipo = "Monitor "+marca + " " + modelo
+                    imagenEquipo = imagen
+                elif tabla == "Teclados":
+                    consultaTeclados = Teclados.objects.filter(id_teclado = idequipoPrestamo)
+                    for datoPres in consultaTeclados:
+                        marca = datoPres.marca
+                        modelo = datoPres.modelo
+                        if datoPres.conexion == "A":
+                            conexion = "Alámbrico"
+                        elif datoPres.conexion == "I":
+                            conexion = "Inalámbrico"
+                        imagen = datoPres.foto
+                    nombreEquipo = "Teclado "+conexion+" "+marca + " " + modelo
+                    imagenEquipo = imagen
+                elif tabla == "Mouses":
+                    consultaMouses = Mouses.objects.filter(id_mouse = idequipoPrestamo)
+                    for datoPres in consultaMouses:
+                        marca = datoPres.marca
+                        modelo = datoPres.modelo
+                        if datoPres.conexion == "A":
+                            conexion = "Alámbrico"
+                        elif datoPres.conexion == "I":
+                            conexion = "Inalámbrico"
+                        imagen = datoPres.foto
+                    nombreEquipo = "Mouse "+conexion+" "+marca + " " + modelo
+                    imagenEquipo = imagen
+                elif tabla == "Teléfonos":
+                    consultaTelefonos = Telefonos.objects.filter(id_telefono = idequipoPrestamo)
+                    for datoPres in consultaTelefonos:
+                        marca = datoPres.marca
+                        modelo = datoPres.modelo
+                        if datoPres.conexion == "A":
+                            conexion = "Alámbrico"
+                        elif datoPres.conexion == "I":
+                            conexion = "Inalámbrico"
+                        imagen = datoPres.foto
+                    nombreEquipo = "Teléfono "+conexion+" "+marca + " " + modelo
+                    imagenEquipo = imagen
+                
+
+                
+                
+                
+                
+                #info empleado
+                idEmpleado = dato.id_empleado_id
+                infoEmpleado = Empleados.objects.filter(id_empleado = idEmpleado)
+                for dato in infoEmpleado:
+                    nombre = dato.nombre
+                    apellidos = dato.apellidos
+
+                    idArea = dato.id_area_id
+                nombreCompletoEmpleado = nombre + " " + apellidos
+                datosArea = Areas.objects.filter(id_area=idArea)
+
+                for dato in datosArea:
+                    nombreDepartamento = dato.nombre
+                    colorDepartamento = dato.color
+
+
+            return render(request, "prestamos/firmaAgregarPrestamo.html", {"estaEnVerPrestamos": estaEnVerPrestamos, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo,
+                                                           "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti,  "numeroNoti":numeroNoti,   "foto":foto, "infoPrestamo":infoPrestamo,
+                                            "nombreDepartamento":nombreDepartamento,
+                                            "colorDepartamento":colorDepartamento,
+                                            "nombreCompletoEmpleado":nombreCompletoEmpleado,
+                                            "nombreEquipo":nombreEquipo,
+                                            "imagen":imagen})
+
+            
+    else:
+        return redirect("/login/")
+
+
+
 def actualizarPrestamos(request):
 
-    if request.method == "POST":
+    if "idSesion" in request.session:
 
-        idPrestamo = request.POST['prestamoActualizar']
+        if request.method == "POST":
 
-        condiciones = request.POST['condiciones']
+            idPrestamo = request.POST['idPrestamoGuardarFirma']
 
-        canvasLargo1 = request.POST['canvasData']
-        format1, imgstr1 = canvasLargo1.split(';base64,')
-        ext1 = format1.split('/')[-1]
-        archivo1 = ContentFile(base64.b64decode(imgstr1), name= "imagen" + '.' + ext1)
-        fecha_Hoy = date.today()
+            condiciones = request.POST['condiciones']
 
-        actualizrPrestamo = PrestamosSistemas.objects.get(id_prestamo=idPrestamo)
-        actualizrPrestamo.fecha_entrega = fecha_Hoy
-        actualizrPrestamo.firma_devolucion = archivo1
-        actualizrPrestamo.save()
+            canvasLargo1 = request.POST['canvasData']
+            format1, imgstr1 = canvasLargo1.split(';base64,')
+            ext1 = format1.split('/')[-1]
+            archivo1 = ContentFile(base64.b64decode(imgstr1), name= "imagen" + '.' + ext1)
+            fecha_Hoy = date.today()
 
-        actualizar = PrestamosSistemas.objects.filter(id_prestamo=idPrestamo).update( estatus = "Finalizado", condiciones = condiciones)
-            
-        if actualizar:
-            
-            textoPrestamo = "Se ha entregado el material del préstamo  "+ str(idPrestamo) + " con éxito!"
-                        
-            request.session['prestamoFinalizado'] = textoPrestamo
-            
-            return redirect('/verPrestamos/')
+            actualizrPrestamo = PrestamosSistemas.objects.get(id_prestamo=idPrestamo)
+            actualizrPrestamo.fecha_entrega = fecha_Hoy
+            actualizrPrestamo.firma_devolucion = archivo1
+            actualizrPrestamo.save()
+
+            actualizar = PrestamosSistemas.objects.filter(id_prestamo=idPrestamo).update( estatus = "Finalizado", condiciones = condiciones)
+                
+            if actualizar:
+                
+                textoPrestamo = "Se ha entregado el material del préstamo  "+ str(idPrestamo) + " con éxito!"
+                            
+                request.session['prestamoFinalizado'] = textoPrestamo
+                
+                return redirect('/verPrestamos/')
+    else:
+        return redirect("/login/")
+
+
 
 
 

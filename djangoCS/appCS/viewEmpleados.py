@@ -2249,10 +2249,17 @@ def implementacionesSistemas(request):
         subdirector = True
         
         listaImplementaciones = ImplementacionSoluciones.objects.all()
+        listaImplementacionesModal = ImplementacionSoluciones.objects.all()
+        listaImplementacionesModal2 = ImplementacionSoluciones.objects.all()
 
+        if "firmaGuardada" in request.session:
+            firmaGuardada = True
+            del request.session['firmaGuardada']
+            return render(request, "empleadosCustom/direccion/implementacionesSistemas.html",{"estaEnVerImplementacionesSistemas":estaEnVerImplementacionesSistemas,"id_admin":id_admin,
+                                                                                          "nombreini":nombreini,"apellidosini":apellidosini,"correo":correo,"foto":foto,"nombreCompleto":nombreCompleto,"subdirector":subdirector, "listaImplementaciones":listaImplementaciones, "listaImplementacionesModal":listaImplementacionesModal, "listaImplementacionesModal2":listaImplementacionesModal2, "firmaGuardada":firmaGuardada})
 
         return render(request, "empleadosCustom/direccion/implementacionesSistemas.html",{"estaEnVerImplementacionesSistemas":estaEnVerImplementacionesSistemas,"id_admin":id_admin,
-                                                                                          "nombreini":nombreini,"apellidosini":apellidosini,"correo":correo,"foto":foto,"nombreCompleto":nombreCompleto,"subdirector":subdirector, "listaImplementaciones":listaImplementaciones})
+                                                                                          "nombreini":nombreini,"apellidosini":apellidosini,"correo":correo,"foto":foto,"nombreCompleto":nombreCompleto,"subdirector":subdirector, "listaImplementaciones":listaImplementaciones, "listaImplementacionesModal":listaImplementacionesModal, "listaImplementacionesModal2":listaImplementacionesModal2})
     else:
         return redirect("/login/")
     
@@ -2272,10 +2279,128 @@ def revisarImplementacion(request):
         nombreCompleto = nombreini + " " + apellidosini #Blanca Yesenia Gaeta Talamantes
         subdirector = True
         
-        listaImplementaciones = ImplementacionSoluciones.objects.all()
+        if request.method == "POST":
+            idImplementacionRecibida = request.POST['idImplemenatcionARevisar']
 
+            datosImplementacion = ImplementacionSoluciones.objects.filter(id_implementacion = idImplementacionRecibida)
 
-        return render(request, "empleadosCustom/direccion/revisarImplementacion.html",{"estaEnVerImplementacionesSistemas":estaEnVerImplementacionesSistemas,"id_admin":id_admin,
-                                                                                          "nombreini":nombreini,"apellidosini":apellidosini,"correo":correo,"foto":foto,"nombreCompleto":nombreCompleto,"subdirector":subdirector, "listaImplementaciones":listaImplementaciones})
+            return render(request, "empleadosCustom/direccion/revisarImplementacion.html",{"estaEnVerImplementacionesSistemas":estaEnVerImplementacionesSistemas,"id_admin":id_admin,
+                                                                                          "nombreini":nombreini,"apellidosini":apellidosini,"correo":correo,"foto":foto,"nombreCompleto":nombreCompleto,"subdirector":subdirector, "datosImplementacion":datosImplementacion})
+
+        
     else:
         return redirect("/login/")
+
+
+
+def firmarImplementacion(request):
+
+    #Si ya hay una sesión iniciada..
+    if "idSesion" in request.session:
+
+        if request.method == "POST":
+            idImplementacionRecibidaParaFirma = request.POST['idImplementacionAFirmar']
+            comentarios = request.POST['comentarios']
+            canvas = request.POST['canvasData']
+
+            firma = "firmaImplementacion"+str(idImplementacionRecibidaParaFirma)
+
+            format, imgstr = canvas.split(';base64,')
+            ext = format.split('/')[-1]
+            archivo = ContentFile(base64.b64decode(imgstr), name= str(firma) + '.' + ext)
+
+            if comentarios == "":
+                actualizacion = ImplementacionSoluciones.objects.get(id_implementacion=idImplementacionRecibidaParaFirma)
+                actualizacion.comentarios_direccion = "Sin comentarios."
+                actualizacion.revisado = "S"
+                actualizacion.firma_direccion = archivo
+                actualizacion.save()
+                
+            else:
+                actualizacion = ImplementacionSoluciones.objects.get(id_implementacion=idImplementacionRecibidaParaFirma)
+                actualizacion.comentarios_direccion = comentarios
+                actualizacion.revisado = "S"
+                actualizacion.firma_direccion = archivo
+                actualizacion.save()
+
+            
+            request.session['firmaGuardada'] = "sesionNotificacionFirma"
+
+            return redirect("/implementacionesSistemas/")
+
+        estaEnVerImplementacionesSistemas = True
+        enAño = True
+        estaEnEncuesta = True
+        id_admin=request.session["idSesion"]
+        nombreini = request.session['nombres']
+        apellidosini = request.session['apellidos']
+        correo = request.session['correoSesion']
+        foto = fotoAdmin(request)
+        nombreCompleto = nombreini + " " + apellidosini #Blanca Yesenia Gaeta Talamantes
+        subdirector = True
+        
+        listaImplementaciones = ImplementacionSoluciones.objects.all()
+        listaImplementacionesModal = ImplementacionSoluciones.objects.all()
+        listaImplementacionesModal2 = ImplementacionSoluciones.objects.all()
+
+
+        return render(request, "empleadosCustom/direccion/implementacionesSistemas.html",{"estaEnVerImplementacionesSistemas":estaEnVerImplementacionesSistemas,"id_admin":id_admin,
+                                                                                          "nombreini":nombreini,"apellidosini":apellidosini,"correo":correo,"foto":foto,"nombreCompleto":nombreCompleto,"subdirector":subdirector, "listaImplementaciones":listaImplementaciones, "listaImplementacionesModal":listaImplementacionesModal, "listaImplementacionesModal2":listaImplementacionesModal2})
+    else:
+        return redirect("/login/")
+
+def excelImplementacion(request):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename=Reporte Implementaciones '+str(datetime.today().strftime('%Y-%m-%d'))+'.xls'
+    
+    #creación de libro de excel
+    libro = xlwt.Workbook(encoding='utf-8')
+    hoja = libro.add_sheet('Implementaciones Sistemas')
+    
+    numero_fila = 0
+    estilo_fuente = xlwt.XFStyle()
+    estilo_fuente.font.bold = True
+    
+    columnas = ['Id Implementacion','Problema', 'Descripcion', 'Fecha Comienzo', 'Fecha Solución', 'Resuelto','Revisado','comentarios']
+    for columna in range(len(columnas)):
+        hoja.write(numero_fila, columna, columnas[columna], estilo_fuente)
+        
+    #lista la lista de cantidad_empleados
+
+    listaImplementaciones = []
+    implementaciones = ImplementacionSoluciones.objects.all()
+    for implementacion in implementaciones:
+        idim = implementacion.id_implementacion
+        problema = implementacion.titulo_problema
+        descripcion = implementacion.descripcion
+        fechaComienzo = implementacion.fecha_comienzo
+        fechaTerminado = implementacion.fecha_terminada
+        if implementacion.resuelto == "S":
+            resuelto = "Si"
+        elif implementacion.resuelto == "N":
+            resuelto = "No"
+
+        if implementacion.revisado == "S":
+            revisado = "Si"
+        elif implementacion.revisado == "N":
+            revisado = "No"
+        
+        comentarios = implementacion.comentarios_direccion
+
+        listaImplementaciones.append([idim,problema,descripcion,fechaComienzo,fechaTerminado,resuelto,revisado,comentarios])
+        
+
+
+    
+    estilo_fuente = xlwt.XFStyle()
+    for imp in listaImplementaciones:
+        numero_fila+=1
+        for columna in range(len(imp)):
+            hoja.write(numero_fila, columna, str(imp[columna]), estilo_fuente)
+        
+    
+    
+    
+        
+    libro.save(response)
+    return response    

@@ -426,34 +426,24 @@ Realizar carta
                 <center>
                     <h2>{{fecha}}</h2>
                     <h2>Ingresar Firma Electrónica</h2>
-                    <div style="width: 550px;
-                    height: 350px;
-                    background-color: black;">
-                        <div>
-                            <label for=""></label>
-                        </div>
-                        <canvas id="pizarra"></canvas>
-
-                    </div>
-
-                    <div>
-                        <button type="submit" class="btn btn-warning m-t-15 waves-effect" onclick="limpiar()"><i
-                                class="material-icons">delete_sweep</i> Limpiar</button>
-                        <br><br>
-                        <form action="/guardarImagen/" method="POST" id="form1">{% csrf_token %}
-                            {% for equipo in datosEquipo %}
-                            <input type="hidden" name="idEquipo" value="{{equipo.id_equipo}}">
-                            {% endfor %}
-                            {% for empleados in empleadoDatos%}
-                            <input type="hidden" name="idEmpleado" value="{{empleados.id_empleado}}">
-                            {% endfor %}
+                    <center>    
+                
+                        <canvas id="sheet" width="400" height="250" style="border: 1px solid black"></canvas>
+                        <div class="row clearfix">
+                            <button type="button"  onclick="limpiar()"
+                            class="btn btn-success m-t-15 waves-effect animate__animated animate__flipInX">
+                            <i class="material-icons">delete_sweep</i> Limpiar firma</button>
                             <input type="hidden" name="canvasData" id="my_hidden">
-                            <button type="submit" class="btn btn-success m-t-15 waves-effect" onclick="save()"><i
-                                    class="material-icons">save</i> Guardar</button>
+                        </div>
+                        <div clas="row clearfix">   
+                            <button type="submit"  onclick="save()"
+                            class="btn btn-warning m-t-15 waves-effect animate__animated animate__flipInX">
+                            <i class="material-icons">assignment_turned_in</i> Relizar entrega de préstamo</button>
+                        <div>
+                        <br>
+                    </center>
 
-
-                        </form>
-                    </div>
+             
                     <br>
                     <form action="/firmarCarta/" method="POST">{% csrf_token %}
                         {% for equipo in datosEquipo %}

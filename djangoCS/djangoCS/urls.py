@@ -146,6 +146,7 @@ urlpatterns = [
     path("agregarPrestamos/", views.agregarPrestamos),
     path("verPrestamos/", views.verPrestamos),
     path("actualizarPrestamos/", views.actualizarPrestamos),
+    path("firmarPrestamoDevolucion/", views.firmarPrestamoDevolucion),
     
     path("agregarEncuestas/", views.agregarEncuestas),
     path("verEncuestas/", views.verEncuestas),
@@ -201,6 +202,8 @@ urlpatterns = [
     
     path("implementacionesSistemas/", viewEmpleados.implementacionesSistemas),
     path("revisarImplementacion/", viewEmpleados.revisarImplementacion),
+    path("firmarImplementacion/", viewEmpleados.firmarImplementacion),
+    path("excelImplementacion/", viewEmpleados.excelImplementacion),
 
 
 ]
