@@ -34,18 +34,12 @@ Realizar carta
 
 <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
 <link href={% static 'panel/css/themes/all-themes.css' %} rel="stylesheet" />
-<style>
-    canvas {
-        width: 500px;
-        height: 300px;
-        background-color: #faf6f6;
-    }
-</style>
+
 {% endblock %}
 
 {% block contenido %}
 <div class="row clearfix">
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div >
         <div class="card">
             <div class="body">
                 <center>
@@ -423,41 +417,7 @@ Realizar carta
                         </div>
                     </div>
                 </div>
-                <center>
-                    <h2>{{fecha}}</h2>
-                    <h2>Ingresar Firma Electrónica</h2>
-                    <center>    
                 
-                        <canvas id="sheet" width="400" height="250" style="border: 1px solid black"></canvas>
-                        <div class="row clearfix">
-                            <button type="button"  onclick="limpiar()"
-                            class="btn btn-success m-t-15 waves-effect animate__animated animate__flipInX">
-                            <i class="material-icons">delete_sweep</i> Limpiar firma</button>
-                            <input type="hidden" name="canvasData" id="my_hidden">
-                        </div>
-                        <div clas="row clearfix">   
-                            <button type="submit"  onclick="save()"
-                            class="btn btn-warning m-t-15 waves-effect animate__animated animate__flipInX">
-                            <i class="material-icons">assignment_turned_in</i> Relizar entrega de préstamo</button>
-                        <div>
-                        <br>
-                    </center>
-
-             
-                    <br>
-                    <form action="/firmarCarta/" method="POST">{% csrf_token %}
-                        {% for equipo in datosEquipo %}
-                        <input type="hidden" name="idEquipo" value="{{equipo.id_equipo}}">
-                        {% endfor %}
-                        {% for empleados in empleadoDatos%}
-                        <input type="hidden" name="idEmpleado" value="{{empleados.id_empleado}}">
-                        {% endfor %}
-                        <button type="submit" class="btn bg-red waves-effect"><i class="material-icons">blur_on</i>
-                            QR</button>
-                    </form>
-
-
-                </center>
                 {% else %}
 
                 {% endif %}
@@ -466,6 +426,60 @@ Realizar carta
 
             </div>
         </div>
+
+        {% if compuSeleccionada2 %}
+        <!-- aqui va lo del canvas -->
+        <div style="background-color: #fff; background-clip: border-box;
+        border: 1px solid rgba(0, 0, 0, 0.125);
+        border-radius: 0.25rem;">
+            <div class="row clearfix" > 
+                <center>
+                    <h2>Ingresar Firma Electrónica</h2>
+                    <h4>Se solicita ingresar la firma electrónica del empleado para el archivo virtual.</h4>
+                </center>
+            </div>
+            <br>
+            <center>
+
+                <canvas id="sheet" width="400" height="250" style="border: 1px solid black"></canvas>
+                <div class="row clearfix">
+                    <button type="button"  onclick="limpiar()"
+                    class="btn btn-success m-t-15 waves-effect animate__animated animate__flipInX">
+                    <i class="material-icons">delete_sweep</i> Limpiar firma</button>
+                    
+                </div>
+                <div clas="row clearfix">  
+                    
+                    <form action="/guardarImagen/" method="POST">{% csrf_token %}
+                        {% for equipo in datosEquipo %}
+                        <input type="hidden" name="idEquipo" value="{{equipo.id_equipo}}">
+                        {% endfor %}
+                        {% for empleado in empleadoDatos %}
+                        <input type="hidden" name="idEmpleado" value="{{empleado.id_empleado}}">
+                        {% endfor %}
+                        <input type="hidden" name="canvasData" id="my_hidden">
+                        <button type="submit"  onclick="save()"
+                    class="btn btn-warning m-t-15 waves-effect animate__animated animate__flipInX">
+                    <i class="material-icons">save</i> Guardar carta</button>
+                    </form>
+                    <br>
+                    
+
+                    <form action="/firmarCarta/" method="POST">{% csrf_token %}
+                        {% for equipo in datosEquipo %}
+                        <input type="hidden" name="idEquipo" value="{{equipo.id_equipo}}">
+                        {% endfor %}
+                        {% for empleado in empleadoDatos %}
+                        <input type="hidden" name="idEmpleado" value="{{empleado.id_empleado}}">
+                        {% endfor %}
+                        <button type="submit" class="btn bg-red waves-effect"><i class="material-icons">blur_on</i>QR</button>
+                    </form>
+                <div>
+                <br>
+            </center>
+            
+        </div>
+        {% endif %}
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
@@ -480,131 +494,48 @@ Realizar carta
     });
 </script>
 {% endif %}
+
 <script>
+    
+
+    var canvas = document.getElementById('sheet'), g = canvas.getContext("2d");
+    g.strokeStyle = "hsl(208, 100%, 43%)";
+    g.lineJoin = "round";
+    g.lineWidth = 1;
+    g.filter = "blur(1px)";
+
+    const
+    relPos = pt => [pt.pageX - canvas.offsetLeft, pt.pageY - canvas.offsetTop],
+    drawStart = pt => { with(g) { beginPath(); moveTo.apply(g, pt); stroke(); }},
+    drawMove = pt => { with(g) { lineTo.apply(g, pt); stroke(); }},
+
+    pointerDown = e => drawStart(relPos(e.touches ? e.touches[0] : e)),
+    pointerMove = e => drawMove(relPos(e.touches ? e.touches[0] : e)),
+
+    draw = (method, move, stop) => e => {
+        if(method=="add") pointerDown(e);
+        canvas[method+"EventListener"](move, pointerMove);
+        canvas[method+"EventListener"](stop, g.closePath);
+    };
+
+    canvas.addEventListener("mousedown", draw("add","mousemove","mouseup"));
+    canvas.addEventListener("touchstart", draw("add","touchmove","touchend"));
+    canvas.addEventListener("mouseup", draw("remove","mousemove","mouseup"));
+    canvas.addEventListener("touchend", draw("remove","touchmove","touchend"));
+
+    function limpiar(){
+        g.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
     function save() {
-        var canvas = document.getElementById('pizarra');
+        var canvas = document.getElementById('sheet');
         var inputVacio = document.getElementById('my_hidden');
         inputVacio.value = canvas.toDataURL();
         document.forms["form1"].submit();
     }
 
-    function limpiar() {
-        let miCanvas = document.querySelector('#pizarra');
-        let lineas = [];
-        let correccionX = 0;
-        let correccionY = 0;
-        let pintarLinea = false;
-        // Marca el nuevo punto
-        let nuevaPosicionX = 0;
-        let nuevaPosicionY = 0;
+    
 
-        let posicion = miCanvas.getBoundingClientRect()
-        correccionX = posicion.x;
-        correccionY = posicion.y;
-
-        miCanvas.width = 500;
-        miCanvas.height = 300;
-
-
-    }
-    //======================================================================
-    // VARIABLES
-    //======================================================================
-    let miCanvas = document.querySelector('#pizarra');
-    let lineas = [];
-    let correccionX = 0;
-    let correccionY = 0;
-    let pintarLinea = false;
-    // Marca el nuevo punto
-    let nuevaPosicionX = 0;
-    let nuevaPosicionY = 0;
-
-    let posicion = miCanvas.getBoundingClientRect()
-    correccionX = posicion.x;
-    correccionY = posicion.y;
-
-    miCanvas.width = 500;
-    miCanvas.height = 300;
-
-    //======================================================================
-    // FUNCIONES
-    //======================================================================
-
-    /**
-     * Funcion que empieza a dibujar la linea
-     */
-    function empezarDibujo() {
-        pintarLinea = true;
-        lineas.push([]);
-    };
-
-    /**
-     * Funcion que guarda la posicion de la nueva línea
-     */
-    function guardarLinea() {
-        lineas[lineas.length - 1].push({
-            x: nuevaPosicionX,
-            y: nuevaPosicionY
-        });
-    }
-
-    /**
-     * Funcion dibuja la linea
-     */
-    function dibujarLinea(event) {
-        event.preventDefault();
-        if (pintarLinea) {
-            let ctx = miCanvas.getContext('2d')
-            // Estilos de linea
-            ctx.lineJoin = ctx.lineCap = 'round';
-            ctx.lineWidth = 5;
-            // Color de la linea
-            ctx.strokeStyle = '#000000';
-            // Marca el nuevo punto
-            if (event.changedTouches == undefined) {
-                // Versión ratón
-                nuevaPosicionX = event.layerX;
-                nuevaPosicionY = event.layerY;
-            } else {
-                // Versión touch, pantalla tactil
-                nuevaPosicionX = event.changedTouches[0].pageX - correccionX;
-                nuevaPosicionY = event.changedTouches[0].pageY - correccionY;
-            }
-            // Guarda la linea
-            guardarLinea();
-            // Redibuja todas las lineas guardadas
-            ctx.beginPath();
-            lineas.forEach(function (segmento) {
-                ctx.moveTo(segmento[0].x, segmento[0].y);
-                segmento.forEach(function (punto, index) {
-                    ctx.lineTo(punto.x, punto.y);
-                });
-            });
-            ctx.stroke();
-        }
-    }
-
-    /**
-     * Funcion que deja de dibujar la linea
-     */
-    function pararDibujar() {
-        pintarLinea = false;
-        lineas = [];
-        guardarLinea();
-    }
-
-    //======================================================================
-    // EVENTOS
-    //======================================================================
-
-    // Eventos raton
-    miCanvas.addEventListener('mousedown', empezarDibujo, false);
-    miCanvas.addEventListener('mousemove', dibujarLinea, false);
-    miCanvas.addEventListener('mouseup', pararDibujar, false);
-
-    // Eventos pantallas táctiles
-    miCanvas.addEventListener('touchstart', empezarDibujo, false);
-    miCanvas.addEventListener('touchmove', dibujarLinea, false);
 </script>
 {% endblock %}
 

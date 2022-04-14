@@ -40,7 +40,7 @@
 
 {% block contenido %}
 <div class="row clearfix">
-    <div >
+    <div>
         <div class="card">
             <div class="header">
                 <h2>
@@ -354,71 +354,74 @@
                         </div>
                     </div>
                 </div>
+                <center>
+                    {% if imagen2 %}
+                    <h2>Fecha: {{fecha}}</h2>
+                    <img src="{% static 'images/qr4.png' %}" width="10%" alt="qr">
+                    <img src="{{imagen.url}}" alt="firma">
+                    <h3>Administrador de Custom System - Versión 1.0.0.</h3>
+                    {% endif %}
+
+
+
+
+
+                </center>
                 
 
 
             </div>
         </div>
-        <center>
-            
-
-            <div style="background-color: #fff; background-clip: border-box;
-                border: 1px solid rgba(0, 0, 0, 0.125);
-                border-radius: 0.25rem;">
-                <div class="row clearfix" > 
-                    <center>
-                        <h2>Fecha: {{fecha}}</h2>
-                        <img src="{% static 'images/qr4.png' %}" width="10%" alt="qr">
-                        {% if imagen2 %}
-                        <img src="{{imagen.url}}" alt="firma">
-
-
-                        {% else %}
-                        <h2>Ingresar Condiciones</h2>
-                        <div class="row clearfix">
-                            <div class="col-md-3">
-
-                            </div>
-                            <div class="col-md-6">
-                                <textarea style="border: 1px; border-color:black!important;" name="condiciones" cols="30" rows="5"
-                                                maxlength="400" class="form-control no-resize" required></textarea>
-                            </div>
-                            <div class="col-md-3">
-
-                            </div>
-                        </div>
-                        
-                        <h2>Ingresar Firma de entrega</h2>
-                        <h4>Se solicita integrar una firma de entrega para su historial.</h4>
-                    </center>
-                </div>
-                <br>
-                <center>    
-                    
-                    
-                    <div class="row clearfix">
-                        <button type="button"  onclick="limpiar()"
-                        class="btn btn-success m-t-15 waves-effect animate__animated animate__flipInX">
-                        <i class="material-icons">delete_sweep</i> Limpiar firma</button>
-                        <input type="hidden" name="canvasData" id="my_hidden">
-                    </div>
-                    <div clas="row clearfix">   
-                        <button type="submit"  onclick="save()"
-                        class="btn btn-warning m-t-15 waves-effect animate__animated animate__flipInX">
-                        <i class="material-icons">assignment_turned_in</i> Relizar entrega de préstamo</button>
-                    <div>
-                    <br>
-                </center>
-            
+        {% if faltaFirma %}
+        <!-- aqui va lo del canvas -->
         
-                {% endif %}
+        <div style="background-color: #fff; background-clip: border-box;
+        border: 1px solid rgba(0, 0, 0, 0.125);
+        border-radius: 0.25rem;">
+            <div class="row clearfix" > 
+                <center>
+                    <H2>Escanear QR para firmar en teléfono.</H2>
+                    <img src="{% static 'images/qr4.png' %}" width="10%" alt="qr">
+                    <h2>Fecha: {{fecha}}</h2>
+                    <h2>Ingresar Firma Electrónica</h2>
+                    <h4>Se solicita ingresar la firma electrónica del empleado para el archivo virtual.</h4>
+                </center>
+            </div>
+            <br>
+            <center>
 
-
-        </center>
+                <canvas id="sheet" width="400" height="250" style="border: 1px solid black"></canvas>
+                <div class="row clearfix">
+                    <button type="button"  onclick="limpiar()"
+                    class="btn btn-success m-t-15 waves-effect animate__animated animate__flipInX">
+                    <i class="material-icons">delete_sweep</i> Limpiar firma</button>
+                    
+                </div>
+                <div clas="row clearfix">  
+                    
+                    <form action="/guardarImagen/" method="POST">{% csrf_token %}
+                        {% for equipo in datosEquipo %}
+                        <input type="hidden" name="idEquipo" value="{{equipo.id_equipo}}">
+                        {% endfor %}
+                        {% for empleado in datosEmpleado %}
+                        <input type="hidden" name="idEmpleado" value="{{empleado.id_empleado}}">
+                        {% endfor %}
+                        <input type="hidden" name="canvasData" id="my_hidden">
+                        <button type="submit"  onclick="save()"
+                    class="btn btn-warning m-t-15 waves-effect animate__animated animate__flipInX">
+                    <i class="material-icons">save</i> Guardar carta</button>
+                    </form>
+                    <br>
+                <div>
+                <br>
+            </center>
             
+        </div>
+        {% endif %}
+        
     </div>
 </div>
-<canvas id="sheet" width="400" height="250" style="border: 1px solid black"></canvas>
+
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 {% if imagen2 %}

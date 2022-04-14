@@ -2363,6 +2363,7 @@ def agregarCarta(request):
             datosEquipo = Equipos.objects.filter(id_equipo = compuS)
         
             compuSeleccionada = True 
+            compuSeleccionada2 = True
             empleadoDatos = Empleados.objects.filter(id_empleado=empleSeleccionado)
             
             for empleados in empleadoDatos:
@@ -2378,7 +2379,7 @@ def agregarCarta(request):
 
             estaEnAgregarCarta = True
             return render(request, "cartaCompromiso/agregarCarta.html",{"estaEnAgregarCarta": estaEnAgregarCarta, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "equipos":equipos, "empleados": empledos, "lista":lista, "fecha":fecha,
-                                                                    "compusInactivas": compusInactivas, "compuSeleccionada":compuSeleccionada, "datosEquipo":datosEquipo, "empleadoDatos": empleadoDatos, "areaNombre": areaNombre, "color":color,
+                                                                    "compusInactivas": compusInactivas, "compuSeleccionada":compuSeleccionada,"compuSeleccionada2":compuSeleccionada2, "datosEquipo":datosEquipo, "empleadoDatos": empleadoDatos, "areaNombre": areaNombre, "color":color,
                                                                     "fecha": fecha, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
 
         estaEnAgregarCarta = True
@@ -3612,7 +3613,7 @@ def firmarCarta(request):
         numeroFirmas = Carta.objects.count() #1
                 
         registroFirma = Carta.objects.get(id_carta=numeroFirmas)
-            
+        faltaFirma = True
             
         idEquipo = registroFirma.id_equipo_id
         idEmpleado = registroFirma.id_empleado_id
@@ -3636,7 +3637,7 @@ def firmarCarta(request):
                 #Hacer consulta al ultimo registro de la tabla de cartas, para ver la ultima carta preguardada.
             
 
-        return render(request, "cartaCompromiso/firmarCarta.html", {"datosEquipo":datosEquipo, "datosEmpleado":datosEmpleado, "nombre":nombre, "color":color, "fecha":fecha}) 
+        return render(request, "cartaCompromiso/firmarCarta.html", {"datosEquipo":datosEquipo, "datosEmpleado":datosEmpleado, "nombre":nombre, "color":color, "fecha":fecha,"faltaFirma":faltaFirma}) 
     
 
 def reporteDepartamentos(request):
