@@ -296,3 +296,59 @@ class ImplementacionSoluciones (models.Model):
     
     def __str__(self):
         return self.id_implementacion
+
+
+#ALMACEN
+class PrestamosAlmacen (models.Model):
+    id_prestamo = models.AutoField(primary_key=True)
+    fecha_solicitud = models.DateField()
+    id_empleado_solicitante = models.ForeignKey(Empleados, on_delete=models.CASCADE)
+    tipo = models.CharField(max_length = 50, null=True)
+    proyecto_tarea = models.CharField(max_length = 100, null=True)
+    observaciones = models.CharField(max_length=255)
+    tabla = models.CharField(max_length=100, null=True)
+    id_herramientaInstrumento = models.CharField(max_length=4, null=True)
+    otro = models.CharField(max_length=100, null=True)
+    cantidad_solicitada = models.IntegerField()
+    fecha_prestamo = models.DateField()
+    firma_prestamo = models.ImageField(upload_to="firmasPrestamosAlmacen", null = True)
+    fecha_devolucion = models.DateField(null=True)
+    firma_devolucion = models.ImageField(upload_to="firmasDevolucionAlmacen", null = True)
+    condiciones = models.CharField(max_length=100, null=True)
+    estatus = models.CharField(max_length=20, null=True)
+
+    def __str__(self):
+        return self.id_prestamo
+    
+class HerramientasAlmacen (models.Model):
+    id_herramienta = models.AutoField(primary_key=True)
+    codigo_herramienta = models.CharField(max_length=6)
+    nombre_herramienta = models.CharField(max_length=100)
+    descripcion_herramienta = models.TextField()
+    marca = models.CharField(max_length=50)
+    unidad = models.CharField(max_length=50)
+    sku = models.CharField(max_length=30)
+    cantidad_existencia = models.IntegerField(null=True)
+    imagen_herramienta = models.ImageField(upload_to="imagenesHerramientas", null = True)
+    estado_herramienta = models.CharField(max_length=2)
+    motivo_estado = models.CharField(max_length=200)
+    fecha_alta = models.DateField()
+
+    def __str__(self):
+        return self.id_herramienta
+    
+class InstrumentosAlmacen (models.Model):
+    id_instrumento = models.AutoField(primary_key=True)
+    codigo_instrumento = models.CharField(max_length=6)
+    nombre_instrumento = models.CharField(max_length=100)
+    descripcion_instrumento = models.TextField()
+    marca = models.CharField(max_length=50)
+    unidad = models.CharField(max_length=50)
+    sku = models.CharField(max_length=30)
+    imagen_instrumento = models.ImageField(upload_to="imagenesInstrumentos", null = True)
+    estado_instrumento = models.CharField(max_length=2)
+    motivo_estado = models.CharField(max_length=200)
+    fecha_alta = models.DateField()
+
+    def __str__(self):
+        return self.id_instrumento

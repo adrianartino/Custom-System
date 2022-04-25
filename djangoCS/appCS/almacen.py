@@ -14,7 +14,7 @@ from django.shortcuts import redirect
 from reportlab import cmp
 
 #Importación de modelos
-from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Preguntas, Encuestas, Respuestas, EncuestaEmpleadoResuelta, Mouses, Teclados, Monitores
+from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Preguntas, Encuestas, Respuestas, EncuestaEmpleadoResuelta, Mouses, Teclados, Monitores, HerramientasAlmacen, InstrumentosAlmacen
 
 #Librería para manejar archivos en Python
 from django.core.files.base import ContentFile
@@ -151,9 +151,12 @@ def verHerramientasALM(request):
         correo = request.session['correoSesion']
         foto = fotoAdmin(request)
         nombreCompleto = nombreini + " " + apellidosini #Blanca Yesenia Gaeta Talamantes
+        
+        registrosHerramientas = HerramientasAlmacen.objects.all()
+        registrosInstrumentos = InstrumentosAlmacen.objects.all()
 
 
-        return render(request, "empleadosCustom/almacen/verHerramientas.html", {"estaEnAlmacen":estaEnAlmacen,"estaEnVerHerramientas":estaEnVerHerramientas,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo})
+        return render(request, "empleadosCustom/almacen/verHerramientas.html", {"estaEnAlmacen":estaEnAlmacen,"estaEnVerHerramientas":estaEnVerHerramientas,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "registrosHerramientas":registrosHerramientas, "registrosInstrumentos":registrosInstrumentos})
     #Si le da al inicio y no hay una sesión iniciada..
     else:
         return redirect('/login/') #redirecciona a url de inicio
@@ -178,6 +181,70 @@ def agregarHerramientasALM(request):
         nombreCompleto = nombreini + " " + apellidosini #Blanca Yesenia Gaeta Talamantes
 
 
+        if request.method == "POST":
+            tipoHerramienta = request.POST['tipoHerramienta']
+            nombreHerramienta = request.POST['nombreHerramienta']
+            marcaHerramienta = request.POST['marcaHerramienta']
+            unidadMedida = request.POST['unidadMedida']
+            descripcion = request.POST['descripcion']
+            imagenHerramienta = request.FILES.get('imagenHerramienta')
+            skuHerramienta = request.POST['skuHerramienta']
+            cantidadHerramienta = request.POST['cantidadHerramienta']
+            
+            
+            if tipoHerramienta == "Herramienta":
+                #Codigo de herramienta
+                consultaHerramientas = HerramientasAlmacen.objects.all()
+                
+                #Si hay, sumar codigo
+                if consultaHerramientas:
+                    for herramienta in consultaHerramientas:
+                        codigo = herramienta.codigo_herramienta
+                    
+                    #el ultimo código
+                    primerDigito = codigo[2]
+                    segundoDigito = codigo[3]
+                    tercerDigito = codigo[4]
+                    cuartoDigito = codigo[5]
+                    
+                    numero = primerDigito+segundoDigito+tercerDigito+cuartoDigito
+                    intNumero = int(numero)
+                    codigoInt = intNumero + 1
+                    codigo = "HA"+str(codigoInt)
+                else:
+                    codigo = "HA1000"
+                
+                # Registro de herramienta
+                fechaAlta = fecha= datetime.now()
+                
+                if imagenHerramienta:
+                    registroHerramienta = HerramientasAlmacen(codigo_herramienta = codigo,
+                                                          nombre_herramienta = nombreHerramienta,
+                                                          descripcion_herramienta = descripcion,
+                                                          marca = marcaHerramienta,
+                                                          unidad = unidadMedida,
+                                                          sku = skuHerramienta,
+                                                          imagen_herramienta = imagenHerramienta,
+                                                          estado_herramienta = "F",
+                                                          motivo_estado = "Es funcional, disponible para prestamo",
+                                                          fecha_alta = fechaAlta, 
+                                                          cantidad_existencia = cantidadHerramienta)
+                else:
+                    registroHerramienta = HerramientasAlmacen(codigo_herramienta = codigo,
+                                                          nombre_herramienta = nombreHerramienta,
+                                                          descripcion_herramienta = descripcion,
+                                                          marca = marcaHerramienta,
+                                                          unidad = unidadMedida,
+                                                          sku = skuHerramienta,
+                                                          estado_herramienta = "F",
+                                                          motivo_estado = "Es funcional, disponible para prestamo",
+                                                          fecha_alta = fechaAlta, 
+                                                          cantidad_existencia = cantidadHerramienta)
+                
+                registroHerramienta.save()
+                if registroHerramienta:
+                    herramientaGuardada = "La herramienta " + nombreHerramienta + " ha sido guardada satisfactoriamente!"
+                    return render(request, "empleadosCustom/almacen/agregarHerramientas.html", {"estaEnAlmacen":estaEnAlmacen,"estaEnAgregarHerramientas":estaEnAgregarHerramientas,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "herramientaGuardada":herramientaGuardada})
         return render(request, "empleadosCustom/almacen/agregarHerramientas.html", {"estaEnAlmacen":estaEnAlmacen,"estaEnAgregarHerramientas":estaEnAgregarHerramientas,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo})
     #Si le da al inicio y no hay una sesión iniciada..
     else:

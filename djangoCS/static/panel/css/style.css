@@ -8226,7 +8226,11 @@ html.ie11 .bs-searchbox .form-control {
 }
 
 .colorAmarilloIcono{
-  color: #ffc300 !important;
+  color: #B8405E !important;
+  
+}
+.colorSeleccionMenuAdmin{
+  color: #2EB086 !important;
   
 }
 .colorTextoSeleccionado{

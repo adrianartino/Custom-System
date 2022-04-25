@@ -25,6 +25,13 @@ Agregar Herramientas | CS
 <!-- Morris Chart Css-->
 <link href={% static 'panel/plugins/morrisjs/morris.css' %} rel="stylesheet" />
 
+<!-- Bootstrap Select Css -->
+<link href={% static 'panel/plugins/bootstrap-select/css/bootstrap-select.css' %} rel="stylesheet" />
+
+<!-- Bootstrap Spinner Css -->
+<link href="{% static 'panel/plugins/jquery-spinner/css/bootstrap-spinner.css' %}" rel="stylesheet">
+
+
 <!-- Custom Css -->
 <link href={% static 'panel/css/style.css' %} rel="stylesheet">
 
@@ -32,6 +39,9 @@ Agregar Herramientas | CS
 
 <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
 <link href={% static 'panel/css/themes/all-themes.css' %} rel="stylesheet" />
+
+<!-- Jquery Spinner Plugin Js -->
+<script src={% static 'panel/plugins/js/spinner.js' %}></script>
 
 
 {% endblock %}
@@ -51,306 +61,153 @@ Agregar Herramientas | CS
 
 
             </div>
+            <div class="body">
+                <form id="form_validation" action="/agregarHerramientasALM/" enctype="multipart/form-data" method="POST">{% csrf_token %}
+                    <div class="row clearfix">
+                        <div class="col-md-7">
+                            <div class="row clearfix">
+                                <div class="col-md-6">
+                                    <label for="email_address"><span style="color: #078F68;">* </span>Tipo:</label>
+        
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="material-icons">work</i>
+                                        </span>
+                                        <select class="form-control show-tick" id="marcas" name="tipoHerramienta">
+                                            <option value="Herramienta" selected> Herramienta de trabajo </option>
+                                            <option value="INstrumento">Instrumento</option>
+                                            
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="email_address"><span style="color: #078F68;">* </span>Nombre:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="material-icons">build</i>
+                                        </span>
+                                        <div class="form-line">
+                                            <input onkeypress='return soloLetras(event)' type="text" class="form-control date"
+                                                placeholder="Ingresar nombre" maxlength="50"
+                                                title="No se permiten caracteres especiales." name="nombreHerramienta" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row clearfix">
+                                <div class="col-md-6">
+                                    <label for="password"><span style="color: #078F68;">* </span>Marca:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="material-icons">copyright</i>
+                                        </span>
+                                        <div class="form-line">
+                                            <input onkeypress='return soloLetras(event)' type="text" class="form-control date"
+                                                placeholder="Ingresar marca" maxlength="50"
+                                                title="No se permiten caracteres especiales." name="marcaHerramienta" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="email_address"><span style="color: #078F68;">* </span>Unidad de medida:</label>
+        
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="material-icons">settings</i>
+                                        </span>
+                                        <select class="form-control show-tick" id="marcas" name="unidadMedida">
+                                            <option value="Pieza" selected>Pieza</option>
+                                            
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-5">
+                            <label for="password"><span style="color: #078F68;">* </span>Descripción:</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <textarea style="border: 1px;" name="descripcion" cols="30" rows="6"
+                                            maxlength="255" class="form-control no-resize" required></textarea>
 
-            <div class="body" id="divActivos">
-                
-
-                <div class="table-responsive">
-
-                    <table class="table table-bordered table-striped table-hover dataTable js-exportable">
-                        <thead>
-                            <tr style="background-color: #fad60e; color: black;">
-                                <th>ID</th>
-                                <th>Nombre</th>
-                                <th>Apellidos</th>
-                                <th>Imagen</th>
-                                <th>Departamento</th>
-                                <th>Puesto</th>
-                                <th>Correo</th>
-                            </tr>
-                        </thead>
-                        <tfoot>
-                            <tr>
-                                <th>ID</th>
-                                <th>Nombre</th>
-                                <th>Apellidos</th>
-                                <th>Imagen</th>
-                                <th>Departamento</th>
-                                <th>Puesto</th>
-                                <th>Correo</th>
-                            </tr>
-                        </tfoot>
-                        <tbody class="animate__animated animate__backInDown">
-                            {% for empleado, area in lista %}
-                            <tr>
-                                <td>{{empleado.id_empleado}}</td>
-                                <td>{{empleado.nombre}}</td>
-                                <td>{{empleado.apellidos}}</td>
-                                <td>
-                                    <center>
-                                        <img src="{{empleado.imagen_empleado.url}}" width="60%" alt="empleado">
-                                    </center>
-                                </td>
-                                <td> <label class="{{area.1}}">{{area.0}}</label> </td>
-                                <td>{{empleado.puesto}}</td>
-                                <td>{{empleado.correo}}</td>
-                                
-                            </tr>
-                            {% endfor %}
-
-
-
-
-                        </tbody>
-                    </table>
-                </div>
-                <br>
-
-
-            </div>
-            <div class="body" id="divInactivos">
-                <div class="row clear-fix">
-                    <div class="col-xs-12 col-sm-1">
-                        <form action="/reporteEmpleadosActivos/" method="POST">{% csrf_token %}
-                            <input type="hidden" name="activo" value="I">
-                            <button type="submit" class="btn bg-red waves-effect animate__animated animate__flipInX"
-                                data-toggle="tooltip" data-placement="bottom"
-                                title="Descargar reporte Empleados de baja en PDF.">
-                                <i class="material-icons">picture_as_pdf</i>
-                                <span>PDF</span>
-                            </button>
-                        </form>
-                    </div>
-                    <div class="col-xs-12 col-sm-1">
-                        <form action="/xlEmpleados/" method="POST">{% csrf_token %}
-                            <input type="hidden" name="activo" value="I">
-                            <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
-                                data-toggle="tooltip" data-placement="bottom"
-                                title="Descargar reporte Empleados de baja en Excel.">
-                                <i class="material-icons">grid_on</i>
-                                <span>Excel</span>
-                            </button>
-                        </form>
-                    </div>
-                    <div class="col-xs-12 col-sm-4">
-                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarEmpleados/">Agregar
-                            Empleado</a>
+                                </div>
+                            </div>
+                        </div>
+                        
                     </div>
 
-                </div>
-                <div class="table-responsive">
+                    <div class="row clearfix">
 
-                    <table class="table table-bordered table-striped table-hover dataTable js-exportable ">
-                        <thead>
-                            <tr style="background-color: #E05D5D; color: whitesmoke;">
-                                <th>ID</th>
-                                <th>Nombre</th>
-                                <th>Apellidos</th>
-                                <th>Imagen</th>
-                                <th>Departamento</th>
-                                <th>Puesto</th>
-                                <th>Correo</th>
-                                <th>Alta</th>
-                            </tr>
-                        </thead>
-                        <tfoot>
-                            <tr>
-                                <th>ID</th>
-                                <th>Nombre</th>
-                                <th>Apellidos</th>
-                                <th>Imagen</th>
-                                <th>Departamento</th>
-                                <th>Puesto</th>
-                                <th>Correo</th>
-                                <th>Alta</th>
-                            </tr>
-                        </tfoot>
-                        <tbody>
-                            {% for empleado, area in lista1 %}
-                            <tr>
-                                <td>{{empleado.id_empleado}}</td>
-                                <td>{{empleado.nombre}}</td>
-                                <td>{{empleado.apellidos}}</td>
-                                <td>
-                                    <center>
-                                        <img src="{{empleado.imagen_empleado.url}}" width="60%" alt="empleado">
-                                    </center>
-                                </td>
-                                <td> <label class="{{area.1}}">{{area.0}}</label> </td>
-                                <td>{{empleado.puesto}}</td>
-                                <td>{{empleado.correo}}</td>
-                                <th>
-                                    <center>
-                                        <button type="button" class="btn bg-green waves-effect" data-toggle="modal"
-                                            data-target="#{{empleado.id_empleado}}">
-                                            <i class="material-icons">upgrade</i>
-                                        </button>
-                                    </center>
-                                </th>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                <br>
-
-            </div>
-        </div>
-    </div>
-</div>
-
-
-{% for empleado, area in listaModal1 %}
-<!-- Default Size -->
-<div class="modal fade" id="{{empleado.id_empleado}}" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content" style="border-radius: 16px;">
-            <div class="modal-header">
-                <center>
-                    <h1 style="color: crimson; font-family: 'Oswald', sans-serif;">DAR DE BAJA EMPLEADO <i
-                            class="material-icons" style="color:black; font-size:100%">get_app</i></h1>
-                    <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
-
-                </center>
-            </div>
-            <div class="modal-body">
-                <form action="/bajaEmpleado/" method="POST">{% csrf_token %}
-                    <div class="body table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr class="bg-teal">
-                                    <th>Nombre</th>
-                                    <th>Apellidos</th>
-                                    <th>Imagen</th>
-                                    <th>Departamento</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td style="color: black;">{{empleado.nombre}}</td>
-                                    <td style="color: black;">{{empleado.apellidos}}</td>
-                                    <th> <img src="{{empleado.imagen_empleado.url}}" width="120" height="150" alt="lap">
-                                    </th>
-                                    <td> <label class="{{area.1}}">{{area.0}}</label> </td>
-                                </tr>
-
-
-                            </tbody>
-                        </table>
-
-
-
+                        <div class="col-md-6">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Imagen de
+                                herramienta/instrumento:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">add_photo_alternate</i>
+                                </span>
+                                <div class="form-line">
+                                    <input type="file" name="imagenHerramienta" id="txtimagen">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="password"><span style="color: #078F68;">* </span>SKU/Número externo:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">copyright</i>
+                                </span>
+                                <div class="form-line">
+                                    <input onkeypress='return soloLetras(event)' type="text" class="form-control date"
+                                        placeholder="Ingresar SKU" maxlength="30"
+                                        title="No se permiten caracteres especiales." name="skuHerramienta" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="password"><span style="color: #078F68;">* </span>Cantidad en existencia:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">copyright</i>
+                                </span>
+                                <div class="form-line">
+                                    <input type="number" class="form-control date"
+                                        placeholder="Ingresar cantidad" maxlength="4" max="1000" min="1" step="1"
+                                         name="cantidadHerramienta" required>
+                                </span>
+                            </div>
+                        </div>
                     </div>
-                    <center>
-                        <input type="hidden" value="{{empleado.id_empleado}}" name="idEmpleadoBaja">
-                        <h3 style="color: black;">Seguro que desea dar de baja al empleado?</h3>
-                        <button type="submit" class="btn bg-red waves-effect">
-                            <i class="material-icons">cancel</i>
-                            <span>DAR DE BAJA</span>
-                        </button>
-                    </center>
+
+
+
+                    <button type="submit"
+                        class="btn btn-warning m-t-15 waves-effect animate__animated animate__flipInX"><i
+                            class="material-icons">build</i> Agregar Herramienta</button>
                 </form>
             </div>
+
+            
         </div>
     </div>
 </div>
 
-{% endfor %}
 
-{% for empleado, area in listaModal2 %}
-<!-- Default Size -->
-<div class="modal fade" id="{{empleado.id_empleado}}" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content" style="border-radius: 16px;">
-            <div class="modal-header">
-                <center>
-                    <h1 style="color: green; font-family: 'Oswald', sans-serif;">DAR DE ALTA EMPLEADO <i
-                            class="material-icons" style="color:black; font-size:100%">upgrade</i></h1>
-                    <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
-
-                </center>
-            </div>
-            <div class="modal-body">
-                <form action="/altaEmpleado/" method="POST">{% csrf_token %}
-                    <div class="body table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr class="bg-teal">
-                                    <th>Nombre</th>
-                                    <th>Apellidos</th>
-                                    <th>Imagen</th>
-                                    <th>Departamento</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td style="color: black;">{{empleado.nombre}}</td>
-                                    <td style="color: black;">{{empleado.apellidos}}</td>
-                                    <th> <img src="{{empleado.imagen_empleado.url}}" width="120" height="150" alt="lap">
-                                    </th>
-                                    <td> <label class="{{area.1}}">{{area.0}}</label> </td>
-                                </tr>
-
-
-                            </tbody>
-                        </table>
-
-
-
-                    </div>
-                    <center>
-                        <input type="hidden" value="{{empleado.id_empleado}}" name="idEmpleadoAlta">
-                        <h3 style="color: black;">Seguro que desea dar de alta al empleado?</h3>
-                        <button type="submit" class="btn bg-green waves-effect">
-                            <i class="material-icons">upgrade</i>
-                            <span>DAR DE ALTA</span>
-                        </button>
-                    </center>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-{% endfor %}
 
 
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-{% if alta %}
+{% if herramientaGuardada %}
 <script type="text/javascript">
     swal({
         icon: 'success',
-        title: 'Wuu..!',
-        text: ' {{mensaje}}',
+        title: 'Enhorabuena..!',
+        text: ' {{herramientaGuardada}}',
         footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
         width: '40%'
     });
 </script>
 {% endif %}
 
-{% if correoEnviado %}
-<script type="text/javascript">
-    swal({
-        icon: 'success',
-        title: 'Wuu..!',
-        text: ' {{mensaje}}',
-        footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
-        width: '40%'
-    });
-</script>
-{% endif %}
-
-{% if baja %}
-<script type="text/javascript">
-    swal({
-        icon: 'error',
-        title: 'Wuu..!',
-        text: ' {{mensaje}}',
-        footer: '<span style="color: red!important"> Vuelve a navegar por Custom System! </span>',
-        width: '40%'
-    });
-</script>
-{% endif %}
 
 <script type="text/javascript">
     function inicio() {
@@ -401,6 +258,13 @@ Agregar Herramientas | CS
 
 <!-- Jquery CountTo Plugin Js -->
 <script src={% static 'panel/plugins/jquery-countto/jquery.countTo.js' %}></script>
+
+<!-- Multi Select Plugin Js -->
+<script src={% static 'panel/plugins/multi-select/js/jquery.multi-select.js' %}></script>
+
+<!-- Jquery Spinner Plugin Js -->
+<script src={% static 'panel/plugins/jquery-spinner/js/jquery.spinner.js' %}></script>
+
 
 <!-- Morris Plugin Js -->
 <script src={% static 'panel/plugins/raphael/raphael.min.js' %}></script>
