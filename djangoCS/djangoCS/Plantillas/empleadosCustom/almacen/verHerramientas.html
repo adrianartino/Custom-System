@@ -47,18 +47,18 @@ Herramientas | Custom System
                 </h2>
 
                 <br>
-                <label for="email_address">Filtro Tipo de herramienta:</label>
+                <label for="email_address">Filtro Estatus de herramientas:</label>
                 <div class="input-group">
                     <span class="input-group-addon">
                         <i class="material-icons">build</i>
                     </span>
                     <select class="form-control show-tick" id="filtroEmpleados" onchange="cambioFiltro();">
-                        <option>Herramientas de trabajo</option>
-                        <option>Instrumentos</option>
+                        <option>Herramientas existentes</option>
+                        <option>Herramienta Dañada o extraviada</option>
 
                     </select>
                 </div>
-
+            
 
             </div>
 
@@ -98,65 +98,123 @@ Herramientas | Custom System
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                         <thead>
                             <tr style="background-color: #fad60e; color: black;">
-                                <th>ID</th>
-                                <th>Código Herramienta</th>
+                                <th>ID- código</th>
+                                <th>Tipo</th>
                                 <th>Nombre</th>
                                 <th>Marca</th>
                                 <th>Descripción</th>
                                 <th>Unidad medida</th>
                                 <th>SKU</th>
                                 <th>Cantidad existencia</th>
+                                <th>Cantidad dañada</th>
                                 <th>Imagen</th>
                                 <th>Estado</th>
-                                <th>Motivo</th>
                                 <th>Fecha alta</th>
                                 <th>Préstamo</th>
+                                <th>Editar</th>
+                                <th>Agregar Defecto</th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
-                                <th>ID</th>
-                                <th>Código Herramienta</th>
+                                <th>ID - código</th>
+                                <th>Tipo</th>
                                 <th>Nombre</th>
                                 <th>Marca</th>
                                 <th>Descripción</th>
                                 <th>Unidad medida</th>
                                 <th>SKU</th>
                                 <th>Cantidad existencia</th>
+                                <th>Cantidad dañada</th>
                                 <th>Imagen</th>
                                 <th>Estado</th>
-                                <th>Motivo</th>
                                 <th>Fecha alta</th>
                                 <th>Préstamo</th>
+                                <th>Editar</th>
+                                <th>Agregar Defecto</th>
                             </tr>
                         </tfoot>
                         <tbody class="animate__animated animate__backInDown">
                             {% for herramienta in registrosHerramientas %}
                             <tr>
-                                <td><h4><span class="label bg-black">{{herramienta.id_herramienta}}</span></h4></td>
-                                <td><h4><span class="label bg-teal">{{herramienta.codigo_herramienta}}</span></h4></td>
+                                <td>
+                                    <div>
+                                        <h4><span class="label bg-black">{{herramienta.id_herramienta}}</span></h4>
+                                    </div>
+                                    <div>
+                                        <h4><span class="label bg-teal">{{herramienta.codigo_herramienta}}</span></h4>
+                                    </div>
+
+                                </td>
+                                {% if herramienta.tipo_herramienta == "Herramienta" %}
+                                <td><div><i class="material-icons" style="font-size: 10px; display:inline;">build</i>{{herramienta.tipo_herramienta}}</div> </td>
+                                {% elif herramienta.tipo_herramienta == "Instrumento" %}
+                                <td><div><i class="material-icons" style="font-size: 10px; display:inline;">flash_auto</i>{{herramienta.tipo_herramienta}}</div> </td>
+                                {% endif %}
                                 <td>{{herramienta.nombre_herramienta}}</td>
                                 <td>{{herramienta.marca}}</td>
                                 <td>{{herramienta.descripcion_herramienta}}</td>
                                 <td>{{herramienta.unidad}}</td>
                                 <td>{{herramienta.sku}}</td>
-                                <td><h4><span class="label bg-indigo">{{herramienta.cantidad_existencia}} unidades</span></h4></td>
+                                <td>
+                                    <center>
+                                    <div>
+                                        <h4><span class="label bg-indigo">{{herramienta.cantidad_existencia}} unidades</span></h4>
+                                    </div>
+                                    <div>
+                                        <h5>+</h5>
+                                    </div>
+                                    <div>
+                                        <h4><span class="label bg-indigo">0 en préstamo</span></h4>
+                                    </div>
+                                </center>
+                                </td>
+                                <td>
+                                    <div>
+                                        <h4><span class="label bg-red">2 unidades</span></h4>
+                                    </div>
+                                </td>
                                 <td>
                                     <center>
                                         <img src="{{herramienta.imagen_herramienta.url}}" width="60%" alt="empleado">
                                     </center>
                                 </td>
+                                
                                 {% if herramienta.estado_herramienta == "F" %}
-                                <td><h4><span class="label bg-green">Funcional</span></h4></td>
+                                <td>
+                                    <h4><span class="label bg-green">Funcional</span></h4>
+                                    <div><label data-toggle="tooltip" data-placement="right"
+                                        title="{{herramienta.motivo_estado}}">Ver motivo</label></div>
+                                </td>
                                 {% elif herramienta.estado_herramienta == "N" %}
-                                <td><h4><span class="label bg-red">No funcional<</span></h4></td>
+                                <td>
+                                    <h4><span class="label bg-red">No funcional</span></h4>
+                                    <div><label data-toggle="tooltip" data-placement="right"
+                                        title="{{herramienta.motivo_estado}}">Ver motivo</label></div>
+                                </td>
                                 {% endif %}
-                                <td>{{herramienta.motivo_estado}}</td>
                                 <td>{{herramienta.fecha_alta}}</td>
                                 
                                 <td>
-                                    <div>S</div>
-                                    <div>José Guadalupe</div>
+                                    <div><h4><span class="label bg-cyan">Si</span></h4></div>
+                                    <div><h4><a href=""><span class="label bg-amber" data-toggle="tooltip" data-placement="left"
+                                        title="Ver préstamo">José Guadalupe</span></a> </h4></div>
+                                </td>
+                                <td>
+                                    
+                                    <center>
+                                        <button type="button" class="btn btn-warning waves-effect" data-toggle="modal" data-target="#modalHerramienta{{herramienta.id_herramienta}}">
+                                            <i class="material-icons">edit</i>
+                                        </button>
+                                    </center>
+                                </td>
+                                <td>
+                                   
+                                    <center>
+                                        <button type="submit" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#modalHerramientaBaja{{herramienta.id_herramienta}}">
+                                            <i class="material-icons">delete</i>
+                                        </button>
+                                    </center>
                                 </td>
                                 
                             </tr>
@@ -171,7 +229,12 @@ Herramientas | Custom System
                 <br>
 
 
+            
+            
+                <br>
+
             </div>
+
             <div class="body" id="divInactivos">
                 <div class="row clear-fix">
                     <div class="col-xs-12 col-sm-1">
@@ -198,7 +261,7 @@ Herramientas | Custom System
                     </div>
                     <div class="col-xs-12 col-sm-4">
                         <a class="label bg-blue-grey" style="font-size:small; " href="/agregarEmpleados/">Agregar
-                            Empleado</a>
+                            Herramientas</a>
                     </div>
 
                 </div>
@@ -207,50 +270,69 @@ Herramientas | Custom System
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable ">
                         <thead>
                             <tr style="background-color: #E05D5D; color: whitesmoke;">
-                                <th>ID</th>
+                                <th>ID Daño</th>
+                                <th>ID Herramienta / código</th>
+                                <th>Tipo/código</th>
                                 <th>Nombre</th>
-                                <th>Apellidos</th>
-                                <th>Imagen</th>
-                                <th>Departamento</th>
-                                <th>Puesto</th>
-                                <th>Correo</th>
-                                <th>Alta</th>
+                                <th>Marca</th>
+                                <th>Descripcion</th>
+                                <th>Cantidad Baja</th>
+                                <th>Préstamo</th>
+                                <th>Motivo baja</th>
+                                <th>Descripción de baja</th>
+                                <th>Fecha de baja</th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
-                                <th>ID</th>
+                                <th>ID Daño</th>
+                                <th>ID Herramienta / código</th>
+                                <th>Tipo</th>
                                 <th>Nombre</th>
-                                <th>Apellidos</th>
-                                <th>Imagen</th>
-                                <th>Departamento</th>
-                                <th>Puesto</th>
-                                <th>Correo</th>
-                                <th>Alta</th>
+                                <th>Marca</th>
+                                <th>Descripcion</th>
+                                <th>Cantidad Baja</th>
+                                <th>Préstamo</th>
+                                <th>Motivo baja</th>
+                                <th>Descripción de baja</th>
+                                <th>Fecha de baja</th>
                             </tr>
                         </tfoot>
                         <tbody>
-                            {% for empleado, area in lista1 %}
+                            {% for daño, datoHerramienta in listaDañadas %}
                             <tr>
-                                <td>{{empleado.id_empleado}}</td>
-                                <td>{{empleado.nombre}}</td>
-                                <td>{{empleado.apellidos}}</td>
+                                <td>{{daño.id_herramientaInactiva}}</td>
                                 <td>
-                                    <center>
-                                        <img src="{{empleado.imagen_empleado.url}}" width="60%" alt="empleado">
-                                    </center>
+                                    <div>
+                                        <h4><span class="label bg-black">{{datoHerramienta.0}}</span></h4>
+                                    </div>
+                                    <div>
+                                        <h4><span class="label bg-teal">{{datoHerramienta.2}}</span></h4>
+                                    </div>
                                 </td>
-                                <td> <label class="{{area.1}}">{{area.0}}</label> </td>
-                                <td>{{empleado.puesto}}</td>
-                                <td>{{empleado.correo}}</td>
-                                <th>
-                                    <center>
-                                        <button type="button" class="btn bg-green waves-effect" data-toggle="modal"
-                                            data-target="#{{empleado.id_empleado}}">
-                                            <i class="material-icons">upgrade</i>
-                                        </button>
-                                    </center>
-                                </th>
+                                {% if datoHerramienta.1 == "Herramienta" %}
+                                <td><div><i class="material-icons" style="font-size: 10px; display:inline;">build</i>{{datoHerramienta.1}}</div> </td>
+                                {% elif datoHerramienta.1 == "Instrumento" %}
+                                <td><div><i class="material-icons" style="font-size: 10px; display:inline;">flash_auto</i>{{hdatoHerramienta.1}}</div> </td>
+                                {% endif %}
+                                <td>{{datoHerramienta.3}}</td>
+                                <td>{{datoHerramienta.4}}</td>
+                                <td>{{datoHerramienta.5}}</td>
+                                <td>1 unidad</td>
+                                {% if daño.id_prestamo == None %}
+                                <td><h4><span class="label bg-orange">Sin prestamo asociado</span></h4></td>
+                                {% else %}
+                                <td><a href=""><h4><span class="label bg-light-green">Prestamo 4</span></h4></a> </td>
+                                {% endif %}
+
+                                {% if daño.motivo_baja == "D" %}
+                                <td><h4><span class="label bg-red">Daño</span></h4> </td>
+                                {% elif daño.motivo_baja == "E" %}
+                                <td><h4><span class="label bg-red">Extravío</span></h4> </td>
+                                {% endif %}
+                                <td>{{daño.explicacion_baja}}</td>
+                                <td>{{daño.fecha_baja}}</td>
+                                
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -259,43 +341,73 @@ Herramientas | Custom System
                 <br>
 
             </div>
+
+
         </div>
     </div>
 </div>
 
 
-{% for empleado, area in listaModal1 %}
+{% for herramienta in registrosHerramientasModal %}
 <!-- Default Size -->
-<div class="modal fade" id="{{empleado.id_empleado}}" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+<div class="modal fade" id="modalHerramienta{{herramienta.id_herramienta}}" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content" style="border-radius: 16px;">
             <div class="modal-header">
                 <center>
-                    <h1 style="color: crimson; font-family: 'Oswald', sans-serif;">DAR DE BAJA EMPLEADO <i
+                    <h1 style="color: green; font-family: 'Oswald', sans-serif;">EDITAR CANTIDADES (ENTRADA) <i
                             class="material-icons" style="color:black; font-size:100%">get_app</i></h1>
                     <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
 
                 </center>
             </div>
             <div class="modal-body">
-                <form action="/bajaEmpleado/" method="POST">{% csrf_token %}
+                <form action="/actualizarCantidadesHerramientasAlmacen/" method="POST">{% csrf_token %}
                     <div class="body table-responsive">
                         <table class="table">
                             <thead>
                                 <tr class="bg-teal">
+                                    <th>ID - Código</th>
                                     <th>Nombre</th>
-                                    <th>Apellidos</th>
+                                    <th>Descripción</th>
                                     <th>Imagen</th>
-                                    <th>Departamento</th>
+                                    <th>Existencia Actual Funcional</th>
+                                    <th>Cantidad a agregar</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td style="color: black;">{{empleado.nombre}}</td>
-                                    <td style="color: black;">{{empleado.apellidos}}</td>
-                                    <th> <img src="{{empleado.imagen_empleado.url}}" width="120" height="150" alt="lap">
+                                    <td>
+                                        <div>
+                                            <h4><span class="label bg-black" >{{herramienta.id_herramienta}}</span></h4>
+                                        </div>
+                                        <div>
+                                            <h4><span class="label bg-teal">{{herramienta.codigo_herramienta}}</span></h4>
+                                        </div>
+                                    </td>
+                                    <td style="color: black;">{{herramienta.nombre_herramienta}}</td>
+                                    <td style="color: black;">{{herramienta.descripcion_herramienta}}</td>
+                                    {% if herramienta.imagen_herramienta %}
+                                    <th> <img src="{{herramienta.imagen_herramienta.url}}" width="120" height="150" alt="lap">
                                     </th>
-                                    <td> <label class="{{area.1}}">{{area.0}}</label> </td>
+                                    {% else %}
+                                    <th style="color: black;">Sin imagen</th>
+                                    {% endif %}
+                                    <td style="color: black;">
+                                        <center>
+                                            <div>
+                                                <h4><span class="label bg-black" >{{herramienta.cantidad_existencia}} unidades</span></h4>
+                                            </div>
+                                            <div>+</div>
+                                            <div>
+                                                <h4><span class="label bg-black" >2 unidades en préstamo</span></h4>
+                                            </div>
+                                        </center>
+                                        
+                                    </td>
+                                    <td> <input type="number" class="form-control date"
+                                        placeholder="Cantidad" maxlength="4" max="1000" min="1" step="1"
+                                         name="cantidadHerramientaActualizar" required></td>
                                 </tr>
 
 
@@ -306,11 +418,11 @@ Herramientas | Custom System
 
                     </div>
                     <center>
-                        <input type="hidden" value="{{empleado.id_empleado}}" name="idEmpleadoBaja">
-                        <h3 style="color: black;">Seguro que desea dar de baja al empleado?</h3>
-                        <button type="submit" class="btn bg-red waves-effect">
-                            <i class="material-icons">cancel</i>
-                            <span>DAR DE BAJA</span>
+                        <input type="hidden" value="{{herramienta.id_herramienta}}" name="idHerramientaActualizar">
+                        
+                        <button type="submit" class="btn bg-green waves-effect">
+                            <i class="material-icons">loop</i>
+                            <span>ACTUALIZAR CANTIDADES</span>
                         </button>
                     </center>
                 </form>
@@ -321,38 +433,64 @@ Herramientas | Custom System
 
 {% endfor %}
 
-{% for empleado, area in listaModal2 %}
+{% for herramientaBaja in registrosHerramientasModalBaja %}
 <!-- Default Size -->
-<div class="modal fade" id="{{empleado.id_empleado}}" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+<div class="modal fade" id="modalHerramientaBaja{{herramientaBaja.id_herramienta}}" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content" style="border-radius: 16px;">
             <div class="modal-header">
                 <center>
-                    <h1 style="color: green; font-family: 'Oswald', sans-serif;">DAR DE ALTA EMPLEADO <i
-                            class="material-icons" style="color:black; font-size:100%">upgrade</i></h1>
+                    <h1 style="color: crimson; font-family: 'Oswald', sans-serif;">DAR DE BAJA HERRAMIENTA <i
+                            class="material-icons" style="color:black; font-size:100%">backspace</i></h1>
+                    <h4 style=" font-family: 'Oswald', sans-serif;">(Por daño o extravío)</h4>
                     <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
 
                 </center>
             </div>
             <div class="modal-body">
-                <form action="/altaEmpleado/" method="POST">{% csrf_token %}
+                <form action="/bajaHerramientaAlmacen/" method="POST">{% csrf_token %}
                     <div class="body table-responsive">
                         <table class="table">
                             <thead>
                                 <tr class="bg-teal">
+                                    <th>ID - Código</th>
                                     <th>Nombre</th>
-                                    <th>Apellidos</th>
+                                    <th>Descripción</th>
                                     <th>Imagen</th>
-                                    <th>Departamento</th>
+                                    <th>Existencia Actual Funcional</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td style="color: black;">{{empleado.nombre}}</td>
-                                    <td style="color: black;">{{empleado.apellidos}}</td>
-                                    <th> <img src="{{empleado.imagen_empleado.url}}" width="120" height="150" alt="lap">
+                                    <td>
+                                        <div>
+                                            <h4><span class="label bg-black" >{{herramientaBaja.id_herramienta}}</span></h4>
+                                        </div>
+                                        <div>
+                                            <h4><span class="label bg-teal">{{herramientaBaja.codigo_herramienta}}</span></h4>
+                                        </div>
+                                    </td>
+                                    <td style="color: black;">{{herramientaBaja.nombre_herramienta}}</td>
+                                    <td style="color: black;">{{herramientaBaja.descripcion_herramienta}}</td>
+                                    {% if herramientaBaja.imagen_herramienta %}
+                                    <th> <img src="{{herramientaBaja.imagen_herramienta.url}}" width="120" height="150" alt="lap">
                                     </th>
-                                    <td> <label class="{{area.1}}">{{area.0}}</label> </td>
+                                    {% else %}
+                                    <th style="color: black;">Sin imagen</th>
+                                    {% endif %}
+                                    <td style="color: black;">
+                                        <center>
+                                            <div>
+                                                <h4><span class="label bg-black" >{{herramientaBaja.cantidad_existencia}} unidades</span></h4>
+                                            </div>
+                                            <div>+</div>
+                                            <div>
+                                                <h4><span class="label bg-black" >2 unidades en préstamo</span></h4>
+                                            </div>
+                                        </center>
+                                        
+                                    </td>
+                                    
                                 </tr>
 
 
@@ -362,12 +500,49 @@ Herramientas | Custom System
 
 
                     </div>
+                    <div class="row clearfix">
+                        <div class="col-md-6">
+                            <h2><span class="label bg-black">CANTIDAD DE BAJA:</span> <span class="label bg-red">1 unidad.</span> </h2>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Motivo de baja:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">settings</i>
+                                </span>
+                                <select class="form-control show-tick" id="marcas" name="motivoBaja" required>
+                                    <option value="D" selected>Daño</option>
+                                    <option value="E">Extravío</option>
+                                    
+                                </select>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="row clearfix">
+                        <div class="col-md-3">
+                            <h2><span class="label bg-black">MOTIVO DE BAJA:</span></h2>
+                        </div>
+                        <div class="col-md-9">
+                            <label for="password"><span style="color: #078F68;">* </span>Agregar Motivo:</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <textarea style="border: 1px;" name="explicacion" cols="30" rows="6"
+                                            maxlength="255" class="form-control no-resize" required></textarea>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <br>
                     <center>
-                        <input type="hidden" value="{{empleado.id_empleado}}" name="idEmpleadoAlta">
-                        <h3 style="color: black;">Seguro que desea dar de alta al empleado?</h3>
-                        <button type="submit" class="btn bg-green waves-effect">
-                            <i class="material-icons">upgrade</i>
-                            <span>DAR DE ALTA</span>
+                        <input type="hidden" value="{{herramientaBaja.id_herramienta}}" name="idHerramientaBaja">
+                        
+                        <button type="submit" class="btn bg-red waves-effect">
+                            <i class="material-icons">clear</i>
+                            <span>Dar de baja herramienta</span>
                         </button>
                     </center>
                 </form>
@@ -380,12 +555,12 @@ Herramientas | Custom System
 
 
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-{% if alta %}
+{% if herramientaAct %}
 <script type="text/javascript">
     swal({
         icon: 'success',
-        title: 'Wuu..!',
-        text: ' {{mensaje}}',
+        title: 'Enhorabuena..!',
+        text: ' {{herramientaAct}}',
         footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
         width: '40%'
     });

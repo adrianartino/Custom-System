@@ -186,6 +186,8 @@ urlpatterns = [
     path("historialSolicitudesALM/",almacen.historialSolicitudesALM),
     path("solicitudesMarcadasALM/",almacen.solicitudesMarcadasALM),
     path("verHerramientasALM/",almacen.verHerramientasALM),
+    path('actualizarCantidadesHerramientasAlmacen/', almacen.actualizarCantidadesHerramientasAlmacen),
+    path('bajaHerramientaAlmacen/', almacen.bajaHerramientaAlmacen),
     path("agregarHerramientasALM/",almacen.agregarHerramientasALM),
     path("solicitarHerramientas/",almacen.solicitarHerramientas),
     path("verMisPrestamos/",almacen.verMisPrestamos),

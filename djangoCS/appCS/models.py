@@ -2,7 +2,7 @@ from os import truncate
 from pyexpat import model
 from django.db import models
 from django.db.models.deletion import CASCADE
-from django.forms import CharField
+from django.forms import CharField, model_to_dict
 
 
 # Create your models here.
@@ -302,14 +302,13 @@ class ImplementacionSoluciones (models.Model):
 class PrestamosAlmacen (models.Model):
     id_prestamo = models.AutoField(primary_key=True)
     fecha_solicitud = models.DateField()
+    fecha_requerimiento = models.DateField(null=True)
     id_empleado_solicitante = models.ForeignKey(Empleados, on_delete=models.CASCADE)
-    tipo = models.CharField(max_length = 50, null=True)
     proyecto_tarea = models.CharField(max_length = 100, null=True)
     observaciones = models.CharField(max_length=255)
-    tabla = models.CharField(max_length=100, null=True)
-    id_herramientaInstrumento = models.CharField(max_length=4, null=True)
+    id_herramientaInstrumento = models.CharField(max_length=100, null=True)
+    cantidades_solicitadas = models.CharField(max_length=100, null=True)
     otro = models.CharField(max_length=100, null=True)
-    cantidad_solicitada = models.IntegerField()
     fecha_prestamo = models.DateField()
     firma_prestamo = models.ImageField(upload_to="firmasPrestamosAlmacen", null = True)
     fecha_devolucion = models.DateField(null=True)
@@ -323,6 +322,7 @@ class PrestamosAlmacen (models.Model):
 class HerramientasAlmacen (models.Model):
     id_herramienta = models.AutoField(primary_key=True)
     codigo_herramienta = models.CharField(max_length=6)
+    tipo_herramienta = models.CharField(max_length=15, null=True)
     nombre_herramienta = models.CharField(max_length=100)
     descripcion_herramienta = models.TextField()
     marca = models.CharField(max_length=50)
@@ -333,6 +333,18 @@ class HerramientasAlmacen (models.Model):
     estado_herramienta = models.CharField(max_length=2)
     motivo_estado = models.CharField(max_length=200)
     fecha_alta = models.DateField()
+
+    def __str__(self):
+        return self.id_herramienta
+    
+class HerramientasAlmacenInactivas (models.Model):
+    id_herramientaInactiva = models.AutoField(primary_key=True)
+    id_herramienta = models.ForeignKey(HerramientasAlmacen, on_delete=models.CASCADE)
+    id_prestamo = models.ForeignKey(PrestamosAlmacen, on_delete=models.CASCADE, null=True)
+    motivo_baja = models.CharField(max_length=6)
+    explicacion_baja = models.TextField()
+    cantidad_baja = models.CharField(max_length=15, null=True)
+    fecha_baja = models.DateField()
 
     def __str__(self):
         return self.id_herramienta

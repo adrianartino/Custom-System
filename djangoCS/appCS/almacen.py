@@ -14,7 +14,7 @@ from django.shortcuts import redirect
 from reportlab import cmp
 
 #Importación de modelos
-from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Preguntas, Encuestas, Respuestas, EncuestaEmpleadoResuelta, Mouses, Teclados, Monitores, HerramientasAlmacen, InstrumentosAlmacen
+from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Preguntas, Encuestas, Respuestas, EncuestaEmpleadoResuelta, Mouses, Teclados, Monitores, HerramientasAlmacen, InstrumentosAlmacen, HerramientasAlmacenInactivas
 
 #Librería para manejar archivos en Python
 from django.core.files.base import ContentFile
@@ -153,10 +153,37 @@ def verHerramientasALM(request):
         nombreCompleto = nombreini + " " + apellidosini #Blanca Yesenia Gaeta Talamantes
         
         registrosHerramientas = HerramientasAlmacen.objects.all()
-        registrosInstrumentos = InstrumentosAlmacen.objects.all()
+        registrosHerramientasModal = HerramientasAlmacen.objects.all()
+        registrosHerramientasModalBaja = HerramientasAlmacen.objects.all()
+        
+        registrosHerramientasDañadas = HerramientasAlmacenInactivas.objects.all()
+        datosHerramientasDañadas = []
+        for herramientaDañada in registrosHerramientasDañadas:
+            id_herramienta = herramientaDañada.id_herramienta_id
+            
+            #consulta a herramienta
+            datosHerramienta = HerramientasAlmacen.objects.filter(id_herramienta = id_herramienta)
+            
+            for herramienta in datosHerramienta:
+            
+                tipo = herramienta.tipo_herramienta
+                codigo = herramienta.codigo_herramienta
+                nombre = herramienta.nombre_herramienta
+                marca = herramienta.marca
+                descripcion = herramienta.descripcion_herramienta
+            
+            datosHerramientasDañadas.append([id_herramienta, tipo, codigo, nombre, marca, descripcion])
+        
+        listaDañadas = zip(registrosHerramientasDañadas, datosHerramientasDañadas)    
+    
+        if "herramientaActualizada" in request.session:
+            herramientaAct = request.session['herramientaActualizada']
+            del request.session['herramientaActualizada']
+            return render(request, "empleadosCustom/almacen/verHerramientas.html", {"estaEnAlmacen":estaEnAlmacen,"estaEnVerHerramientas":estaEnVerHerramientas,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "registrosHerramientas":registrosHerramientas, "registrosHerramientasModal":registrosHerramientasModal, "registrosHerramientasModalBaja":registrosHerramientasModalBaja, "listaDañadas":listaDañadas, "herramientaAct":herramientaAct})
+            
 
 
-        return render(request, "empleadosCustom/almacen/verHerramientas.html", {"estaEnAlmacen":estaEnAlmacen,"estaEnVerHerramientas":estaEnVerHerramientas,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "registrosHerramientas":registrosHerramientas, "registrosInstrumentos":registrosInstrumentos})
+        return render(request, "empleadosCustom/almacen/verHerramientas.html", {"estaEnAlmacen":estaEnAlmacen,"estaEnVerHerramientas":estaEnVerHerramientas,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "registrosHerramientas":registrosHerramientas, "registrosHerramientasModalBaja":registrosHerramientasModalBaja, "registrosHerramientasModal":registrosHerramientasModal, "listaDañadas":listaDañadas})
     #Si le da al inicio y no hay una sesión iniciada..
     else:
         return redirect('/login/') #redirecciona a url de inicio
@@ -192,33 +219,33 @@ def agregarHerramientasALM(request):
             cantidadHerramienta = request.POST['cantidadHerramienta']
             
             
-            if tipoHerramienta == "Herramienta":
-                #Codigo de herramienta
-                consultaHerramientas = HerramientasAlmacen.objects.all()
+            #Codigo de herramienta
+            consultaHerramientas = HerramientasAlmacen.objects.all()
                 
-                #Si hay, sumar codigo
-                if consultaHerramientas:
-                    for herramienta in consultaHerramientas:
-                        codigo = herramienta.codigo_herramienta
+            #Si hay, sumar codigo
+            if consultaHerramientas:
+                for herramienta in consultaHerramientas:
+                    codigo = herramienta.codigo_herramienta
                     
                     #el ultimo código
-                    primerDigito = codigo[2]
-                    segundoDigito = codigo[3]
-                    tercerDigito = codigo[4]
-                    cuartoDigito = codigo[5]
+                primerDigito = codigo[2]
+                segundoDigito = codigo[3]
+                tercerDigito = codigo[4]
+                cuartoDigito = codigo[5]
                     
-                    numero = primerDigito+segundoDigito+tercerDigito+cuartoDigito
-                    intNumero = int(numero)
-                    codigoInt = intNumero + 1
-                    codigo = "HA"+str(codigoInt)
-                else:
-                    codigo = "HA1000"
+                numero = primerDigito+segundoDigito+tercerDigito+cuartoDigito
+                intNumero = int(numero)
+                codigoInt = intNumero + 1
+                codigo = "HA"+str(codigoInt)
+            else:
+                codigo = "HA1000"
                 
                 # Registro de herramienta
-                fechaAlta = fecha= datetime.now()
+            fechaAlta =  datetime.now()
                 
-                if imagenHerramienta:
-                    registroHerramienta = HerramientasAlmacen(codigo_herramienta = codigo,
+            if imagenHerramienta:
+                registroHerramienta = HerramientasAlmacen(codigo_herramienta = codigo,
+                                                          tipo_herramienta = tipoHerramienta,
                                                           nombre_herramienta = nombreHerramienta,
                                                           descripcion_herramienta = descripcion,
                                                           marca = marcaHerramienta,
@@ -229,8 +256,9 @@ def agregarHerramientasALM(request):
                                                           motivo_estado = "Es funcional, disponible para prestamo",
                                                           fecha_alta = fechaAlta, 
                                                           cantidad_existencia = cantidadHerramienta)
-                else:
-                    registroHerramienta = HerramientasAlmacen(codigo_herramienta = codigo,
+            else:
+                registroHerramienta = HerramientasAlmacen(codigo_herramienta = codigo,
+                                                          tipo_herramienta = tipoHerramienta,
                                                           nombre_herramienta = nombreHerramienta,
                                                           descripcion_herramienta = descripcion,
                                                           marca = marcaHerramienta,
@@ -241,10 +269,10 @@ def agregarHerramientasALM(request):
                                                           fecha_alta = fechaAlta, 
                                                           cantidad_existencia = cantidadHerramienta)
                 
-                registroHerramienta.save()
-                if registroHerramienta:
-                    herramientaGuardada = "La herramienta " + nombreHerramienta + " ha sido guardada satisfactoriamente!"
-                    return render(request, "empleadosCustom/almacen/agregarHerramientas.html", {"estaEnAlmacen":estaEnAlmacen,"estaEnAgregarHerramientas":estaEnAgregarHerramientas,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "herramientaGuardada":herramientaGuardada})
+            registroHerramienta.save()
+            if registroHerramienta:
+                herramientaGuardada = "La herramienta " + nombreHerramienta + " ha sido guardada satisfactoriamente!"
+                return render(request, "empleadosCustom/almacen/agregarHerramientas.html", {"estaEnAlmacen":estaEnAlmacen,"estaEnAgregarHerramientas":estaEnAgregarHerramientas,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "herramientaGuardada":herramientaGuardada})
         return render(request, "empleadosCustom/almacen/agregarHerramientas.html", {"estaEnAlmacen":estaEnAlmacen,"estaEnAgregarHerramientas":estaEnAgregarHerramientas,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo})
     #Si le da al inicio y no hay una sesión iniciada..
     else:
@@ -273,9 +301,12 @@ def solicitarHerramientas(request):
         correo = request.session['correoSesion']
         foto = fotoAdmin(request)
         nombreCompleto = nombreini + " " + apellidosini #Blanca Yesenia Gaeta Talamantes
+        
+        fechaHoy = datetime.now()
 
 
-        return render(request, "empleadosCustom/almacen/empleados/solicitudHerramientas.html", {"solicitantePrestamo":solicitantePrestamo,"estaEnSolicitarHerramienta":estaEnSolicitarHerramienta,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo})
+        return render(request, "empleadosCustom/almacen/empleados/solicitudHerramientas.html", {"solicitantePrestamo":solicitantePrestamo,"estaEnSolicitarHerramienta":estaEnSolicitarHerramienta,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
+                                                                                                "fechaHoy":fechaHoy})
     #Si le da al inicio y no hay una sesión iniciada..
     else:
         return redirect('/login/') #redirecciona a url de inicio
@@ -303,3 +334,68 @@ def verMisPrestamos(request):
     else:
         return redirect('/login/') #redirecciona a url de inicio
 
+def actualizarCantidadesHerramientasAlmacen(request):
+    #Si ya hay una sesión iniciada..
+    if "idSesion" in request.session:
+        
+        if request.method == "POST":
+            idHerramientaActualizar = request.POST['idHerramientaActualizar']
+            cantidadHerramientaActualizar = request.POST['cantidadHerramientaActualizar']
+            intCantidadHerramientaActualizar = int(cantidadHerramientaActualizar)
+            
+            consultaHerramienta = HerramientasAlmacen.objects.filter(id_herramienta = idHerramientaActualizar)
+            
+            for dato in consultaHerramienta:
+                cantidadExistenteActual = dato.cantidad_existencia
+                nombreHerramienta = dato.nombre_herramienta
+                
+            intCantidadExistenciaActual = int(cantidadExistenteActual)
+            
+            sumaCantidad = intCantidadExistenciaActual + intCantidadHerramientaActualizar
+            
+            #Actualizar cantidad
+            actualizacion = HerramientasAlmacen.objects.filter(id_herramienta = idHerramientaActualizar).update(cantidad_existencia = sumaCantidad)
+            
+            if actualizacion:
+                request.session['herramientaActualizada'] = "La herramienta " + nombreHerramienta + " ha sido actualizada satisfactoriamente!"
+                
+                return redirect('/verHerramientasALM/')
+    #Si le da al inicio y no hay una sesión iniciada..
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+    
+def bajaHerramientaAlmacen(request):
+    #Si ya hay una sesión iniciada..
+    if "idSesion" in request.session:
+        
+        if request.method == "POST":
+            idHerramientaBaja = request.POST['idHerramientaBaja']
+            motivoBaja = request.POST['motivoBaja']
+            explicacion = request.POST['explicacion']
+            
+            consultaHerramienta = HerramientasAlmacen.objects.filter(id_herramienta = idHerramientaBaja)
+            
+            for dato in consultaHerramienta:
+                cantidadExistenteActual = dato.cantidad_existencia
+                nombreHerramienta = dato.nombre_herramienta
+                
+            intCantidadExistenciaActual = int(cantidadExistenteActual)
+            
+            
+            restaCantidad = intCantidadExistenciaActual - 1
+            fechaBaja = datetime.now()
+            #Actualizar cantidad
+            actualizacion = HerramientasAlmacen.objects.filter(id_herramienta = idHerramientaBaja).update(cantidad_existencia = restaCantidad)
+            
+            #Registro de baja 
+            registroDeBaja = HerramientasAlmacenInactivas(id_herramienta = HerramientasAlmacen.objects.get(id_herramienta = idHerramientaBaja), motivo_baja = motivoBaja, explicacion_baja = explicacion, 
+                                                          cantidad_baja = "1", fecha_baja = fechaBaja)
+            registroDeBaja.save()
+            if actualizacion and registroDeBaja:
+                request.session['herramientaActualizada'] = "La herramienta " + nombreHerramienta + " ha sido dada de baja satisfactoriamente!"
+                
+                return redirect('/verHerramientasALM/')
+    #Si le da al inicio y no hay una sesión iniciada..
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+    
