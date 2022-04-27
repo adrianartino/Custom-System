@@ -5,6 +5,7 @@ import os
 import base64
 from io  import BytesIO
 from io import StringIO
+from typing import List
 
 #Renderizado
 from django.http import response
@@ -12,9 +13,11 @@ from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.shortcuts import redirect
 from reportlab import cmp
+from django.views.generic import ListView
+import json
 
 #Importación de modelos
-from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Preguntas, Encuestas, Respuestas, EncuestaEmpleadoResuelta, Mouses, Teclados, Monitores, HerramientasAlmacen, InstrumentosAlmacen, HerramientasAlmacenInactivas
+from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Preguntas, Encuestas, Respuestas, EncuestaEmpleadoResuelta, Mouses, Teclados, Monitores, HerramientasAlmacen, InstrumentosAlmacen, HerramientasAlmacenInactivas, PrestamosAlmacen
 
 #Librería para manejar archivos en Python
 from django.core.files.base import ContentFile
@@ -303,10 +306,70 @@ def solicitarHerramientas(request):
         nombreCompleto = nombreini + " " + apellidosini #Blanca Yesenia Gaeta Talamantes
         
         fechaHoy = datetime.now()
+        
+        
+        data = [i.json() for i in HerramientasAlmacen.objects.all()]
+        consulta = HerramientasAlmacen.objects.all()
+        consulta2 = HerramientasAlmacen.objects.all()
+        consultaFunciones = HerramientasAlmacen.objects.all()
+        
+        if request.method == "POST":
+            
+            fecha_solicitud = datetime.now()
+            fecha_requerido = request.POST['fecha_requerido']
+            fecha_separada = fecha_requerido.split("/") #29   06    2018            2018     29   06
+            fecha_normal_requerido = fecha_separada[2] + "-" + fecha_separada[0] + "-" + fecha_separada[1]
+            
+            proyecto = request.POST['proyecto']
+            notas = request.POST['notas']
+            cantidadHerramientasSolicitadas = request.POST['cantidadHerramientasSolicitadas']
+            
+            arregloCantidades = []
+            
+            arregloIdsHerramientas = cantidadHerramientasSolicitadas.split(",")
+            contadorHerramienta = 0
+            for h in arregloIdsHerramientas:
+                contadorHerramienta = contadorHerramienta + 1
+            
+            
+            idPregunta = "id"
+            cantidadSolicitar = "cantidadSolicitar"
+            herramienta = 0
+            for idherramienta in range(contadorHerramienta):
+                herramienta= herramienta + 1
+                nameIdDeHerramienta = idPregunta + str(herramienta)
+                nameCantidadASolicitar = cantidadSolicitar + str(herramienta)
+                
+                #Obtener valores que se mandaron
+                idHerramientaMandado = request.POST[nameIdDeHerramienta]
+                cantidadSolicitadaMandada = request.POST[nameCantidadASolicitar]
+                arregloCantidades.append(cantidadSolicitadaMandada)
 
+            stringCantidadesAGuardarEnBD = ""
+            contadorCantidades = 0
+            for cantidad in arregloCantidades:
+                contadorCantidades = contadorCantidades + 1
+                if contadorCantidades == 1:
+                    stringCantidadesAGuardarEnBD = str(cantidad)
+                else:
+                    stringCantidadesAGuardarEnBD += "," + str(cantidad)
+                    
+            
+            registroSolicitudPrestamo = PrestamosAlmacen(fecha_solicitud = fecha_solicitud,
+                                                         fecha_requerimiento = fecha_normal_requerido,
+                                                         id_empleado_solicitante = Empleados.objects.get(id_empleado = id_admin),
+                                                         proyecto_tarea = proyecto,
+                                                         observaciones = notas,
+                                                         id_herramientaInstrumento = cantidadHerramientasSolicitadas,
+                                                         cantidades_solicitadas = stringCantidadesAGuardarEnBD,
+                                                         estatus = "Pendiente")
+            registroSolicitudPrestamo.save()
+            solicitudGuardada = "La solicitud ha sigo guardada con exito!"
+            return render(request, "empleadosCustom/almacen/empleados/solicitudHerramientas.html", {"solicitantePrestamo":solicitantePrestamo,"estaEnSolicitarHerramienta":estaEnSolicitarHerramienta,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
+                                                                                                "fechaHoy":fechaHoy, "context":json.dumps(data), "HerramientasAlmacen":consulta, "consulta2":consulta2, "consultaFunciones":consultaFunciones, "solicitudGuardada":solicitudGuardada, "contadorHerramienta":contadorHerramienta})
 
         return render(request, "empleadosCustom/almacen/empleados/solicitudHerramientas.html", {"solicitantePrestamo":solicitantePrestamo,"estaEnSolicitarHerramienta":estaEnSolicitarHerramienta,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
-                                                                                                "fechaHoy":fechaHoy})
+                                                                                                "fechaHoy":fechaHoy, "context":json.dumps(data), "HerramientasAlmacen":consulta, "consulta2":consulta2, "consultaFunciones":consultaFunciones})
     #Si le da al inicio y no hay una sesión iniciada..
     else:
         return redirect('/login/') #redirecciona a url de inicio
@@ -399,3 +462,4 @@ def bajaHerramientaAlmacen(request):
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
+

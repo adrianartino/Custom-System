@@ -309,7 +309,7 @@ class PrestamosAlmacen (models.Model):
     id_herramientaInstrumento = models.CharField(max_length=100, null=True)
     cantidades_solicitadas = models.CharField(max_length=100, null=True)
     otro = models.CharField(max_length=100, null=True)
-    fecha_prestamo = models.DateField()
+    fecha_prestamo = models.DateField(null=True)
     firma_prestamo = models.ImageField(upload_to="firmasPrestamosAlmacen", null = True)
     fecha_devolucion = models.DateField(null=True)
     firma_devolucion = models.ImageField(upload_to="firmasDevolucionAlmacen", null = True)
@@ -337,6 +337,22 @@ class HerramientasAlmacen (models.Model):
     def __str__(self):
         return self.id_herramienta
     
+    def json(self):
+        return {
+            'id_herramienta':    self.id_herramienta,
+            'codigo': self.codigo_herramienta,
+            'tipo_herramienta': self.tipo_herramienta,
+            'nombre_herramienta': self.nombre_herramienta,
+            'descripcion_herramienta': self.descripcion_herramienta,
+            'marca': self.marca,
+            'unidad': self.unidad,
+            'sku': self.sku,
+            'cantidad_existencia': self.cantidad_existencia,
+            'imagen_herramienta': str(self.imagen_herramienta),
+            'estado_herramienta': self.estado_herramienta,
+            'motivo_estado': self.motivo_estado,
+            'fecha_alta': str(self.fecha_alta) 
+        }
 class HerramientasAlmacenInactivas (models.Model):
     id_herramientaInactiva = models.AutoField(primary_key=True)
     id_herramienta = models.ForeignKey(HerramientasAlmacen, on_delete=models.CASCADE)

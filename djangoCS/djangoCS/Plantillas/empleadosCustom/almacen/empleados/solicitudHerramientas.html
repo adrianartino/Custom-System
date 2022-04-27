@@ -63,7 +63,7 @@ Solicitud Herramientas | CS
 
             </div>
             <div class="body">
-                <form id="form_validation" action="/agregarHerramientasALM/" enctype="multipart/form-data" method="POST">{% csrf_token %}
+                <form id="form_validation" action="/solicitarHerramientas/" enctype="multipart/form-data" method="POST">{% csrf_token %}
                     <div class="row clearfix">
                         <div class="col-md-7">
                             <div class="row clearfix">
@@ -86,7 +86,7 @@ Solicitud Herramientas | CS
                                             <i class="material-icons">date_range</i>
                                         </span>
                                         <div class="form-line" id="bs_datepicker_container">
-                                            <input type="text" class="form-control" name="fecha_compra"
+                                            <input type="text" class="form-control" name="fecha_requerido"
                                                 placeholder="Seleccionar fecha" required>
                                         </div>
                                     </div>
@@ -102,7 +102,7 @@ Solicitud Herramientas | CS
                                         <div class="form-line">
                                             <input type="text" class="form-control date"
                                                 placeholder="Ingresar proyecto/tarea" maxlength="50"
-                                                 name="marcaHerramienta" required>
+                                                 name="proyecto" required>
                                         </div>
                                     </div>
                                 </div>
@@ -114,33 +114,174 @@ Solicitud Herramientas | CS
                             <label for="password"><span style="color: #078F68;">* </span>Notas:</label>
                             <div class="form-group">
                                 <div class="form-line">
-                                    <textarea style="border: 1px;" name="descripcion" cols="30" rows="6"
+                                    <textarea style="border: 1px;" name="notas" cols="30" rows="6"
                                             maxlength="255" class="form-control no-resize" required placeholder="Ingresar notas"></textarea>
 
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-12">
-                            <label for="password"><span style="color: #078F68;">* </span>Busqueda de producto:</label>
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <i class="material-icons">work</i>
-                                    </span>
-                                    <div class="form-line">
-                                        <input type="text" name="buscador" id="buscador" placeholder="Ingresar una descripcion de herramienta">
-                                    </div>
-                                </div>
-                        </div>
+                        
                         
                     </div>
+                    <h1 style="font-family: 'Oswald', sans-serif;" >
+                        BUSQUEDA DE PRODUCTOS. 
+                    </h1>
+                    
+                    <div class="table-responsive">
 
+                        <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                            <thead>
+                                <tr style="background-color: #fad60e; color: black;">
+                                    <th>ID- código</th>
+                                    <th>Tipo</th>
+                                    <th>Nombre</th>
+                                    <th>Marca</th>
+                                    <th>Descripción</th>
+                                    <th>Unidad medida</th>
+                                    <th>SKU</th>
+                                    <th>Imagen</th>
+                                    <th>Existencia en almacén</th>
+                                    <th>Solicitar</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>ID- código</th>
+                                    <th>Tipo</th>
+                                    <th>Nombre</th>
+                                    <th>Marca</th>
+                                    <th>Descripción</th>
+                                    <th>Unidad medida</th>
+                                    <th>SKU</th>
+                                    <th>Imagen</th>
+                                    <th>Existencia en almacén</th>
+                                    <th>Solicitar</th>
+                                </tr>
+                            </tfoot>
+                            <tbody class="animate__animated animate__backInDown">
+                                {% for herramienta in consulta2 %}
+                                <tr>
+                                    <td>
+                                        <div>
+                                            <h4><span class="label bg-black">{{herramienta.id_herramienta}}</span></h4>
+                                        </div>
+                                        <div>
+                                            <h4><span class="label bg-teal">{{herramienta.codigo_herramienta}}</span></h4>
+                                        </div>
+    
+                                    </td>
+                                    {% if herramienta.tipo_herramienta == "Herramienta" %}
+                                    <td><div><i class="material-icons" style="font-size: 10px; display:inline;">build</i>{{herramienta.tipo_herramienta}}</div> </td>
+                                    {% elif herramienta.tipo_herramienta == "Instrumento" %}
+                                    <td><div><i class="material-icons" style="font-size: 10px; display:inline;">flash_auto</i>{{herramienta.tipo_herramienta}}</div> </td>
+                                    {% endif %}
+                                    <td>{{herramienta.nombre_herramienta}}</td>
+                                    <td>{{herramienta.marca}}</td>
+                                    <td>{{herramienta.descripcion_herramienta}}</td>
+                                    <td>{{herramienta.unidad}}</td>
+                                    <td>{{herramienta.sku}}</td>
+                                    {% if herramienta.imagen_herramienta %}
+                                    <td>
+                                        <center>
+                                            <img src="{{herramienta.imagen_herramienta.url}}" width="60%" alt="empleado">
+                                        </center>
+                                    </td>
+                                    {% else %}
+                                    <td>Sin imagen</td>
+                                    {% endif %}
+                                    <td>
+                                        <center>
+                                        <div>
+                                            <h4><span class="label bg-indigo">{{herramienta.cantidad_existencia}} unidades</span></h4>
+                                        </div>
+                                        <div>
+                                            <h5>+</h5>
+                                        </div>
+                                        <div>
+                                            <h4><span class="label bg-indigo">0 en préstamo</span></h4>
+                                        </div>
+                                    </center>
+                                    </td>
+                                    <td>
+                                        <input type="checkbox" id="check{{herramienta.codigo_herramienta}}" class="filled-in chk-col-green" onclick="agregarHerramienta{{herramienta.id_herramienta}}('{{herramienta.codigo_herramienta}}')"/>
+                                        <label for="check{{herramienta.codigo_herramienta}}">SOLICITAR</label>
+                                    </td>
+                                    
+                                    
+                                </tr>
+                                {% endfor %}
+    
+    
+    
+    
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div >
+                        <h1 style="font-family: 'Oswald', sans-serif;">
+                            HERRAMIENTAS AGREGADAS.
+                        </h1>
+                        <div >
+                            <div class="table-responsive">
+
+                                <table class="table table-bordered table-striped table-hover dataTable">
+                                    <thead>
+                                        <tr style="background-color: #3F51B5; color: black;">
+                                            <th>ID- código</th>
+                                            <th>Tipo</th>
+                                            <th>Nombre</th>
+                                            <th>Marca</th>
+                                            <th>Imagen</th>
+                                            <th>Descripción</th>
+                                            <th>Unidad medida</th>
+                                            <th>SKU</th>
+                                            <th>Existencia en almacén</th>
+                                            <th>Cantidad a solicitar</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th>ID- código</th>
+                                            <th>Tipo</th>
+                                            <th>Nombre</th>
+                                            <th>Marca</th>
+                                            <th>Imagen</th>
+                                            <th>Descripción</th>
+                                            <th>Unidad medida</th>
+                                            <th>SKU</th>
+                                            <th>Existencia en almacén</th>
+                                            <th>Cantidad a solicitar</th>
+                                        </tr>
+                                    </tfoot>
+                                    <tbody class="animate__animated animate__backInDown" id="herramientasAgregadas">
+                                        
+                                        
+            
+            
+            
+            
+                                    </tbody>
+                                    
+                                </table>
+                            </div>
+                            <div id="inputCantidadHerramientas">
+
+                            </div>
+                        </div>
+                    </div>
                     
 
 
                     <button type="submit"
                         class="btn btn-warning m-t-15 waves-effect animate__animated animate__flipInX"><i
-                            class="material-icons">build</i> Agregar Herramienta</button>
+                            class="material-icons">build</i> Realizar Solicitud</button>
                 </form>
+                {% if arregloIdsHerramientas %}
+                {% for x in arregloIdsHerramientas %}
+                    <h1>{{x}}</h1>
+                {% endfor %}
+                {% endif %}
             </div>
 
             
@@ -152,13 +293,13 @@ Solicitud Herramientas | CS
 
 
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-{% if herramientaGuardada %}
+{% if solicitudGuardada %}
 <script type="text/javascript">
     swal({
         icon: 'success',
         title: 'Enhorabuena..!',
-        text: ' {{herramientaGuardada}}',
-        footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
+        text: ' {{solicitudGuardada}}',
+        footer: '<span style="color: green!important"> Puedes visualizar la solicitud en el apartado "Ver mis prestamos"</span>',
         width: '40%'
     });
 </script>
@@ -189,9 +330,117 @@ Solicitud Herramientas | CS
 </script>
 
 
+
 {% endblock %}
 
 {% block estilosJs %}
+
+<script>
+
+    const data = '{{context}}'
+    console.log(data)
+
+    const rdata = JSON.parse(data.replace(/&quot;/g,'"'));
+    console.log(rdata)
+
+    var caontadorCheckbox = 0;
+    var idsHerramientasASolicitar = [];
+    var valorHerramientasTotalesAMandar = "";
+    {% for herramienta in consultaFunciones %}
+    function agregarHerramienta{{herramienta.id_herramienta}}(codigoHerramienta) {  //Se realiza una función por cada herramienta, y se recibe el código de esta
+        var codigoHerramienta = codigoHerramienta; //Se toma el codigo de herramienta que manda el checkbox
+        let filtroResultados = [] //Arreglo donde se va a obtener el resultado de la seleccion
+        filtroResultados = rdata.filter(herramienta=> herramienta['codigo'].includes(codigoHerramienta))  //Se buscan coincidencias con el data de json declarado arriba
+        console.log(filtroResultados); //Se imprime la coincidencia
+        var idCheckbox = "check" + codigoHerramienta.toString(); //Se obtiene el name del checkbox que se apretó
+        var checkbox = document.getElementById(idCheckbox); //Se obtiene el checkbox que se apreto
+
+        var divHerramientas = document.getElementById('herramientasAgregadas');  //Agarramos el div donde van los registros de la tabla de herramientas agregadas
+        var divCantidadHerramientas = document.getElementById('inputCantidadHerramientas');
+        
+        
+        if(checkbox.checked == true){ //Si se le apretó al botón del checkbox.. 
+            caontadorCheckbox = caontadorCheckbox +1;
+            filtroResultados.map(herramienta=>{ //De los resultados, por cada uno de los resultados, que en este caso siempre será solo uno debido a que el codigo no se repite
+                var idHerramientaAgregar = herramienta['id_herramienta'].toString();
+                let agregarId = idsHerramientasASolicitar.push(idHerramientaAgregar);
+
+                
+
+                divHerramientas.innerHTML += '<tr id ="'+"filaRegistroHerramienta"+herramienta['id_herramienta']+'">\
+                                            <td>\
+                                                <div>\
+                                                    <input type="text" style="border:none!important;" readonly value="'+herramienta['id_herramienta']+'" name="id'+herramienta['id_herramienta']+'">\
+                                                </div>\
+                                                <div>\
+                                                    <h4><span class="label bg-teal">'+herramienta['codigo']+'</span></h4>\
+                                                </div>\
+                                            </td>\
+                                            <td>'+herramienta['tipo_herramienta']+'</td>\
+                                            <td>'+herramienta['nombre_herramienta']+'</td>\
+                                            <td>'+herramienta['marca']+'</td>\
+                                            <td><center><img src="{{herramienta.imagen_herramienta.url}}" width="60%" alt="empleado"></center></td>\
+                                            <td>'+herramienta['descripcion_herramienta']+'</td>\
+                                            <td>'+herramienta['unidad']+'</td>\
+                                            <td>'+herramienta['sku']+'</td>\
+                                            <td>\
+                                                <center>\
+                                                <div>\
+                                                    <h4><span class="label bg-indigo">'+herramienta['cantidad_existencia']+' unidades</span></h4>\
+                                                </div>\
+                                                </center>\
+                                            </td>\
+                                            <td>\
+                                                <input type="number" value="1" max="'+herramienta['cantidad_existencia']+'" min="1" step="1" name="cantidadSolicitar'+herramienta['id_herramienta']+'" >\
+                                            </td>\
+                                        </tr>';
+                
+                
+            })
+        }else{ //Si se deschequea
+            caontadorCheckbox = caontadorCheckbox - 1;
+            filtroResultados.map(herramienta=>{ //De los resultados, por cada uno de los resultados, que en este caso siempre será solo uno debido a que el codigo no se repite
+                var idHerramientaAgregar = herramienta['id_herramienta'].toString();
+                var index = idsHerramientasASolicitar.indexOf(idHerramientaAgregar);
+                if (index !== -1) {
+                    idsHerramientasASolicitar.splice(index, 1);
+                    
+                }
+                
+                
+                
+
+                var idFila = "#filaRegistroHerramienta"+herramienta['id_herramienta'] //Se toma el id de la fila
+                $(idFila).remove(); //Remover esa fila
+                
+            })
+        }
+
+        if (idsHerramientasASolicitar.length === 0){
+            valorHerramientasTotalesAMandar = "No se mandara ninguna herramienta";
+        }
+        else{
+            idsHerramientasASolicitar.forEach(function(valor, index) {
+                var posicion = index;
+                var valor = valor;
+                if (posicion === 0){
+                    valorHerramientasTotalesAMandar = valor.toString();
+                }else{
+                    valorHerramientasTotalesAMandar += "," + valor.toString();
+                }
+    
+            });
+        }
+        // ARMAR EL STRING QUE SE VA A MANDAR EN EL INPUT ESCONDIDO
+        
+        divCantidadHerramientas.innerHTML = '<input type="hidden" value="'+valorHerramientasTotalesAMandar+'" readonly name="cantidadHerramientasSolicitadas">';
+        console.log(caontadorCheckbox)
+        console.log(idsHerramientasASolicitar)
+        console.log("ESTO ES LO QUE SE VA A MANDAAAAR "+ valorHerramientasTotalesAMandar)
+      }
+    {% endfor %}
+    
+</script>
 
 <script>
     function soloLetras(e) {
@@ -294,10 +543,11 @@ Solicitud Herramientas | CS
 
 <!-- Custom Js -->
 <script src={% static 'panel/js/admin.js' %}></script>
+
+<script src={% static 'panel/js/pages/ui/tooltips-popovers.js' %}"></script>
 <script src={% static 'panel/js/pages/forms/basic-form-elements.js' %}></script>
 <script src={% static 'panel/js/pages/tables/jquery-datatable.js' %}></script>
 <script src={% static 'panel/js/pages/forms/advanced-form-elements.js' %}></script>
-
 
 <!-- Demo Js -->
 <script src={% static 'panel/js/demo.js' %}></script>
