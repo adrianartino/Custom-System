@@ -52,10 +52,10 @@ Mis préstamos | Custom System
                     <span class="input-group-addon">
                         <i class="material-icons">build</i>
                     </span>
-                    <select class="form-control show-tick" id="filtroEmpleados" onchange="cambioFiltro();">
-                        <option>Solicitudes Pendientes</option>
-                        <option>Prestamos pendientes de entrega</option>
-                        <option>Prestamos entregados</option>
+                    <select class="form-control show-tick" id="filtroPrestamos" onchange="cambioFiltro();">
+                        <option value="solicitudesPendientes">Solicitudes Pendientes</option>
+                        <option value="pendientesEntregar">Prestamos pendientes de entrega</option>
+                        <option value="entregados">Prestamos entregados</option>
                     </select>
                 </div>
             
@@ -98,124 +98,55 @@ Mis préstamos | Custom System
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                         <thead>
                             <tr style="background-color: #fad60e; color: black;">
-                                <th>ID- código</th>
-                                <th>Tipo</th>
-                                <th>Nombre</th>
-                                <th>Marca</th>
-                                <th>Descripción</th>
-                                <th>Unidad medida</th>
-                                <th>SKU</th>
-                                <th>Cantidad existencia</th>
-                                <th>Cantidad dañada</th>
-                                <th>Imagen</th>
-                                <th>Estado</th>
-                                <th>Fecha alta</th>
-                                <th>Préstamo</th>
-                                <th>Editar</th>
-                                <th>Agregar Defecto</th>
+                                <th>ID</th>
+                                <th>Fecha Solicitud</th>
+                                <th>Fecha Requerido</th>
+                                <th>Proyecto</th>
+                                <th>Observaciones</th>
+                                <th>Herramientas solicitadas</th>
+                                <th>Otras herramientas</th>
+                                <th>Estatus</th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
-                                <th>ID - código</th>
-                                <th>Tipo</th>
-                                <th>Nombre</th>
-                                <th>Marca</th>
-                                <th>Descripción</th>
-                                <th>Unidad medida</th>
-                                <th>SKU</th>
-                                <th>Cantidad existencia</th>
-                                <th>Cantidad dañada</th>
-                                <th>Imagen</th>
-                                <th>Estado</th>
-                                <th>Fecha alta</th>
-                                <th>Préstamo</th>
-                                <th>Editar</th>
-                                <th>Agregar Defecto</th>
+                                <th>ID</th>
+                                <th>Fecha Solicitud</th>
+                                <th>Fecha Requerido</th>
+                                <th>Proyecto</th>
+                                <th>Observaciones</th>
+                                <th>Herramientas solicitadas</th>
+                                <th>Otras herramientas</th>
+                                <th>Estatus</th>
                             </tr>
                         </tfoot>
                         <tbody class="animate__animated animate__backInDown">
-                            {% for herramienta in registrosHerramientas %}
+                            {% for solicitud in solicitudesPendientes %}
                             <tr>
-                                <td>
-                                    <div>
-                                        <h4><span class="label bg-black">{{herramienta.id_herramienta}}</span></h4>
-                                    </div>
-                                    <div>
-                                        <h4><span class="label bg-teal">{{herramienta.codigo_herramienta}}</span></h4>
-                                    </div>
-
-                                </td>
-                                {% if herramienta.tipo_herramienta == "Herramienta" %}
-                                <td><div><i class="material-icons" style="font-size: 10px; display:inline;">build</i>{{herramienta.tipo_herramienta}}</div> </td>
-                                {% elif herramienta.tipo_herramienta == "Instrumento" %}
-                                <td><div><i class="material-icons" style="font-size: 10px; display:inline;">flash_auto</i>{{herramienta.tipo_herramienta}}</div> </td>
-                                {% endif %}
-                                <td>{{herramienta.nombre_herramienta}}</td>
-                                <td>{{herramienta.marca}}</td>
-                                <td>{{herramienta.descripcion_herramienta}}</td>
-                                <td>{{herramienta.unidad}}</td>
-                                <td>{{herramienta.sku}}</td>
+                                <td><h4><span class="label bg-black">{{solicitud.id_prestamo}}</span></h4></td>
+                                <td><h4><span class="label bg-teal">{{solicitud.fecha_solicitud}}</span></h4></td>
+                                <td><h4><span class="label bg-green">{{solicitud.fecha_requerimiento}}</span></h4></td>
+                                <td><h5><span>{{solicitud.proyecto_tarea}}</span></h5></td>
+                                <td><h5><span>{{solicitud.observaciones}}</span></h5></td>
                                 <td>
                                     <center>
-                                    <div>
-                                        <h4><span class="label bg-indigo">{{herramienta.cantidad_existencia}} unidades</span></h4>
-                                    </div>
-                                    <div>
-                                        <h5>+</h5>
-                                    </div>
-                                    <div>
-                                        <h4><span class="label bg-indigo">0 en préstamo</span></h4>
-                                    </div>
-                                </center>
-                                </td>
-                                <td>
-                                    <div>
-                                        <h4><span class="label bg-red">2 unidades</span></h4>
-                                    </div>
-                                </td>
-                                <td>
-                                    <center>
-                                        <img src="{{herramienta.imagen_herramienta.url}}" width="60%" alt="empleado">
+                                        <button type="button" class="btn bg-blue waves-effect" data-trigger="focus" data-container="body" data-toggle="popover"
+                                        data-placement="right" title="Listado de herramientas" data-html="true" data-content="
+                                        {% for h in arregloHerramientas %}
+                                        <div><h4><span class='label bg-indigo'>{{h.0}}</span> - <span class='label bg-blue-grey'>{{h.1}}</span>    <span class='label bg-light-green'>{{h.3}}</span></h4></div>
+                                        {% endfor %}
+                                        ">
+                                            <i class="material-icons">visibility</i>
+                                        </button>
                                     </center>
-                                </td>
-                                
-                                {% if herramienta.estado_herramienta == "F" %}
-                                <td>
-                                    <h4><span class="label bg-green">Funcional</span></h4>
-                                    <div><label data-toggle="tooltip" data-placement="right"
-                                        title="{{herramienta.motivo_estado}}">Ver motivo</label></div>
-                                </td>
-                                {% elif herramienta.estado_herramienta == "N" %}
-                                <td>
-                                    <h4><span class="label bg-red">No funcional</span></h4>
-                                    <div><label data-toggle="tooltip" data-placement="right"
-                                        title="{{herramienta.motivo_estado}}">Ver motivo</label></div>
-                                </td>
-                                {% endif %}
-                                <td>{{herramienta.fecha_alta}}</td>
-                                
-                                <td>
-                                    <div><h4><span class="label bg-cyan">Si</span></h4></div>
-                                    <div><h4><a href=""><span class="label bg-amber" data-toggle="tooltip" data-placement="left"
-                                        title="Ver préstamo">José Guadalupe</span></a> </h4></div>
-                                </td>
-                                <td>
                                     
-                                    <center>
-                                        <button type="button" class="btn btn-warning waves-effect" data-toggle="modal" data-target="#modalHerramienta{{herramienta.id_herramienta}}">
-                                            <i class="material-icons">edit</i>
-                                        </button>
-                                    </center>
                                 </td>
-                                <td>
-                                   
-                                    <center>
-                                        <button type="submit" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#modalHerramientaBaja{{herramienta.id_herramienta}}">
-                                            <i class="material-icons">delete</i>
-                                        </button>
-                                    </center>
-                                </td>
+                                {% if solicitud.otro == None %}
+                                <td><h5><span>No se solicitan otras herramientas</span></h5></td>
+                                {% else %}
+                                <td><h5><span>{{solicitud.otro}}</span></h5></td>
+                                {% endif %}
+                                <td><h4><span class="label bg-red">{{solicitud.estatus}}</span></h4></td>
                                 
                             </tr>
                             {% endfor %}
@@ -451,6 +382,16 @@ Mis préstamos | Custom System
 
 
         </div>
+    </div>
+</div>
+
+<div class="hidden" id="a1">
+    <div class="popover-heading">
+      This is the heading for #1
+    </div>
+  
+    <div class="popover-body">
+      This is the body for #1
     </div>
 </div>
 
@@ -699,29 +640,33 @@ Mis préstamos | Custom System
 {% endif %}
 
 <script type="text/javascript">
-    window.onload  = function(){
-        var div = document.getElementById("divSolicitudes");
-        var div1 = document.getElementById("divPendientes");
-        var div2 = document.getElementById("divEntregados");
-        div.style.display = "block";
-        div1.style.display = "none";
-        div2.style.display = "none";
-    }
+    
+    
+
+    var div = document.getElementById("divSolicitudes"); 
+    var div1 = document.getElementById("divPendientes");
+    var div2 = document.getElementById("divEntregados");
+    div.style.display = "block";
+    div1.style.display = "none";
+    div2.style.display = "none";
 
     function cambioFiltro() {
-        var div = document.getElementById("divSolicitudes");
-        var div1 = document.getElementById("divPendientes");
-        var div2 = document.getElementById("divEntregados");
+
+        var valorSelectPrestamo = document.getElementById("filtroPrestamos").value;
         /* Si la tabla de Empleados Activos está activa..*/
-        if (div.style.display === "none") {
+        if (valorSelectPrestamo === "solicitudesPendientes") {
             //Bloquear la tabla de empleados Activos.. 
             div.style.display = "block";
             div1.style.display = "none";
             div2.style.display = "none";
-        } else if (){ //Si la tabla de empleados Activos está inactiva
+        } else if (valorSelectPrestamo === "pendientesEntregar"){ //Si la tabla de empleados Activos está inactiva
             div.style.display = "none"; //Desbloquear la tabla de empleados Activos
             div1.style.display = "block";
             div2.style.display = "none";
+        }else if (valorSelectPrestamo === "entregados"){ //Si la tabla de empleados Activos está inactiva
+            div.style.display = "none"; //Desbloquear la tabla de empleados Activos
+            div1.style.display = "none";
+            div2.style.display = "block";
         }
 
     }

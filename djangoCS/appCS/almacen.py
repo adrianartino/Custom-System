@@ -323,6 +323,10 @@ def solicitarHerramientas(request):
             proyecto = request.POST['proyecto']
             notas = request.POST['notas']
             cantidadHerramientasSolicitadas = request.POST['cantidadHerramientasSolicitadas']
+            otrasHerramientas = request.POST['otrasHerramientas']
+            
+            if otrasHerramientas == "":
+                otrasHerramientas = "No se solicitan otras herramientas"
             
             arregloCantidades = []
             
@@ -359,6 +363,7 @@ def solicitarHerramientas(request):
                                                          fecha_requerimiento = fecha_normal_requerido,
                                                          id_empleado_solicitante = Empleados.objects.get(id_empleado = id_admin),
                                                          proyecto_tarea = proyecto,
+                                                         otro = otrasHerramientas,
                                                          observaciones = notas,
                                                          id_herramientaInstrumento = cantidadHerramientasSolicitadas,
                                                          cantidades_solicitadas = stringCantidadesAGuardarEnBD,
@@ -390,9 +395,45 @@ def verMisPrestamos(request):
         correo = request.session['correoSesion']
         foto = fotoAdmin(request)
         nombreCompleto = nombreini + " " + apellidosini #Blanca Yesenia Gaeta Talamantes
+        
+        solicitudesPendientes = PrestamosAlmacen.objects.filter(id_empleado_solicitante_id__id_empleado = id_admin)
+        
+        arregloHerramientas = []
+        for solicitud in solicitudesPendientes:
+            
+            #Herramientas
+            herramientas = solicitud.id_herramientaInstrumento
+            arregloIndividualHerramientas = herramientas.split(",") #[1,2]
+            
+            codigos = []
+            nombres = []
+            descripciones = []
+            for herramientaIndividual in arregloIndividualHerramientas:
+                
+                idHerramienta = int(herramientaIndividual)
+                
+                consultaHerramienta = HerramientasAlmacen.objects.filter(id_herramienta = idHerramienta)
+                
+                for dato in consultaHerramienta:
+                    codigo = dato.codigo_herramienta
+                    nombre = dato.nombre_herramienta
+                    descripcion = dato.descripcion_herramienta
+                codigos.append(codigo)
+                nombres.append(nombre)
+                descripciones.append(descripciones)
+                    
+            
+            # Cantidades
+            cantidades = solicitud.cantidades_solicitadas
+            arregloIndividualCantidades = cantidades.split(",")
+            
+        arregloHerramientas = zip(codigos,nombres,descripciones, arregloIndividualCantidades)
+        
+        
 
 
-        return render(request, "empleadosCustom/almacen/empleados/verMisPrestamos.html", {"solicitantePrestamo":solicitantePrestamo,"estaEnVerMisPrestamos":estaEnVerMisPrestamos,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo})
+        return render(request, "empleadosCustom/almacen/empleados/verMisPrestamos.html", {"solicitantePrestamo":solicitantePrestamo,"estaEnVerMisPrestamos":estaEnVerMisPrestamos,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
+                                                                                          "solicitudesPendientes":solicitudesPendientes, "arregloHerramientas":arregloHerramientas})
     #Si le da al inicio y no hay una sesión iniciada..
     else:
         return redirect('/login/') #redirecciona a url de inicio
