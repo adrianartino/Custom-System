@@ -331,18 +331,12 @@ def solicitarHerramientas(request):
             arregloCantidades = []
             
             arregloIdsHerramientas = cantidadHerramientasSolicitadas.split(",")
-            contadorHerramienta = 0
-            for h in arregloIdsHerramientas:
-                contadorHerramienta = contadorHerramienta + 1
-            
             
             idPregunta = "id"
             cantidadSolicitar = "cantidadSolicitar"
-            herramienta = 0
-            for idherramienta in range(contadorHerramienta):
-                herramienta= herramienta + 1
-                nameIdDeHerramienta = idPregunta + str(herramienta)
-                nameCantidadASolicitar = cantidadSolicitar + str(herramienta)
+            for idherramienta in arregloIdsHerramientas:
+                nameIdDeHerramienta = idPregunta + str(idherramienta)
+                nameCantidadASolicitar = cantidadSolicitar + str(idherramienta)
                 
                 #Obtener valores que se mandaron
                 idHerramientaMandado = request.POST[nameIdDeHerramienta]
