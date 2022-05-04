@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block titulo %}
-Solicitudes Marcadas | CS
+Solicitudes Pendientes | CS
 {% endblock %}
 
 {% block estilos %}
@@ -13,6 +13,7 @@ Solicitudes Marcadas | CS
 <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
     type="text/css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+
 <!-- Bootstrap Core Css -->
 <link href={% static 'panel/plugins/bootstrap/css/bootstrap.css' %} rel="stylesheet">
 
@@ -22,13 +23,14 @@ Solicitudes Marcadas | CS
 <!-- Animation Css -->
 <link href={% static 'panel/plugins/animate-css/animate.css' %} rel="stylesheet" />
 
-<!-- Morris Chart Css-->
-<link href={% static 'panel/plugins/morrisjs/morris.css' %} rel="stylesheet" />
+<!-- JQuery DataTable Css -->
+<link href={% static 'panel/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css' %} rel="stylesheet">
+
+<!-- Bootstrap Select Css -->
+<link href={% static 'panel/plugins/bootstrap-select/css/bootstrap-select.css' %} rel="stylesheet" />
 
 <!-- Custom Css -->
 <link href={% static 'panel/css/style.css' %} rel="stylesheet">
-
-<link href={% static 'css/margen.css' %} rel="stylesheet" />
 
 <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
 <link href={% static 'panel/css/themes/all-themes.css' %} rel="stylesheet" />
@@ -42,18 +44,28 @@ Solicitudes Marcadas | CS
         <div class="card">
             <div class="header">
                 <h2 style="font-family: 'Oswald', sans-serif;">
-                    SOLICITUDES MARACADAS DE PRESTAMOS DE HERRAMIENTAS DE CUSTOM & CO.
-                    <small style="color: #790C05;">Vista de listado de solicitudes de prestamo de herramientas marcadas en la empresa.</small>
+                    SOLICITUDES PENDIENTES DE PRESTAMOS HERRAMIENTA DE ALMACEN DE CUSTOM & CO
+                    <small style="color: #790C05;">Listado de solicitudes pendientes de herramienta.</small>
                 </h2>
-
-                <br>
-                
-
-
             </div>
 
-            <div class="body" id="divActivos">
-                
+            <div class="body" id="divSolicitudes">
+                {% if sinPendientes %}
+                <h2>Sin solicitudes pendientes</h2>
+                {% else %}
+                <div class="row clear-fix">
+                    <div class="col-xs-12 col-sm-1">
+                        <form action="/xlEmpleados/" method="POST">{% csrf_token %}
+                            <input type="hidden" name="activo" value="A">
+                            <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
+                                data-toggle="tooltip" data-placement="bottom"
+                                title="Descargar reporte Empleados Activos en Excel.">
+                                <i class="material-icons">grid_on</i>
+                                <span>Excel</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
 
                 <div class="table-responsive">
 
@@ -61,327 +73,147 @@ Solicitudes Marcadas | CS
                         <thead>
                             <tr style="background-color: #fad60e; color: black;">
                                 <th>ID</th>
-                                <th>Nombre</th>
-                                <th>Apellidos</th>
-                                <th>Imagen</th>
-                                <th>Departamento</th>
-                                <th>Puesto</th>
-                                <th>Correo</th>
+                                <th>Solicitante</th>
+                                <th>Fecha Solicitud</th>
+                                <th>Fecha Préstamo</th>
+                                <th>Firma Préstamo</th>
+                                <th>Proyecto</th>
+                                <th>Observaciones</th>
+                                <th>Herramientas solicitadas</th>
+                                <th>Recibir Préstamo</th>
+                                <th>Estatus</th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
                                 <th>ID</th>
-                                <th>Nombre</th>
-                                <th>Apellidos</th>
-                                <th>Imagen</th>
-                                <th>Departamento</th>
-                                <th>Puesto</th>
-                                <th>Correo</th>
+                                <th>Solicitante</th>
+                                <th>Fecha Solicitud</th>
+                                <th>Fecha Préstamo</th>
+                                <th>Firma Préstamo</th>
+                                <th>Proyecto</th>
+                                <th>Observaciones</th>
+                                <th>Herramientas solicitadas</th>
+                                <th>Recibir Préstamo</th>
+                                <th>Estatus</th>
                             </tr>
                         </tfoot>
                         <tbody class="animate__animated animate__backInDown">
-                            {% for empleado, area in lista %}
+                            {% for prestamo, empleado in listaPrestamosRealizados %}
                             <tr>
-                                <td>{{empleado.id_empleado}}</td>
-                                <td>{{empleado.nombre}}</td>
-                                <td>{{empleado.apellidos}}</td>
+                                <td><h4><span class="label bg-black">{{prestamo.id_prestamo}}</span></h4></td>
+                                <td><h4><span class="label bg-indigo">{{empleado}}</span></h4></td>
+                                <td><h4><span class="label bg-amber">{{prestamo.fecha_solicitud}}</span></h4> Requerido para el <h4><span class="label bg-blue">{{prestamo.fecha_requerimiento}}</span></h4></td>
+                                <td><h4><span class="label bg-green">{{prestamo.fecha_prestamo}}</span></h4></td>
                                 <td>
                                     <center>
-                                        <img src="{{empleado.imagen_empleado.url}}" width="60%" alt="empleado">
+                                        <img src="{{prestamo.firma_prestamo.url}}" alt="firmaEntrega" width="100">
                                     </center>
                                 </td>
-                                <td> <label class="{{area.1}}">{{area.0}}</label> </td>
-                                <td>{{empleado.puesto}}</td>
-                                <td>{{empleado.correo}}</td>
+                                <td><h5><span>{{prestamo.proyecto_tarea}}</span></h5></td>
+                                <td><h5><span>{{prestamo.observaciones}}</span></h5></td>
+                                <td>
+                                    <center>
+                                        <button type="button" class="btn bg-blue waves-effect" data-trigger="focus" data-container="body" data-toggle="popover"
+                                        data-placement="right" title="Listado de herramientas" data-html="true" data-content="
+                                        {% for h in arregloHerramientas %}
+                                        <div><h4><span class='label bg-indigo'>{{h.0}}</span> - <span class='label bg-blue-grey'>{{h.1}}</span>    <span class='label bg-light-green'>{{h.3}}</span></h4></div>
+                                        {% endfor %}
+                                        ">
+                                            <i class="material-icons">visibility</i>
+                                        </button>
+                                    </center>
+                                    
+                                </td>
+                                <td>
+                                    <center>
+                                        <form action="/firmarDevolucion/" method="POST">{% csrf_token %}
+                                            <input type="hidden" name="idPrestamo" value="{{prestamo.id_prestamo}}" readonly>
+                                            <button type="submit" class="btn bg-deep-orange waves-effect" >
+                                                <i class="material-icons">assignment_returned</i>
+                                            </button>
+                                        </form>
+                                    </center>
+                                    
+                                </td>
+                                <td><h4><span class="label bg-red">{{prestamo.estatus}}</span></h4><h4><span class="label bg-red">Pendiente de devolver</span></h4></td>
                                 
                             </tr>
                             {% endfor %}
-
-
-
-
+                        
+                        
+                        
+                        
                         </tbody>
                     </table>
                 </div>
                 <br>
 
 
-            </div>
-            <div class="body" id="divInactivos">
-                <div class="row clear-fix">
-                    <div class="col-xs-12 col-sm-1">
-                        <form action="/reporteEmpleadosActivos/" method="POST">{% csrf_token %}
-                            <input type="hidden" name="activo" value="I">
-                            <button type="submit" class="btn bg-red waves-effect animate__animated animate__flipInX"
-                                data-toggle="tooltip" data-placement="bottom"
-                                title="Descargar reporte Empleados de baja en PDF.">
-                                <i class="material-icons">picture_as_pdf</i>
-                                <span>PDF</span>
-                            </button>
-                        </form>
-                    </div>
-                    <div class="col-xs-12 col-sm-1">
-                        <form action="/xlEmpleados/" method="POST">{% csrf_token %}
-                            <input type="hidden" name="activo" value="I">
-                            <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
-                                data-toggle="tooltip" data-placement="bottom"
-                                title="Descargar reporte Empleados de baja en Excel.">
-                                <i class="material-icons">grid_on</i>
-                                <span>Excel</span>
-                            </button>
-                        </form>
-                    </div>
-                    <div class="col-xs-12 col-sm-4">
-                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarEmpleados/">Agregar
-                            Empleado</a>
-                    </div>
-
-                </div>
-                <div class="table-responsive">
-
-                    <table class="table table-bordered table-striped table-hover dataTable js-exportable ">
-                        <thead>
-                            <tr style="background-color: #E05D5D; color: whitesmoke;">
-                                <th>ID</th>
-                                <th>Nombre</th>
-                                <th>Apellidos</th>
-                                <th>Imagen</th>
-                                <th>Departamento</th>
-                                <th>Puesto</th>
-                                <th>Correo</th>
-                                <th>Alta</th>
-                            </tr>
-                        </thead>
-                        <tfoot>
-                            <tr>
-                                <th>ID</th>
-                                <th>Nombre</th>
-                                <th>Apellidos</th>
-                                <th>Imagen</th>
-                                <th>Departamento</th>
-                                <th>Puesto</th>
-                                <th>Correo</th>
-                                <th>Alta</th>
-                            </tr>
-                        </tfoot>
-                        <tbody>
-                            {% for empleado, area in lista1 %}
-                            <tr>
-                                <td>{{empleado.id_empleado}}</td>
-                                <td>{{empleado.nombre}}</td>
-                                <td>{{empleado.apellidos}}</td>
-                                <td>
-                                    <center>
-                                        <img src="{{empleado.imagen_empleado.url}}" width="60%" alt="empleado">
-                                    </center>
-                                </td>
-                                <td> <label class="{{area.1}}">{{area.0}}</label> </td>
-                                <td>{{empleado.puesto}}</td>
-                                <td>{{empleado.correo}}</td>
-                                <th>
-                                    <center>
-                                        <button type="button" class="btn bg-green waves-effect" data-toggle="modal"
-                                            data-target="#{{empleado.id_empleado}}">
-                                            <i class="material-icons">upgrade</i>
-                                        </button>
-                                    </center>
-                                </th>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+            
+            
                 <br>
+                {% endif %}
 
             </div>
+
+            
+
+
         </div>
     </div>
 </div>
-
-
-{% for empleado, area in listaModal1 %}
-<!-- Default Size -->
-<div class="modal fade" id="{{empleado.id_empleado}}" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content" style="border-radius: 16px;">
-            <div class="modal-header">
-                <center>
-                    <h1 style="color: crimson; font-family: 'Oswald', sans-serif;">DAR DE BAJA EMPLEADO <i
-                            class="material-icons" style="color:black; font-size:100%">get_app</i></h1>
-                    <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
-
-                </center>
-            </div>
-            <div class="modal-body">
-                <form action="/bajaEmpleado/" method="POST">{% csrf_token %}
-                    <div class="body table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr class="bg-teal">
-                                    <th>Nombre</th>
-                                    <th>Apellidos</th>
-                                    <th>Imagen</th>
-                                    <th>Departamento</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td style="color: black;">{{empleado.nombre}}</td>
-                                    <td style="color: black;">{{empleado.apellidos}}</td>
-                                    <th> <img src="{{empleado.imagen_empleado.url}}" width="120" height="150" alt="lap">
-                                    </th>
-                                    <td> <label class="{{area.1}}">{{area.0}}</label> </td>
-                                </tr>
-
-
-                            </tbody>
-                        </table>
-
-
-
-                    </div>
-                    <center>
-                        <input type="hidden" value="{{empleado.id_empleado}}" name="idEmpleadoBaja">
-                        <h3 style="color: black;">Seguro que desea dar de baja al empleado?</h3>
-                        <button type="submit" class="btn bg-red waves-effect">
-                            <i class="material-icons">cancel</i>
-                            <span>DAR DE BAJA</span>
-                        </button>
-                    </center>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-{% endfor %}
-
-{% for empleado, area in listaModal2 %}
-<!-- Default Size -->
-<div class="modal fade" id="{{empleado.id_empleado}}" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content" style="border-radius: 16px;">
-            <div class="modal-header">
-                <center>
-                    <h1 style="color: green; font-family: 'Oswald', sans-serif;">DAR DE ALTA EMPLEADO <i
-                            class="material-icons" style="color:black; font-size:100%">upgrade</i></h1>
-                    <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
-
-                </center>
-            </div>
-            <div class="modal-body">
-                <form action="/altaEmpleado/" method="POST">{% csrf_token %}
-                    <div class="body table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr class="bg-teal">
-                                    <th>Nombre</th>
-                                    <th>Apellidos</th>
-                                    <th>Imagen</th>
-                                    <th>Departamento</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td style="color: black;">{{empleado.nombre}}</td>
-                                    <td style="color: black;">{{empleado.apellidos}}</td>
-                                    <th> <img src="{{empleado.imagen_empleado.url}}" width="120" height="150" alt="lap">
-                                    </th>
-                                    <td> <label class="{{area.1}}">{{area.0}}</label> </td>
-                                </tr>
-
-
-                            </tbody>
-                        </table>
-
-
-
-                    </div>
-                    <center>
-                        <input type="hidden" value="{{empleado.id_empleado}}" name="idEmpleadoAlta">
-                        <h3 style="color: black;">Seguro que desea dar de alta al empleado?</h3>
-                        <button type="submit" class="btn bg-green waves-effect">
-                            <i class="material-icons">upgrade</i>
-                            <span>DAR DE ALTA</span>
-                        </button>
-                    </center>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-{% endfor %}
 
 
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-{% if alta %}
+{% if prestamoEntregado %}
 <script type="text/javascript">
     swal({
         icon: 'success',
-        title: 'Wuu..!',
-        text: ' {{mensaje}}',
+        title: 'Enhorabuena..!',
+        text: ' {{prestamoEntregado}}',
         footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
         width: '40%'
     });
 </script>
 {% endif %}
 
-{% if correoEnviado %}
 <script type="text/javascript">
-    swal({
-        icon: 'success',
-        title: 'Wuu..!',
-        text: ' {{mensaje}}',
-        footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
-        width: '40%'
-    });
-</script>
-{% endif %}
+    
+    
 
-{% if baja %}
-<script type="text/javascript">
-    swal({
-        icon: 'error',
-        title: 'Wuu..!',
-        text: ' {{mensaje}}',
-        footer: '<span style="color: red!important"> Vuelve a navegar por Custom System! </span>',
-        width: '40%'
-    });
-</script>
-{% endif %}
-
-<script type="text/javascript">
-    function inicio() {
-        var div1 = document.getElementById("divInactivos");
-        div1.style.display = "none"; /* bloquear u ocultar la tabla..*/
-    }
-    window.onload = inicio;
+    var div = document.getElementById("divSolicitudes"); 
+    var div1 = document.getElementById("divPendientes");
+    var div2 = document.getElementById("divEntregados");
+    div.style.display = "block";
+    div1.style.display = "none";
+    div2.style.display = "none";
 
     function cambioFiltro() {
-        var div = document.getElementById("divActivos");
-        var div1 = document.getElementById("divInactivos");
+
+        var valorSelectPrestamo = document.getElementById("filtroPrestamos").value;
         /* Si la tabla de Empleados Activos está activa..*/
-        if (div.style.display === "none") {
+        if (valorSelectPrestamo === "solicitudesPendientes") {
             //Bloquear la tabla de empleados Activos.. 
             div.style.display = "block";
             div1.style.display = "none";
-        } else { //Si la tabla de empleados Activos está inactiva
+            div2.style.display = "none";
+        } else if (valorSelectPrestamo === "pendientesEntregar"){ //Si la tabla de empleados Activos está inactiva
             div.style.display = "none"; //Desbloquear la tabla de empleados Activos
             div1.style.display = "block";
+            div2.style.display = "none";
+        }else if (valorSelectPrestamo === "entregados"){ //Si la tabla de empleados Activos está inactiva
+            div.style.display = "none"; //Desbloquear la tabla de empleados Activos
+            div1.style.display = "none";
+            div2.style.display = "block";
         }
 
     }
 </script>
 
-
 {% endblock %}
 
 {% block estilosJs %}
-
-
-
 
 <!-- Jquery Core Js -->
 <script src={% static 'panel/plugins/jquery/jquery.min.js' %}></script>
@@ -396,37 +228,47 @@ Solicitudes Marcadas | CS
 <script src={% static 'panel/plugins/jquery-slimscroll/jquery.slimscroll.js' %}></script>
 
 
+<!-- Bootstrap Colorpicker Js -->
+<script src={% static 'panel/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js' %}></script>
+
+<!-- Dropzone Plugin Js -->
+<script src={% static 'panel/plugins/dropzone/dropzone.js' %}></script>
+
+<!-- Input Mask Plugin Js -->
+<script src={% static 'panel/plugins/jquery-inputmask/jquery.inputmask.bundle.js' %}></script>
+
+<!-- Multi Select Plugin Js -->
+<script src={% static 'panel/plugins/multi-select/js/jquery.multi-select.js' %}></script>
+
+<!-- Jquery Spinner Plugin Js -->
+<script src={% static 'panel/plugins/jquery-spinner/js/jquery.spinner.js' %}></script>
+
+<!-- Bootstrap Tags Input Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js' %}></script>
+
+<!-- noUISlider Plugin Js -->
+<script src={% static 'panel/plugins/nouislider/nouislider.js' %}></script>
 <!-- Waves Effect Plugin Js -->
 <script src={% static 'panel/plugins/node-waves/waves.js' %}></script>
 
-<!-- Jquery CountTo Plugin Js -->
-<script src={% static 'panel/plugins/jquery-countto/jquery.countTo.js' %}></script>
-
-<!-- Morris Plugin Js -->
-<script src={% static 'panel/plugins/raphael/raphael.min.js' %}></script>
-<script src={% static 'panel/plugins/morrisjs/morris.js' %}></script>
-
-<!-- ChartJs -->
-<script src={% static 'panel/plugins/chartjs/Chart.bundle.js' %}></script>
-
-<!-- Flot Charts Plugin Js -->
-<script src={% static 'panel/plugins/flot-charts/jquery.flot.js' %}></script>
-<script src={% static 'panel/plugins/flot-charts/jquery.flot.resize.js' %}></script>
-<script src={% static 'panel/plugins/flot-charts/jquery.flot.pie.js' %}></script>
-<script src={% static 'panel/plugins/flot-charts/jquery.flot.categories.js' %}></script>
-<script src={% static 'panel/plugins/flot-charts/jquery.flot.time.js' %}></script>
-
-<!-- Sparkline Chart Plugin Js -->
-<script src={% static 'panel/plugins/jquery-sparkline/jquery.sparkline.js' %}></script>
+<!-- Jquery DataTable Plugin Js -->
+<script src={% static 'panel/plugins/jquery-datatable/jquery.dataTables.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.flash.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/jszip.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/pdfmake.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/vfs_fonts.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.html5.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.print.min.js' %}></script>
 
 <!-- Custom Js -->
 <script src={% static 'panel/js/admin.js' %}></script>
 <script src={% static 'panel/js/pages/ui/tooltips-popovers.js' %}></script>
-<script src={% static 'panel/js/pages/index.js' %}></script>
+<script src={% static 'panel/js/pages/tables/jquery-datatable.js' %}></script>
+<script src={% static 'panel/js/pages/forms/advanced-form-elements.js' %}></script>
 
 <!-- Demo Js -->
 <script src={% static 'panel/js/demo.js' %}></script>
-
-
 
 {% endblock %}

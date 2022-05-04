@@ -1,5 +1,6 @@
 #Librerías
 from email.mime import text
+from logging import info
 import mimetypes
 import os
 import base64
@@ -81,9 +82,282 @@ def solicitudesPendientesALM(request):
         correo = request.session['correoSesion']
         foto = fotoAdmin(request)
         nombreCompleto = nombreini + " " + apellidosini #Blanca Yesenia Gaeta Talamantes
+        
+        solicitudesPendientes = PrestamosAlmacen.objects.filter(estatus="Pendiente")
+        empleadosSolicitantes = []
+        
+        if solicitudesPendientes:
+            for solicitud in solicitudesPendientes:
+                
+                #Herramientas
+                herramientas = solicitud.id_herramientaInstrumento #Lista de herramientas 1,2
+                arregloIndividualHerramientas = herramientas.split(",") #[1,2]
+                
+                codigos = []
+                nombres = []
+                descripciones = []
+                for herramientaIndividual in arregloIndividualHerramientas:
+                    
+                    idHerramienta = int(herramientaIndividual)
+                    
+                    consultaHerramienta = HerramientasAlmacen.objects.filter(id_herramienta = idHerramienta)
+                    
+                    for dato in consultaHerramienta:
+                        codigo = dato.codigo_herramienta
+                        nombre = dato.nombre_herramienta
+                        descripcion = dato.descripcion_herramienta
+                    codigos.append(codigo)
+                    nombres.append(nombre)
+                    descripciones.append(descripciones)
+                        
+                
+                # Cantidades
+                cantidades = solicitud.cantidades_solicitadas
+                arregloIndividualCantidades = cantidades.split(",")
+                
+                idEmpleadoSolicitante = solicitud.id_empleado_solicitante_id
+                consultaEmpleado = Empleados.objects.filter(id_empleado = idEmpleadoSolicitante)
+                for dato in consultaEmpleado:
+                    nombreEmpleadoSolicitante = dato.nombre
+                    apellidosEmpleadoSolicitante = dato.apellidos
+                    
+                    nombreCompletoEmpleadoSolicitante = nombreEmpleadoSolicitante + " " + apellidosEmpleadoSolicitante
+                    empleadosSolicitantes.append(nombreCompletoEmpleadoSolicitante)
+                
+                
+            arregloHerramientas = zip(codigos,nombres,descripciones, arregloIndividualCantidades)
+            
+            listaSolicitudesPendientes = zip(solicitudesPendientes,empleadosSolicitantes)
+            
+
+            if "prestamoEntregado" in request.session:
+                prestamoEntregado = request.session["prestamoEntregado"]
+                del request.session["prestamoEntregado"]
+                return render(request, "empleadosCustom/almacen/solicitudesPendientes.html", {"estaEnAlmacen":estaEnAlmacen,"estaEnSolicitudesPendientes":estaEnSolicitudesPendientes,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
+                                                                                        "arregloHerramientas":arregloHerramientas, "solicitudesPendientes":solicitudesPendientes, "listaSolicitudesPendientes":listaSolicitudesPendientes, "prestamoEntregado":prestamoEntregado})
+
+            return render(request, "empleadosCustom/almacen/solicitudesPendientes.html", {"estaEnAlmacen":estaEnAlmacen,"estaEnSolicitudesPendientes":estaEnSolicitudesPendientes,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
+                                                                                        "arregloHerramientas":arregloHerramientas, "solicitudesPendientes":solicitudesPendientes, "listaSolicitudesPendientes":listaSolicitudesPendientes})
+        else:
+            sinPendientes = True
+            if "prestamoEntregado" in request.session:
+                prestamoEntregado = request.session["prestamoEntregado"]
+                del request.session["prestamoEntregado"]    
+                return render(request, "empleadosCustom/almacen/solicitudesPendientes.html", {"estaEnAlmacen":estaEnAlmacen,"estaEnSolicitudesPendientes":estaEnSolicitudesPendientes,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
+                                                                                        "sinPendientes":sinPendientes,"prestamoEntregado":prestamoEntregado})
+                
+            return render(request, "empleadosCustom/almacen/solicitudesPendientes.html", {"estaEnAlmacen":estaEnAlmacen,"estaEnSolicitudesPendientes":estaEnSolicitudesPendientes,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
+                                                                                        "sinPendientes":sinPendientes})
+    #Si le da al inicio y no hay una sesión iniciada..
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+
+def firmarPrestamo(request):
+    
+    #Si ya hay una sesión iniciada..
+    if "idSesion" in request.session:
+        
+        
+        estaEnAlmacen = True
+        estaEnSolicitudesPendientes = True
+        almacen = True
 
 
-        return render(request, "empleadosCustom/almacen/solicitudesPendientes.html", {"estaEnAlmacen":estaEnAlmacen,"estaEnSolicitudesPendientes":estaEnSolicitudesPendientes,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo})
+        id_admin=request.session["idSesion"]
+        nombreini = request.session['nombres']
+        apellidosini = request.session['apellidos']
+        correo = request.session['correoSesion']
+        foto = fotoAdmin(request)
+        nombreCompleto = nombreini + " " + apellidosini #Blanca Yesenia Gaeta Talamantes
+        
+        if request.method == "POST":
+            idPrestamoRecibido = request.POST['idPrestamo']
+            
+            infoPrestamo = PrestamosAlmacen.objects.filter(id_prestamo = idPrestamoRecibido)
+            
+            for dato in infoPrestamo:
+                idEmpleadoSolicitante = dato.id_empleado_solicitante_id
+                herramientasSolicitadas = dato.id_herramientaInstrumento
+                cantidadesSolicitadas = dato.cantidades_solicitadas
+                otro = dato.otro
+            
+            #Información de empleado
+            consultaEmpleado = Empleados.objects.filter(id_empleado = idEmpleadoSolicitante)
+            for datoEmpleado in consultaEmpleado:
+                nombre = datoEmpleado.nombre
+                apellidos = datoEmpleado.apellidos
+                nombreCompletoEmpleadoSolicitante = nombre + " " + apellidos
+                
+                idArea = datoEmpleado.id_area_id
+                consultaArea = Areas.objects.filter(id_area = idArea)
+                for datoArea in consultaArea:
+                    nombreDepartamento = datoArea.nombre
+                    colorDepartamento = datoArea.color
+                    
+            #Información de herramientas
+            arregloCantidadesHerramientas = cantidadesSolicitadas.split(",")
+            herramientasAPrestar = []
+            
+            arregloIdsHerramientasAPrestar = herramientasSolicitadas.split(",")
+            for idHerramienta in arregloIdsHerramientasAPrestar:
+                consultaHerramienta = HerramientasAlmacen.objects.filter(id_herramienta = idHerramienta)
+                
+                for datoHerramienta in consultaHerramienta:
+                    id_herramienta = datoHerramienta.id_herramienta
+                    codigo_herramienta = datoHerramienta.codigo_herramienta
+                    tipo_herramienta = datoHerramienta.tipo_herramienta
+                    nombre_herramienta = datoHerramienta.nombre_herramienta
+                    marca = datoHerramienta.marca
+                    imagen = datoHerramienta.imagen_herramienta
+                    descripcion_herramienta = datoHerramienta.descripcion_herramienta
+                    unidad_herramienta = datoHerramienta.unidad
+                    sku_herramienta = datoHerramienta.sku
+                    cantidad_existencia = datoHerramienta.cantidad_existencia
+                    
+                herramientasAPrestar.append([id_herramienta, codigo_herramienta, tipo_herramienta,
+                                             nombre_herramienta, marca, imagen, descripcion_herramienta,
+                                             unidad_herramienta, sku_herramienta, cantidad_existencia])
+            
+            
+            listaHerramientas = zip(herramientasAPrestar, arregloCantidadesHerramientas)
+            
+            return render(request, "empleadosCustom/almacen/firmarPrestamo.html", {"estaEnAlmacen":estaEnAlmacen,"estaEnSolicitudesPendientes":estaEnSolicitudesPendientes,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, 
+                                                                                   "infoPrestamo":infoPrestamo, "nombreCompletoEmpleadoSolicitante":nombreCompletoEmpleadoSolicitante,
+                                                                                   "nombreDepartamento":nombreDepartamento, "colorDepartamento":colorDepartamento, "listaHerramientas":listaHerramientas, "otro":otro})
+    #Si le da al inicio y no hay una sesión iniciada..
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+    
+def firmarDevolucion(request):
+    
+    #Si ya hay una sesión iniciada..
+    if "idSesion" in request.session:
+        
+        
+        estaEnAlmacen = True
+        estaEnSolicitudesMarcadas = True
+        almacen = True
+
+
+        id_admin=request.session["idSesion"]
+        nombreini = request.session['nombres']
+        apellidosini = request.session['apellidos']
+        correo = request.session['correoSesion']
+        foto = fotoAdmin(request)
+        nombreCompleto = nombreini + " " + apellidosini #Blanca Yesenia Gaeta Talamantes
+        
+        if request.method == "POST":
+            idPrestamoRecibido = request.POST['idPrestamo']
+            
+            infoPrestamo = PrestamosAlmacen.objects.filter(id_prestamo = idPrestamoRecibido)
+            
+            for dato in infoPrestamo:
+                idEmpleadoSolicitante = dato.id_empleado_solicitante_id
+                herramientasSolicitadas = dato.id_herramientaInstrumento
+                cantidadesSolicitadas = dato.cantidades_solicitadas
+                otro = dato.otro
+            
+            #Información de empleado
+            consultaEmpleado = Empleados.objects.filter(id_empleado = idEmpleadoSolicitante)
+            for datoEmpleado in consultaEmpleado:
+                nombre = datoEmpleado.nombre
+                apellidos = datoEmpleado.apellidos
+                nombreCompletoEmpleadoSolicitante = nombre + " " + apellidos
+                
+                idArea = datoEmpleado.id_area_id
+                consultaArea = Areas.objects.filter(id_area = idArea)
+                for datoArea in consultaArea:
+                    nombreDepartamento = datoArea.nombre
+                    colorDepartamento = datoArea.color
+                    
+            #Información de herramientas
+            arregloCantidadesHerramientas = cantidadesSolicitadas.split(",")
+            herramientasPrestadas = []
+            
+            arregloIdsHerramientasAPrestar = herramientasSolicitadas.split(",")
+            for idHerramienta in arregloIdsHerramientasAPrestar:
+                consultaHerramienta = HerramientasAlmacen.objects.filter(id_herramienta = idHerramienta)
+                
+                for datoHerramienta in consultaHerramienta:
+                    id_herramienta = datoHerramienta.id_herramienta
+                    codigo_herramienta = datoHerramienta.codigo_herramienta
+                    tipo_herramienta = datoHerramienta.tipo_herramienta
+                    nombre_herramienta = datoHerramienta.nombre_herramienta
+                    marca = datoHerramienta.marca
+                    imagen = datoHerramienta.imagen_herramienta
+                    descripcion_herramienta = datoHerramienta.descripcion_herramienta
+                    unidad_herramienta = datoHerramienta.unidad
+                    sku_herramienta = datoHerramienta.sku
+                    cantidad_existencia = datoHerramienta.cantidad_existencia
+                    
+                herramientasPrestadas.append([id_herramienta, codigo_herramienta, tipo_herramienta,
+                                             nombre_herramienta, marca, imagen, descripcion_herramienta,
+                                             unidad_herramienta, sku_herramienta, cantidad_existencia])
+            
+            
+            listaHerramientas = zip(herramientasPrestadas, arregloCantidadesHerramientas)
+            
+            return render(request, "empleadosCustom/almacen/firmarDevolucion.html", {"estaEnAlmacen":estaEnAlmacen,"estaEnSolicitudesMarcadas":estaEnSolicitudesMarcadas,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, 
+                                                                                   "infoPrestamo":infoPrestamo, "nombreCompletoEmpleadoSolicitante":nombreCompletoEmpleadoSolicitante,
+                                                                                   "nombreDepartamento":nombreDepartamento, "colorDepartamento":colorDepartamento, "listaHerramientas":listaHerramientas, "otro":otro})
+    #Si le da al inicio y no hay una sesión iniciada..
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+    
+    
+    
+def guardarEntrega(request):
+    
+    #Si ya hay una sesión iniciada..
+    if "idSesion" in request.session:
+        
+        if request.method == "POST":
+            idPrestamoGuardar = request.POST['idPrestamoGuardar']
+            condicionesEntrega = request.POST['condicionesEntrega']
+            canvasLargo = request.POST['canvasData']
+            format, imgstr = canvasLargo.split(';base64,')
+            ext = format.split('/')[-1]
+            archivo = ContentFile(base64.b64decode(imgstr), name= "Prestamo"+str(idPrestamoGuardar) + '.' + ext)    
+            
+            fechaPrestamo = datetime.now()
+            #actualizarRegistro
+            
+            actualizacionPrestamo = PrestamosAlmacen.objects.get(id_prestamo = idPrestamoGuardar)
+            actualizacionPrestamo.fecha_prestamo = fechaPrestamo
+            actualizacionPrestamo.firma_prestamo = archivo
+            actualizacionPrestamo.condiciones = condicionesEntrega
+            actualizacionPrestamo.estatus = "En prestamo"
+            actualizacionPrestamo.save()
+            
+            if actualizacionPrestamo:
+                #AQUI SE DEBEN DE DAR DE BAJA LAS CANTIDADES SELECCIONADAS
+                consultaPrestamo = PrestamosAlmacen.objects.filter(id_prestamo = idPrestamoGuardar)
+                for datos in consultaPrestamo:
+                    idsHerramientas = datos.id_herramientaInstrumento
+                    cantidadesHerramientas = datos.cantidades_solicitadas
+                    
+                arregloCantidadesHerramientas = cantidadesHerramientas.split(",")
+                arregloIdsHerramientas = idsHerramientas.split(",")
+                
+                listaHerramientas = zip(arregloIdsHerramientas, arregloCantidadesHerramientas)
+                
+                for herramienta, cantidad in listaHerramientas:
+                    consultaHerramienta = HerramientasAlmacen.objects.filter(id_herramienta = herramienta)
+                    for datoHerramienta in consultaHerramienta:
+                        cantidadActualEnExistencia = datoHerramienta.cantidad_existencia
+                    
+                    cantidadActualizada = cantidadActualEnExistencia - int(cantidad)
+                    
+                    actualizarExistenciaHerramienta = HerramientasAlmacen.objects.filter(id_herramienta = herramienta).update(cantidad_existencia = cantidadActualizada)
+                    
+                if actualizarExistenciaHerramienta:
+                
+            
+                    request.session['prestamoEntregado'] = "El prestamo "+ str(idPrestamoGuardar)+" ha sido entregado satisfactoriamente!"
+
+                    return redirect("/solicitudesPendientesALM/")
+            
+    
     #Si le da al inicio y no hay una sesión iniciada..
     else:
         return redirect('/login/') #redirecciona a url de inicio
@@ -129,12 +403,76 @@ def solicitudesMarcadasALM(request):
         correo = request.session['correoSesion']
         foto = fotoAdmin(request)
         nombreCompleto = nombreini + " " + apellidosini #Blanca Yesenia Gaeta Talamantes
+        
+        prestamosRealizados = PrestamosAlmacen.objects.filter(estatus="En prestamo")
+        empleadosPrestados = []
+        
+        if prestamosRealizados:
+            for prestamo in prestamosRealizados:
+                
+                #Herramientas
+                herramientas = prestamo.id_herramientaInstrumento #Lista de herramientas 1,2
+                arregloIndividualHerramientas = herramientas.split(",") #[1,2]
+                
+                codigos = []
+                nombres = []
+                descripciones = []
+                for herramientaIndividual in arregloIndividualHerramientas:
+                    
+                    idHerramienta = int(herramientaIndividual)
+                    
+                    consultaHerramienta = HerramientasAlmacen.objects.filter(id_herramienta = idHerramienta)
+                    
+                    for dato in consultaHerramienta:
+                        codigo = dato.codigo_herramienta
+                        nombre = dato.nombre_herramienta
+                        descripcion = dato.descripcion_herramienta
+                    codigos.append(codigo)
+                    nombres.append(nombre)
+                    descripciones.append(descripcion)
+                        
+                
+                # Cantidades
+                cantidades = prestamo.cantidades_solicitadas
+                arregloIndividualCantidades = cantidades.split(",")
+                
+                idEmpleadoSolicitante = prestamo.id_empleado_solicitante_id
+                consultaEmpleado = Empleados.objects.filter(id_empleado = idEmpleadoSolicitante)
+                for dato in consultaEmpleado:
+                    nombreEmpleadoSolicitante = dato.nombre
+                    apellidosEmpleadoSolicitante = dato.apellidos
+                    
+                    nombreCompletoEmpleadoSolicitante = nombreEmpleadoSolicitante + " " + apellidosEmpleadoSolicitante
+                    empleadosPrestados.append(nombreCompletoEmpleadoSolicitante)
+                
+                
+            arregloHerramientas = zip(codigos,nombres,descripciones, arregloIndividualCantidades)
+            
+            listaPrestamosRealizados = zip(prestamosRealizados,empleadosPrestados)
+            
 
+            if "prestamoEntregado" in request.session:
+                prestamoEntregado = request.session["prestamoEntregado"]
+                del request.session["prestamoEntregado"]
+                return render(request, "empleadosCustom/almacen/solicitudesMarcadas.html", {"estaEnAlmacen":estaEnAlmacen,"estaEnSolicitudesMarcadas":estaEnSolicitudesMarcadas,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
+                                                                                        "arregloHerramientas":arregloHerramientas, "prestamosRealizados":prestamosRealizados, "listaPrestamosRealizados":listaPrestamosRealizados, "prestamoEntregado":prestamoEntregado})
 
-        return render(request, "empleadosCustom/almacen/solicitudesMarcadas.html", {"estaEnAlmacen":estaEnAlmacen,"estaEnSolicitudesMarcadas":estaEnSolicitudesMarcadas,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo})
+            return render(request, "empleadosCustom/almacen/solicitudesMarcadas.html", {"estaEnAlmacen":estaEnAlmacen,"estaEnSolicitudesMarcadas":estaEnSolicitudesMarcadas,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
+                                                                                        "arregloHerramientas":arregloHerramientas, "prestamosRealizados":prestamosRealizados, "listaPrestamosRealizados":listaPrestamosRealizados})
+        else:
+            sinPrestamos = True
+            if "prestamoEntregado" in request.session:
+                prestamoEntregado = request.session["prestamoEntregado"]
+                del request.session["prestamoEntregado"]    
+                return render(request, "empleadosCustom/almacen/solicitudesMarcadas.html", {"estaEnAlmacen":estaEnAlmacen,"estaEnSolicitudesMarcadas":estaEnSolicitudesMarcadas,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
+                                                                                        "sinPrestamos":sinPrestamos,"prestamoEntregado":prestamoEntregado})
+                
+            return render(request, "empleadosCustom/almacen/solicitudesMarcadas.html", {"estaEnAlmacen":estaEnAlmacen,"estaEnSolicitudesMarcadas":estaEnSolicitudesMarcadas,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
+                                                                                        "sinPrestamos":sinPrestamos})
     #Si le da al inicio y no hay una sesión iniciada..
     else:
         return redirect('/login/') #redirecciona a url de inicio
+
 
     
 def verHerramientasALM(request):
@@ -365,7 +703,7 @@ def solicitarHerramientas(request):
             registroSolicitudPrestamo.save()
             solicitudGuardada = "La solicitud ha sigo guardada con exito!"
             return render(request, "empleadosCustom/almacen/empleados/solicitudHerramientas.html", {"solicitantePrestamo":solicitantePrestamo,"estaEnSolicitarHerramienta":estaEnSolicitarHerramienta,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
-                                                                                                "fechaHoy":fechaHoy, "context":json.dumps(data), "HerramientasAlmacen":consulta, "consulta2":consulta2, "consultaFunciones":consultaFunciones, "solicitudGuardada":solicitudGuardada, "contadorHerramienta":contadorHerramienta})
+                                                                                                "fechaHoy":fechaHoy, "context":json.dumps(data), "HerramientasAlmacen":consulta, "consulta2":consulta2, "consultaFunciones":consultaFunciones, "solicitudGuardada":solicitudGuardada})
 
         return render(request, "empleadosCustom/almacen/empleados/solicitudHerramientas.html", {"solicitantePrestamo":solicitantePrestamo,"estaEnSolicitarHerramienta":estaEnSolicitarHerramienta,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
                                                                                                 "fechaHoy":fechaHoy, "context":json.dumps(data), "HerramientasAlmacen":consulta, "consulta2":consulta2, "consultaFunciones":consultaFunciones})
@@ -390,44 +728,99 @@ def verMisPrestamos(request):
         foto = fotoAdmin(request)
         nombreCompleto = nombreini + " " + apellidosini #Blanca Yesenia Gaeta Talamantes
         
-        solicitudesPendientes = PrestamosAlmacen.objects.filter(id_empleado_solicitante_id__id_empleado = id_admin)
         
+        
+        # PRESTAMOS PENDIENTES- ----------------------------------------------------------------------------------------------------------------------------
+        solicitudesPendientes = PrestamosAlmacen.objects.filter(id_empleado_solicitante_id__id_empleado = id_admin, estatus="Pendiente")
+        prestamosEntregados = PrestamosAlmacen.objects.filter(id_empleado_solicitante_id__id_empleado = id_admin, estatus="En prestamo")
+        
+        #Pendientes
         arregloHerramientas = []
-        for solicitud in solicitudesPendientes:
+        codigos = []
+        nombres = []
+        descripciones = []
+        
+        #Entregados 
+        arregloHerramientasEntregadas = []
+        codigosHerramientasEntregadas = []
+        nombresHerramientasEntregadas = []
+        descripcionesHerramientasEntregadas = []
+        
+        
+        if solicitudesPendientes:
             
-            #Herramientas
-            herramientas = solicitud.id_herramientaInstrumento
-            arregloIndividualHerramientas = herramientas.split(",") #[1,2]
-            
-            codigos = []
-            nombres = []
-            descripciones = []
-            for herramientaIndividual in arregloIndividualHerramientas:
+            for solicitud in solicitudesPendientes:
                 
-                idHerramienta = int(herramientaIndividual)
+                #Herramientas
+                herramientas = solicitud.id_herramientaInstrumento
+                arregloIndividualHerramientas = herramientas.split(",") #[1,2]
                 
-                consultaHerramienta = HerramientasAlmacen.objects.filter(id_herramienta = idHerramienta)
                 
-                for dato in consultaHerramienta:
-                    codigo = dato.codigo_herramienta
-                    nombre = dato.nombre_herramienta
-                    descripcion = dato.descripcion_herramienta
-                codigos.append(codigo)
-                nombres.append(nombre)
-                descripciones.append(descripciones)
+                for herramientaIndividual in arregloIndividualHerramientas:
                     
-            
-            # Cantidades
-            cantidades = solicitud.cantidades_solicitadas
-            arregloIndividualCantidades = cantidades.split(",")
-            
-        arregloHerramientas = zip(codigos,nombres,descripciones, arregloIndividualCantidades)
+                    idHerramienta = int(herramientaIndividual)
+                    
+                    consultaHerramienta = HerramientasAlmacen.objects.filter(id_herramienta = idHerramienta)
+                    
+                    for dato in consultaHerramienta:
+                        codigo = dato.codigo_herramienta
+                        nombre = dato.nombre_herramienta
+                        descripcion = dato.descripcion_herramienta
+                    codigos.append(codigo)
+                    nombres.append(nombre)
+                    descripciones.append(descripcion)
+                        
+                
+                # Cantidades
+                cantidades = solicitud.cantidades_solicitadas
+                arregloIndividualCantidades = cantidades.split(",")
+                
+            arregloHerramientas = zip(codigos,nombres,descripciones, arregloIndividualCantidades)
         
         
+            
+        
+        if prestamosEntregados:
+            
+            for entrega in prestamosEntregados:
+                
+                #Herramientas
+                herramientasEntregadas = entrega.id_herramientaInstrumento
+                arregloIndividualHerramientasEntregadas = herramientasEntregadas.split(",") #[1,2]
+                
+                
+                for herramientaIndividualEntregada in arregloIndividualHerramientasEntregadas:
+                    
+                    idHerramientaEntregada = int(herramientaIndividualEntregada)
+                    
+                    consultaHerramientaEntregada = HerramientasAlmacen.objects.filter(id_herramienta = idHerramientaEntregada)
+                    
+                    for datoE in consultaHerramientaEntregada:
+                        codigoE = datoE.codigo_herramienta
+                        nombreE = datoE.nombre_herramienta
+                        descripcionE = datoE.descripcion_herramienta
+                    codigosHerramientasEntregadas.append(codigoE)
+                    nombresHerramientasEntregadas.append(nombreE)
+                    descripcionesHerramientasEntregadas.append(descripcionE)
+                        
+                
+                # Cantidades
+                cantidadesEntregadas = entrega.cantidades_solicitadas
+                arregloIndividualCantidadesEntregadas = cantidadesEntregadas.split(",")
+                
+            arregloHerramientasEntregadas = zip(codigosHerramientasEntregadas,nombresHerramientasEntregadas,descripcionesHerramientasEntregadas, arregloIndividualCantidadesEntregadas)
+        
+        
+            
+            
 
 
         return render(request, "empleadosCustom/almacen/empleados/verMisPrestamos.html", {"solicitantePrestamo":solicitantePrestamo,"estaEnVerMisPrestamos":estaEnVerMisPrestamos,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
-                                                                                          "solicitudesPendientes":solicitudesPendientes, "arregloHerramientas":arregloHerramientas})
+                                                                                      "solicitudesPendientes":solicitudesPendientes, "arregloHerramientas":arregloHerramientas,
+                                                                                      "prestamosEntregados":prestamosEntregados, "arregloHerramientasEntregadas":arregloHerramientasEntregadas})
+            
+            
+        
     #Si le da al inicio y no hay una sesión iniciada..
     else:
         return redirect('/login/') #redirecciona a url de inicio

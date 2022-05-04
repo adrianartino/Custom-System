@@ -1,0 +1,436 @@
+{% extends "empleadosCustom/menu/menu.html" %}
+{% load static %}
+
+{% block titulo %}
+Entregar Préstamo | CS
+{% endblock %}
+
+{% block estilos %}
+<!-- Favicon-->
+<link rel="icon" href={% static 'images/icons/ra.ico' %} type="image/x-icon">
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
+    type="text/css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+<!-- Bootstrap Core Css -->
+<link href={% static 'panel/plugins/bootstrap/css/bootstrap.css' %} rel="stylesheet">
+
+<!-- Waves Effect Css -->
+<link href={% static 'panel/plugins/node-waves/waves.css' %} rel="stylesheet" />
+
+<!-- Animation Css -->
+<link href={% static 'panel/plugins/animate-css/animate.css' %} rel="stylesheet" />
+
+<!-- Morris Chart Css-->
+<link href={% static 'panel/plugins/morrisjs/morris.css' %} rel="stylesheet" />
+
+<!-- Custom Css -->
+<link href={% static 'panel/css/style.css' %} rel="stylesheet">
+
+<link href={% static 'css/margen.css' %} rel="stylesheet" />
+
+<!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+<link href={% static 'panel/css/themes/all-themes.css' %} rel="stylesheet" />
+
+
+{% endblock %}
+
+{% block contenido %}
+<div class="row clearfix">
+    <div >
+        <form action="/guardarEntrega/" enctype="multipart/form-data" method="POST">{% csrf_token %}
+        <div class="card">
+            <div class="header">
+                <h2 style="font-family: 'Oswald', sans-serif;">
+                    FIRMA DE ENTREGA DE PRÉSTAMO DE HERRAMIENTA
+                    <small style="color: #790C05;">Formato de entrega de herramienta al empleado solicitante.</small>
+                </h2>
+
+                <br>
+                
+
+
+            </div>
+
+            <div class="body">
+                
+                {% for dato in infoPrestamo %}
+                    <center>
+                        <h1 style="color: black;">ENTREGA DE PRÉSTAMO #{{dato.id_prestamo}}</h1>
+                        <h3 style=" color: black;">Estatus: <span class="label bg-red">Pendiente</span></h3>
+                        <img src="{% static 'images/iconoPrestamoAlmacén.png' %}" width="15%" alt="lap">
+
+                        <h3>{{datoImplementacion.descripcion}}</h3>
+                        <h2 style="color: black;">Solicitante: {{nombreCompletoEmpleadoSolicitante}}</h2>
+                        <h2 style="color: black;">Departamento: <span class="{{colorDepartamento}}">{{nombreDepartamento}}</span></h2>
+                    </center>
+                    <div class="row clearfix">
+                        <div class="col-md-6">
+                            <div class="row clearfix">
+                                <br>
+                                <div class="col-md-6">
+                                    <center>
+                                        <h3 style="color: black;">Fecha de solicitud</h3>
+                                        <span style="font-size: 150%;">
+                                            <i class="material-icons"
+                                                style="color: rgb(42, 141, 17); font-size: 200%;">date_range</i>
+        
+                                        </span>
+                                        <h3 style="color: black;">{{dato.fecha_solicitud}}</h3>
+                                    </center>
+                                </div>
+                                <div class="col-md-6">
+                                    <center>
+                                        <h3 style="color: black;">Fecha de requerido</h3>
+                                        <span style="font-size: 150%;">
+                                            <i class="material-icons"
+                                                style="color: rgb(51, 82, 255); font-size: 200%;">date_range</i>
+        
+                                        </span>
+                                        <h3 style="color: black;">{{dato.fecha_requerimiento}}</h3>
+                                    </center>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="col-md-6">
+                            <br>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="card">
+                                    <div class="header bg-light-blue">
+                                        <h2 class="font-bold">
+                                            {{dato.proyecto_tarea}}<small>Proyecto</small>
+                                        </h2>
+                                    </div>
+                                    <div class="body">
+                                        <div>
+                                            <h4 >Observaciones:</h4>
+                                        </div>
+                                       <div>
+                                       <h5 class="text-justify">{{dato.observaciones}}</h5> 
+                                       </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                    
+                    <input type="hidden" name="idPrestamoGuardar" value="{{dato.id_prestamo}}">  
+                    
+                    <h1>Herramientas Solicitadas</h1>
+                    <div class="table-responsive">
+
+                        <table class="table table-bordered table-striped table-hover dataTable">
+                            <thead>
+                                <tr style="background-color: #3F51B5; color: black;">
+                                    <th>ID- código</th>
+                                    <th>Tipo</th>
+                                    <th>Nombre</th>
+                                    <th>Marca</th>
+                                    <th>Imagen</th>
+                                    <th>Descripción</th>
+                                    <th>Unidad medida</th>
+                                    <th>SKU</th>
+                                    <th>Existencia en almacén</th>
+                                    <th>Cantidad solicitada</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>ID- código</th>
+                                    <th>Tipo</th>
+                                    <th>Nombre</th>
+                                    <th>Marca</th>
+                                    <th>Imagen</th>
+                                    <th>Descripción</th>
+                                    <th>Unidad medida</th>
+                                    <th>SKU</th>
+                                    <th>Existencia en almacén</th>
+                                    <th>Cantidad solicitada</th>
+                                </tr>
+                            </tfoot>
+                            <tbody class="animate__animated animate__backInDown" id="herramientasAgregadas">
+                                {% for herramienta, cantidad in listaHerramientas %}
+                                <tr>
+                                    <td>
+                                        <div>
+                                            <h4><span class="label bg-black">{{herramienta.0}}</span></h4>
+                                        </div>
+                                        <div>
+                                            <h4><span class="label bg-teal">{{herramienta.1}}</span></h4>
+                                        </div>
+
+                                    </td>
+                                    {% if herramienta.2 == "Herramienta" %}
+                                    <td><div><i class="material-icons" style="font-size: 10px; display:inline;">build</i>{{herramienta.2}}</div> </td>
+                                    {% elif herramienta.2 == "Instrumento" %}
+                                    <td><div><i class="material-icons" style="font-size: 10px; display:inline;">flash_auto</i>{{herramienta.2}}</div> </td>
+                                    {% endif %}
+                                    <td>{{herramienta.3}}</td>
+                                    <td>{{herramienta.4}}</td>
+                                    <td>
+                                        <center>
+                                            <img src="{{herramienta.5.url}}" width="60%" alt="empleado">
+                                        </center>
+                                    </td>
+                                    <td>{{herramienta.6}}</td>
+                                    <td>{{herramienta.7}}</td>
+                                    <td>{{herramienta.8}}</td>
+                                    <td>
+                                        <center>
+                                        <div>
+                                            <h4><span class="label bg-indigo">{{herramienta.9}} unidades</span></h4>
+                                        </div>
+                                        <div>
+                                            <h5>+</h5>
+                                        </div>
+                                        <div>
+                                            <h4><span class="label bg-indigo">0 en préstamo</span></h4>
+                                        </div>
+                                    </center>
+                                    </td>
+                                   
+                                    <td>
+                                        <h4><span class="label bg-amber">{{cantidad}} unidades</span></h4>
+                                    </td>
+                                    
+                                </tr>
+                            {% endfor %}
+    
+    
+    
+    
+                            </tbody>
+                            
+                        </table>
+                    </div>
+                    <h1>Otras herramientas</h1>
+                    <div class="row clearfix">
+                        <div class="col-md-6">
+                            <div class="form-line">
+                                {% if otro == None %}
+                                <textarea rows="4" class="form-control no-resize" placeholder="No se solicitaron otras herramientas"></textarea>
+                                {% else %}
+                                <textarea rows="4" class="form-control no-resize"  value="{{otro}}"></textarea>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+            </div>
+        </div>
+        <div style="background-color: #fff; background-clip: border-box;
+                border: 1px solid rgba(0, 0, 0, 0.125);
+                border-radius: 0.25rem;">
+                <div class="row clearfix" > 
+                    <center>
+                        <h2>Ingresar Condiciones de entrega</h2>
+                        <div class="row clearfix">
+                            <div class="col-md-3">
+
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-line">
+                                    <textarea rows="4" class="form-control no-resize" placeholder="Ingresar condiciones de entrega" name="condicionesEntrega" required></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+
+                            </div>
+                        </div>
+                        
+                        <h2>Ingresar Firma de entrega del empleado</h2>
+                        <h4>Se solicita integrar una firma de entrega para su historial.</h4>
+                        <h5>"Acepto de conformidad que los materiales, herramientas y/o equipo descritos anteriormente se me fueron proporcionados y seran
+                            utilizados para la realización de mis actividades dentro de la empresa y si son exraviados o dañados por mal uso, serán descontados 
+                            de mi nómina, de igual manera al ser solicitados por el cese de relaciones laborales, serán entregados o en su omisión 
+                            descontados de mi finiquito."</h5>
+                    </center>
+                </div>
+                <br>
+                <center>    
+                    
+                    <canvas id="sheet" width="400" height="250" style="border: 1px solid black"></canvas>
+                    <div class="row clearfix">
+                        <button type="button"  onclick="limpiar()"
+                        class="btn btn-success m-t-15 waves-effect animate__animated animate__flipInX">
+                        <i class="material-icons">delete_sweep</i> Limpiar firma</button>
+                        <input type="hidden" name="canvasData" id="my_hidden">
+                    </div>
+                    <div clas="row clearfix">   
+                        <button type="submit"  onclick="save()"
+                        class="btn btn-warning m-t-15 waves-effect animate__animated animate__flipInX">
+                        <i class="material-icons">assignment_turned_in</i> Relizar entrega de préstamo</button>
+                    <div>
+                    <br>
+                </center>
+            
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+{% if alta %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Wuu..!',
+        text: ' {{mensaje}}',
+        footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
+
+{% if correoEnviado %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Wuu..!',
+        text: ' {{mensaje}}',
+        footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
+
+{% if baja %}
+<script type="text/javascript">
+    swal({
+        icon: 'error',
+        title: 'Wuu..!',
+        text: ' {{mensaje}}',
+        footer: '<span style="color: red!important"> Vuelve a navegar por Custom System! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
+
+<script type="text/javascript">
+    function inicio() {
+        var div1 = document.getElementById("divInactivos");
+        div1.style.display = "none"; /* bloquear u ocultar la tabla..*/
+    }
+    window.onload = inicio;
+
+    function cambioFiltro() {
+        var div = document.getElementById("divActivos");
+        var div1 = document.getElementById("divInactivos");
+        /* Si la tabla de Empleados Activos está activa..*/
+        if (div.style.display === "none") {
+            //Bloquear la tabla de empleados Activos.. 
+            div.style.display = "block";
+            div1.style.display = "none";
+        } else { //Si la tabla de empleados Activos está inactiva
+            div.style.display = "none"; //Desbloquear la tabla de empleados Activos
+            div1.style.display = "block";
+        }
+
+    }
+</script>
+
+<script>
+    
+
+    var canvas = document.getElementById('sheet'), g = canvas.getContext("2d");
+    g.strokeStyle = "hsl(208, 100%, 43%)";
+    g.lineJoin = "round";
+    g.lineWidth = 1;
+    g.filter = "blur(1px)";
+
+    const
+    relPos = pt => [pt.pageX - canvas.offsetLeft, pt.pageY - canvas.offsetTop],
+    drawStart = pt => { with(g) { beginPath(); moveTo.apply(g, pt); stroke(); }},
+    drawMove = pt => { with(g) { lineTo.apply(g, pt); stroke(); }},
+
+    pointerDown = e => drawStart(relPos(e.touches ? e.touches[0] : e)),
+    pointerMove = e => drawMove(relPos(e.touches ? e.touches[0] : e)),
+
+    draw = (method, move, stop) => e => {
+        if(method=="add") pointerDown(e);
+        canvas[method+"EventListener"](move, pointerMove);
+        canvas[method+"EventListener"](stop, g.closePath);
+    };
+
+    canvas.addEventListener("mousedown", draw("add","mousemove","mouseup"));
+    canvas.addEventListener("touchstart", draw("add","touchmove","touchend"));
+    canvas.addEventListener("mouseup", draw("remove","mousemove","mouseup"));
+    canvas.addEventListener("touchend", draw("remove","touchmove","touchend"));
+
+    function limpiar(){
+        g.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function save() {
+        var canvas = document.getElementById('sheet');
+        var inputVacio = document.getElementById('my_hidden');
+        inputVacio.value = canvas.toDataURL();
+        document.forms["form1"].submit();
+    }
+
+    
+
+</script>t>
+
+
+
+{% endblock %}
+
+{% block estilosJs %}
+
+
+
+
+<!-- Jquery Core Js -->
+<script src={% static 'panel/plugins/jquery/jquery.min.js' %}></script>
+
+<!-- Bootstrap Core Js -->
+<script src={% static 'panel/plugins/bootstrap/js/bootstrap.js' %}></script>
+
+<!-- Select Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-select/js/bootstrap-select.js' %}></script>
+
+<!-- Slimscroll Plugin Js -->
+<script src={% static 'panel/plugins/jquery-slimscroll/jquery.slimscroll.js' %}></script>
+
+
+<!-- Waves Effect Plugin Js -->
+<script src={% static 'panel/plugins/node-waves/waves.js' %}></script>
+
+<!-- Jquery CountTo Plugin Js -->
+<script src={% static 'panel/plugins/jquery-countto/jquery.countTo.js' %}></script>
+
+<!-- Morris Plugin Js -->
+<script src={% static 'panel/plugins/raphael/raphael.min.js' %}></script>
+<script src={% static 'panel/plugins/morrisjs/morris.js' %}></script>
+
+<!-- ChartJs -->
+<script src={% static 'panel/plugins/chartjs/Chart.bundle.js' %}></script>
+
+<!-- Flot Charts Plugin Js -->
+<script src={% static 'panel/plugins/flot-charts/jquery.flot.js' %}></script>
+<script src={% static 'panel/plugins/flot-charts/jquery.flot.resize.js' %}></script>
+<script src={% static 'panel/plugins/flot-charts/jquery.flot.pie.js' %}></script>
+<script src={% static 'panel/plugins/flot-charts/jquery.flot.categories.js' %}></script>
+<script src={% static 'panel/plugins/flot-charts/jquery.flot.time.js' %}></script>
+
+<!-- Sparkline Chart Plugin Js -->
+<script src={% static 'panel/plugins/jquery-sparkline/jquery.sparkline.js' %}></script>
+
+<!-- Custom Js -->
+<script src={% static 'panel/js/admin.js' %}></script>
+<script src={% static 'panel/js/pages/ui/tooltips-popovers.js' %}></script>
+<script src={% static 'panel/js/pages/index.js' %}></script>
+
+<!-- Demo Js -->
+<script src={% static 'panel/js/demo.js' %}></script>
+
+
+
+{% endblock %}
