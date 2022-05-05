@@ -435,7 +435,7 @@ def historialSolicitudesALM(request):
         
         
         estaEnAlmacen = True
-        estaEnSolicitudesPendientes = True
+        estaEnHistorialSolicitudes = True
         almacen = True
 
 
@@ -529,12 +529,12 @@ def historialSolicitudesALM(request):
             
 
             
-            return render(request, "empleadosCustom/almacen/historialSolicitudes.html", {"estaEnAlmacen":estaEnAlmacen,"estaEnSolicitudesPendientes":estaEnSolicitudesPendientes,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
+            return render(request, "empleadosCustom/almacen/historialSolicitudes.html", {"estaEnAlmacen":estaEnAlmacen,"estaEnHistorialSolicitudes":estaEnHistorialSolicitudes,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
                                                                                         "arregloHerramientas":arregloHerramientas, "solicitudesPendientes":prestamosDevueltos, "listaSolicitudesPendientes":listaSolicitudesPendientes, "herramientasDañadas":herramientasDañadas})
         else:
             sinPendientes = True
                 
-            return render(request, "empleadosCustom/almacen/solicitudesPendientes.html", {"estaEnAlmacen":estaEnAlmacen,"estaEnSolicitudesPendientes":estaEnSolicitudesPendientes,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
+            return render(request, "empleadosCustom/almacen/historialSolicitudes.html", {"estaEnAlmacen":estaEnAlmacen,"estaEnHistorialSolicitudes":estaEnHistorialSolicitudes,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
                                                                                         "sinPendientes":sinPendientes})
     #Si le da al inicio y no hay una sesión iniciada..
     else:
@@ -856,6 +856,31 @@ def solicitarHerramientas(request):
                                                          estatus = "Pendiente")
             registroSolicitudPrestamo.save()
             solicitudGuardada = "La solicitud ha sigo guardada con exito!"
+            
+            #CORREO ELECTRÓNICO
+            datosEmpleadoSolicitante = Empleados.objects.filter(id_empleado=id_admin)
+            strUltimoPrestamo = PrestamosAlmacen.objects.count()
+            ultimoPrestamo = str(strUltimoPrestamo)
+            for dato in datosEmpleadoSolicitante:
+                nombreSolicitante= dato.nombre
+                apellidosSolicitante=dato.apellidos
+                correoSolicitante=dato.correo
+                
+            asunto = "CS | Nueva solicitud de préstamo de herramienta"
+            plantilla = "empleadosCustom/almacen/correos/correoSolicitud.html"
+            html_mensaje = render_to_string(plantilla, {"nombreSolicitante": nombreSolicitante, "apellidosSolicitante": apellidosSolicitante, "correoSolicitante": correoSolicitante,
+                                                        "fecha_solicitud":fecha_solicitud,
+                                                        "fecha_normal_requerido":fecha_normal_requerido,
+                                                        "proyecto":proyecto,
+                                                        "ultimoPrestamo":ultimoPrestamo})
+            email_remitente = settings.EMAIL_HOST_USER
+            email_destino = ['sistemas@customco.com.mx']
+            mensaje = EmailMessage(asunto, html_mensaje, email_remitente, email_destino)
+            mensaje.content_subtype = 'html'
+            mensaje.send()
+            
+            
+            
             return render(request, "empleadosCustom/almacen/empleados/solicitudHerramientas.html", {"solicitantePrestamo":solicitantePrestamo,"estaEnSolicitarHerramienta":estaEnSolicitarHerramienta,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
                                                                                                 "fechaHoy":fechaHoy, "context":json.dumps(data), "HerramientasAlmacen":consulta, "consulta2":consulta2, "consultaFunciones":consultaFunciones, "solicitudGuardada":solicitudGuardada})
 
@@ -902,6 +927,19 @@ def verMisPrestamos(request):
         codigosHerramientasEntregadas = []
         nombresHerramientasEntregadas = []
         descripcionesHerramientasEntregadas = []
+        
+        #Pendientes
+        conDaño = []
+        nombresHerramientasDañadas = []
+        motivosDañados = []
+        idsHerramientasDañadas = []
+        codigosDevueltos = []
+        nombresDevueltos = []
+        descripcionesDevueltos = []
+        
+        listaPrestamosDevueltos = ""
+        herramientasDañadas = ""
+        arregloHerramientasDevueltas = []
         
         
         if solicitudesPendientes:
@@ -969,13 +1007,7 @@ def verMisPrestamos(request):
         
         
         
-        conDaño = []
-        nombresHerramientasDañadas = []
-        motivosDañados = []
-        idsHerramientasDañadas = []
-        codigosDevueltos = []
-        nombresDevueltos = []
-        descripcionesDevueltos = []
+        
         
         if prestamosDevueltos:
             for prestamoDevuelto in prestamosDevueltos:
@@ -1007,7 +1039,7 @@ def verMisPrestamos(request):
                     conDaños = "NO"
                     idsHerramientasDañadas.append("jijija")
                 
-                herramientasDañadas = zip(idsHerramientasDañadas, nombresHerramientasDañadas, motivosDañados)
+                
                 
                 conDaño.append(conDaños)
                     
@@ -1037,9 +1069,11 @@ def verMisPrestamos(request):
                 
                 
                 
-            arregloHerramientasDevueltas = zip(codigosDevueltos,nombresDevueltos,descripcionesDevueltos, arregloIndividualCantidades)
+                arregloHerramientasDevueltas = zip(codigosDevueltos,nombresDevueltos,descripcionesDevueltos, arregloIndividualCantidades)
             
             listaPrestamosDevueltos = zip(prestamosDevueltos, conDaño)
+            
+            herramientasDañadas = zip(idsHerramientasDañadas, nombresHerramientasDañadas, motivosDañados)
             
             
 
@@ -1048,6 +1082,8 @@ def verMisPrestamos(request):
                                                                                       "solicitudesPendientes":solicitudesPendientes, "arregloHerramientas":arregloHerramientas,
                                                                                       "prestamosEntregados":prestamosEntregados, "arregloHerramientasEntregadas":arregloHerramientasEntregadas,
                                                                                       "listaPrestamosDevueltos":listaPrestamosDevueltos, "herramientasDañadas":herramientasDañadas, "arregloHerramientasDevueltas":arregloHerramientasDevueltas})
+        
+        
             
             
         
@@ -1094,11 +1130,23 @@ def bajaHerramientaAlmacen(request):
             motivoBaja = request.POST['motivoBaja']
             explicacion = request.POST['explicacion']
             
+            bajita = ""
+            if motivoBaja == "E":
+                bajita = "Extravio"
+            elif motivoBaja == "D":
+                bajita = "Dañado"
+            
             consultaHerramienta = HerramientasAlmacen.objects.filter(id_herramienta = idHerramientaBaja)
             
             for dato in consultaHerramienta:
                 cantidadExistenteActual = dato.cantidad_existencia
                 nombreHerramienta = dato.nombre_herramienta
+                codigoInternoSistema = dato.codigo_herramienta
+                tipo = dato.tipo_herramienta
+                marca = dato.marca
+                descripcion = dato.descripcion_herramienta
+                sku = dato.sku
+                imagenHerramienta = dato.imagen_herramienta
                 
             intCantidadExistenciaActual = int(cantidadExistenteActual)
             
@@ -1113,7 +1161,32 @@ def bajaHerramientaAlmacen(request):
                                                           cantidad_baja = "1", fecha_baja = fechaBaja)
             registroDeBaja.save()
             if actualizacion and registroDeBaja:
-                request.session['herramientaActualizada'] = "La herramienta " + nombreHerramienta + " ha sido dada de baja satisfactoriamente!"
+                request.session['herramientaActualizada'] = "La herramienta " + nombreHerramienta + " ha sido dada de baja satisfactoriamente! Se ha mandado un correo con la solicitud de requisición de compra!"
+                
+                #MANDAR CORREO DE SOLICITUD DE REQUISICIÓN DE COMPRA
+                
+                    
+                asunto = "CS | Solicitud de requisición de compra de herramienta"
+                plantilla = "empleadosCustom/almacen/correos/correoBajaHerramienta.html"
+                html_mensaje = render_to_string(plantilla, {"idHerramientaDañada":idHerramientaBaja,
+                                                            "codigoHerramientaDañada":codigoInternoSistema,
+                                                            "skuHerramientaDañada":sku,
+                                                            "tipoHerramientaDañada":tipo,
+                                                            "nombreHerramientaDañada":nombreHerramienta,
+                                                            "marcaHerramientaDañada":marca,
+                                                            "descripcionHerramientaDañada":descripcion,
+                                                            "restaCantidad":restaCantidad,
+                                                            "motivoDañoHerramientaDañada":bajita,
+                                                            "explicacionDañoHerramientaDañada":explicacion,
+                                                            "imagenHerramientaDañada":imagenHerramienta
+                                                            })
+                email_remitente = settings.EMAIL_HOST_USER
+                email_destino = ['sistemas@customco.com.mx']
+                mensaje = EmailMessage(asunto, html_mensaje, email_remitente, email_destino)
+                mensaje.content_subtype = 'html'
+                mensaje.send()
+            
+                
                 
                 return redirect('/verHerramientasALM/')
     #Si le da al inicio y no hay una sesión iniciada..

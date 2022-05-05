@@ -1,0 +1,231 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <title>Document</title>
+</head>
+<body><div style="text-align: center;"><div style="margin:auto;max-width:600px;font-family: helvetica, arial,sans-serif;"><base target="_blank"><div style="display:none !important; visibility:hidden; mso-hide:all; font-size:1px; color:#ffffff; line-height:1px; max-height:0; max-width:0; opacity:0; overflow:hidden;">Realice la compra de su cotización y asegure su pedido antes de que los precios cambien</div><table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#ffffff"><tbody><tr><td style="font-size:0;">&nbsp;</td><td align="center" valign="middle" width="600" height="300" bgcolor="#ffffff"><table width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color: #FFFFFF; border: solid 1px #c7d1de; margin-top: 16px; border-radius: 8px 8px 0px 0px;">
+    <tbody>
+   
+        
+        <tr style="">
+            <td style="text-align: center;
+                       height: 64px;
+                       
+                       padding: 12px 0px 4px 16px;
+                       ">
+                <img src="data:image/png;base64,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" width = "40" height = "60">
+                <center>
+                    <h2 style="font-family: 'Oswald', sans-serif;">
+                        CUSTOM SYSTEM
+                        
+                    </h2>
+                </center>
+            </td>
+            
+        </tr>
+        
+    </tbody>
+</table><!-- MESSAGE START -->
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color: #FFFFFF; border-bottom: solid 1px #DDDDDD; border-right: solid 1px #DDDDDD; border-left: solid 1px #DDDDDD;">
+    <tbody>
+        <tr>
+            <td style="text-align: left;
+                       line-height: 24px;
+                       vertical-align: middle;
+                       font-size: 16px;
+                       padding: 16px;
+                       ">
+                <h2 style="
+                           margin-top: 0px;
+                           margin-bottom: 8px;
+                           color: #666666;
+                           ">Hola, José Álvarez Hernández!</h2>
+                <p style="
+                          margin: 0px;
+                          color: #666666;
+                          ">
+                    Tienes una nueva solicitud de préstamo de herramienta en Custom System.
+                </p><br>
+                <p style="
+                          margin: 0px;
+                          color: #666666;
+                          ">
+                    A continuación te proporcionamos los datos:
+                </p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- MESSAGE END -->
+
+<!-- PRODUCT LIST START -->
+<table width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color: #FFFFFF; border-bottom: solid 1px #DDDDDD; border-right: solid 1px #DDDDDD; border-left: solid 1px #DDDDDD; padding-bottom: 15px; padding-left: 15px;">
+    <tbody><tr >
+        <td style="font-family: sans-serif;font-size:14px; padding-top: 16px;"> Solicitante: {{nombreSolicitante}} {{apellidosSolicitante}}</td>
+    </tr>
+    <tr>
+        <td style="font-family: sans-serif;font-size:14px;">Correo electrónico: {{correoSolicitante}}</td>
+    </tr>
+    <tr>
+        <td style="font-family: sans-serif;font-size:14px;">Fecha Solicitud: {{fecha_solicitud}}</td>
+        <td style="font-family: sans-serif;font-size:14px;">Fecha Requerido: {{fecha_normal_requerido}}</td>
+    </tr>
+    <tr>
+        <td style="font-family: sans-serif;font-size:14px;">Proyecto: {{proyecto}}</td>
+    </tr>
+    <tr>
+        <td colspan="3" style="font-family: sans-serif;font-size:14px;">Favor de ir a <a href="http://192.168.10.5:8000/solicitudesPendientesALM/">solicitudes pendientes</a> , solicitud número {{ultimoPrestamo}} para realizar entrega del mismo.</td>
+    </tr>
+    <tr>
+    
+    <td colspan="3" style="padding-top: 20px;text-align:center; padding-bottom: 10px;"><a href="http://192.168.10.5:8000/login/" style="-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;
+                                  text-align: center;
+                                  text-decoration: none;
+                                  padding: 12px;
+                                  border-radius: 4px;
+                                  color: #35c1cb;
+                                  font-size: 16px;
+                                  font-weight: bold;
+                                
+                                  box-shadow: 0px 4px 8px RGBA(0,0,0, 0.1);
+                                   
+                                  ">Ir a Custom System</a></td>
+    </tr>
+</tbody></table>
+
+
+
+   
+
+
+<!-- STATUS END --><!-- CONTACT START -->
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0" style="border-bottom: solid 1px #c7d1de; border-right: solid 1px #c7d1de; border-left: solid 1px #c7d1de; background-color: #f5b7b1">
+    <tbody>
+        <tr>
+            <td style="text-align: center;
+                       line-height: 16px;
+                       vertical-align: middle;
+                       font-size: 16px;
+                       padding: 16px;
+                       font-family: sans-serif;
+                       ">
+                <h4 style="
+                           margin-top: 0px;
+                           margin-bottom: 12px;
+                           color: #2D3235;
+                           ">
+                    Para cualquier duda, puede contactarse con:
+                </h4>
+                
+                
+                <p style="color: #2D3235;  text-align: center; font-size: 16px; font-weight: 700; margin:0; padding:12px;">
+                    Marcos Adrian Guerrero Artiño
+                </p>
+                <p style="color: #666666;
+                          margin: 0px;
+                          padding: 4px;
+                          border-radius: 4px;
+                          background-color: #f1948a;
+                          font-size: 14px;
+                          line-height: 16px;
+                          ">
+                    <a  style="
+                                       text-decoration: none;
+                                       color: #0088d2;
+                                       font-size: 16px;
+                                       ">
+                        sistemas@customco.com.mx
+                    </a> ● 
+                    <a  style="
+                                       text-decoration: none;
+                                       color: #0088d2;
+                                       font-size: 16px;
+                                       ">
+                        Tel: Ext. 120 - Departamento de Sistemas
+                    </a>
+                </p>
+
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- CONTACT END -->
+
+<!-- FOOTER START -->
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0" style="border-bottom: solid 1px #c7d1de; border-right: solid 1px #c7d1de; border-left: solid 1px #c7d1de; background-color: #f5b7b1; padding-bottom: 16px;">
+    <tbody>
+        
+        <tr valign="top">
+            <td style="
+                       text-align: center;
+                       padding-left: 16px;
+                       padding-right:16px;
+                       
+                       padding-top: 16px;
+                       font-family: sans-serif;
+                       ">
+                
+                <p style="font-size: 16px; line-height: 24px; font-weight: 700; color: #2D3235; margin:0; padding-bottom: 4px;">
+                    Custom & Co S.A. de C.V.
+                </p>
+                <p style="font-size: 14px; line-height: 20px; font-weight: 700; color: #2D3235;margin:0; padding-bottom: 4px;">
+                    RFC: CAC070116IS9.
+                </p>
+                <p style="font-size: 14px; line-height: 20px; font-weight: 400; color: #899299;margin:0; padding-bottom: 4px;">
+                    Av. Allende 646.
+                </p>
+                <p style="font-size: 14px; line-height: 20px; font-weight: 400; color: #899299;margin:0; padding-bottom: 4px;">
+                    Col. Zona Centro.
+
+                
+                </p>
+                <p style="font-size: 14px; line-height: 20px; font-weight: 400; color: #899299;margin:0;">
+                    35000 Gómez Palacio,Durango México.
+                </p>
+                
+            </td>
+    
+        </tr>
+    </tbody>
+</table>
+
+<!-- UNSUBSCRIBE START -->
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0" style="border-bottom: solid 1px #c7d1de; border-right: solid 1px #c7d1de; border-left: solid 1px #c7d1de; background-color: #f5b7b1; border-radius: 0px 0px 8px 8px;font-family: sans-serif; padding-right: 35px; padding-top: 3px; padding-bottom: 3px;">
+    <tbody>
+        <tr valign="top">
+            <td style="
+                       text-align: right;
+                       line-height: 24px;
+                       color: #666666;
+                       font-size: 12px;
+                       width: 50%;
+                       
+                       ">
+                <a style="color: crimson; text-decoration: none; padding-right: 8px;" href="https://www.customco.com.mx/">© 2022 Custom & Co S.A. de C.V.</a>     |   
+            </td>
+            <td style="
+                       text-align: left;
+                       line-height: 24px;
+                       color: #666666;
+                       font-size: 12px;
+                       width: 50%;
+                       ">
+                <a style="color:crimson; text-decoration: none; padding-left: 8px;" >Administrador de Custom System</a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- UNSUBSCRIBE END --></td><td style="font-size:0;">&nbsp;</td></tr></tbody></table></div></div></body>
+</html>
