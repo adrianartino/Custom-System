@@ -168,17 +168,7 @@ Mis préstamos | Custom System
 
             <div class="body" id="divPendientes">
                 <div class="row clear-fix">
-                    <div class="col-xs-12 col-sm-1">
-                        <form action="/reporteEmpleadosActivos/" method="POST">{% csrf_token %}
-                            <input type="hidden" name="activo" value="I">
-                            <button type="submit" class="btn bg-red waves-effect animate__animated animate__flipInX"
-                                data-toggle="tooltip" data-placement="bottom"
-                                title="Descargar reporte Empleados de baja en PDF.">
-                                <i class="material-icons">picture_as_pdf</i>
-                                <span>PDF</span>
-                            </button>
-                        </form>
-                    </div>
+                    
                     <div class="col-xs-12 col-sm-1">
                         <form action="/xlEmpleados/" method="POST">{% csrf_token %}
                             <input type="hidden" name="activo" value="I">
@@ -189,10 +179,6 @@ Mis préstamos | Custom System
                                 <span>Excel</span>
                             </button>
                         </form>
-                    </div>
-                    <div class="col-xs-12 col-sm-4">
-                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarEmpleados/">Agregar
-                            Herramientas</a>
                     </div>
 
                 </div>
@@ -270,17 +256,7 @@ Mis préstamos | Custom System
 
             <div class="body" id="divEntregados">
                 <div class="row clear-fix">
-                    <div class="col-xs-12 col-sm-1">
-                        <form action="/reporteEmpleadosActivos/" method="POST">{% csrf_token %}
-                            <input type="hidden" name="activo" value="I">
-                            <button type="submit" class="btn bg-red waves-effect animate__animated animate__flipInX"
-                                data-toggle="tooltip" data-placement="bottom"
-                                title="Descargar reporte Empleados de baja en PDF.">
-                                <i class="material-icons">picture_as_pdf</i>
-                                <span>PDF</span>
-                            </button>
-                        </form>
-                    </div>
+                    
                     <div class="col-xs-12 col-sm-1">
                         <form action="/xlEmpleados/" method="POST">{% csrf_token %}
                             <input type="hidden" name="activo" value="I">
@@ -292,10 +268,7 @@ Mis préstamos | Custom System
                             </button>
                         </form>
                     </div>
-                    <div class="col-xs-12 col-sm-4">
-                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarEmpleados/">Agregar
-                            Herramientas</a>
-                    </div>
+                    
 
                 </div>
                 <div class="table-responsive">
@@ -303,68 +276,76 @@ Mis préstamos | Custom System
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable ">
                         <thead>
                             <tr style="background-color: #E05D5D; color: whitesmoke;">
-                                <th>ID Daño</th>
-                                <th>ID Herramienta / código</th>
-                                <th>Tipo/código</th>
-                                <th>Nombre</th>
-                                <th>Marca</th>
-                                <th>Descripcion</th>
-                                <th>Cantidad Baja</th>
-                                <th>Préstamo</th>
-                                <th>Motivo baja</th>
-                                <th>Descripción de baja</th>
-                                <th>Fecha de baja</th>
+                                <th>ID</th>
+                                <th>Fecha Solicitud</th>
+                                <th>Fecha / Firma Préstamo</th>
+                                <th>Fecha / Firma devolución</th>
+                                <th>Proyecto</th>
+                                <th>Observaciones</th>
+                                <th>Herramientas solicitadas</th>
+                                <th>Estatus</th>
+                                <th>Devuelto con daño/extravío?</th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
-                                <th>ID Daño</th>
-                                <th>ID Herramienta / código</th>
-                                <th>Tipo</th>
-                                <th>Nombre</th>
-                                <th>Marca</th>
-                                <th>Descripcion</th>
-                                <th>Cantidad Baja</th>
-                                <th>Préstamo</th>
-                                <th>Motivo baja</th>
-                                <th>Descripción de baja</th>
-                                <th>Fecha de baja</th>
+                                <th>ID</th>
+                                <th>Fecha Solicitud</th>
+                                <th>Fecha / Firma Préstamo</th>
+                                <th>Fecha / Firma devolución</th>
+                                <th>Proyecto</th>
+                                <th>Observaciones</th>
+                                <th>Herramientas solicitadas</th>
+                                <th>Estatus</th>
+                                <th>Devuelto con daño/extravío?</th>
                             </tr>
                         </tfoot>
                         <tbody>
-                            {% for daño, datoHerramienta in listaDañadas %}
+                            {% for solicitud, condaño in listaPrestamosDevueltos %}
                             <tr>
-                                <td>{{daño.id_herramientaInactiva}}</td>
+                                <td><h4><span class="label bg-black">{{solicitud.id_prestamo}}</span></h4></td>
+                                <td><h4><span class="label bg-amber">{{solicitud.fecha_solicitud}}</span></h4></td>
                                 <td>
-                                    <div>
-                                        <h4><span class="label bg-black">{{datoHerramienta.0}}</span></h4>
-                                    </div>
-                                    <div>
-                                        <h4><span class="label bg-teal">{{datoHerramienta.2}}</span></h4>
-                                    </div>
+                                    <h4><span class="label bg-blue">{{solicitud.fecha_prestamo}}</span></h4>
+                                    <img src="{{solicitud.firma_prestamo.url}}" alt="firmaPrestamo" width="100">
                                 </td>
-                                {% if datoHerramienta.1 == "Herramienta" %}
-                                <td><div><i class="material-icons" style="font-size: 10px; display:inline;">build</i>{{datoHerramienta.1}}</div> </td>
-                                {% elif datoHerramienta.1 == "Instrumento" %}
-                                <td><div><i class="material-icons" style="font-size: 10px; display:inline;">flash_auto</i>{{hdatoHerramienta.1}}</div> </td>
-                                {% endif %}
-                                <td>{{datoHerramienta.3}}</td>
-                                <td>{{datoHerramienta.4}}</td>
-                                <td>{{datoHerramienta.5}}</td>
-                                <td>1 unidad</td>
-                                {% if daño.id_prestamo == None %}
-                                <td><h4><span class="label bg-orange">Sin prestamo asociado</span></h4></td>
-                                {% else %}
-                                <td><a href=""><h4><span class="label bg-light-green">Prestamo 4</span></h4></a> </td>
-                                {% endif %}
-
-                                {% if daño.motivo_baja == "D" %}
-                                <td><h4><span class="label bg-red">Daño</span></h4> </td>
-                                {% elif daño.motivo_baja == "E" %}
-                                <td><h4><span class="label bg-red">Extravío</span></h4> </td>
-                                {% endif %}
-                                <td>{{daño.explicacion_baja}}</td>
-                                <td>{{daño.fecha_baja}}</td>
+                                <td>
+                                    <h4><span class="label bg-green">{{solicitud.fecha_devolucion}}</span></h4>
+                                    <img src="{{solicitud.firma_devolucion.url}}" alt="firmaDevolucion" width="100">
+                                </td>
+                                <td><h5><span>{{solicitud.proyecto_tarea}}</span></h5></td>
+                                <td><h5><span>{{solicitud.observaciones}}</span></h5></td>
+                                <td>
+                                    <center>
+                                        <button type="button" class="btn bg-blue waves-effect" data-trigger="focus" data-container="body" data-toggle="popover"
+                                        data-placement="left" title="Listado de herramientas" data-html="true" data-content="
+                                        {% for h in arregloHerramientasDevueltas %}
+                                        <div><h4><span class='label bg-indigo'>{{h.0}}</span> - <span class='label bg-blue-grey'>{{h.1}}</span>    <span class='label bg-light-green'>{{h.3}}</span></h4></div>
+                                        {% endfor %}
+                                        ">
+                                            <i class="material-icons">visibility</i>
+                                        </button>
+                                    </center>
+                                    
+                                </td>
+                               
+                                <td><h4><span class="label bg-green">{{solicitud.estatus}}</span></h4></td>
+                                <td>
+                                    {% if condaño == "SI" %}
+                                    <h4><span class="label bg-red">SI</span></h4>
+                                    <center>
+                                        <button type="button" class="btn bg-blue waves-effect" data-trigger="focus" data-container="body" data-toggle="popover"
+                                        data-placement="left" title="Listado de herramientas" data-html="true" data-content="
+                                        {% for h in herramientasDañadas %}
+                                        <div><h4><span class='label bg-indigo'>{{h.0}}</span> - <span class='label bg-blue-grey'>{{h.1}}</span>    <span class='label bg-light-green'>{% if h.2 == 'D' %}Daño{% elif h.2 == 'E' %}Extravío{% endif %}</span></h4></div>
+                                        {% endfor %}
+                                        ">
+                                            <i class="material-icons">visibility</i>
+                                        </button>
+                                    </center>
+                                    {% else %} 
+                                    <h4><span class="label bg-green">NO</span></h4></td>
+                                    {% endif %}
                                 
                             </tr>
                             {% endfor %}

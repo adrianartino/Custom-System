@@ -188,11 +188,13 @@ urlpatterns = [
     path("verHerramientasALM/",almacen.verHerramientasALM),
     path('actualizarCantidadesHerramientasAlmacen/', almacen.actualizarCantidadesHerramientasAlmacen),
     path('bajaHerramientaAlmacen/', almacen.bajaHerramientaAlmacen),
+    path('bajaHerramientaAlmacenPrestamo/', almacen.bajaHerramientaAlmacenPrestamo),
     path("agregarHerramientasALM/",almacen.agregarHerramientasALM),
     path("solicitarHerramientas/",almacen.solicitarHerramientas),
     path("verMisPrestamos/",almacen.verMisPrestamos),
     path("firmarPrestamo/", almacen.firmarPrestamo),
     path("guardarEntrega/", almacen.guardarEntrega),
+    path("guardarDevolucion/", almacen.guardarDevolucion),
     path("firmarDevolucion/", almacen.firmarDevolucion),
     
     #soportes tecnicos
