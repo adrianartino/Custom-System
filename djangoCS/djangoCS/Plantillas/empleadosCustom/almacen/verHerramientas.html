@@ -95,7 +95,7 @@ Herramientas | Custom System
 
                 <div class="table-responsive">
 
-                    <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                    <table class="table table-bordered  table-hover dataTable js-exportable">
                         <thead>
                             <tr style="background-color: #fad60e; color: black;">
                                 <th>ID- código</th>
@@ -105,8 +105,11 @@ Herramientas | Custom System
                                 <th>Descripción</th>
                                 <th>Unidad medida</th>
                                 <th>SKU</th>
+                                <th >Costo unitario</th>
                                 <th>Cantidad existencia</th>
+                                <th>Stock necesario</th>
                                 <th>Cantidad dañada</th>
+                                <th>Costo Total inventario</th>
                                 <th>Imagen</th>
                                 <th>Estado</th>
                                 <th>Fecha alta</th>
@@ -124,8 +127,11 @@ Herramientas | Custom System
                                 <th>Descripción</th>
                                 <th>Unidad medida</th>
                                 <th>SKU</th>
+                                <th>Costo unitario</th>
                                 <th>Cantidad existencia</th>
+                                <th>Stock necesario</th>
                                 <th>Cantidad dañada</th>
+                                <th>Costo Total inventario</th>
                                 <th>Imagen</th>
                                 <th>Estado</th>
                                 <th>Fecha alta</th>
@@ -135,7 +141,7 @@ Herramientas | Custom System
                             </tr>
                         </tfoot>
                         <tbody class="animate__animated animate__backInDown">
-                            {% for herramienta in registrosHerramientas %}
+                            {% for herramienta, costoTotal, dañadas, enPrestamo, costoDaño in listaHerramientas %}
                             <tr>
                                 <td>
                                     <div>
@@ -157,6 +163,12 @@ Herramientas | Custom System
                                 <td>{{herramienta.unidad}}</td>
                                 <td>{{herramienta.sku}}</td>
                                 <td>
+                                    <div>
+                                        <p class="font-bold col-green">${{herramienta.costo}} MXN</p>
+                                    </div>
+                                
+                                </td>
+                                <td>
                                     <center>
                                     <div>
                                         <h4><span class="label bg-indigo">{{herramienta.cantidad_existencia}} unidades</span></h4>
@@ -165,15 +177,35 @@ Herramientas | Custom System
                                         <h5>+</h5>
                                     </div>
                                     <div>
-                                        <h4><span class="label bg-indigo">0 en préstamo</span></h4>
+                                        <h4><span class="label bg-indigo">{{enPrestamo}} en préstamo</span></h4>
                                     </div>
                                 </center>
                                 </td>
                                 <td>
+                                    <center>
                                     <div>
-                                        <h4><span class="label bg-red">2 unidades</span></h4>
+                                        <h4><span class="label bg-cyan">{{herramienta.stock}} unidades</span></h4>
+                                    </div>
+                                    
+                                </center>
+                                </td>
+                                <td>
+                                    <div>
+                                        {% if dañadas == 0 %}
+                                        <h4><span class="label bg-grey">Sin unidades dañadas</span></h4>
+                                        {% elif dañadas != 0 %}
+                                        <h4><span class="label bg-red">{{dañadas}} unidades</span></h4>
+                                        <h6><span >Costo total daño:</span></h6>
+                                        <p class="font-bold col-red">${{costoDaño}} MXN</p>
+                                        {% endif %}
                                     </div>
                                 </td>
+                                <td>
+                                    <div>
+                                        <h4><span class="label bg-green">${{costoTotal}} MXN</span></h4>
+                                    </div>
+                                </td>
+                                
                                 <td>
                                     <center>
                                         <img src="{{herramienta.imagen_herramienta.url}}" width="60%" alt="empleado">
@@ -228,11 +260,6 @@ Herramientas | Custom System
                 </div>
                 <br>
 
-
-            
-            
-                <br>
-
             </div>
 
             <div class="body" id="divInactivos">
@@ -260,7 +287,7 @@ Herramientas | Custom System
                         </form>
                     </div>
                     <div class="col-xs-12 col-sm-4">
-                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarEmpleados/">Agregar
+                        <a class="label bg-blue-grey" style="font-size:small; " href="/verHerramientasALM/">Agregar
                             Herramientas</a>
                     </div>
 

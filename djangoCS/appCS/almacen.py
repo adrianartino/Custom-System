@@ -651,7 +651,8 @@ def verHerramientasALM(request):
         registrosHerramientasModal = HerramientasAlmacen.objects.all()
         registrosHerramientasModalBaja = HerramientasAlmacen.objects.all()
         
-        registrosHerramientasDañadas = HerramientasAlmacenInactivas.objects.all()
+        #Herramientas dañadas
+        registrosHerramientasDañadas = HerramientasAlmacenInactivas.objects.filter(enInventario = "Si")
         datosHerramientasDañadas = []
         for herramientaDañada in registrosHerramientasDañadas:
             id_herramienta = herramientaDañada.id_herramienta_id
@@ -671,14 +672,74 @@ def verHerramientasALM(request):
         
         listaDañadas = zip(registrosHerramientasDañadas, datosHerramientasDañadas)    
     
+        #Costos de herramientas
+        costoTotalHerramienta = []
+        herramientasDañadasXHerramienta = []
+        herramientasEnPrestamo = []
+        costoTotalDañoHerramienta = []
+        for herramienta in registrosHerramientas:
+            cantidadExistencia = herramienta.cantidad_existencia
+            costo = herramienta.costo
+            
+            idHerramienta = herramienta.id_herramienta
+            consultaHerramientasDañadas = HerramientasAlmacenInactivas.objects.filter(id_herramienta_id__id_herramienta = idHerramienta, enInventario="Si")
+            
+            contadorHerramientasDañadas = 0
+            for dañada in consultaHerramientasDañadas:
+                contadorHerramientasDañadas = contadorHerramientasDañadas + 1
+            
+            totalExistenciaConDaños = cantidadExistencia + contadorHerramientasDañadas
+            
+            costoTotalDaño = costo * contadorHerramientasDañadas
+            
+           
+            
+            consultaPrestamos = PrestamosAlmacen.objects.all()
+            contadorHerramientaEnPrestamo = 0
+            for prestamo in consultaPrestamos:
+                idsHerramientasPrestadas = prestamo.id_herramientaInstrumento
+                cantidadesHerramientasPrestadas = prestamo.cantidades_solicitadas
+                
+                arregloIdsHerramientasPrestadas = idsHerramientasPrestadas.split(",")
+                arregloCantidadesHerramientas = cantidadesHerramientasPrestadas.split(",")
+                
+                listaHerramientasEnPrestamo = zip(arregloIdsHerramientasPrestadas, arregloCantidadesHerramientas)
+                
+                for iid, cantidad in listaHerramientasEnPrestamo:
+                    if iid == idHerramienta:
+                        contadorHerramientaEnPrestamo = contadorHerramientaEnPrestamo + 1
+                        
+            if contadorHerramientaEnPrestamo == 0:
+                costoTotalInventarioHerramienta = costo*totalExistenciaConDaños
+            else:
+                costoPrestados = costo*contadorHerramientaEnPrestamo
+                costosTodos = costo*totalExistenciaConDaños
+                costoTotalInventarioHerramienta = costoPrestados + costosTodos
+            
+            
+            herramientasEnPrestamo.append(contadorHerramientaEnPrestamo)
+            costoTotalHerramienta.append(costoTotalInventarioHerramienta)
+            herramientasDañadasXHerramienta.append(contadorHerramientasDañadas)
+            costoTotalDañoHerramienta.append(costoTotalDaño)
+            
+            
+        
+            
+        listaHerramientas = zip(registrosHerramientas, costoTotalHerramienta, herramientasDañadasXHerramienta, herramientasEnPrestamo, costoTotalDañoHerramienta)
+    
+        costoTotalTotal = 0
+        for costototal in costoTotalHerramienta:
+            costoTotalTotal = costoTotalTotal + costototal
+        
+        #Si una herramienta fue actualizada..
         if "herramientaActualizada" in request.session:
             herramientaAct = request.session['herramientaActualizada']
             del request.session['herramientaActualizada']
-            return render(request, "empleadosCustom/almacen/verHerramientas.html", {"estaEnAlmacen":estaEnAlmacen,"estaEnVerHerramientas":estaEnVerHerramientas,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "registrosHerramientas":registrosHerramientas, "registrosHerramientasModal":registrosHerramientasModal, "registrosHerramientasModalBaja":registrosHerramientasModalBaja, "listaDañadas":listaDañadas, "herramientaAct":herramientaAct})
+            return render(request, "empleadosCustom/almacen/verHerramientas.html", {"estaEnAlmacen":estaEnAlmacen,"estaEnVerHerramientas":estaEnVerHerramientas,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "registrosHerramientas":registrosHerramientas, "registrosHerramientasModal":registrosHerramientasModal, "registrosHerramientasModalBaja":registrosHerramientasModalBaja, "listaDañadas":listaDañadas, "herramientaAct":herramientaAct, "listaHerramientas":listaHerramientas, "costoTotalTotal":costoTotalTotal})
             
 
 
-        return render(request, "empleadosCustom/almacen/verHerramientas.html", {"estaEnAlmacen":estaEnAlmacen,"estaEnVerHerramientas":estaEnVerHerramientas,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "registrosHerramientas":registrosHerramientas, "registrosHerramientasModalBaja":registrosHerramientasModalBaja, "registrosHerramientasModal":registrosHerramientasModal, "listaDañadas":listaDañadas})
+        return render(request, "empleadosCustom/almacen/verHerramientas.html", {"estaEnAlmacen":estaEnAlmacen,"estaEnVerHerramientas":estaEnVerHerramientas,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "registrosHerramientas":registrosHerramientas, "registrosHerramientasModalBaja":registrosHerramientasModalBaja, "registrosHerramientasModal":registrosHerramientasModal, "listaDañadas":listaDañadas, "listaHerramientas":listaHerramientas, "costoTotalTotal":costoTotalTotal})
     #Si le da al inicio y no hay una sesión iniciada..
     else:
         return redirect('/login/') #redirecciona a url de inicio
@@ -712,6 +773,7 @@ def agregarHerramientasALM(request):
             imagenHerramienta = request.FILES.get('imagenHerramienta')
             skuHerramienta = request.POST['skuHerramienta']
             cantidadHerramienta = request.POST['cantidadHerramienta']
+            costoHerramienta = request.POST['costoHerramienta']
             
             
             #Codigo de herramienta
@@ -750,7 +812,9 @@ def agregarHerramientasALM(request):
                                                           estado_herramienta = "F",
                                                           motivo_estado = "Es funcional, disponible para prestamo",
                                                           fecha_alta = fechaAlta, 
-                                                          cantidad_existencia = cantidadHerramienta)
+                                                          cantidad_existencia = cantidadHerramienta,
+                                                          costo = costoHerramienta,
+                                                          stock = cantidadHerramienta)
             else:
                 registroHerramienta = HerramientasAlmacen(codigo_herramienta = codigo,
                                                           tipo_herramienta = tipoHerramienta,
@@ -762,7 +826,9 @@ def agregarHerramientasALM(request):
                                                           estado_herramienta = "F",
                                                           motivo_estado = "Es funcional, disponible para prestamo",
                                                           fecha_alta = fechaAlta, 
-                                                          cantidad_existencia = cantidadHerramienta)
+                                                          cantidad_existencia = cantidadHerramienta,
+                                                          costo = costoHerramienta,
+                                                          stock = cantidadHerramienta)
                 
             registroHerramienta.save()
             if registroHerramienta:
@@ -1105,13 +1171,17 @@ def actualizarCantidadesHerramientasAlmacen(request):
             for dato in consultaHerramienta:
                 cantidadExistenteActual = dato.cantidad_existencia
                 nombreHerramienta = dato.nombre_herramienta
+                stockActual = dato.stock
                 
             intCantidadExistenciaActual = int(cantidadExistenteActual)
             
             sumaCantidad = intCantidadExistenciaActual + intCantidadHerramientaActualizar
             
+            if sumaCantidad > stockActual:
+                stockActual = sumaCantidad
+            
             #Actualizar cantidad
-            actualizacion = HerramientasAlmacen.objects.filter(id_herramienta = idHerramientaActualizar).update(cantidad_existencia = sumaCantidad)
+            actualizacion = HerramientasAlmacen.objects.filter(id_herramienta = idHerramientaActualizar).update(cantidad_existencia = sumaCantidad, stock = stockActual)
             
             if actualizacion:
                 request.session['herramientaActualizada'] = "La herramienta " + nombreHerramienta + " ha sido actualizada satisfactoriamente!"
@@ -1132,7 +1202,7 @@ def bajaHerramientaAlmacen(request):
             
             bajita = ""
             if motivoBaja == "E":
-                bajita = "Extravio"
+                bajita = "Extravío"
             elif motivoBaja == "D":
                 bajita = "Dañado"
             
@@ -1157,8 +1227,12 @@ def bajaHerramientaAlmacen(request):
             actualizacion = HerramientasAlmacen.objects.filter(id_herramienta = idHerramientaBaja).update(cantidad_existencia = restaCantidad)
             
             #Registro de baja 
-            registroDeBaja = HerramientasAlmacenInactivas(id_herramienta = HerramientasAlmacen.objects.get(id_herramienta = idHerramientaBaja), motivo_baja = motivoBaja, explicacion_baja = explicacion, 
-                                                          cantidad_baja = "1", fecha_baja = fechaBaja)
+            if bajita == "Extravío":
+                registroDeBaja = HerramientasAlmacenInactivas(id_herramienta = HerramientasAlmacen.objects.get(id_herramienta = idHerramientaBaja), motivo_baja = motivoBaja, explicacion_baja = explicacion, 
+                                                          cantidad_baja = "1", fecha_baja = fechaBaja, enInventario = "No")
+            else:
+                registroDeBaja = HerramientasAlmacenInactivas(id_herramienta = HerramientasAlmacen.objects.get(id_herramienta = idHerramientaBaja), motivo_baja = motivoBaja, explicacion_baja = explicacion, 
+                                                          cantidad_baja = "1", fecha_baja = fechaBaja, enInventario = "Si")
             registroDeBaja.save()
             if actualizacion and registroDeBaja:
                 request.session['herramientaActualizada'] = "La herramienta " + nombreHerramienta + " ha sido dada de baja satisfactoriamente! Se ha mandado un correo con la solicitud de requisición de compra!"

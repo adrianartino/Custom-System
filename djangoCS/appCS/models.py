@@ -329,6 +329,8 @@ class HerramientasAlmacen (models.Model):
     unidad = models.CharField(max_length=50)
     sku = models.CharField(max_length=30)
     cantidad_existencia = models.IntegerField(null=True)
+    stock = models.IntegerField(null=True)
+    costo = models.FloatField(null=True)
     imagen_herramienta = models.ImageField(upload_to="imagenesHerramientas", null = True)
     estado_herramienta = models.CharField(max_length=2)
     motivo_estado = models.CharField(max_length=200)
@@ -348,6 +350,8 @@ class HerramientasAlmacen (models.Model):
             'unidad': self.unidad,
             'sku': self.sku,
             'cantidad_existencia': self.cantidad_existencia,
+            'stock':self.stock,
+            'costo':self.costo,
             'imagen_herramienta': str(self.imagen_herramienta),
             'estado_herramienta': self.estado_herramienta,
             'motivo_estado': self.motivo_estado,
@@ -361,6 +365,7 @@ class HerramientasAlmacenInactivas (models.Model):
     explicacion_baja = models.TextField()
     cantidad_baja = models.CharField(max_length=15, null=True)
     fecha_baja = models.DateField()
+    enInventario = models.CharField(max_length=3, null=True)
 
     def __str__(self):
         return self.id_herramienta
