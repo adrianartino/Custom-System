@@ -141,7 +141,7 @@ Herramientas | Custom System
                             </tr>
                         </tfoot>
                         <tbody class="animate__animated animate__backInDown">
-                            {% for herramienta, costoTotal, dañadas, enPrestamo, costoDaño in listaHerramientas %}
+                            {% for herramienta, costoTotal, dañadas, enPrestamo, costoDaño, prestamosHerramienta in listaHerramientas %}
                             <tr>
                                 <td>
                                     <div>
@@ -228,9 +228,25 @@ Herramientas | Custom System
                                 <td>{{herramienta.fecha_alta}}</td>
                                 
                                 <td>
-                                    <div><h4><span class="label bg-cyan">Si</span></h4></div>
-                                    <div><h4><a href=""><span class="label bg-amber" data-toggle="tooltip" data-placement="left"
-                                        title="Ver préstamo">José Guadalupe</span></a> </h4></div>
+                                    {% if prestamoHerramienta == None %}
+                                    <h4><span class="label bg-cyan">Si</span></h4>
+                                    {% else %}
+                                    <h4><span class="label bg-grey">Sin prestamos</span></h4>
+                                    {% endif %}
+
+                                    {% for prestamo in prestamosHerramienta %}
+                                    <div>
+                                        <form action="/firmarDevolucion/" method="POST">{% csrf_token %}
+                                            <input type="hidden" value="{{prestamo.0}}" name="idPrestamo">
+                                            <h4><span class="label bg-amber" data-toggle="tooltip" data-placement="left"
+                                            title="Ver préstamo">{{prestamo.0}} {{prestamo.1}} <button type="submit" class="btn bg-deep-orange btn-xs" >
+                                                Ver
+                                            </button></span>
+                                            </h4>
+                                            
+                                        </form>
+                                    </div>
+                                    {% endfor %}
                                 </td>
                                 <td>
                                     
@@ -259,7 +275,6 @@ Herramientas | Custom System
                     </table>
                 </div>
                 <br>
-
             </div>
 
             <div class="body" id="divInactivos">
@@ -347,9 +362,9 @@ Herramientas | Custom System
                                 <td>{{datoHerramienta.5}}</td>
                                 <td>1 unidad</td>
                                 {% if daño.id_prestamo == None %}
-                                <td><h4><span class="label bg-orange">Sin prestamo asociado</span></h4></td>
+                                <td><h4><span class="label bg-orange">Sin prestamo asociado</span></h4><h4><span class="label bg-orange">Dado de baja por almacén</span></h4></td>
                                 {% else %}
-                                <td><a href=""><h4><span class="label bg-light-green">Prestamo 4</span></h4></a> </td>
+                                <td><a href=""><h4><span class="label bg-light-green">Prestamo {{datoHerramienta.6}} - {{datoHerramienta.7}}</span></h4></a> </td>
                                 {% endif %}
 
                                 {% if daño.motivo_baja == "D" %}
@@ -375,7 +390,7 @@ Herramientas | Custom System
 </div>
 
 
-{% for herramienta in registrosHerramientasModal %}
+{% for herramienta, prestamos in registrosHerramientasModal %}
 <!-- Default Size -->
 <div class="modal fade" id="modalHerramienta{{herramienta.id_herramienta}}" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
@@ -399,6 +414,7 @@ Herramientas | Custom System
                                     <th>Descripción</th>
                                     <th>Imagen</th>
                                     <th>Existencia Actual Funcional</th>
+                                    <th>Stock Necesario</th>
                                     <th>Cantidad a agregar</th>
                                 </tr>
                             </thead>
@@ -427,11 +443,12 @@ Herramientas | Custom System
                                             </div>
                                             <div>+</div>
                                             <div>
-                                                <h4><span class="label bg-black" >2 unidades en préstamo</span></h4>
+                                                <h4><span class="label bg-black" >{{prestamos}} unidades en préstamo</span></h4>
                                             </div>
                                         </center>
                                         
                                     </td>
+                                    <td style="color: crimson;">{{herramienta.stock}} unidades</td>
                                     <td> <input type="number" class="form-control date"
                                         placeholder="Cantidad" maxlength="4" max="1000" min="1" step="1"
                                          name="cantidadHerramientaActualizar" required></td>
@@ -460,7 +477,7 @@ Herramientas | Custom System
 
 {% endfor %}
 
-{% for herramientaBaja in registrosHerramientasModalBaja %}
+{% for herramientaBaja, cantidadPrestamo in registrosHerramientasModalBaja %}
 <!-- Default Size -->
 <div class="modal fade" id="modalHerramientaBaja{{herramientaBaja.id_herramienta}}" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
@@ -512,7 +529,7 @@ Herramientas | Custom System
                                             </div>
                                             <div>+</div>
                                             <div>
-                                                <h4><span class="label bg-black" >2 unidades en préstamo</span></h4>
+                                                <h4><span class="label bg-black" >{{cantidadPrestamo}} unidades en préstamo</span></h4>
                                             </div>
                                         </center>
                                         
@@ -566,7 +583,7 @@ Herramientas | Custom System
                     <br>
                     <center>
                         <input type="hidden" value="{{herramientaBaja.id_herramienta}}" name="idHerramientaBaja">
-                        
+                        <p><span class="font-bold col-red">Nota:</span><span class="col-black">Al dar de baja la herramienta, se restará 1 en cantidad en existencia, no en préstamo.</span></p>
                         <button type="submit" class="btn bg-red waves-effect">
                             <i class="material-icons">clear</i>
                             <span>Dar de baja herramienta</span>

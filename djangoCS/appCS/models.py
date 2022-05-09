@@ -385,3 +385,15 @@ class InstrumentosAlmacen (models.Model):
 
     def __str__(self):
         return self.id_instrumento
+    
+class RequisicionCompraAlmacen (models.Model):
+    id_requi = models.AutoField(primary_key=True)
+    id_empleado_solicitante = models.ForeignKey(Empleados, on_delete=models.CASCADE, null=True)
+    id_herramienta = models.ForeignKey(HerramientasAlmacen, on_delete=models.CASCADE, null=True)
+    id_prestamo = models.ForeignKey(PrestamosAlmacen, on_delete=models.CASCADE, null=True)
+    cantidad_requerida = models.IntegerField()
+    fehca_requi = models.DateField()
+    estatus_requi = models.CharField(max_length=30)
+
+    def __str__(self):
+        return self.id_requi

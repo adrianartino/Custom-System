@@ -18,7 +18,7 @@ from django.views.generic import ListView
 import json
 
 #Importación de modelos
-from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Preguntas, Encuestas, Respuestas, EncuestaEmpleadoResuelta, Mouses, Teclados, Monitores, HerramientasAlmacen, InstrumentosAlmacen, HerramientasAlmacenInactivas, PrestamosAlmacen
+from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Preguntas, Encuestas, Respuestas, EncuestaEmpleadoResuelta, Mouses, Teclados, Monitores, HerramientasAlmacen, InstrumentosAlmacen, HerramientasAlmacenInactivas, PrestamosAlmacen, RequisicionCompraAlmacen
 
 #Librería para manejar archivos en Python
 from django.core.files.base import ContentFile
@@ -656,7 +656,7 @@ def verHerramientasALM(request):
         datosHerramientasDañadas = []
         for herramientaDañada in registrosHerramientasDañadas:
             id_herramienta = herramientaDañada.id_herramienta_id
-            
+            id_prestamo = herramientaDañada.id_prestamo
             #consulta a herramienta
             datosHerramienta = HerramientasAlmacen.objects.filter(id_herramienta = id_herramienta)
             
@@ -667,8 +667,21 @@ def verHerramientasALM(request):
                 nombre = herramienta.nombre_herramienta
                 marca = herramienta.marca
                 descripcion = herramienta.descripcion_herramienta
+                
+                if id_prestamo == None:
+                    id_prestamo = "Sin prestamo"
+                    nombreEmpleadoResponsable = "Dado de baja por almacén"
+                else:
+                    consultaPrestamo = PrestamosAlmacen.objects.filter(id_prestamo = id_prestamo)
+                    for dato in consultaPrestamo:
+                        idEmpleadoResponsable = dato.id_empleado_solicitante_id
+                            
+                    consultaEmpleado = Empleados.objects.filter(id_empleado = idEmpleadoResponsable)
+                    for datoEmpleado in consultaEmpleado:
+                        nombreEmpleadoResponsable = datoEmpleado.nombre
+                    
             
-            datosHerramientasDañadas.append([id_herramienta, tipo, codigo, nombre, marca, descripcion])
+            datosHerramientasDañadas.append([id_herramienta, tipo, codigo, nombre, marca, descripcion, id_prestamo, nombreEmpleadoResponsable])
         
         listaDañadas = zip(registrosHerramientasDañadas, datosHerramientasDañadas)    
     
@@ -677,6 +690,7 @@ def verHerramientasALM(request):
         herramientasDañadasXHerramienta = []
         herramientasEnPrestamo = []
         costoTotalDañoHerramienta = []
+        prestamosDeHerramienta = []
         for herramienta in registrosHerramientas:
             cantidadExistencia = herramienta.cantidad_existencia
             costo = herramienta.costo
@@ -694,7 +708,7 @@ def verHerramientasALM(request):
             
            
             
-            consultaPrestamos = PrestamosAlmacen.objects.all()
+            consultaPrestamos = PrestamosAlmacen.objects.filter(estatus = "En prestamo")
             contadorHerramientaEnPrestamo = 0
             for prestamo in consultaPrestamos:
                 idsHerramientasPrestadas = prestamo.id_herramientaInstrumento
@@ -705,9 +719,10 @@ def verHerramientasALM(request):
                 
                 listaHerramientasEnPrestamo = zip(arregloIdsHerramientasPrestadas, arregloCantidadesHerramientas)
                 
-                for iid, cantidad in listaHerramientasEnPrestamo:
-                    if iid == idHerramienta:
-                        contadorHerramientaEnPrestamo = contadorHerramientaEnPrestamo + 1
+                for idH, cantidad in listaHerramientasEnPrestamo:
+                    intidH = int(idH)
+                    if intidH == idHerramienta:
+                        contadorHerramientaEnPrestamo = contadorHerramientaEnPrestamo + int(cantidad)
                         
             if contadorHerramientaEnPrestamo == 0:
                 costoTotalInventarioHerramienta = costo*totalExistenciaConDaños
@@ -722,11 +737,36 @@ def verHerramientasALM(request):
             herramientasDañadasXHerramienta.append(contadorHerramientasDañadas)
             costoTotalDañoHerramienta.append(costoTotalDaño)
             
+        
+            #Prestamos de herramientas
+            prestamosAlmacen = PrestamosAlmacen.objects.filter(estatus="En prestamo")
+            prestamosHerramientaIndividual = []
+            for prestamo in prestamosAlmacen:
+                idsHerramientasPrestamo = prestamo.id_herramientaInstrumento
+                idPrestamo = prestamo.id_prestamo
+                idEmpleadoSolicitante = prestamo.id_empleado_solicitante_id
+                
+                consultaEmpleado = Empleados.objects.filter(id_empleado = idEmpleadoSolicitante)
+                for dato in consultaEmpleado:
+                    nombreEmpleado = dato.nombre
+                
+                arregloIdsHerramientasPrestamo = idsHerramientasPrestamo.split(",")
+                for idf in arregloIdsHerramientasPrestamo:
+                    intId = int(idf)
+                    if intId == idHerramienta:
+                        prestamosHerramientaIndividual.append([idPrestamo, nombreEmpleado])
+                  
+            
+            prestamosDeHerramienta.append(prestamosHerramientaIndividual)
+            
             
         
             
-        listaHerramientas = zip(registrosHerramientas, costoTotalHerramienta, herramientasDañadasXHerramienta, herramientasEnPrestamo, costoTotalDañoHerramienta)
-    
+        listaHerramientas = zip(registrosHerramientas, costoTotalHerramienta, herramientasDañadasXHerramienta, herramientasEnPrestamo, costoTotalDañoHerramienta, prestamosDeHerramienta)
+
+        registrosHerramientasModal = zip(registrosHerramientas,herramientasEnPrestamo)
+        registrosHerramientasModalBaja = zip(registrosHerramientas,herramientasEnPrestamo)
+        
         costoTotalTotal = 0
         for costototal in costoTotalHerramienta:
             costoTotalTotal = costoTotalTotal + costototal
@@ -868,7 +908,41 @@ def solicitarHerramientas(request):
         
         data = [i.json() for i in HerramientasAlmacen.objects.all()]
         consulta = HerramientasAlmacen.objects.all()
+        
+        #Mandar prestamos de cada herramienta
+        
         consulta2 = HerramientasAlmacen.objects.all()
+        datosPrestamosPorHerramienta = []
+        
+        for herramienta in consulta2:
+            idHerramienta = herramienta.id_herramienta
+            
+            prestamos = PrestamosAlmacen.objects.filter(estatus = "En prestamo")
+            prestamosHerramientaIndividual = []
+            for prestamo in prestamos:
+                idPrestamito = prestamo.id_prestamo
+                idsHerramientas = prestamo.id_herramientaInstrumento
+                cantidadesHerramientas = prestamo.cantidades_solicitadas
+                solicitante = prestamo.id_empleado_solicitante_id 
+                consultaSolicitante = Empleados.objects.filter(id_empleado = solicitante)
+                for datoEmpleado in consultaSolicitante:
+                    nombreSolicitante = datoEmpleado.nombre
+                
+                arregloIds = idsHerramientas.split(",")
+                arregloCantidades = cantidadesHerramientas.split(",")
+                
+                listaHerramientasEnPrestamo = zip(arregloIds, arregloCantidades)
+                
+                for idH, cantidad in listaHerramientasEnPrestamo:
+                    
+                    intidh = int(idH)
+                    if idHerramienta == intidh:
+                        prestamosHerramientaIndividual.append([idPrestamito, nombreSolicitante, cantidad ])
+            
+            datosPrestamosPorHerramienta.append(prestamosHerramientaIndividual)
+                
+        consultaHerramientasTabla = zip(consulta2, datosPrestamosPorHerramienta)
+            
         consultaFunciones = HerramientasAlmacen.objects.all()
         
         if request.method == "POST":
@@ -887,19 +961,24 @@ def solicitarHerramientas(request):
                 otrasHerramientas = "No se solicitan otras herramientas"
             
             arregloCantidades = []
+            arregloCantidadesRequi = []
             
             arregloIdsHerramientas = cantidadHerramientasSolicitadas.split(",")
             
             idPregunta = "id"
             cantidadSolicitar = "cantidadSolicitar"
+            cantidadSolicitarRequi = "cantidadSolicitarRequi"
             for idherramienta in arregloIdsHerramientas:
                 nameIdDeHerramienta = idPregunta + str(idherramienta)
                 nameCantidadASolicitar = cantidadSolicitar + str(idherramienta)
+                nameCantidadSolicitarRequi = cantidadSolicitarRequi + str(idHerramienta)
                 
                 #Obtener valores que se mandaron
                 idHerramientaMandado = request.POST[nameIdDeHerramienta]
                 cantidadSolicitadaMandada = request.POST[nameCantidadASolicitar]
+                cantidadSolicitaraRequiMandada = request.POST[nameCantidadSolicitarRequi]
                 arregloCantidades.append(cantidadSolicitadaMandada)
+                arregloCantidadesRequi.append(cantidadSolicitaraRequiMandada)
 
             stringCantidadesAGuardarEnBD = ""
             contadorCantidades = 0
@@ -909,6 +988,11 @@ def solicitarHerramientas(request):
                     stringCantidadesAGuardarEnBD = str(cantidad)
                 else:
                     stringCantidadesAGuardarEnBD += "," + str(cantidad)
+                    
+            
+            listaHerramientasRequi = zip(arregloIdsHerramientas, arregloCantidadesRequi)
+            
+            
                     
             
             registroSolicitudPrestamo = PrestamosAlmacen(fecha_solicitud = fecha_solicitud,
@@ -921,6 +1005,34 @@ def solicitarHerramientas(request):
                                                          cantidades_solicitadas = stringCantidadesAGuardarEnBD,
                                                          estatus = "Pendiente")
             registroSolicitudPrestamo.save()
+            
+            registrosPrestamos = PrestamosAlmacen.objects.filter(estatus="Pendiente")
+            arrayIdsPrestamos = []
+            
+            for prest in registrosPrestamos:
+                idPrestPendiente = prest.id_prestamo
+                arrayIdsPrestamos.append(idPrestPendiente)
+                
+            ultimoID = 0
+            for idd in arrayIdsPrestamos:
+                idInt = int(idd)
+                ultimoID = idInt
+            
+            for herramientaRequi, cantidadRequi in listaHerramientasRequi:
+                
+                #guarda aunque se mande en 0
+                if cantidadRequi == 0:
+                    nada = True
+                else:
+                    registroRequi = RequisicionCompraAlmacen(id_empleado_solicitante = Empleados.objects.get(id_empleado = id_admin),
+                                                             id_herramienta = HerramientasAlmacen.objects.get(id_herramienta = herramientaRequi),
+                                                             id_prestamo = PrestamosAlmacen.objects.get(id_prestamo = ultimoID),
+                                                             cantidad_requerida = cantidadRequi,
+                                                             fehca_requi = fecha_solicitud,
+                                                             estatus_requi = "Pendiente")
+                    registroRequi.save()
+                    
+                    
             solicitudGuardada = "La solicitud ha sigo guardada con exito!"
             
             #CORREO ELECTRÓNICO
@@ -948,10 +1060,10 @@ def solicitarHerramientas(request):
             
             
             return render(request, "empleadosCustom/almacen/empleados/solicitudHerramientas.html", {"solicitantePrestamo":solicitantePrestamo,"estaEnSolicitarHerramienta":estaEnSolicitarHerramienta,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
-                                                                                                "fechaHoy":fechaHoy, "context":json.dumps(data), "HerramientasAlmacen":consulta, "consulta2":consulta2, "consultaFunciones":consultaFunciones, "solicitudGuardada":solicitudGuardada})
+                                                                                                "fechaHoy":fechaHoy, "context":json.dumps(data), "HerramientasAlmacen":consulta, "consulta2":consultaHerramientasTabla, "consultaFunciones":consultaFunciones, "solicitudGuardada":solicitudGuardada})
 
         return render(request, "empleadosCustom/almacen/empleados/solicitudHerramientas.html", {"solicitantePrestamo":solicitantePrestamo,"estaEnSolicitarHerramienta":estaEnSolicitarHerramienta,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
-                                                                                                "fechaHoy":fechaHoy, "context":json.dumps(data), "HerramientasAlmacen":consulta, "consulta2":consulta2, "consultaFunciones":consultaFunciones})
+                                                                                                "fechaHoy":fechaHoy, "context":json.dumps(data), "HerramientasAlmacen":consulta, "consulta2":consultaHerramientasTabla, "consultaFunciones":consultaFunciones})
     #Si le da al inicio y no hay una sesión iniciada..
     else:
         return redirect('/login/') #redirecciona a url de inicio

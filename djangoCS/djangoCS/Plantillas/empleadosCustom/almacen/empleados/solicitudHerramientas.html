@@ -159,7 +159,7 @@ Solicitud Herramientas | CS
                                 </tr>
                             </tfoot>
                             <tbody class="animate__animated animate__backInDown">
-                                {% for herramienta in consulta2 %}
+                                {% for herramienta, prestamos in consulta2 %}
                                 <tr>
                                     <td>
                                         <div>
@@ -192,19 +192,42 @@ Solicitud Herramientas | CS
                                     <td>
                                         <center>
                                         <div>
-                                            <h4><span class="label bg-indigo">{{herramienta.cantidad_existencia}} unidades</span></h4>
+                                            <h4><span class="label bg-indigo">{{herramienta.cantidad_existencia}} unidades disponibles para préstamo</span></h4>
                                         </div>
+                                        {% if prestamos %}
+                                        <h3>Prestamos solicitados</h3>
+                                        {% endif %}
                                         <div>
-                                            <h5>+</h5>
+                                            <table>
+                                                <thead>
+                                                    <tr style="background-color: #4CAF50; color: black;">
+                                                        <th>Id préstamo</th>
+                                                        <th>Solicitante</th>
+                                                        <th>Unidades prestadas</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for prestamo in prestamos %}
+                                                    <tr>
+                                                        <th>{{prestamo.0}}</th>
+                                                        <th>{{prestamo.1}}</th>
+                                                        <th>{{prestamo.2}}</th>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                            
                                         </div>
-                                        <div>
-                                            <h4><span class="label bg-indigo">0 en préstamo</span></h4>
-                                        </div>
+                                        
                                     </center>
                                     </td>
                                     <td>
-                                        <input type="checkbox" id="check{{herramienta.codigo_herramienta}}" class="filled-in chk-col-green" onclick="agregarHerramienta{{herramienta.id_herramienta}}('{{herramienta.codigo_herramienta}}')"/>
-                                        <label for="check{{herramienta.codigo_herramienta}}">SOLICITAR</label>
+                                        <div>
+                                            <input type="checkbox" id="check{{herramienta.codigo_herramienta}}" class="filled-in chk-col-green" onclick="agregarHerramienta{{herramienta.id_herramienta}}('{{herramienta.codigo_herramienta}}')"/>
+                                            <label for="check{{herramienta.codigo_herramienta}}">SOLICITAR</label>
+                                        </div>
+                                        
+                                        
                                     </td>
                                     
                                     
@@ -405,6 +428,14 @@ Solicitud Herramientas | CS
                                             </td>\
                                             <td>\
                                                 <input type="number" value="1" max="'+herramienta['cantidad_existencia']+'" min="1" step="1" name="cantidadSolicitar'+herramienta['id_herramienta']+'" >\
+                                                <div >\
+                                                    <p>¿Requieres más unidades?</p>\
+                                                    <button type="button"\
+                                                    class="btn btn-success m-t-15 waves-effect animate__animated animate__flipInX" onclick="mostrarDiv('+herramienta['id_herramienta']+')">\
+                                                    <i class="material-icons">attach_money</i> Solicitar requisición</button><br><br>\
+                                                    <div id="requisicionHerramienta'+herramienta['id_herramienta']+'" style="display:none;"><p>¿Cuántas unidades más necesitas?</p> \
+                                                    <input type="number" value="0" max="100" min="0" step="1" name="cantidadSolicitarRequi'+herramienta['id_herramienta']+'" ></div>\
+                                                </div>\
                                             </td>\
                                         </tr>';
                 
@@ -473,6 +504,21 @@ Solicitud Herramientas | CS
         if (letras.indexOf(tecla) == -1 && !tecla_especial) {
             return false;
         }
+    }
+
+    function mostrarDiv(idDivMostrar) {
+
+        var id = idDivMostrar;
+        console.log(id)
+        var div = "requisicionHerramienta" + id.toString();
+
+        var divMostrar = document.getElementById(div);
+        if (divMostrar.style.display == "none"){
+            divMostrar.style.display = "block";
+        }else if (divMostrar.style.display == "block"){
+            divMostrar.style.display = "none";
+        }
+        
     }
 
     function validaNumericos(event) {
