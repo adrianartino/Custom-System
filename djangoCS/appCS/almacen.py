@@ -815,6 +815,16 @@ def agregarHerramientasALM(request):
             cantidadHerramienta = request.POST['cantidadHerramienta']
             costoHerramienta = request.POST['costoHerramienta']
             
+            proveedorHerramienta = request.POST['proveedorHerramienta']
+            odcHerramienta = request.POST['odcHerramienta']
+            
+            if proveedorHerramienta == "":
+                proveedorHerramienta = "Sin proveedor"
+            
+            if odcHerramienta == "":
+                odcHerramienta == "Sin orden de compra"
+                
+            
             
             #Codigo de herramienta
             consultaHerramientas = HerramientasAlmacen.objects.all()
@@ -854,7 +864,9 @@ def agregarHerramientasALM(request):
                                                           fecha_alta = fechaAlta, 
                                                           cantidad_existencia = cantidadHerramienta,
                                                           costo = costoHerramienta,
-                                                          stock = cantidadHerramienta)
+                                                          stock = cantidadHerramienta,
+                                                          orden_compra_evidence = odcHerramienta,
+                                                          proveedor = proveedorHerramienta)
             else:
                 registroHerramienta = HerramientasAlmacen(codigo_herramienta = codigo,
                                                           tipo_herramienta = tipoHerramienta,
@@ -868,7 +880,9 @@ def agregarHerramientasALM(request):
                                                           fecha_alta = fechaAlta, 
                                                           cantidad_existencia = cantidadHerramienta,
                                                           costo = costoHerramienta,
-                                                          stock = cantidadHerramienta)
+                                                          stock = cantidadHerramienta,
+                                                          orden_compra_evidence = odcHerramienta,
+                                                          proveedor = proveedorHerramienta)
                 
             registroHerramienta.save()
             if registroHerramienta:
@@ -913,6 +927,7 @@ def solicitarHerramientas(request):
         
         consulta2 = HerramientasAlmacen.objects.all()
         datosPrestamosPorHerramienta = []
+        datosHerramientasRequisicion = []
         
         for herramienta in consulta2:
             idHerramienta = herramienta.id_herramienta
@@ -962,23 +977,27 @@ def solicitarHerramientas(request):
             
             arregloCantidades = []
             arregloCantidadesRequi = []
+            names = []
+            names2 = []
             
             arregloIdsHerramientas = cantidadHerramientasSolicitadas.split(",")
             
             idPregunta = "id"
             cantidadSolicitar = "cantidadSolicitar"
             cantidadSolicitarRequi = "cantidadSolicitarRequi"
-            for idherramienta in arregloIdsHerramientas:
-                nameIdDeHerramienta = idPregunta + str(idherramienta)
-                nameCantidadASolicitar = cantidadSolicitar + str(idherramienta)
-                nameCantidadSolicitarRequi = cantidadSolicitarRequi + str(idHerramienta)
+            for idherramienta in arregloIdsHerramientas:      # 1 2
+                stringHerramienta = str(idherramienta)
+                nameIdDeHerramienta = idPregunta + stringHerramienta
+                nameCantidadASolicitar = cantidadSolicitar + stringHerramienta
+                nameCantidadSolicitarRequi = cantidadSolicitarRequi + stringHerramienta #cantidadSolicitarRequi1   #cantidadSolicitarRequi2
                 
                 #Obtener valores que se mandaron
                 idHerramientaMandado = request.POST[nameIdDeHerramienta]
                 cantidadSolicitadaMandada = request.POST[nameCantidadASolicitar]
-                cantidadSolicitaraRequiMandada = request.POST[nameCantidadSolicitarRequi]
                 arregloCantidades.append(cantidadSolicitadaMandada)
-                arregloCantidadesRequi.append(cantidadSolicitaraRequiMandada)
+                
+                cantidadSolicitadaRequiMandada = request.POST[nameCantidadSolicitarRequi]
+                arregloCantidadesRequi.append(cantidadSolicitadaRequiMandada)
 
             stringCantidadesAGuardarEnBD = ""
             contadorCantidades = 0
@@ -1018,12 +1037,13 @@ def solicitarHerramientas(request):
                 idInt = int(idd)
                 ultimoID = idInt
             
+            
             for herramientaRequi, cantidadRequi in listaHerramientasRequi:
                 
-                #guarda aunque se mande en 0
-                if cantidadRequi == 0:
+                #Si es 0, no guarda la requi!
+                if cantidadRequi == "0":
                     nada = True
-                else:
+                else: #Se guarda la requi
                     registroRequi = RequisicionCompraAlmacen(id_empleado_solicitante = Empleados.objects.get(id_empleado = id_admin),
                                                              id_herramienta = HerramientasAlmacen.objects.get(id_herramienta = herramientaRequi),
                                                              id_prestamo = PrestamosAlmacen.objects.get(id_prestamo = ultimoID),
@@ -1032,8 +1052,27 @@ def solicitarHerramientas(request):
                                                              estatus_requi = "Pendiente")
                     registroRequi.save()
                     
+                    consultaHerramientaRequerida = HerramientasAlmacen.objects.filter(id_herramienta = herramientaRequi)
+                    for dato in consultaHerramientaRequerida:
+                        nombreHerramientaRequerida = dato.nombre_herramienta
+                        sku_herramientaRequerida = dato.sku
+                        codigo = dato.codigo_herramienta
+                        if dato.imagen_herramienta == None:
+                            imagen = "sin imagen"
+                        else:
+                            imagen = dato.imagen_herramienta
+                        marca = dato.marca
+                        proveedor = dato.proveedor
+                        ordenCompra = dato.orden_compra_evidence
                     
-            solicitudGuardada = "La solicitud ha sigo guardada con exito!"
+                    datosHerramientasRequisicion.append([herramientaRequi,nombreHerramientaRequerida,codigo,sku_herramientaRequerida,imagen, cantidadRequi, marca, proveedor,ordenCompra])
+                    
+                    
+                    
+            if registroRequi:         
+                request.session['solicitudGuardada'] = "La solicitud ha sigo guardada con exito! Se ha mandado la requisición de herramientas por correo!"
+            else:
+                request.session['solicitudGuardada'] = "La solicitud ha sigo guardada con exito! Favor de ir a 'Ver mis prestamos almacén'!"
             
             #CORREO ELECTRÓNICO
             datosEmpleadoSolicitante = Empleados.objects.filter(id_empleado=id_admin)
@@ -1043,10 +1082,21 @@ def solicitarHerramientas(request):
                 nombreSolicitante= dato.nombre
                 apellidosSolicitante=dato.apellidos
                 correoSolicitante=dato.correo
-                
-            asunto = "CS | Nueva solicitud de préstamo de herramienta"
+            
+            if registroRequi:    
+                asunto = "CS | Nueva solicitud de préstamo de herramienta con Requisición de compra."
+            else:
+                asunto = "CS | Nueva solicitud de préstamo de herramienta."
             plantilla = "empleadosCustom/almacen/correos/correoSolicitud.html"
-            html_mensaje = render_to_string(plantilla, {"nombreSolicitante": nombreSolicitante, "apellidosSolicitante": apellidosSolicitante, "correoSolicitante": correoSolicitante,
+            
+            if registroRequi:
+                html_mensaje = render_to_string(plantilla, {"nombreSolicitante": nombreSolicitante, "apellidosSolicitante": apellidosSolicitante, "correoSolicitante": correoSolicitante,
+                                                        "fecha_solicitud":fecha_solicitud,
+                                                        "fecha_normal_requerido":fecha_normal_requerido,
+                                                        "proyecto":proyecto,
+                                                        "ultimoPrestamo":ultimoPrestamo, "datosHerramientasRequisicion":datosHerramientasRequisicion })
+            else:
+                html_mensaje = render_to_string(plantilla, {"nombreSolicitante": nombreSolicitante, "apellidosSolicitante": apellidosSolicitante, "correoSolicitante": correoSolicitante,
                                                         "fecha_solicitud":fecha_solicitud,
                                                         "fecha_normal_requerido":fecha_normal_requerido,
                                                         "proyecto":proyecto,
@@ -1059,8 +1109,7 @@ def solicitarHerramientas(request):
             
             
             
-            return render(request, "empleadosCustom/almacen/empleados/solicitudHerramientas.html", {"solicitantePrestamo":solicitantePrestamo,"estaEnSolicitarHerramienta":estaEnSolicitarHerramienta,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
-                                                                                                "fechaHoy":fechaHoy, "context":json.dumps(data), "HerramientasAlmacen":consulta, "consulta2":consultaHerramientasTabla, "consultaFunciones":consultaFunciones, "solicitudGuardada":solicitudGuardada})
+            return redirect('/verMisPrestamos/')
 
         return render(request, "empleadosCustom/almacen/empleados/solicitudHerramientas.html", {"solicitantePrestamo":solicitantePrestamo,"estaEnSolicitarHerramienta":estaEnSolicitarHerramienta,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
                                                                                                 "fechaHoy":fechaHoy, "context":json.dumps(data), "HerramientasAlmacen":consulta, "consulta2":consultaHerramientasTabla, "consultaFunciones":consultaFunciones})
@@ -1255,7 +1304,14 @@ def verMisPrestamos(request):
             
             
 
-
+        if 'solicitudGuardada' in request.session:
+            solicitudGuardada = request.session['solicitudGuardada']
+            del request.session['solicitudGuardada']
+            return render(request, "empleadosCustom/almacen/empleados/verMisPrestamos.html", {"solicitantePrestamo":solicitantePrestamo,"estaEnVerMisPrestamos":estaEnVerMisPrestamos,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
+                                                                                      "solicitudesPendientes":solicitudesPendientes, "arregloHerramientas":arregloHerramientas,
+                                                                                      "prestamosEntregados":prestamosEntregados, "arregloHerramientasEntregadas":arregloHerramientasEntregadas,
+                                                                                      "listaPrestamosDevueltos":listaPrestamosDevueltos, "herramientasDañadas":herramientasDañadas, "arregloHerramientasDevueltas":arregloHerramientasDevueltas, "solicitudGuardada":solicitudGuardada})
+        
         return render(request, "empleadosCustom/almacen/empleados/verMisPrestamos.html", {"solicitantePrestamo":solicitantePrestamo,"estaEnVerMisPrestamos":estaEnVerMisPrestamos,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo,
                                                                                       "solicitudesPendientes":solicitudesPendientes, "arregloHerramientas":arregloHerramientas,
                                                                                       "prestamosEntregados":prestamosEntregados, "arregloHerramientasEntregadas":arregloHerramientasEntregadas,

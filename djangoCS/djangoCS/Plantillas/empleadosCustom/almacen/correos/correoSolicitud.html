@@ -75,6 +75,9 @@
     </tr>
     <tr>
         <td style="font-family: sans-serif;font-size:14px;">Fecha Solicitud: {{fecha_solicitud}}</td>
+        
+    </tr>
+    <tr>
         <td style="font-family: sans-serif;font-size:14px;">Fecha Requerido: {{fecha_normal_requerido}}</td>
     </tr>
     <tr>
@@ -83,6 +86,63 @@
     <tr>
         <td colspan="3" style="font-family: sans-serif;font-size:14px;">Favor de ir a <a href="http://192.168.10.5:8000/solicitudesPendientesALM/">solicitudes pendientes</a> , solicitud número {{ultimoPrestamo}} para realizar entrega del mismo.</td>
     </tr>
+    {% if datosHerramientasRequisicion %}
+    <tr>
+        <td style="text-align: center;
+                       height: 64px;
+                       
+                       padding: 12px 0px 4px 16px;
+                       ">
+                <center>
+                    <h2 style="font-family: 'Oswald', sans-serif; color:crimson">
+                        -SOLICITUD DE REQUISICIÓN DE COMPRA-
+                        
+                    </h2>
+                </center>
+            </td>
+    </tr>
+    <tr>
+        <center>
+            <table width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color: #FFFFFF; border-bottom: solid 1px #DDDDDD; border-right: solid 1px #DDDDDD; border-left: solid 1px #DDDDDD; padding-bottom: 15px; padding-left: 15px;">
+                <thead>
+                    <tr style="background-color: #3F51B5; color: black;  padding: 16px;">
+                        <th>ID</th>
+                        <th>Código</th>
+                        <th>SKU</th>
+                        <th>Nombre</th>
+                        <th>Marca</th>
+                        <th>Imagen</th>
+                        <th>Cantidad Requerida</th>
+                        <th>Proveedor</th>
+                        <th>ODC Evidence</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for herramienta in datosHerramientasRequisicion %}
+                    <tr >
+                        <td style="font-family: sans-serif;font-size:14px;">{{herramienta.0}}</td>
+                        <td style="font-family: sans-serif;font-size:14px;">{{herramienta.2}}</td>
+                        <td style="font-family: sans-serif;font-size:14px;">{{herramienta.3}}</td>
+                        <td style="font-family: sans-serif;font-size:14px;">{{herramienta.1}}</td>
+                        <td style="font-family: sans-serif;font-size:14px;">{{herramienta.6}}</td>
+                        {% if herramienta.4 == "Sin imagen" %}
+                            <td style="font-family: sans-serif;font-size:14px;">Sin imagen</td>
+                        {% else %}
+                        <td style="font-family: sans-serif;font-size:14px;"><center><img src="http://localhost:8000{{herramienta.4.url}}" alt="herramienta" width="60"></center></td>
+                        {% endif %}
+                        <td style="font-family: sans-serif;font-size:14px;">{{herramienta.5}} unidades</td>
+                        <td style="font-family: sans-serif;font-size:14px;">{{herramienta.7}}</td>
+                        <td style="font-family: sans-serif;font-size:14px;">{{herramienta.8}}</td>
+                    
+                    </tr>
+                    {% endfor %}
+                
+                
+            </tbody></table>
+        </center>
+        
+    </tr>
+    {% endif %}
     <tr>
     
     <td colspan="3" style="padding-top: 20px;text-align:center; padding-bottom: 10px;"><a href="http://192.168.10.5:8000/login/" style="-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;

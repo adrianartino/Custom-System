@@ -335,6 +335,8 @@ class HerramientasAlmacen (models.Model):
     estado_herramienta = models.CharField(max_length=2)
     motivo_estado = models.CharField(max_length=200)
     fecha_alta = models.DateField()
+    orden_compra_evidence = models.CharField(max_length=30, null=True)
+    proveedor = models.CharField(max_length=100, null=True)
 
     def __str__(self):
         return self.id_herramienta

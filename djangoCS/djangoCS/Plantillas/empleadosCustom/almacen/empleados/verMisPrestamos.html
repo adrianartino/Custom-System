@@ -591,25 +591,13 @@ Mis préstamos | Custom System
 </script>
 {% endif %}
 
-{% if correoEnviado %}
+{% if solicitudGuardada %}
 <script type="text/javascript">
     swal({
         icon: 'success',
-        title: 'Wuu..!',
-        text: ' {{mensaje}}',
+        title: 'Enhorabuena..!',
+        text: ' {{solicitudGuardada}}',
         footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
-        width: '40%'
-    });
-</script>
-{% endif %}
-
-{% if baja %}
-<script type="text/javascript">
-    swal({
-        icon: 'error',
-        title: 'Wuu..!',
-        text: ' {{mensaje}}',
-        footer: '<span style="color: red!important"> Vuelve a navegar por Custom System! </span>',
         width: '40%'
     });
 </script>

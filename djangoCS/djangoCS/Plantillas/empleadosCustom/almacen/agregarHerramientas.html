@@ -155,7 +155,7 @@ Agregar Herramientas | CS
                             <label for="password"><span style="color: #078F68;">* </span>SKU/Número externo:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
-                                    <i class="material-icons">copyright</i>
+                                    <i class="material-icons">code</i>
                                 </span>
                                 <div class="form-line">
                                     <input onkeypress='return soloLetras(event)' type="text" class="form-control date"
@@ -164,32 +164,67 @@ Agregar Herramientas | CS
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label for="password"><span style="color: #078F68;">* </span>Cantidad en existencia:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
-                                    <i class="material-icons">copyright</i>
+                                    <i class="material-icons">format_list_numbered</i>
                                 </span>
                                 <div class="form-line">
                                     <input type="number" class="form-control date"
                                         placeholder="Ingresar cantidad" maxlength="4" max="1000" min="1" step="1"
                                          name="cantidadHerramienta" required>
+                                </div>
+                                <span class="input-group-addon">
+                                    <p>unidades.</p>
                                 </span>
                             </div>
                         </div>
                     </div>
                     <div class="row clearfix">
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label for="password"><span style="color: #078F68;">* </span>Costo:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
-                                    <i class="material-icons">copyright</i>
+                                    <i class="material-icons">attach_money</i>
                                 </span>
                                 <div class="form-line">
                                     <input type="number" class="form-control"
                                                 maxlength="10"
                                                 name="costoHerramienta" value="1.00" step="0.01" min="1.00" max="9999999.00" required>
                                 </div>
+                                <span class="input-group-addon">
+                                    <p>MXN.</p>
+                                </span>
+                                
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <label for="password">Proveedor:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">local_shipping</i>
+                                </span>
+                                <div class="form-line">
+                                    <input onkeypress='return soloLetras(event)' type="text" class="form-control date"
+                                        placeholder="Ingresar Proveedor" maxlength="30"
+                                        title="No se permiten caracteres especiales." name="proveedorHerramienta" required>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="password">Orden de compra Evidence:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <img src="{% static 'images/icons/logoevidence.ico' %}" alt="logoEvidence" width="25">
+                                </span>
+                                <div class="form-line">
+                                    <input onkeypress='return soloLetras(event)' type="text" class="form-control date"
+                                        placeholder="Ingresar Folio Orden de compra" maxlength="30"
+                                        title="No se permiten caracteres especiales." name="odcHerramienta" required>
+                                </div>
+                                
                             </div>
                         </div>
                     </div>

@@ -113,6 +113,8 @@ Herramientas | Custom System
                                 <th>Imagen</th>
                                 <th>Estado</th>
                                 <th>Fecha alta</th>
+                                <th>Proveedor</th>
+                                <th>ODC Evidence</th>
                                 <th>Préstamo</th>
                                 <th>Editar</th>
                                 <th>Agregar Defecto</th>
@@ -135,6 +137,8 @@ Herramientas | Custom System
                                 <th>Imagen</th>
                                 <th>Estado</th>
                                 <th>Fecha alta</th>
+                                <th>Proveedor</th>
+                                <th>ODC Evidence</th>
                                 <th>Préstamo</th>
                                 <th>Editar</th>
                                 <th>Agregar Defecto</th>
@@ -162,7 +166,7 @@ Herramientas | Custom System
                                 <td>{{herramienta.descripcion_herramienta}}</td>
                                 <td>{{herramienta.unidad}}</td>
                                 <td>{{herramienta.sku}}</td>
-                                <td>
+                                <td style="white-space:nowrap!important;">
                                     <div>
                                         <p class="font-bold col-green">${{herramienta.costo}} MXN</p>
                                     </div>
@@ -226,9 +230,22 @@ Herramientas | Custom System
                                 </td>
                                 {% endif %}
                                 <td>{{herramienta.fecha_alta}}</td>
+
+                                {% if herramienta.proveedor == "Sin proveedor"%}
+                                <td>Sin proovedor</td>
+                                {% else %}
+                                <td>{{herramienta.proveedor}}</td>
+                                {% endif %}
+                                
+
+                                {% if herramienta.orden_compra_evidence == "Sin orden de compra" %}
+                                
+                                {% else %}
+                                <td style="white-space:nowrap!important;"> <img src="{% static 'images/icons/logoevidence.ico' %}" alt="logoEvidence" width="15"> {{herramienta.orden_compra_evidence}}</td>
+                                {% endif %}
                                 
                                 <td>
-                                    {% if prestamoHerramienta == None %}
+                                    {% if prestamoHerramienta %}
                                     <h4><span class="label bg-cyan">Si</span></h4>
                                     {% else %}
                                     <h4><span class="label bg-grey">Sin prestamos</span></h4>
@@ -610,6 +627,8 @@ Herramientas | Custom System
     });
 </script>
 {% endif %}
+
+
 
 
 <script type="text/javascript">

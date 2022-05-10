@@ -196,7 +196,6 @@ Solicitud Herramientas | CS
                                         </div>
                                         {% if prestamos %}
                                         <h3>Prestamos solicitados</h3>
-                                        {% endif %}
                                         <div>
                                             <table>
                                                 <thead>
@@ -218,6 +217,10 @@ Solicitud Herramientas | CS
                                             </table>
                                             
                                         </div>
+                                        {% else %}
+                                        <h4>Esta herramienta no se encuentra en préstamo actualmente.</h4>
+                                        {% endif %}
+                                        
                                         
                                     </center>
                                     </td>
@@ -313,11 +316,7 @@ Solicitud Herramientas | CS
                         class="btn btn-warning m-t-15 waves-effect animate__animated animate__flipInX"><i
                             class="material-icons">build</i> Realizar Solicitud</button>
                 </form>
-                {% if arregloIdsHerramientas %}
-                {% for x in arregloIdsHerramientas %}
-                    <h1>{{x}}</h1>
-                {% endfor %}
-                {% endif %}
+                
             </div>
 
             
