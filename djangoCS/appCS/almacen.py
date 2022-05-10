@@ -345,25 +345,69 @@ def guardarEntrega(request):
                 for datos in consultaPrestamo:
                     idsHerramientas = datos.id_herramientaInstrumento
                     cantidadesHerramientas = datos.cantidades_solicitadas
+                    idEmpleadoSolicitante = datos.id_empleado_solicitante_id
+                    fecha_solicitud = datos.fecha_solicitud
+                    proyecto = datos.proyecto_tarea
+                    imagenFirmaEntrega = datos.firma_prestamo
                     
                 arregloCantidadesHerramientas = cantidadesHerramientas.split(",")
                 arregloIdsHerramientas = idsHerramientas.split(",")
                 
                 listaHerramientas = zip(arregloIdsHerramientas, arregloCantidadesHerramientas)
                 
+                arregloTablaHerramientasCorreo = []
+                
                 for herramienta, cantidad in listaHerramientas:
                     consultaHerramienta = HerramientasAlmacen.objects.filter(id_herramienta = herramienta)
                     for datoHerramienta in consultaHerramienta:
                         cantidadActualEnExistencia = datoHerramienta.cantidad_existencia
+                        idHerramienta = datoHerramienta.id_herramienta
+                        codigoHerramienta = datoHerramienta.codigo_herramienta
+                        skuHerramienta = datoHerramienta.sku
+                        nombreHerramienta = datoHerramienta.nombre_herramienta
+                        marcaHerramienta = datoHerramienta.marca
+                        if datoHerramienta.imagen_herramienta == None:
+                            imagenHerramienta = "Sin imagen"
+                        else: 
+                            imagenHerramienta = datoHerramienta.imagen_herramienta
+                        cantidadPrestada = str(cantidad)
                     
                     cantidadActualizada = cantidadActualEnExistencia - int(cantidad)
                     
                     actualizarExistenciaHerramienta = HerramientasAlmacen.objects.filter(id_herramienta = herramienta).update(cantidad_existencia = cantidadActualizada)
                     
+                    arregloTablaHerramientasCorreo.append([idHerramienta,codigoHerramienta,skuHerramienta,nombreHerramienta,marcaHerramienta,imagenHerramienta,cantidadActualizada,cantidadPrestada])
+                    
                 if actualizarExistenciaHerramienta:
                 
             
                     request.session['prestamoEntregado'] = "El prestamo "+ str(idPrestamoGuardar)+" ha sido entregado satisfactoriamente!"
+                    
+                    #Madar correo
+                    datosEmpleadoSolicitante = Empleados.objects.filter(id_empleado=idEmpleadoSolicitante)
+                    for dato in datosEmpleadoSolicitante:
+                        nombreSolicitante= dato.nombre
+                        apellidosSolicitante=dato.apellidos
+                        correoSolicitante=dato.correo
+                    
+                    
+                    asunto = "CS | Nueva entrega de préstamo a empleado."
+                    plantilla = "empleadosCustom/almacen/correos/correoEntregaHerramienta.html"
+                    
+                    
+                   
+                    html_mensaje = render_to_string(plantilla, {"nombreSolicitante": nombreSolicitante, "apellidosSolicitante": apellidosSolicitante, "correoSolicitante": correoSolicitante,
+                                                                "fecha_solicitud":fecha_solicitud,
+                                                                "fecha_entrega":fechaPrestamo,
+                                                                "proyecto":proyecto,
+                                                                "imagenFirmaEntrega":imagenFirmaEntrega,
+                                                                "idPrestamoEntregado":idPrestamoGuardar,
+                                                                "arregloTablaHerramientasCorreo":arregloTablaHerramientasCorreo})
+                    email_remitente = settings.EMAIL_HOST_USER
+                    email_destino = ['sistemas@customco.com.mx']
+                    mensaje = EmailMessage(asunto, html_mensaje, email_remitente, email_destino)
+                    mensaje.content_subtype = 'html'
+                    mensaje.send()
 
                     return redirect("/solicitudesPendientesALM/")
             
@@ -401,26 +445,70 @@ def guardarDevolucion(request):
                 for datos in consultaPrestamo:
                     idsHerramientas = datos.id_herramientaInstrumento
                     cantidadesHerramientas = datos.cantidades_solicitadas
+                    idEmpleadoSolicitante = datos.id_empleado_solicitante_id
+                    fecha_solicitud = datos.fecha_solicitud
+                    fechaPrestamo = datos.fecha_prestamo
+                    proyecto = datos.proyecto_tarea
+                    imagenFirmaDevolucion = datos.fecha_devolucion
                     
                 arregloCantidadesHerramientas = cantidadesHerramientas.split(",")
                 arregloIdsHerramientas = idsHerramientas.split(",")
                 
                 listaHerramientas = zip(arregloIdsHerramientas, arregloCantidadesHerramientas)
                 
+                arregloTablaHerramientasCorreo = []
+                
                 for herramienta, cantidad in listaHerramientas:
                     consultaHerramienta = HerramientasAlmacen.objects.filter(id_herramienta = herramienta)
                     for datoHerramienta in consultaHerramienta:
                         cantidadActualEnExistencia = datoHerramienta.cantidad_existencia
+                        idHerramienta = datoHerramienta.id_herramienta
+                        codigoHerramienta = datoHerramienta.codigo_herramienta
+                        skuHerramienta = datoHerramienta.sku
+                        nombreHerramienta = datoHerramienta.nombre_herramienta
+                        marcaHerramienta = datoHerramienta.marca
+                        if datoHerramienta.imagen_herramienta == None:
+                            imagenHerramienta = "Sin imagen"
+                        else: 
+                            imagenHerramienta = datoHerramienta.imagen_herramienta
+                        cantidadDevuelta = str(cantidad)
                     
                     cantidadActualizada = cantidadActualEnExistencia + int(cantidad)
                     
                     actualizarExistenciaHerramienta = HerramientasAlmacen.objects.filter(id_herramienta = herramienta).update(cantidad_existencia = cantidadActualizada)
+                    arregloTablaHerramientasCorreo.append([idHerramienta,codigoHerramienta,skuHerramienta,nombreHerramienta,marcaHerramienta,imagenHerramienta,cantidadActualizada,cantidadDevuelta])
                     
                 if actualizarExistenciaHerramienta:
                 
             
                     request.session['prestamoDevuelto'] = "El prestamo "+ str(idPrestamoGuardar)+" ha sido devuelto satisfactoriamente!"
 
+                    datosEmpleadoSolicitante = Empleados.objects.filter(id_empleado=idEmpleadoSolicitante)
+                    for dato in datosEmpleadoSolicitante:
+                        nombreSolicitante= dato.nombre
+                        apellidosSolicitante=dato.apellidos
+                        correoSolicitante=dato.correo
+                    
+                    
+                    asunto = "CS | Nueva devolución de préstamo a almacén."
+                    plantilla = "empleadosCustom/almacen/correos/correoDevolucionHerramienta.html"
+                    
+                    
+                   
+                    html_mensaje = render_to_string(plantilla, {"nombreSolicitante": nombreSolicitante, "apellidosSolicitante": apellidosSolicitante, "correoSolicitante": correoSolicitante,
+                                                                "fecha_solicitud":fecha_solicitud,
+                                                                "fecha_entrega":fechaPrestamo,
+                                                                "fecha_devolucion":fechaDevolucion,
+                                                                "proyecto":proyecto,
+                                                                "imagenFirmaEntrega":imagenFirmaDevolucion,
+                                                                "idPrestamoEntregado":idPrestamoGuardar,
+                                                                "arregloTablaHerramientasCorreo":arregloTablaHerramientasCorreo})
+                    email_remitente = settings.EMAIL_HOST_USER
+                    email_destino = ['sistemas@customco.com.mx']
+                    mensaje = EmailMessage(asunto, html_mensaje, email_remitente, email_destino)
+                    mensaje.content_subtype = 'html'
+                    mensaje.send()
+                    
                     return redirect("/solicitudesMarcadasALM/")
             
     
@@ -1044,6 +1132,7 @@ def solicitarHerramientas(request):
                 if cantidadRequi == "0":
                     nada = True
                 else: #Se guarda la requi
+                    nada = False
                     registroRequi = RequisicionCompraAlmacen(id_empleado_solicitante = Empleados.objects.get(id_empleado = id_admin),
                                                              id_herramienta = HerramientasAlmacen.objects.get(id_herramienta = herramientaRequi),
                                                              id_prestamo = PrestamosAlmacen.objects.get(id_prestamo = ultimoID),
@@ -1069,10 +1158,10 @@ def solicitarHerramientas(request):
                     
                     
                     
-            if registroRequi:         
+            if nada == False:         
                 request.session['solicitudGuardada'] = "La solicitud ha sigo guardada con exito! Se ha mandado la requisición de herramientas por correo!"
             else:
-                request.session['solicitudGuardada'] = "La solicitud ha sigo guardada con exito! Favor de ir a 'Ver mis prestamos almacén'!"
+                request.session['solicitudGuardada'] = "La solicitud ha sigo guardada con exito!"
             
             #CORREO ELECTRÓNICO
             datosEmpleadoSolicitante = Empleados.objects.filter(id_empleado=id_admin)
@@ -1083,13 +1172,13 @@ def solicitarHerramientas(request):
                 apellidosSolicitante=dato.apellidos
                 correoSolicitante=dato.correo
             
-            if registroRequi:    
+            if nada == False:    
                 asunto = "CS | Nueva solicitud de préstamo de herramienta con Requisición de compra."
             else:
                 asunto = "CS | Nueva solicitud de préstamo de herramienta."
             plantilla = "empleadosCustom/almacen/correos/correoSolicitud.html"
             
-            if registroRequi:
+            if nada == False:
                 html_mensaje = render_to_string(plantilla, {"nombreSolicitante": nombreSolicitante, "apellidosSolicitante": apellidosSolicitante, "correoSolicitante": correoSolicitante,
                                                         "fecha_solicitud":fecha_solicitud,
                                                         "fecha_normal_requerido":fecha_normal_requerido,
