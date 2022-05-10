@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block titulo %}
-Entregar Préstamo | CS
+Recibir préstamo | CS
 {% endblock %}
 
 {% block estilos %}
@@ -28,6 +28,9 @@ Entregar Préstamo | CS
 <!-- Custom Css -->
 <link href={% static 'panel/css/style.css' %} rel="stylesheet">
 
+<!-- Bootstrap Select Css -->
+<link href={% static 'panel/plugins/bootstrap-select/css/bootstrap-select.css' %} rel="stylesheet" />
+
 <link href={% static 'css/margen.css' %} rel="stylesheet" />
 
 <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
@@ -39,12 +42,12 @@ Entregar Préstamo | CS
 {% block contenido %}
 <div class="row clearfix">
     <div >
-        <form action="/guardarEntrega/" enctype="multipart/form-data" method="POST">{% csrf_token %}
+        <form action="/guardarDevolucionParcial/" enctype="multipart/form-data" method="POST">{% csrf_token %}
         <div class="card">
             <div class="header">
                 <h2 style="font-family: 'Oswald', sans-serif;">
-                    FIRMA DE ENTREGA DE PRÉSTAMO DE HERRAMIENTA
-                    <small style="color: #790C05;">Formato de entrega de herramienta al empleado solicitante.</small>
+                    FIRMA DE DEVOLUCIÓN DE PRÉSTAMO DE HERRAMIENTA
+                    <small style="color: #790C05;">Formato de devolución de herramienta al empleado solicitante.</small>
                 </h2>
 
                 <br>
@@ -58,11 +61,13 @@ Entregar Préstamo | CS
                 {% for dato in infoPrestamo %}
                     <center>
                         <h1 style="color: black;">ENTREGA DE PRÉSTAMO #{{dato.id_prestamo}}</h1>
-                        <h3 style=" color: black;">Estatus: <span class="label bg-red">Pendiente</span></h3>
+                        <h3 style=" color: black;">Estatus: <span class="label bg-amber">En préstamo</span></h3>
                         <img src="{% static 'images/iconoPrestamoAlmacén.png' %}" width="15%" alt="lap">
 
-                        <h3>{{datoImplementacion.descripcion}}</h3>
+                        <h3>{{dato.descripcion}}</h3>
                         <h2 style="color: black;">Solicitante: {{nombreCompletoEmpleadoSolicitante}}</h2>
+                        <h3>Firma de Entrega de prestamo</h3>
+                        <img src="{{dato.firma_prestamo.url}}" alt="firmaEntrega">
                         <h2 style="color: black;">Departamento: <span class="{{colorDepartamento}}">{{nombreDepartamento}}</span></h2>
                     </center>
                     <div class="row clearfix">
@@ -82,13 +87,13 @@ Entregar Préstamo | CS
                                 </div>
                                 <div class="col-md-6">
                                     <center>
-                                        <h3 style="color: black;">Fecha de requerido</h3>
+                                        <h3 style="color: black;">Fecha de entrega préstamo</h3>
                                         <span style="font-size: 150%;">
                                             <i class="material-icons"
                                                 style="color: rgb(51, 82, 255); font-size: 200%;">date_range</i>
         
                                         </span>
-                                        <h3 style="color: black;">{{dato.fecha_requerimiento}}</h3>
+                                        <h3 style="color: black;">{{dato.fecha_prestamo}}</h3>
                                     </center>
                                 </div>
                             </div>
@@ -133,7 +138,7 @@ Entregar Préstamo | CS
                                     <th>Unidad medida</th>
                                     <th>SKU</th>
                                     <th>Existencia en almacén</th>
-                                    <th>Cantidad solicitada</th>
+                                    <th>Cantidad a devolver</th>
                                 </tr>
                             </thead>
                             <tfoot>
@@ -147,7 +152,7 @@ Entregar Préstamo | CS
                                     <th>Unidad medida</th>
                                     <th>SKU</th>
                                     <th>Existencia en almacén</th>
-                                    <th>Cantidad solicitada</th>
+                                    <th>Cantidad a devolver</th>
                                 </tr>
                             </tfoot>
                             <tbody class="animate__animated animate__backInDown" id="herramientasAgregadas">
@@ -187,8 +192,9 @@ Entregar Préstamo | CS
                                     </td>
                                    
                                     <td>
-                                        <h4><span class="label bg-amber">{{cantidad}} unidades</span></h4>
+                                        <input type="number" value="{{cantidad}}" max="{{cantidad}}" min="1" step="1" name="cantidadDevolver{{herramienta.0}}" >
                                     </td>
+                                   
                                     
                                 </tr>
                             {% endfor %}
@@ -200,118 +206,228 @@ Entregar Préstamo | CS
                             
                         </table>
                     </div>
-                    <h1>Otras herramientas</h1>
                     <div class="row clearfix">
                         <div class="col-md-6">
-                            <div class="form-line">
-                                {% if otro == None %}
-                                <textarea rows="4" class="form-control no-resize" placeholder="No se solicitaron otras herramientas"></textarea>
-                                {% else %}
-                                <textarea rows="4" class="form-control no-resize"  value="{{otro}}"></textarea>
-                                {% endif %}
+                            <h1>Otras herramientas</h1>
+                            <div class="row clearfix">
+                                <div class="col-md-12">
+                                    <div class="form-line">
+                                        {% if otro == None %}
+                                        <textarea rows="4" class="form-control no-resize" placeholder="No se solicitaron otras herramientas" readonly></textarea>
+                                        {% else %}
+                                        <textarea rows="4" class="form-control no-resize"  value="{{otro}}" readonly></textarea>
+                                        {% endif %}
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    {% endfor %}
+                        <div class="col-md-6">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="card">
+                                    <div class="header bg-teal">
+                                        <h2 class="font-bold">
+                                            CONDICIONES DE ENTREGA
+                                        </h2>
+                                    </div>
+                                    <div class="body">
+                                        <div>
+                                            <h4 >Condiciones:</h4>
+                                        </div>
+                                       <div>
+                                       <h5 class="text-justify">{{dato.condiciones}}</h5> 
+                                       </div>
+                                    </div>
+                                </div>
+                            </div>
 
-            </div>
-        </div>
-        <div style="background-color: #fff; background-clip: border-box;
-                border: 1px solid rgba(0, 0, 0, 0.125);
-                border-radius: 0.25rem;">
-                <div class="row clearfix" > 
-                    <center>
-                        <h2>Ingresar Condiciones de entrega</h2>
-                        <div class="row clearfix">
+                            
+                        </div>
+                    </div>
+                    <div class="row clearfix">
+                        <center>
                             <div class="col-md-3">
 
                             </div>
                             <div class="col-md-6">
-                                <div class="form-line">
-                                    <textarea rows="4" class="form-control no-resize" placeholder="Ingresar condiciones de entrega" name="condicionesEntrega" required></textarea>
+                                <h1>Actualizar Condiciones de entrega</h1>
+                                <div class="row clearfix">
+                                    <div class="col-md-12">
+                                        <div class="form-line">
+                                            <textarea rows="4" class="form-control no-resize" readonly name="condicionesEntrega">{{dato.condiciones}}</textarea>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-3">
-
-                            </div>
-                        </div>
+                        </center>
                         
-                        <h2>Ingresar Firma de entrega del empleado</h2>
-                        <h4>Se solicita integrar una firma de entrega para su historial.</h4>
-                        
-                    </center>
-                </div>
-                <br>
-                <center>    
+                       
+                    </div>
                     
-                    <canvas id="sheet" width="400" height="250" style="border: 1px solid black"></canvas>
-                    <div class="row clearfix">
-                        <div class="col-md-2">
-    
-                        </div>
-                        <div class="col-md-8">
-                            <h5 class="text-center">"Acepto de conformidad que los materiales, herramientas y/o equipo descritos anteriormente se me fueron proporcionados y seran
-                                utilizados para la realización de mis actividades dentro de la empresa y si son exraviados o dañados por mal uso, serán descontados 
-                                de mi nómina, de igual manera al ser solicitados por el cese de relaciones laborales, serán entregados o en su omisión 
-                                descontados de mi finiquito."</h5>
-                        </div>
-                        <div class="col-md-2">
-    
-                        </div>
-                    </div>
-                    <div class="row clearfix">
-                        <button type="button"  onclick="limpiar()"
-                        class="btn btn-success m-t-15 waves-effect animate__animated animate__flipInX">
-                        <i class="material-icons">delete_sweep</i> Limpiar firma</button>
-                        <input type="hidden" name="canvasData" id="my_hidden">
-                    </div>
-                    <div clas="row clearfix">   
-                        <button type="submit"  onclick="save()"
-                        class="btn btn-warning m-t-15 waves-effect animate__animated animate__flipInX">
-                        <i class="material-icons">assignment_turned_in</i> Relizar entrega de préstamo</button>
+                    {% endfor %}
+                    <div clas="row clearfix"> 
+                        <center>
+                            
+                            <button type="submit"  onclick="save()"
+                            class="btn btn-warning m-t-15 waves-effect animate__animated animate__flipInX">
+                            <i class="material-icons">assignment_turned_in</i> Relizar entrega parcial de préstamo</button>
+        
+                        </center>  
                     <div>
                     <br>
-                </center>
-            
             </div>
+            
+        </div>
         </form>
     </div>
 </div>
+
+{% for herramientaBaja in herramientasPrestadasModalsBaja %}
+<!-- Default Size -->
+<div class="modal fade" id="modalHerramientaBaja{{herramientaBaja.0}}" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" style="border-radius: 16px;">
+            <div class="modal-header">
+                <center>
+                    <h1 style="color: crimson; font-family: 'Oswald', sans-serif;">DAR DE BAJA HERRAMIENTA <i
+                            class="material-icons" style="color:black; font-size:100%">backspace</i></h1>
+                    <h4 style=" font-family: 'Oswald', sans-serif;">(Por daño o extravío)</h4>
+                    <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
+
+                </center>
+            </div>
+            <div class="modal-body">
+                <form action="/bajaHerramientaAlmacenPrestamo/" method="POST">{% csrf_token %}
+                    <div class="body table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr class="bg-teal">
+                                    <th>ID - Código</th>
+                                    <th>Nombre</th>
+                                    <th>Descripción</th>
+                                    <th>Imagen</th>
+                                    <th>Existencia Actual en almacén</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div>
+                                            <h4><span class="label bg-black" >{{herramientaBaja.0}}</span></h4>
+                                        </div>
+                                        <div>
+                                            <h4><span class="label bg-teal">{{herramientaBaja.1}}</span></h4>
+                                        </div>
+                                    </td>
+                                    <td style="color: black;">{{herramientaBaja.3}}</td>
+                                    <td style="color: black;">{{herramientaBaja.6}}</td>
+                                    {% if herramientaBaja.5 %}
+                                    <th> <img src="{{herramientaBaja.5.url}}" width="120" height="150" alt="lap">
+                                    </th>
+                                    {% else %}
+                                    <th style="color: black;">Sin imagen</th>
+                                    {% endif %}
+                                    <td style="color: black;">
+                                        <center>
+                                            <div>
+                                                <h4><span class="label bg-black" >{{herramientaBaja.9}} unidades</span></h4>
+                                            </div>
+                                            <div>+</div>
+                                            <div>
+                                                <h4><span class="label bg-black" >2 unidades en préstamo</span></h4>
+                                            </div>
+                                        </center>
+                                        
+                                    </td>
+                                    
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+
+
+
+                    </div>
+                    <div class="row clearfix">
+                        <div class="col-md-6">
+                            <h2><span class="label bg-black">CANTIDAD DE BAJA:</span> <span class="label bg-red">1 unidad.</span> </h2>
+                            <h3><span class="label bg-black">Id Préstamo:</span> <span class="label bg-teal">
+                                {% for i in infoPrestamo %}
+                                {{i.id_prestamo}}
+                                {% endfor %}
+                            </span> </h3>
+                            {% for i in infoPrestamo %}
+                            <input type="hidden" name="idPrestamo" value="{{i.id_prestamo}}">
+                            {% endfor %}
+                            
+                            
+                        </div>
+                        <div class="col-md-6">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Motivo de baja:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">settings</i>
+                                </span>
+                                <select class="form-control show-tick" id="marcas" name="motivoBaja" required>
+                                    <option value="D" selected>Daño</option>
+                                    <option value="E">Extravío</option>
+                                    
+                                </select>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="row clearfix">
+                        <div class="col-md-12">
+                            <h3><span class="label bg-black">Responsable préstamo:</span> <span class="label bg-indigo">
+                                {{nombreCompletoEmpleadoSolicitante}}
+                            </span> </h3>
+                        </div>
+                    </div>
+                    <div class="row clearfix">
+                        <div class="col-md-3">
+                            <h2><span class="label bg-black">MOTIVO DE BAJA:</span></h2>
+                        </div>
+                        <div class="col-md-9">
+                            <label for="password"><span style="color: #078F68;">* </span>Agregar Motivo:</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <textarea style="border: 1px;" name="explicacion" cols="30" rows="6"
+                                            maxlength="255" class="form-control no-resize" required></textarea>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <br>
+                    <center>
+                        <input type="hidden" value="{{herramientaBaja.0}}" name="idHerramientaBaja">
+                        
+                        <button type="submit" class="btn bg-red waves-effect">
+                            <i class="material-icons">clear</i>
+                            <span>Dar de baja herramienta</span>
+                        </button>
+                    </center>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endfor %}
 
 
 
 
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-{% if alta %}
-<script type="text/javascript">
-    swal({
-        icon: 'success',
-        title: 'Wuu..!',
-        text: ' {{mensaje}}',
-        footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
-        width: '40%'
-    });
-</script>
-{% endif %}
 
-{% if correoEnviado %}
-<script type="text/javascript">
-    swal({
-        icon: 'success',
-        title: 'Wuu..!',
-        text: ' {{mensaje}}',
-        footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
-        width: '40%'
-    });
-</script>
-{% endif %}
-
-{% if baja %}
+{% if herramientaBaja %}
 <script type="text/javascript">
     swal({
         icon: 'error',
         title: 'Wuu..!',
-        text: ' {{mensaje}}',
+        text: ' {{herramientaBaja}}',
         footer: '<span style="color: red!important"> Vuelve a navegar por Custom System! </span>',
         width: '40%'
     });
@@ -382,7 +498,7 @@ Entregar Préstamo | CS
 
     
 
-</script>t>
+</script>
 
 
 

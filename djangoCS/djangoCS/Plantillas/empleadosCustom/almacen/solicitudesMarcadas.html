@@ -67,7 +67,7 @@ Solicitudes Pendientes | CS
                                 <th>Proyecto</th>
                                 <th>Observaciones</th>
                                 <th>Herramientas solicitadas</th>
-                                <th>Recibir Préstamo</th>
+                                <th>Recibir Préstamo Total</th>
                                 <th>Recibir Préstamo Parcialmente</th>
                                 <th>Estatus</th>
                             </tr>
@@ -82,7 +82,7 @@ Solicitudes Pendientes | CS
                                 <th>Proyecto</th>
                                 <th>Observaciones</th>
                                 <th>Herramientas solicitadas</th>
-                                <th>Recibir Préstamo</th>
+                                <th>Recibir Préstamo Total</th>
                                 <th>Recibir Préstamo Parcialmente</th>
                                 <th>Estatus</th>
                             </tr>
@@ -119,6 +119,17 @@ Solicitudes Pendientes | CS
                                         <form action="/firmarDevolucion/" method="POST">{% csrf_token %}
                                             <input type="hidden" name="idPrestamo" value="{{prestamo.id_prestamo}}" readonly>
                                             <button type="submit" class="btn bg-deep-orange waves-effect" >
+                                                <i class="material-icons">assignment_returned</i>
+                                            </button>
+                                        </form>
+                                    </center>
+                                    
+                                </td>
+                                <td>
+                                    <center>
+                                        <form action="/devolucionParcial/" method="POST">{% csrf_token %}
+                                            <input type="hidden" name="idPrestamo" value="{{prestamo.id_prestamo}}" readonly>
+                                            <button type="submit" class="btn bg-deep-purple waves-effect" >
                                                 <i class="material-icons">assignment_returned</i>
                                             </button>
                                         </form>

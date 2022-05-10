@@ -163,7 +163,16 @@ Herramientas | Custom System
                                 {% endif %}
                                 <td>{{herramienta.nombre_herramienta}}</td>
                                 <td>{{herramienta.marca}}</td>
-                                <td>{{herramienta.descripcion_herramienta}}</td>
+                                <td>
+                                    <center>
+                                        <button type="button" class="btn bg-deep-purple waves-effect animate__animated animate__flipInX"
+                                    data-toggle="tooltip" data-placement="right"
+                                    title="{{herramienta.descripcion_herramienta}}">
+                                    <i class="material-icons">visibility</i>
+                                    </button>
+                                    </center>
+                                    
+                                </td>
                                 <td>{{herramienta.unidad}}</td>
                                 <td>{{herramienta.sku}}</td>
                                 <td style="white-space:nowrap!important;">

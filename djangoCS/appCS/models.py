@@ -327,7 +327,7 @@ class HerramientasAlmacen (models.Model):
     descripcion_herramienta = models.TextField()
     marca = models.CharField(max_length=50)
     unidad = models.CharField(max_length=50)
-    sku = models.CharField(max_length=30)
+    sku = models.CharField(max_length=100)
     cantidad_existencia = models.IntegerField(null=True)
     stock = models.IntegerField(null=True)
     costo = models.FloatField(null=True)

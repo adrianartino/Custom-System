@@ -198,6 +198,8 @@ urlpatterns = [
     path("firmarDevolucion/", almacen.firmarDevolucion),
     path("excelInventario/", almacen.excelInventario),
     path("excelInventarioHerramientas/", almacen.excelInventarioHerramientas),
+    path("devolucionParcial/", almacen.devolucionParcial),
+    path("guardarDevolucionParcial/", almacen.guardarDevolucionParcial),
     #soportes tecnicos
     path("verSoportes/",views.verSoportes),
     path("agregarSoporteEquipoComputo/",views.agregarSoporteEquipoComputo),
