@@ -53,19 +53,7 @@ Historial Préstamos | CS
                 {% if sinPendientes %}
                 <h2>Sin prestamos devueltos</h2>
                 {% else %}
-                <div class="row clear-fix">
-                    <div class="col-xs-12 col-sm-1">
-                        <form action="/xlEmpleados/" method="POST">{% csrf_token %}
-                            <input type="hidden" name="activo" value="A">
-                            <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
-                                data-toggle="tooltip" data-placement="bottom"
-                                title="Descargar reporte Empleados Activos en Excel.">
-                                <i class="material-icons">grid_on</i>
-                                <span>Excel</span>
-                            </button>
-                        </form>
-                    </div>
-                </div>
+                
 
                 <div class="table-responsive">
 

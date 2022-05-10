@@ -65,24 +65,24 @@ Herramientas | Custom System
             <div class="body" id="divActivos">
                 <div class="row clear-fix">
                     <div class="col-xs-12 col-sm-1">
-                        <form action="/reporteEmpleadosActivos/" method="POST">{% csrf_token %}
+                        <form action="/excelInventario/" method="POST">{% csrf_token %}
                             <input type="hidden" name="activo" value="A">
-                            <button type="submit" class="btn bg-red waves-effect animate__animated animate__flipInX"
+                            <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
                                 data-toggle="tooltip" data-placement="bottom"
-                                title="Descargar reporte Empleados Activos en PDF.">
-                                <i class="material-icons">picture_as_pdf</i>
-                                <span>PDF</span>
+                                title="Descargar formato inventario de herramientas de almacén.">
+                                <i class="material-icons">grid_on</i>
+                                <span>Inventario</span>
                             </button>
                         </form>
                     </div>
                     <div class="col-xs-12 col-sm-1">
-                        <form action="/xlEmpleados/" method="POST">{% csrf_token %}
+                        <form action="/excelInventarioHerramientas/" method="POST">{% csrf_token %}
                             <input type="hidden" name="activo" value="A">
                             <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
                                 data-toggle="tooltip" data-placement="bottom"
-                                title="Descargar reporte Empleados Activos en Excel.">
+                                title="Descargar formato para realizar inventario de herramientas de almacén.">
                                 <i class="material-icons">grid_on</i>
-                                <span>Excel</span>
+                                <span>Cíclico</span>
                             </button>
                         </form>
                     </div>
@@ -291,35 +291,7 @@ Herramientas | Custom System
             </div>
 
             <div class="body" id="divInactivos">
-                <div class="row clear-fix">
-                    <div class="col-xs-12 col-sm-1">
-                        <form action="/reporteEmpleadosActivos/" method="POST">{% csrf_token %}
-                            <input type="hidden" name="activo" value="I">
-                            <button type="submit" class="btn bg-red waves-effect animate__animated animate__flipInX"
-                                data-toggle="tooltip" data-placement="bottom"
-                                title="Descargar reporte Empleados de baja en PDF.">
-                                <i class="material-icons">picture_as_pdf</i>
-                                <span>PDF</span>
-                            </button>
-                        </form>
-                    </div>
-                    <div class="col-xs-12 col-sm-1">
-                        <form action="/xlEmpleados/" method="POST">{% csrf_token %}
-                            <input type="hidden" name="activo" value="I">
-                            <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
-                                data-toggle="tooltip" data-placement="bottom"
-                                title="Descargar reporte Empleados de baja en Excel.">
-                                <i class="material-icons">grid_on</i>
-                                <span>Excel</span>
-                            </button>
-                        </form>
-                    </div>
-                    <div class="col-xs-12 col-sm-4">
-                        <a class="label bg-blue-grey" style="font-size:small; " href="/verHerramientasALM/">Agregar
-                            Herramientas</a>
-                    </div>
-
-                </div>
+                
                 <div class="table-responsive">
 
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable ">

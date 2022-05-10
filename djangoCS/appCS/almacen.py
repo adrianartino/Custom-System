@@ -1008,12 +1008,12 @@ def solicitarHerramientas(request):
         fechaHoy = datetime.now()
         
         
-        data = [i.json() for i in HerramientasAlmacen.objects.all()]
-        consulta = HerramientasAlmacen.objects.all()
+        data = [i.json() for i in HerramientasAlmacen.objects.filter(cantidad_existencia__range = (1,10000))]
+        consulta = HerramientasAlmacen.objects.filter(cantidad_existencia__range = (1,10000))
         
         #Mandar prestamos de cada herramienta
         
-        consulta2 = HerramientasAlmacen.objects.all()
+        consulta2 = HerramientasAlmacen.objects.filter(cantidad_existencia__range = (1,10000))
         datosPrestamosPorHerramienta = []
         datosHerramientasRequisicion = []
         
@@ -1596,3 +1596,184 @@ def bajaHerramientaAlmacenPrestamo(request):
         return redirect('/login/') #redirecciona a url de inicio
     
 
+def excelInventario(request):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename=Inventario Herramientas Almacén '+str(datetime.today().strftime('%Y-%m-%d'))+'.xls'
+    
+    #creación de libro de excel
+    libro = xlwt.Workbook(encoding='utf-8')
+    hoja = libro.add_sheet('Reporte de existencias')
+    
+    numero_fila = 0
+    estilo_fuente = xlwt.XFStyle()
+    estilo_fuente.font.bold = True
+    
+    columnas = ['Id Herramienta','Código Herramienta', 'Nombre herramienta', 'Descripción', 'Marca', 'Unidad','Tipo', 'SKU','Fecha de alta en CS','Cantidad en préstamos','Stock','Cantidad en existencia','Cantidad Dañadas','Total Cantidades','Costo unitario','Cantidad Extraviadas','Costo Total', 'Costo Total Daño', 'Costo Total Extravío', 'Costo Pérdida', 'Costo Real total', 'Proveedor', 'ODC Evidence ligada' ]
+    for campo in range(len(columnas)):
+        hoja.write(numero_fila, campo, columnas[campo], estilo_fuente)
+        
+    todasLasHerramientas = HerramientasAlmacen.objects.all()
+    
+    arrayHerramientas = []
+    for herramienta in todasLasHerramientas:
+        idHerramienta = herramienta.id_herramienta
+        codigoHerramienta = herramienta.codigo_herramienta,
+        nombreHerramienta = herramienta.nombre_herramienta
+        descripcionHerramienta = herramienta.descripcion_herramienta,
+        marca = herramienta.marca
+        unidad = herramienta.unidad
+        tipo = herramienta.tipo_herramienta
+        sku = herramienta.sku
+        fecha_alta = herramienta.fecha_alta
+        stock = herramienta.stock
+        existencias = herramienta.cantidad_existencia
+        costo_unitario = herramienta.costo
+        proveedor = herramienta.proveedor
+        ordenCompra = herramienta.orden_compra_evidence
+        
+        #CantidadPrestamos ya esta..
+        contadorHerramientasEnPrestamo = 0
+        consultaPrestamosDeHerramienta = PrestamosAlmacen.objects.filter(estatus="En prestamo")
+        for dato in consultaPrestamosDeHerramienta:
+            idsHerramientas = dato.id_herramientaInstrumento
+            cantidadesHerramientas = dato.cantidades_solicitadas
+            
+            arregloIdsHerramientas = idsHerramientas.split(",")
+            arregloCantidadesHerramientas = cantidadesHerramientas.split(",")
+            
+            listaHerramientasEnPrestamo = zip(arregloIdsHerramientas,arregloCantidadesHerramientas)
+            
+            for idhhh, cantidad in listaHerramientasEnPrestamo:
+                idH = int(idhhh)
+                can = int(cantidad)
+                if idH == idHerramienta:
+                    contadorHerramientasEnPrestamo = contadorHerramientasEnPrestamo + can
+        
+        #cantidad dañadas
+        cantidadHerramientasDañadas = 0
+        consultaHerramientasDañadas = HerramientasAlmacenInactivas.objects.filter(id_herramienta_id__id_herramienta = idHerramienta, motivo_baja="D")
+        
+        for herramientaDañada in consultaHerramientasDañadas:
+            cantidadHerramientasDañadas = cantidadHerramientasDañadas + 1
+            
+        #Total cantidades
+        totalCantidades = existencias + cantidadHerramientasDañadas
+        
+        #cantidad extraviadas
+        cantidadHerramientasExtraviadas = 0
+        consultaHerramientasExtraviadas = HerramientasAlmacenInactivas.objects.filter(id_herramienta_id__id_herramienta = idHerramienta, motivo_baja="E")
+        
+        for herramientaExtraviada in consultaHerramientasExtraviadas:
+            cantidadHerramientasExtraviadas = cantidadHerramientasExtraviadas + 1
+            
+        #costo total
+        #Costo de total de herramientas en existencia, más herramientas en prestamo, mas dañadas
+        
+        sumaHerramientas = existencias + contadorHerramientasEnPrestamo + cantidadHerramientasDañadas
+        costoTotal = float(sumaHerramientas) * costo_unitario
+        
+        #costo total daño
+        costoTotalDaño = float(cantidadHerramientasDañadas) * costo_unitario
+        #costo total extravio
+        costoTotalExtravio = float(cantidadHerramientasExtraviadas) * costo_unitario
+        #costo perdida
+        costoTotalPerdida = costoTotalDaño + costoTotalExtravio
+        #costo real total
+        costoRealTotal = costoTotal - costoTotalPerdida
+        
+        arrayHerramientas.append([idHerramienta, codigoHerramienta, nombreHerramienta, descripcionHerramienta, marca, unidad, tipo, sku, fecha_alta,contadorHerramientasEnPrestamo, stock, existencias,cantidadHerramientasDañadas, totalCantidades,costo_unitario, cantidadHerramientasExtraviadas, costoTotal, costoTotalDaño, costoTotalExtravio, costoTotalPerdida, costoRealTotal, proveedor, ordenCompra ])
+        
+        
+            
+        
+    estilo_fuente = xlwt.XFStyle()
+    for herramienta in arrayHerramientas:
+        numero_fila+=1
+        for columna in range(len(herramienta)):
+            hoja.write(numero_fila, columna, str(herramienta[columna]), estilo_fuente)
+        
+    
+    
+    
+        
+    libro.save(response)
+    return response    
+
+
+def excelInventarioHerramientas(request):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename=Inventario Cíclico Herramientas Almacén '+str(datetime.today().strftime('%Y-%m-%d'))+'.xls'
+    
+    #creación de libro de excel
+    libro = xlwt.Workbook(encoding='utf-8')
+    hoja = libro.add_sheet('Reporte de existencias')
+    
+    numero_fila = 0
+    estilo_fuente = xlwt.XFStyle()
+    estilo_fuente.font.bold = True
+    
+    columnas = ['Id Herramienta','Código Herramienta', 'Nombre herramienta', 'Marca', 'Tipo', 'SKU','Stock','Cantidad en existencia Almacén','Cantidad Dañadas','Total Cantidades','Total Cantidades Contadas','¿Con faltante?','Diferencia', 'Total Cantidades en prestamo']
+    for campo in range(len(columnas)):
+        hoja.write(numero_fila, campo, columnas[campo], estilo_fuente)
+        
+    todasLasHerramientas = HerramientasAlmacen.objects.all()
+    
+    arrayHerramientas = []
+    for herramienta in todasLasHerramientas:
+        idHerramienta = herramienta.id_herramienta
+        codigoHerramienta = herramienta.codigo_herramienta
+        nombreHerramienta = herramienta.nombre_herramienta
+        marca = herramienta.marca
+        tipo = herramienta.tipo_herramienta
+        sku = herramienta.sku
+        stock = herramienta.stock
+        existencias = herramienta.cantidad_existencia
+        
+        
+        #CantidadPrestamos ya esta..
+        contadorHerramientasEnPrestamo = 0
+        consultaPrestamosDeHerramienta = PrestamosAlmacen.objects.filter(estatus="En prestamo")
+        for dato in consultaPrestamosDeHerramienta:
+            idsHerramientas = dato.id_herramientaInstrumento
+            cantidadesHerramientas = dato.cantidades_solicitadas
+            
+            arregloIdsHerramientas = idsHerramientas.split(",")
+            arregloCantidadesHerramientas = cantidadesHerramientas.split(",")
+            
+            listaHerramientasEnPrestamo = zip(arregloIdsHerramientas,arregloCantidadesHerramientas)
+            
+            for idhhh, cantidad in listaHerramientasEnPrestamo:
+                idH = int(idhhh)
+                can = int(cantidad)
+                if idH == idHerramienta:
+                    contadorHerramientasEnPrestamo = contadorHerramientasEnPrestamo + can
+        
+        #cantidad dañadas
+        cantidadHerramientasDañadas = 0
+        consultaHerramientasDañadas = HerramientasAlmacenInactivas.objects.filter(id_herramienta_id__id_herramienta = idHerramienta, motivo_baja="D")
+        
+        for herramientaDañada in consultaHerramientasDañadas:
+            cantidadHerramientasDañadas = cantidadHerramientasDañadas + 1
+            
+        #Total cantidades
+        totalCantidades = existencias + cantidadHerramientasDañadas
+        
+       
+        
+        arrayHerramientas.append([idHerramienta, codigoHerramienta, nombreHerramienta, marca,  tipo, sku, stock, existencias,cantidadHerramientasDañadas, totalCantidades, "", "", "", contadorHerramientasEnPrestamo])
+        
+        
+            
+        
+    estilo_fuente = xlwt.XFStyle()
+    for herramienta in arrayHerramientas:
+        numero_fila+=1
+        for columna in range(len(herramienta)):
+            hoja.write(numero_fila, columna, str(herramienta[columna]), estilo_fuente)
+        
+    
+    
+    
+        
+    libro.save(response)
+    return response 
