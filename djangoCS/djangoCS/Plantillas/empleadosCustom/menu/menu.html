@@ -363,7 +363,12 @@
                             <li class="active">
                                 {% else %}
                             <li>
+                                {% if estaEnVerRequisicionesHerramientas %}
+                            <li class="active">
+                                {% else %}
+                            <li>
                             
+                                {% endif %}
                                 {% endif %}
                                 {% endif %}
 
@@ -376,9 +381,14 @@
                                     <i class="material-icons" style="color: #336BFF !important;">assignment</i>
                                     <span class="colorTextoSeleccionado">Inventario</span>
                                     {% else %}
+                                    {% if estaEnVerRequisicionesHerramientas %}
+                                    <i class="material-icons" style="color: #336BFF !important;">assignment</i>
+                                    <span class="colorTextoSeleccionado">Inventario</span>
+                                    {% else %}
                                    
                                     <i class="material-icons colorGrisIcono">assignment</i>
                                     <span class="colorBlanco">Inventario</span>
+                                    {% endif %}
                                     {% endif %}
                                     {% endif %}
                                 </a>
@@ -405,6 +415,18 @@
                                         <a href="/agregarHerramientasALM/" style="color: #e74c3c !important;">Agregar herramientas</a>
                                         {% else %}
                                         <a href="/agregarHerramientasALM/" class="colorBlanco" >Agregar Herramientas</a>
+                                        {% endif %}
+                                    </li>
+
+                                    {% if estaEnVerRequisicionesHerramientas %}
+                                    <li class="active">
+                                        {% else %}
+                                    <li>
+                                        {% endif %}
+                                        {% if estaEnVerRequisicionesHerramientas %}
+                                        <a href="/verRequisicionesHerramientas/" style="color: #e74c3c !important;">Ver requisiciones de herramientas</a>
+                                        {% else %}
+                                        <a href="/verRequisicionesHerramientas/" class="colorBlanco" >Ver requisiciones de herramientas</a>
                                         {% endif %}
                                     </li>
 

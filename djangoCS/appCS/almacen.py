@@ -1951,3 +1951,83 @@ def guardarDevolucionParcial(request):
     #Si le da al inicio y no hay una sesión iniciada..
     else:
         return redirect('/login/') #redirecciona a url de inicio
+    
+    
+    
+def verRequisicionesHerramientas(request):
+    
+    #Si ya hay una sesión iniciada..
+    if "idSesion" in request.session:
+        
+        
+        estaEnAlmacen = True
+        estaEnVerRequisicionesHerramientas = True
+        almacen = True
+
+
+        id_admin=request.session["idSesion"]
+        nombreini = request.session['nombres']
+        apellidosini = request.session['apellidos']
+        correo = request.session['correoSesion']
+        foto = fotoAdmin(request)
+        nombreCompleto = nombreini + " " + apellidosini #Blanca Yesenia Gaeta Talamantes
+        
+        #Consulta a tabla de requis
+        
+        consultaRequisicionesPendientes = RequisicionCompraAlmacen.objects.filter(estatus="Pendiente")
+        consultaRequisicionesSaldadas = RequisicionCompraAlmacen.objects.filter(estatus="Saldada")
+        
+        #informacion de empleado
+        infoEmpleadoPendiente = []
+        infoEmpleadoSaldada = []
+        
+        #información de herramienta
+        infoHerramientaPendiente = []
+        infoHerramientaSaldada = []
+        
+        #Informacion de prestamo
+        infoPrestamoPendiente = []
+        infoPrestamoSaldada = []
+        
+        # Requis pendientes
+        for requiPendiente in consultaRequisicionesPendientes:
+            idEmpleadoSolicitante = requiPendiente.id_empleado_solicitante_id
+            idHerramientaSolicitada = requiPendiente.id_herramienta_id
+            idPrestamo = requiPendiente.id_prestamo_id
+            
+            #infoEmpleado 
+            consultaEmpleado = Empleados.objects.filter(id_empleado = idEmpleadoSolicitante)
+            for dato in consultaEmpleado:
+                nombreEmpleado = dato.nombre
+                apellidosEmpleado = dato.apellidos
+                idArea = dato.id_area_id
+                
+                consultaArea = Areas.objects.filter(id_area = idArea)
+                for datoArea in consultaArea:
+                    nombreArea = datoArea.nombre
+                    colorArea = datoArea.color
+            nombreCompletoEmpleado = nombreEmpleado + " " + apellidosEmpleado
+                    
+            infoEmpleadoPendiente.append([nombreCompletoEmpleado, nombreArea, colorArea])
+            
+            #infoHerramienta
+            consultaHerramienta = HerramientasAlmacen.objects.filter(id_herramienta = idHerramientaSolicitada)
+            for datoHerramienta in consultaHerramienta:
+                idHerramienta = datoHerramienta.id_herramienta
+                nombreHerramienta = datoHerramienta.nombre_herramienta
+                codigoHerramienta = datoHerramienta.codigo_herramienta
+                skuHerramienta = datoHerramienta.sku
+                proveedorHerramienta = datoHerramienta.proveedor
+                odcHerramienta = datoHerramienta.orden_compra_evidence
+            infoHerramientaPendiente.append([idHerramienta, nombreHerramienta, codigoHerramienta, skuHerramienta,proveedorHerramienta,odcHerramienta])
+            
+            #infoPrestamo
+            
+            
+            
+
+
+        return render(request, "empleadosCustom/almacen/requis/verRequisicionesHerramientas.html", {"estaEnAlmacen":estaEnAlmacen,"estaEnVerRequisicionesHerramientas":estaEnVerRequisicionesHerramientas,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo})
+    #Si le da al inicio y no hay una sesión iniciada..
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
