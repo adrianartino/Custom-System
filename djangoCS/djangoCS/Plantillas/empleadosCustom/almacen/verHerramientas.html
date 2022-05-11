@@ -65,6 +65,17 @@ Herramientas | Custom System
             <div class="body" id="divActivos">
                 <div class="row clear-fix">
                     <div class="col-xs-12 col-sm-1">
+                        <form action="/pdfCostosAlmacén/" method="POST">{% csrf_token %}
+                            <input type="hidden" name="activo" value="A">
+                            <button type="submit" class="btn bg-red waves-effect animate__animated animate__flipInX"
+                                data-toggle="tooltip" data-placement="bottom"
+                                title="Descargar reporte de costos de herramientas de almacén.">
+                                <i class="material-icons">picture_as_pdf</i>
+                                <span>Costos</span>
+                            </button>
+                        </form>
+                    </div>
+                    <div class="col-xs-12 col-sm-1">
                         <form action="/excelInventario/" method="POST">{% csrf_token %}
                             <input type="hidden" name="activo" value="A">
                             <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
@@ -281,7 +292,7 @@ Herramientas | Custom System
                                 <td>
                                    
                                     <center>
-                                        <button type="submit" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#modalHerramientaBaja{{herramienta.id_herramienta}}">
+                                        <button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#modalHerramientaBaja{{herramienta.id_herramienta}}">
                                             <i class="material-icons">delete</i>
                                         </button>
                                     </center>
@@ -317,6 +328,7 @@ Herramientas | Custom System
                                 <th>Motivo baja</th>
                                 <th>Descripción de baja</th>
                                 <th>Fecha de baja</th>
+                                <th>Descontar de inventario?</th>
                             </tr>
                         </thead>
                         <tfoot>
@@ -332,6 +344,7 @@ Herramientas | Custom System
                                 <th>Motivo baja</th>
                                 <th>Descripción de baja</th>
                                 <th>Fecha de baja</th>
+                                <th>Descontar de inventario?</th>
                             </tr>
                         </tfoot>
                         <tbody>
@@ -362,12 +375,30 @@ Herramientas | Custom System
                                 {% endif %}
 
                                 {% if daño.motivo_baja == "D" %}
-                                <td><h4><span class="label bg-red">Daño</span></h4> </td>
+                                <td>
+                                    <div>
+                                        <h4><span class="label bg-amber">Daño</span></h4>
+                                    </div> 
+                                    
+                                </td>
                                 {% elif daño.motivo_baja == "E" %}
-                                <td><h4><span class="label bg-red">Extravío</span></h4> </td>
+                                <td><h4><span class="label bg-amber">Extravío</span></h4> </td>
                                 {% endif %}
                                 <td>{{daño.explicacion_baja}}</td>
                                 <td>{{daño.fecha_baja}}</td>
+                                <td>
+                                    <div>
+                                        <form action="/descontarDeInventario/" method="POST">{% csrf_token %}
+                                        <center>
+                                            <input type="hidden" name="idHerramientaADescontarInventario" value="{{daño.id_herramientaInactiva}}">
+                                            <button type="submit" class="btn btn-danger btn-sm waves-effect" data-toggle="tooltip" data-placement="bottom"
+                                            title="Al dar clic, ya no se contará esta herramienta en inventario.">
+                                                <i class="material-icons">clear</i>
+                                            </button>
+                                        </center>
+                                        </form>
+                                    </div>
+                                </td>
                                 
                             </tr>
                             {% endfor %}
@@ -605,6 +636,17 @@ Herramientas | Custom System
 </script>
 {% endif %}
 
+{% if herramientaDescontada %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Enhorabuena..!',
+        text: ' {{herramientaDescontada}}',
+        footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
 
 
 

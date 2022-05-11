@@ -201,6 +201,9 @@ urlpatterns = [
     path("devolucionParcial/", almacen.devolucionParcial),
     path("guardarDevolucionParcial/", almacen.guardarDevolucionParcial),
     path("verRequisicionesHerramientas/", almacen.verRequisicionesHerramientas),
+    path("entradaHerramientaPorRequi/", almacen.entradaHerramientaPorRequi),
+    path("descontarDeInventario/", almacen.descontarDeInventario),
+    path("pdfCostosAlmacén/", almacen.pdfCostosAlmacén),
     #soportes tecnicos
     path("verSoportes/",views.verSoportes),
     path("agregarSoporteEquipoComputo/",views.agregarSoporteEquipoComputo),

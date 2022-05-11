@@ -78,6 +78,8 @@
             <th>Imagen</th>
             <th>Descripción</th>
             <th>Existencia en almacén</th>
+            <th>Proveedor</th>
+            <th>ODC Evidence</th>
         </tr>
     </thead>
     <tbody>
@@ -88,9 +90,15 @@
             <td style="font-family: sans-serif;font-size:14px;">{{tipoHerramientaDañada}}</td>
             <td style="font-family: sans-serif;font-size:14px;">{{nombreHerramientaDañada}}</td>
             <td style="font-family: sans-serif;font-size:14px;">{{marcaHerramientaDañada}}</td>
+            {% if imagenHerramientaDañada == "Sin imagen" %}
+            <td style="font-family: sans-serif;font-size:14px;">Sin imagen</td>
+            {% else %}
             <td style="font-family: sans-serif;font-size:14px;"><center><img src="http://localhost:8000{{imagenHerramientaDañada.url}}" alt="herramienta" width="60"></center></td>
+            {% endif %}
             <td style="font-family: sans-serif;font-size:14px;">{{descripcionHerramientaDañada}}</td>
             <td style="font-family: sans-serif;font-size:14px;">{{restaCantidad}} unidades</td>
+            <td style="font-family: sans-serif;font-size:14px;">{{proveedor}}</td>
+            <td style="font-family: sans-serif;font-size:14px;">{{odcEvidence}}</td>
         
         </tr>
     

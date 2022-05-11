@@ -63,36 +63,7 @@ Herramientas | Custom System
             </div>
 
             <div class="body" id="divActivos">
-                <div class="row clear-fix">
-                    <div class="col-xs-12 col-sm-1">
-                        <form action="/excelInventario/" method="POST">{% csrf_token %}
-                            <input type="hidden" name="activo" value="A">
-                            <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
-                                data-toggle="tooltip" data-placement="bottom"
-                                title="Descargar formato inventario de herramientas de almacén.">
-                                <i class="material-icons">grid_on</i>
-                                <span>Inventario</span>
-                            </button>
-                        </form>
-                    </div>
-                    <div class="col-xs-12 col-sm-1">
-                        <form action="/excelInventarioHerramientas/" method="POST">{% csrf_token %}
-                            <input type="hidden" name="activo" value="A">
-                            <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
-                                data-toggle="tooltip" data-placement="bottom"
-                                title="Descargar formato para realizar inventario de herramientas de almacén.">
-                                <i class="material-icons">grid_on</i>
-                                <span>Cíclico</span>
-                            </button>
-                        </form>
-                    </div>
-                    <div class="col-xs-12 col-sm-4">
-                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarHerramientasALM/">Agregar
-                            Herramienta</a>
-                    </div>
-
-                </div>
-
+                
                 <div class="table-responsive">
 
                     <table class="table table-bordered  table-hover dataTable js-exportable">
@@ -100,7 +71,12 @@ Herramientas | Custom System
                             <tr style="background-color: #fad60e; color: black;">
                                 <th>ID Requi</th>
                                 <th>Herramienta Requerida</th>
+                                <th>Nombre Herramienta</th>
+                                <th>Imagen</th>
+                                <th>Proveedor</th>
+                                <th>ODC Evidence</th>
                                 <th>Cantidad Requerida</th>
+                                <th>Último costo unitario registrado</th>
                                 <th>Fecha Requisición</th>
                                 <th>Solicitante</th>
                                 <th>Préstamo</th>
@@ -112,7 +88,12 @@ Herramientas | Custom System
                             <tr>
                                 <th>ID Requi</th>
                                 <th>Herramienta Requerida</th>
+                                <th>Nombre Herramienta</th>
+                                <th>Imagen</th>
+                                <th>Proveedor</th>
+                                <th>ODC Evidence</th>
                                 <th>Cantidad Requerida</th>
+                                <th>Último costo unitario registrado</th>
                                 <th>Fecha Requisición</th>
                                 <th>Solicitante</th>
                                 <th>Préstamo</th>
@@ -121,144 +102,74 @@ Herramientas | Custom System
                             </tr>
                         </tfoot>
                         <tbody class="animate__animated animate__backInDown">
-                            {% for herramienta, costoTotal, dañadas, enPrestamo, costoDaño, prestamosHerramienta in listaHerramientas %}
+                            {% for requi, empleado, herramienta, prestamo, prestamoBool in listaPrestamosPendientes %}
                             <tr>
                                 <td>
                                     <div>
-                                        <h4><span class="label bg-black">{{herramienta.id_herramienta}}</span></h4>
+                                        <h4><span class="label bg-black">{{requi.id_requi}}</span></h4>
+                                    </div>
+                                </td>
+                                <td  style="white-space:nowrap!important;">
+                                    <div>
+                                        <h4>Id: <span class="label bg-black">{{herramienta.0}}</span></h4>
                                     </div>
                                     <div>
-                                        <h4><span class="label bg-teal">{{herramienta.codigo_herramienta}}</span></h4>
+                                        <h4>Código: <span class="label bg-blue">{{herramienta.2}}</span></h4>
+                                    </div>
+                                    <div>
+                                        <h4>SKU: <span class="label bg-light-blue">{{herramienta.3}}</span></h4>
                                     </div>
 
                                 </td>
-                                {% if herramienta.tipo_herramienta == "Herramienta" %}
-                                <td><div><i class="material-icons" style="font-size: 10px; display:inline;">build</i>{{herramienta.tipo_herramienta}}</div> </td>
-                                {% elif herramienta.tipo_herramienta == "Instrumento" %}
-                                <td><div><i class="material-icons" style="font-size: 10px; display:inline;">flash_auto</i>{{herramienta.tipo_herramienta}}</div> </td>
-                                {% endif %}
-                                <td>{{herramienta.nombre_herramienta}}</td>
-                                <td>{{herramienta.marca}}</td>
-                                <td>
-                                    <center>
-                                        <button type="button" class="btn bg-deep-purple waves-effect animate__animated animate__flipInX"
-                                    data-toggle="tooltip" data-placement="right"
-                                    title="{{herramienta.descripcion_herramienta}}">
-                                    <i class="material-icons">visibility</i>
-                                    </button>
-                                    </center>
-                                    
-                                </td>
-                                <td>{{herramienta.unidad}}</td>
-                                <td>{{herramienta.sku}}</td>
-                                <td style="white-space:nowrap!important;">
-                                    <div>
-                                        <p class="font-bold col-green">${{herramienta.costo}} MXN</p>
-                                    </div>
-                                
-                                </td>
-                                <td>
-                                    <center>
-                                    <div>
-                                        <h4><span class="label bg-indigo">{{herramienta.cantidad_existencia}} unidades</span></h4>
-                                    </div>
-                                    <div>
-                                        <h5>+</h5>
-                                    </div>
-                                    <div>
-                                        <h4><span class="label bg-indigo">{{enPrestamo}} en préstamo</span></h4>
-                                    </div>
-                                </center>
-                                </td>
-                                <td>
-                                    <center>
-                                    <div>
-                                        <h4><span class="label bg-cyan">{{herramienta.stock}} unidades</span></h4>
-                                    </div>
-                                    
-                                </center>
-                                </td>
-                                <td>
-                                    <div>
-                                        {% if dañadas == 0 %}
-                                        <h4><span class="label bg-grey">Sin unidades dañadas</span></h4>
-                                        {% elif dañadas != 0 %}
-                                        <h4><span class="label bg-red">{{dañadas}} unidades</span></h4>
-                                        <h6><span >Costo total daño:</span></h6>
-                                        <p class="font-bold col-red">${{costoDaño}} MXN</p>
-                                        {% endif %}
-                                    </div>
-                                </td>
-                                <td>
-                                    <div>
-                                        <h4><span class="label bg-green">${{costoTotal}} MXN</span></h4>
-                                    </div>
-                                </td>
-                                
-                                <td>
-                                    <center>
-                                        <img src="{{herramienta.imagen_herramienta.url}}" width="60%" alt="empleado">
-                                    </center>
-                                </td>
-                                
-                                {% if herramienta.estado_herramienta == "F" %}
-                                <td>
-                                    <h4><span class="label bg-green">Funcional</span></h4>
-                                    <div><label data-toggle="tooltip" data-placement="right"
-                                        title="{{herramienta.motivo_estado}}">Ver motivo</label></div>
-                                </td>
-                                {% elif herramienta.estado_herramienta == "N" %}
-                                <td>
-                                    <h4><span class="label bg-red">No funcional</span></h4>
-                                    <div><label data-toggle="tooltip" data-placement="right"
-                                        title="{{herramienta.motivo_estado}}">Ver motivo</label></div>
-                                </td>
-                                {% endif %}
-                                <td>{{herramienta.fecha_alta}}</td>
-
-                                {% if herramienta.proveedor == "Sin proveedor"%}
-                                <td>Sin proovedor</td>
+                                <td>{{herramienta.1}}</td>
+                                {% if herramienta.6 == "Sin imagen" %}
+                                <td>Sin imagen</td>
                                 {% else %}
-                                <td>{{herramienta.proveedor}}</td>
+                                <td><img src="{{herramienta.6.url}}" alt="imagenHerramienta" width="120" height="150"></td>
                                 {% endif %}
-                                
-
-                                {% if herramienta.orden_compra_evidence == "Sin orden de compra" %}
-                                
-                                {% else %}
-                                <td style="white-space:nowrap!important;"> <img src="{% static 'images/icons/logoevidence.ico' %}" alt="logoEvidence" width="15"> {{herramienta.orden_compra_evidence}}</td>
-                                {% endif %}
-                                
+                                <td  style="white-space:nowrap!important;">{{herramienta.4}}</td>
+                                <td style="white-space:nowrap!important;"> <img src="{% static 'images/icons/logoevidence.ico' %}" alt="logoEvidence" width="15"> {{herramienta.5}}</td>
+                                <td>{{requi.cantidad_requerida}} unidades</td>
+                                <td><p class="font-bold col-green">${{herramienta.10}} MXN.</p></td>
+                                <td >{{requi.fehca_requi}}</td>
                                 <td>
-                                    
-
-                                    {% for prestamo in prestamosHerramienta %}
                                     <div>
-                                        <form action="/firmarDevolucion/" method="POST">{% csrf_token %}
-                                            <input type="hidden" value="{{prestamo.0}}" name="idPrestamo">
-                                            <h4><span class="label bg-amber" data-toggle="tooltip" data-placement="left"
-                                            title="Ver préstamo">{{prestamo.0}} {{prestamo.1}} <button type="submit" class="btn bg-deep-orange btn-xs" >
-                                                Ver
-                                            </button></span>
-                                            </h4>
-                                            
-                                        </form>
+                                        <h4><span class="label bg-black">{{empleado.0}}</span></h4>
                                     </div>
-                                    {% endfor %}
+                                    <div>
+                                        <h4><span class="{{empleado.2}}">{{empleado.1}}</span></h4>
+                                    </div>
                                 </td>
+                                {% if prestamoBool %}
                                 <td>
-                                    
-                                    <center>
-                                        <button type="button" class="btn btn-warning waves-effect" data-toggle="modal" data-target="#modalHerramienta{{herramienta.id_herramienta}}">
-                                            <i class="material-icons">edit</i>
-                                        </button>
-                                    </center>
+                                    <div>
+                                        <h4><span class="label bg-grey">{{prestamo.0}}</span></h4>
+                                    </div>
+                                    <div>
+                                        <h4>Proyecto: <span class="label bg-grey">{{prestamo.1}}</span></h4>
+                                    </div>
                                 </td>
+                                {% else %}
+                                <td>
+                                    <div>
+                                        <h4><span class="label bg-red">Sin préstamo asociado</span></h4>
+                                    </div>
+                                    <div>
+                                        <h5><span class="font-bold col-red">Dado de baja por almacén</span></h5>
+                                    </div>
+                                </td>
+                                {% endif %}
+
+                                <td>{{requi.estatus_requi}}</td>
+
+
+
+                                
                                 <td>
                                    
                                     <center>
-                                        <button type="submit" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#modalHerramientaBaja{{herramienta.id_herramienta}}">
-                                            <i class="material-icons">delete</i>
+                                        <button type="submit" class="btn btn-success waves-effect" data-toggle="modal" data-target="#modalHerramientaEntrada{{herramienta.0}}">
+                                            <i class="material-icons">local_shipping</i>
                                         </button>
                                     </center>
                                 </td>
@@ -281,69 +192,114 @@ Herramientas | Custom System
 
                     <table class="table table-bordered table-striped table-hover dataTable js-exportable ">
                         <thead>
-                            <tr style="background-color: #E05D5D; color: whitesmoke;">
-                                <th>ID Daño</th>
-                                <th>ID Herramienta / código</th>
-                                <th>Tipo/código</th>
-                                <th>Nombre</th>
-                                <th>Marca</th>
-                                <th>Descripcion</th>
-                                <th>Cantidad Baja</th>
+                            <tr style="background-color: #35af45; color: whitesmoke;">
+                                <th>ID Requi</th>
+                                <th>Herramienta Requerida</th>
+                                <th>Nombre Herramienta</th>
+                                <th>Imagen</th>
+                                <th>Proveedor</th>
+                                <th>ODC Evidence</th>
+                                <th>Cantidad Entrada</th>
+                                <th>Último costo unitario registrado</th>
+                                <th>Fecha Requisición</th>
+                                <th>Fecha Entrada Almacén</th>
+                                <th>Solicitante</th>
                                 <th>Préstamo</th>
-                                <th>Motivo baja</th>
-                                <th>Descripción de baja</th>
-                                <th>Fecha de baja</th>
+                                <th>Estatus</th>
+                                <th>Dar entrada</th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
-                                <th>ID Daño</th>
-                                <th>ID Herramienta / código</th>
-                                <th>Tipo</th>
-                                <th>Nombre</th>
-                                <th>Marca</th>
-                                <th>Descripcion</th>
-                                <th>Cantidad Baja</th>
+                                <th>ID Requi</th>
+                                <th>Herramienta Requerida</th>
+                                <th>Nombre Herramienta</th>
+                                <th>Imagen</th>
+                                <th>Proveedor</th>
+                                <th>ODC Evidence</th>
+                                <th>Cantidad Entrada</th>
+                                <th>Último costo unitario registrado</th>
+                                <th>Fecha Requisición</th>
+                                <th>Fecha Entrada Almacén</th>
+                                <th>Solicitante</th>
                                 <th>Préstamo</th>
-                                <th>Motivo baja</th>
-                                <th>Descripción de baja</th>
-                                <th>Fecha de baja</th>
+                                <th>Estatus</th>
+                                <th>Dar entrada</th>
                             </tr>
                         </tfoot>
-                        <tbody>
-                            {% for daño, datoHerramienta in listaDañadas %}
+                        <tbody class="animate__animated animate__backInDown">
+                            {% for requi, empleado, herramienta, prestamo, prestamoBool in listaRequisSaldadas %}
                             <tr>
-                                <td>{{daño.id_herramientaInactiva}}</td>
                                 <td>
                                     <div>
-                                        <h4><span class="label bg-black">{{datoHerramienta.0}}</span></h4>
-                                    </div>
-                                    <div>
-                                        <h4><span class="label bg-teal">{{datoHerramienta.2}}</span></h4>
+                                        <h4><span class="label bg-black">{{requi.id_requi}}</span></h4>
                                     </div>
                                 </td>
-                                {% if datoHerramienta.1 == "Herramienta" %}
-                                <td><div><i class="material-icons" style="font-size: 10px; display:inline;">build</i>{{datoHerramienta.1}}</div> </td>
-                                {% elif datoHerramienta.1 == "Instrumento" %}
-                                <td><div><i class="material-icons" style="font-size: 10px; display:inline;">flash_auto</i>{{hdatoHerramienta.1}}</div> </td>
-                                {% endif %}
-                                <td>{{datoHerramienta.3}}</td>
-                                <td>{{datoHerramienta.4}}</td>
-                                <td>{{datoHerramienta.5}}</td>
-                                <td>1 unidad</td>
-                                {% if daño.id_prestamo == None %}
-                                <td><h4><span class="label bg-orange">Sin prestamo asociado</span></h4><h4><span class="label bg-orange">Dado de baja por almacén</span></h4></td>
+                                <td  style="white-space:nowrap!important;">
+                                    <div>
+                                        <h4>Id: <span class="label bg-black">{{herramienta.0}}</span></h4>
+                                    </div>
+                                    <div>
+                                        <h4>Código: <span class="label bg-blue">{{herramienta.2}}</span></h4>
+                                    </div>
+                                    <div>
+                                        <h4>SKU: <span class="label bg-light-blue">{{herramienta.3}}</span></h4>
+                                    </div>
+
+                                </td>
+                                <td>{{herramienta.1}}</td>
+                                {% if herramienta.6 == "Sin imagen" %}
+                                <td>Sin imagen</td>
                                 {% else %}
-                                <td><a href=""><h4><span class="label bg-light-green">Prestamo {{datoHerramienta.6}} - {{datoHerramienta.7}}</span></h4></a> </td>
+                                <td><img src="{{herramienta.6.url}}" alt="imagenHerramienta" width="120" height="150"></td>
+                                {% endif %}
+                                <td  style="white-space:nowrap!important;">{{herramienta.4}}</td>
+                                <td style="white-space:nowrap!important;"> <img src="{% static 'images/icons/logoevidence.ico' %}" alt="logoEvidence" width="15"> {{herramienta.5}}</td>
+                                <td>{{requi.cantidad_requerida}} unidades</td>
+                                <td><p class="font-bold col-green">${{herramienta.10}} MXN.</p></td>
+                                <td  style="white-space:nowrap!important;"><h4><span class="label bg-amber">{{requi.fehca_requi}}</span></h4></td>
+                                <td  style="white-space:nowrap!important;"><h4><span class="label bg-light-green">{{requi.fehca_requiEntrada}}</span></h4></td>
+                                <td>
+                                    <div>
+                                        <h4><span class="label bg-black">{{empleado.0}}</span></h4>
+                                    </div>
+                                    <div>
+                                        <h4><span class="{{empleado.2}}">{{empleado.1}}</span></h4>
+                                    </div>
+                                </td>
+                                {% if prestamoBool %}
+                                <td>
+                                    <div>
+                                        <h4><span class="label bg-grey">{{prestamo.0}}</span></h4>
+                                    </div>
+                                    <div>
+                                        <h4>Proyecto: <span class="label bg-grey">{{prestamo.1}}</span></h4>
+                                    </div>
+                                </td>
+                                {% else %}
+                                <td>
+                                    <div>
+                                        <h4><span class="label bg-red">Sin préstamo asociado</span></h4>
+                                    </div>
+                                    <div>
+                                        <h5><span class="font-bold col-red">Dado de baja por almacén</span></h5>
+                                    </div>
+                                </td>
                                 {% endif %}
 
-                                {% if daño.motivo_baja == "D" %}
-                                <td><h4><span class="label bg-red">Daño</span></h4> </td>
-                                {% elif daño.motivo_baja == "E" %}
-                                <td><h4><span class="label bg-red">Extravío</span></h4> </td>
-                                {% endif %}
-                                <td>{{daño.explicacion_baja}}</td>
-                                <td>{{daño.fecha_baja}}</td>
+                                <td style="white-space:nowrap!important;">Saldada <span class="font-bold col-green"><i class="material-icons">done_all</i></span></td>
+
+
+
+                                
+                                <td>
+                                   
+                                    <center>
+                                        <button type="submit" class="btn btn-success waves-effect" data-toggle="modal" data-target="#modalHerramientaEntrada{{herramienta.0}}">
+                                            <i class="material-icons">local_shipping</i>
+                                        </button>
+                                    </center>
+                                </td>
                                 
                             </tr>
                             {% endfor %}
@@ -354,54 +310,54 @@ Herramientas | Custom System
 
             </div>
 
-
         </div>
     </div>
 </div>
 
 
-{% for herramienta, prestamos in registrosHerramientasModal %}
+{% for requi, empleado, herramienta, prestamo, prestamoBool in listaPrestamosPendientesModalEntrada %}
 <!-- Default Size -->
-<div class="modal fade" id="modalHerramienta{{herramienta.id_herramienta}}" tabindex="-1" role="dialog">
+<div class="modal fade" id="modalHerramientaEntrada{{herramienta.0}}" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content" style="border-radius: 16px;">
             <div class="modal-header">
                 <center>
-                    <h1 style="color: green; font-family: 'Oswald', sans-serif;">EDITAR CANTIDADES (ENTRADA) <i
+                    <h1 style="color: green; font-family: 'Oswald', sans-serif;">ENTRADA EN ALMACÉN <i
                             class="material-icons" style="color:black; font-size:100%">get_app</i></h1>
                     <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
 
                 </center>
             </div>
             <div class="modal-body">
-                <form action="/actualizarCantidadesHerramientasAlmacen/" method="POST">{% csrf_token %}
+                <form action="/entradaHerramientaPorRequi/" method="POST">{% csrf_token %}
                     <div class="body table-responsive">
                         <table class="table">
                             <thead>
                                 <tr class="bg-teal">
                                     <th>ID - Código</th>
                                     <th>Nombre</th>
-                                    <th>Descripción</th>
                                     <th>Imagen</th>
                                     <th>Existencia Actual Funcional</th>
+                                    <th>Costo unitario</th>
                                     <th>Stock Necesario</th>
-                                    <th>Cantidad a agregar</th>
+                                    <th style="white-space:nowrap!important;">Cantidad solicitada a agregar</th>
+                                    <th>Proveedor</th>
+                                    <th>ODC Evidence</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td>
                                         <div>
-                                            <h4><span class="label bg-black" >{{herramienta.id_herramienta}}</span></h4>
+                                            <h4><span class="label bg-black" >{{herramienta.0}}</span></h4>
                                         </div>
                                         <div>
-                                            <h4><span class="label bg-teal">{{herramienta.codigo_herramienta}}</span></h4>
+                                            <h4><span class="label bg-teal">{{herramienta.2}}</span></h4>
                                         </div>
                                     </td>
-                                    <td style="color: black;">{{herramienta.nombre_herramienta}}</td>
-                                    <td style="color: black;">{{herramienta.descripcion_herramienta}}</td>
-                                    {% if herramienta.imagen_herramienta %}
-                                    <th> <img src="{{herramienta.imagen_herramienta.url}}" width="120" height="150" alt="lap">
+                                    <td style="color: black;">{{herramienta.1}}</td>
+                                    {% if herramienta.6 %}
+                                    <th> <img src="{{herramienta.6.url}}" width="120" height="150" alt="lap">
                                     </th>
                                     {% else %}
                                     <th style="color: black;">Sin imagen</th>
@@ -409,19 +365,22 @@ Herramientas | Custom System
                                     <td style="color: black;">
                                         <center>
                                             <div>
-                                                <h4><span class="label bg-black" >{{herramienta.cantidad_existencia}} unidades</span></h4>
+                                                <h4><span class="label bg-black" >{{herramienta.7}} unidades</span></h4>
                                             </div>
                                             <div>+</div>
                                             <div>
-                                                <h4><span class="label bg-black" >{{prestamos}} unidades en préstamo</span></h4>
+                                                <h4><span class="label bg-black" >{{herramienta.8}} unidades en préstamo</span></h4>
                                             </div>
                                         </center>
                                         
                                     </td>
-                                    <td style="color: crimson;">{{herramienta.stock}} unidades</td>
+                                    <td><p class="font-bold col-green">${{herramienta.10}} MXN.</p></td>
+                                    <td style="color: crimson;">{{herramienta.9}} unidades</td>
                                     <td> <input type="number" class="form-control date"
-                                        placeholder="Cantidad" maxlength="4" max="1000" min="1" step="1"
-                                         name="cantidadHerramientaActualizar" required></td>
+                                        placeholder="Cantidad" maxlength="4" max="{{requi.cantidad_requerida}}" min="1" step="1"
+                                         name="cantidadHerramientaEntrada" value="{{requi.cantidad_requerida}}" required></td>
+                                    <td style="color: blue;"><input type="text" maxlength="60" name="proveedorEntrada" value="{{herramienta.4}}" required></td>
+                                    <td style="white-space:nowrap!important;"> <img src="{% static 'images/icons/logoevidence.ico' %}" alt="logoEvidence" width="15"> <input type="text" maxlength="30" name="odcEntrada" value="{{herramienta.5}}" required></td>
                                 </tr>
 
 
@@ -432,11 +391,12 @@ Herramientas | Custom System
 
                     </div>
                     <center>
-                        <input type="hidden" value="{{herramienta.id_herramienta}}" name="idHerramientaActualizar">
+                        <input type="hidden" value="{{herramienta.0}}" name="idHerramientaActualizar">
+                        <input type="hidden" value="{{requi.id_requi}}" name="idRequi">
                         
                         <button type="submit" class="btn bg-green waves-effect">
                             <i class="material-icons">loop</i>
-                            <span>ACTUALIZAR CANTIDADES</span>
+                            <span>DAR ENTRADA AL SISTEMA</span>
                         </button>
                     </center>
                 </form>
@@ -447,7 +407,7 @@ Herramientas | Custom System
 
 {% endfor %}
 
-{% for herramientaBaja, cantidadPrestamo in registrosHerramientasModalBaja %}
+{% for herramientaBaja, cantidadPrestamo in listaPrestamosPendientesModalEntrada %}
 <!-- Default Size -->
 <div class="modal fade" id="modalHerramientaBaja{{herramientaBaja.id_herramienta}}" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
@@ -569,12 +529,12 @@ Herramientas | Custom System
 
 
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-{% if herramientaAct %}
+{% if herramientaEntrada %}
 <script type="text/javascript">
     swal({
         icon: 'success',
         title: 'Enhorabuena..!',
-        text: ' {{herramientaAct}}',
+        text: ' {{herramientaEntrada}}',
         footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
         width: '40%'
     });

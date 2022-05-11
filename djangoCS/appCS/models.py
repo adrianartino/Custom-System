@@ -395,6 +395,7 @@ class RequisicionCompraAlmacen (models.Model):
     id_prestamo = models.ForeignKey(PrestamosAlmacen, on_delete=models.CASCADE, null=True)
     cantidad_requerida = models.IntegerField()
     fehca_requi = models.DateField()
+    fehca_requiEntrada = models.DateField(null=True)
     estatus_requi = models.CharField(max_length=30)
 
     def __str__(self):
