@@ -135,6 +135,7 @@ Solicitud Herramientas | CS
                                     <th>ID- código</th>
                                     <th>Tipo</th>
                                     <th>Nombre</th>
+                                    <th>Categoría</th>
                                     <th>Marca</th>
                                     <th>Descripción</th>
                                     <th>Unidad medida</th>
@@ -149,6 +150,7 @@ Solicitud Herramientas | CS
                                     <th>ID- código</th>
                                     <th>Tipo</th>
                                     <th>Nombre</th>
+                                    <th>Categoría</th>
                                     <th>Marca</th>
                                     <th>Descripción</th>
                                     <th>Unidad medida</th>
@@ -176,6 +178,7 @@ Solicitud Herramientas | CS
                                     <td><div><i class="material-icons" style="font-size: 10px; display:inline;">flash_auto</i>{{herramienta.tipo_herramienta}}</div> </td>
                                     {% endif %}
                                     <td>{{herramienta.nombre_herramienta}}</td>
+                                    <td>{{herramienta.nombre_corto}}</td>
                                     <td>{{herramienta.marca}}</td>
                                     <td>{{herramienta.descripcion_herramienta}}</td>
                                     <td>{{herramienta.unidad}}</td>
@@ -257,6 +260,7 @@ Solicitud Herramientas | CS
                                             <th>ID- código</th>
                                             <th>Tipo</th>
                                             <th>Nombre</th>
+                                            <th>Categoría</th>
                                             <th>Marca</th>
                                             <th>Imagen</th>
                                             <th>Descripción</th>
@@ -271,6 +275,7 @@ Solicitud Herramientas | CS
                                             <th>ID- código</th>
                                             <th>Tipo</th>
                                             <th>Nombre</th>
+                                            <th>Categoría</th>
                                             <th>Marca</th>
                                             <th>Imagen</th>
                                             <th>Descripción</th>
@@ -413,6 +418,7 @@ Solicitud Herramientas | CS
                                             </td>\
                                             <td>'+herramienta['tipo_herramienta']+'</td>\
                                             <td>'+herramienta['nombre_herramienta']+'</td>\
+                                            <td>'+herramienta['nombre_corto']+'</td>\
                                             <td>'+herramienta['marca']+'</td>\
                                             <td><center><img src="{{herramienta.imagen_herramienta.url}}" width="60%" alt="empleado"></center></td>\
                                             <td>'+herramienta['descripcion_herramienta']+'</td>\

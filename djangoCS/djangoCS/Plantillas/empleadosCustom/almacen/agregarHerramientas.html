@@ -43,7 +43,6 @@ Agregar Herramientas | CS
 <!-- Jquery Spinner Plugin Js -->
 <script src={% static 'panel/plugins/js/spinner.js' %}></script>
 
-
 {% endblock %}
 
 {% block contenido %}
@@ -64,7 +63,7 @@ Agregar Herramientas | CS
             <div class="body">
                 <form id="form_validation" action="/agregarHerramientasALM/" enctype="multipart/form-data" method="POST">{% csrf_token %}
                     <div class="row clearfix">
-                        <div class="col-md-7">
+                        <div class="col-md-8">
                             <div class="row clearfix">
                                 <div class="col-md-6">
                                     <label for="email_address"><span style="color: #078F68;">* </span>Tipo:</label>
@@ -87,28 +86,39 @@ Agregar Herramientas | CS
                                             <i class="material-icons">build</i>
                                         </span>
                                         <div class="form-line">
-                                            <input onkeypress='return soloLetras(event)' type="text" class="form-control date"
-                                                placeholder="Ingresar nombre" maxlength="50"
-                                                title="No se permiten caracteres especiales." name="nombreHerramienta" required>
+                                            <input  type="text" class="form-control date"
+                                                placeholder="Ingresar nombre" maxlength="50" 
+                                                title="No se permiten caracteres especiales." name="nombreHerramienta" required onkeypress="return alpha(event)">
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="row clearfix">
-                                <div class="col-md-6">
+                                <div class="col-md-3">
                                     <label for="password"><span style="color: #078F68;">* </span>Marca:</label>
                                     <div class="input-group">
                                         <span class="input-group-addon">
                                             <i class="material-icons">copyright</i>
                                         </span>
                                         <div class="form-line">
-                                            <input onkeypress='return soloLetras(event)' type="text" class="form-control date"
+                                            <input type="text" class="form-control date"
                                                 placeholder="Ingresar marca" maxlength="50"
-                                                title="No se permiten caracteres especiales." name="marcaHerramienta" required>
+                                                title="No se permiten caracteres especiales." name="marcaHerramienta" required onkeypress="return alpha(event)">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
+                                    <label for="password"><span style="color: #078F68;">* </span>Nombre Corto:</label>
+                                    <select class="form-control show-tick" data-live-search="true" name="nombreCorto">
+                                        <option value="Martillo">Martillo</option>
+                                        <option value="Multímetro">Multímetro</option>
+                                        <option value="Llave Perica">Llave Perica</option>
+                                        <option value="Llave Inglesa">Llave Inglesa</option>
+                                        <option value="Llave Ellen">Llave Ellen</option>
+                                        <option value="Probador de cable">Probador de cable</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
                                     <label for="email_address"><span style="color: #078F68;">* </span>Unidad de medida:</label>
         
                                     <div class="input-group">
@@ -124,12 +134,12 @@ Agregar Herramientas | CS
                             </div>
                         </div>
                         
-                        <div class="col-md-5">
+                        <div class="col-md-4">
                             <label for="password"><span style="color: #078F68;">* </span>Descripción:</label>
                             <div class="form-group">
                                 <div class="form-line">
                                     <textarea style="border: 1px;" name="descripcion" cols="30" rows="6"
-                                            maxlength="255" class="form-control no-resize" required></textarea>
+                                            maxlength="255" class="form-control no-resize" required onkeypress="return alpha(event)"></textarea>
 
                                 </div>
                             </div>
@@ -139,7 +149,7 @@ Agregar Herramientas | CS
 
                     <div class="row clearfix">
 
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label for="email_address"><span style="color: #078F68;">* </span>Imagen de
                                 herramienta/instrumento:</label>
                             <div class="input-group">
@@ -151,6 +161,19 @@ Agregar Herramientas | CS
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-2">
+                            <label for="password"><span style="color: #078F68;">* </span>Código interno <span style="font-size: 12px;">- Ultimo "{{ultimoCodigo}}"</span> :</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">straighten</i>
+                                </span>
+                                <div class="form-line">
+                                    <input  type="text" class="form-control date"
+                                        placeholder="Ingresar Código" maxlength="50" 
+                                        title="No se permiten caracteres especiales." name="codigoHerramienta" onkeypress="return alpha(event)">
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-md-3">
                             <label for="password"><span style="color: #078F68;">* </span>SKU/Número externo:</label>
                             <div class="input-group">
@@ -158,13 +181,13 @@ Agregar Herramientas | CS
                                     <i class="material-icons">code</i>
                                 </span>
                                 <div class="form-line">
-                                    <input onkeypress='return soloLetras(event)' type="text" class="form-control date"
+                                    <input type="text" class="form-control date"
                                         placeholder="Ingresar SKU" maxlength="50"
-                                        title="No se permiten caracteres especiales." name="skuHerramienta" required>
+                                        title="No se permiten caracteres especiales." name="skuHerramienta" required >
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <label for="password"><span style="color: #078F68;">* </span>Cantidad en existencia:</label>
                             <div class="input-group">
                                 <span class="input-group-addon">
@@ -206,9 +229,9 @@ Agregar Herramientas | CS
                                     <i class="material-icons">local_shipping</i>
                                 </span>
                                 <div class="form-line">
-                                    <input onkeypress='return soloLetras(event)' type="text" class="form-control date"
+                                    <input type="text" class="form-control date"
                                         placeholder="Ingresar Proveedor" maxlength="30"
-                                        title="No se permiten caracteres especiales." name="proveedorHerramienta" required>
+                                        title="No se permiten caracteres especiales." name="proveedorHerramienta" required >
                                 </div>
                                 
                             </div>
@@ -222,7 +245,7 @@ Agregar Herramientas | CS
                                 <div class="form-line">
                                     <input onkeypress='return soloLetras(event)' type="text" class="form-control date"
                                         placeholder="Ingresar Folio Orden de compra" maxlength="30"
-                                        title="No se permiten caracteres especiales." name="odcHerramienta" required>
+                                        title="No se permiten caracteres especiales." name="odcHerramienta" required >
                                 </div>
                                 
                             </div>
@@ -279,6 +302,12 @@ Agregar Herramientas | CS
             div1.style.display = "block";
         }
 
+    }
+
+    function alpha(e) {
+        var k;
+        document.all ? k = e.keyCode : k = e.which;
+        return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32 || (k >= 48 && k <= 57));
     }
 </script>
 

@@ -19,7 +19,7 @@ from django.views.generic import ListView
 import json
 
 #Importación de modelos
-from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Preguntas, Encuestas, Respuestas, EncuestaEmpleadoResuelta, Mouses, Teclados, Monitores, HerramientasAlmacen, InstrumentosAlmacen, HerramientasAlmacenInactivas, PrestamosAlmacen, RequisicionCompraAlmacen
+from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Preguntas, Encuestas, Respuestas, EncuestaEmpleadoResuelta, Mouses, Teclados, Monitores, HerramientasAlmacen, InstrumentosAlmacen, HerramientasAlmacenInactivas, PrestamosAlmacen, RequisicionCompraAlmacen, altasAlmacen, bajasAlmacen
 
 #Librería para manejar archivos en Python
 from django.core.files.base import ContentFile
@@ -791,6 +791,40 @@ def verHerramientasALM(request):
             datosHerramientasDañadas.append([id_herramienta, tipo, codigo, nombre, marca, descripcion, id_prestamo, nombreEmpleadoResponsable])
         
         listaDañadas = zip(registrosHerramientasDañadas, datosHerramientasDañadas)    
+        
+        #Herramientas dañadas fuera del inventario
+        registrosHerramientasDañadasFuera = HerramientasAlmacenInactivas.objects.filter(enInventario = "No")
+        datosHerramientasDañadasFuera = []
+        for herramientaDañadaFuera in registrosHerramientasDañadasFuera:
+            id_herramienta = herramientaDañadaFuera.id_herramienta_id
+            id_prestamo = herramientaDañadaFuera.id_prestamo
+            #consulta a herramienta
+            datosHerramienta = HerramientasAlmacen.objects.filter(id_herramienta = id_herramienta)
+            
+            for herramienta in datosHerramienta:
+            
+                tipo = herramienta.tipo_herramienta
+                codigo = herramienta.codigo_herramienta
+                nombre = herramienta.nombre_herramienta
+                marca = herramienta.marca
+                descripcion = herramienta.descripcion_herramienta
+                
+                if id_prestamo == None:
+                    id_prestamo = "Sin prestamo"
+                    nombreEmpleadoResponsable = "Dado de baja por almacén"
+                else:
+                    consultaPrestamo = PrestamosAlmacen.objects.filter(id_prestamo = id_prestamo)
+                    for dato in consultaPrestamo:
+                        idEmpleadoResponsable = dato.id_empleado_solicitante_id
+                            
+                    consultaEmpleado = Empleados.objects.filter(id_empleado = idEmpleadoResponsable)
+                    for datoEmpleado in consultaEmpleado:
+                        nombreEmpleadoResponsable = datoEmpleado.nombre
+                    
+            
+            datosHerramientasDañadasFuera.append([id_herramienta, tipo, codigo, nombre, marca, descripcion, id_prestamo, nombreEmpleadoResponsable])
+        
+        listaDañadasFuera = zip(registrosHerramientasDañadasFuera, datosHerramientasDañadasFuera)  
     
         #Costos de herramientas
         costoTotalHerramienta = []
@@ -882,16 +916,16 @@ def verHerramientasALM(request):
         if "herramientaActualizada" in request.session:
             herramientaAct = request.session['herramientaActualizada']
             del request.session['herramientaActualizada']
-            return render(request, "empleadosCustom/almacen/verHerramientas.html", {"solicitantePrestamo":solicitantePrestamo,"estaEnAlmacen":estaEnAlmacen,"estaEnVerHerramientas":estaEnVerHerramientas,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "registrosHerramientas":registrosHerramientas, "registrosHerramientasModal":registrosHerramientasModal, "registrosHerramientasModalBaja":registrosHerramientasModalBaja, "listaDañadas":listaDañadas, "herramientaAct":herramientaAct, "listaHerramientas":listaHerramientas, "costoTotalTotal":costoTotalTotal})
+            return render(request, "empleadosCustom/almacen/verHerramientas.html", {"solicitantePrestamo":solicitantePrestamo,"estaEnAlmacen":estaEnAlmacen,"estaEnVerHerramientas":estaEnVerHerramientas,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "registrosHerramientas":registrosHerramientas, "registrosHerramientasModal":registrosHerramientasModal, "registrosHerramientasModalBaja":registrosHerramientasModalBaja, "listaDañadas":listaDañadas,"listaDañadasFuera":listaDañadasFuera, "herramientaAct":herramientaAct, "listaHerramientas":listaHerramientas, "costoTotalTotal":costoTotalTotal})
             
         if "herramientaDescontada" in request.session:
             herramientaDescontada = request.session['herramientaDescontada']
             del request.session['herramientaDescontada']
-            return render(request, "empleadosCustom/almacen/verHerramientas.html", {"solicitantePrestamo":solicitantePrestamo,"estaEnAlmacen":estaEnAlmacen,"estaEnVerHerramientas":estaEnVerHerramientas,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "registrosHerramientas":registrosHerramientas, "registrosHerramientasModal":registrosHerramientasModal, "registrosHerramientasModalBaja":registrosHerramientasModalBaja, "listaDañadas":listaDañadas, "herramientaDescontada":herramientaDescontada, "listaHerramientas":listaHerramientas, "costoTotalTotal":costoTotalTotal})
+            return render(request, "empleadosCustom/almacen/verHerramientas.html", {"solicitantePrestamo":solicitantePrestamo,"estaEnAlmacen":estaEnAlmacen,"estaEnVerHerramientas":estaEnVerHerramientas,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "registrosHerramientas":registrosHerramientas, "registrosHerramientasModal":registrosHerramientasModal, "registrosHerramientasModalBaja":registrosHerramientasModalBaja, "listaDañadas":listaDañadas,"listaDañadasFuera":listaDañadasFuera, "herramientaDescontada":herramientaDescontada, "listaHerramientas":listaHerramientas, "costoTotalTotal":costoTotalTotal})
             
         
 
-        return render(request, "empleadosCustom/almacen/verHerramientas.html", {"solicitantePrestamo":solicitantePrestamo,"estaEnAlmacen":estaEnAlmacen,"estaEnVerHerramientas":estaEnVerHerramientas,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "registrosHerramientas":registrosHerramientas, "registrosHerramientasModalBaja":registrosHerramientasModalBaja, "registrosHerramientasModal":registrosHerramientasModal, "listaDañadas":listaDañadas, "listaHerramientas":listaHerramientas, "costoTotalTotal":costoTotalTotal})
+        return render(request, "empleadosCustom/almacen/verHerramientas.html", {"solicitantePrestamo":solicitantePrestamo,"estaEnAlmacen":estaEnAlmacen,"estaEnVerHerramientas":estaEnVerHerramientas,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "registrosHerramientas":registrosHerramientas, "registrosHerramientasModalBaja":registrosHerramientasModalBaja, "registrosHerramientasModal":registrosHerramientasModal, "listaDañadas":listaDañadas,"listaDañadasFuera":listaDañadasFuera, "listaHerramientas":listaHerramientas, "costoTotalTotal":costoTotalTotal})
     #Si le da al inicio y no hay una sesión iniciada..
     else:
         return redirect('/login/') #redirecciona a url de inicio
@@ -916,6 +950,14 @@ def agregarHerramientasALM(request):
         foto = fotoAdmin(request)
         nombreCompleto = nombreini + " " + apellidosini #Blanca Yesenia Gaeta Talamantes
 
+        ultimoCodigo = ""
+        consultaDeHerramientas = HerramientasAlmacen.objects.all()
+        
+        if consultaDeHerramientas:
+            for herramienta in consultaDeHerramientas:
+                ultimoCodigo = herramienta.codigo_herramienta
+            
+        
 
         if request.method == "POST":
             tipoHerramienta = request.POST['tipoHerramienta']
@@ -930,6 +972,8 @@ def agregarHerramientasALM(request):
             
             proveedorHerramienta = request.POST['proveedorHerramienta']
             odcHerramienta = request.POST['odcHerramienta']
+            codigoHerramienta = request.POST['codigoHerramienta']
+            nombre_corto = request.POST['nombreCorto']
             
             if proveedorHerramienta == "":
                 proveedorHerramienta = "Sin proveedor"
@@ -943,22 +987,34 @@ def agregarHerramientasALM(request):
             consultaHerramientas = HerramientasAlmacen.objects.all()
                 
             #Si hay, sumar codigo
-            if consultaHerramientas:
-                for herramienta in consultaHerramientas:
-                    codigo = herramienta.codigo_herramienta
+            if codigoHerramienta == "":
+                if consultaHerramientas:
+                    haguardado = False
+                    for herramienta in consultaHerramientas:
+                        if "HA" in herramienta.codigo_herramienta:
+                            haguardado = True
+                            codigo = herramienta.codigo_herramienta
+                        else:
+                            haguardado = False
                     
-                    #el ultimo código
-                primerDigito = codigo[2]
-                segundoDigito = codigo[3]
-                tercerDigito = codigo[4]
-                cuartoDigito = codigo[5]
-                    
-                numero = primerDigito+segundoDigito+tercerDigito+cuartoDigito
-                intNumero = int(numero)
-                codigoInt = intNumero + 1
-                codigo = "HA"+str(codigoInt)
+                    if haguardado:
+                        
+                        #el ultimo código
+                        primerDigito = codigo[2]
+                        segundoDigito = codigo[3]
+                        tercerDigito = codigo[4]
+                        cuartoDigito = codigo[5]
+                            
+                        numero = primerDigito+segundoDigito+tercerDigito+cuartoDigito
+                        intNumero = int(numero)
+                        codigoInt = intNumero + 1
+                        codigo = "HA"+str(codigoInt)
+                    else:
+                        codigo = "HA1000"
+                else:
+                    codigo = "HA1000"
             else:
-                codigo = "HA1000"
+                codigo = codigoHerramienta
                 
                 # Registro de herramienta
             fechaAlta =  datetime.now()
@@ -967,6 +1023,7 @@ def agregarHerramientasALM(request):
                 registroHerramienta = HerramientasAlmacen(codigo_herramienta = codigo,
                                                           tipo_herramienta = tipoHerramienta,
                                                           nombre_herramienta = nombreHerramienta,
+                                                          nombre_corto = nombre_corto,
                                                           descripcion_herramienta = descripcion,
                                                           marca = marcaHerramienta,
                                                           unidad = unidadMedida,
@@ -984,6 +1041,7 @@ def agregarHerramientasALM(request):
                 registroHerramienta = HerramientasAlmacen(codigo_herramienta = codigo,
                                                           tipo_herramienta = tipoHerramienta,
                                                           nombre_herramienta = nombreHerramienta,
+                                                          nombre_corto = nombre_corto,
                                                           descripcion_herramienta = descripcion,
                                                           marca = marcaHerramienta,
                                                           unidad = unidadMedida,
@@ -1001,7 +1059,7 @@ def agregarHerramientasALM(request):
             if registroHerramienta:
                 herramientaGuardada = "La herramienta " + nombreHerramienta + " ha sido guardada satisfactoriamente!"
                 return render(request, "empleadosCustom/almacen/agregarHerramientas.html", {"estaEnAlmacen":estaEnAlmacen,"estaEnAgregarHerramientas":estaEnAgregarHerramientas,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "herramientaGuardada":herramientaGuardada})
-        return render(request, "empleadosCustom/almacen/agregarHerramientas.html", {"solicitantePrestamo":solicitantePrestamo,"estaEnAlmacen":estaEnAlmacen,"estaEnAgregarHerramientas":estaEnAgregarHerramientas,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo})
+        return render(request, "empleadosCustom/almacen/agregarHerramientas.html", {"solicitantePrestamo":solicitantePrestamo,"estaEnAlmacen":estaEnAlmacen,"estaEnAgregarHerramientas":estaEnAgregarHerramientas,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "ultimoCodigo":ultimoCodigo})
     #Si le da al inicio y no hay una sesión iniciada..
     else:
         return redirect('/login/') #redirecciona a url de inicio
@@ -1446,27 +1504,115 @@ def actualizarCantidadesHerramientasAlmacen(request):
         if request.method == "POST":
             idHerramientaActualizar = request.POST['idHerramientaActualizar']
             cantidadHerramientaActualizar = request.POST['cantidadHerramientaActualizar']
+            cantidadHerramientaActualizarStock = request.POST['cantidadHerramientaActualizarStock']
+            codigoHerramientaActualizar = request.POST['codigoHerramientaActualizar']
             intCantidadHerramientaActualizar = int(cantidadHerramientaActualizar)
+            intStockActualizado = int(cantidadHerramientaActualizarStock)
             
-            consultaHerramienta = HerramientasAlmacen.objects.filter(id_herramienta = idHerramientaActualizar)
+            fachaSolicitud = datetime.now()
             
-            for dato in consultaHerramienta:
-                cantidadExistenteActual = dato.cantidad_existencia
-                nombreHerramienta = dato.nombre_herramienta
-                stockActual = dato.stock
-                
-            intCantidadExistenciaActual = int(cantidadExistenteActual)
+            odcActualizada = request.POST['odcActualizada']
+            proveedorHerramientaActualizada = request.POST['proveedorHerramientaActualizada']
             
-            sumaCantidad = intCantidadExistenciaActual + intCantidadHerramientaActualizar
-            
-            if sumaCantidad > stockActual:
-                stockActual = sumaCantidad
+        
             
             #Actualizar cantidad
-            actualizacion = HerramientasAlmacen.objects.filter(id_herramienta = idHerramientaActualizar).update(cantidad_existencia = sumaCantidad, stock = stockActual)
+            solicitudActualizacion = altasAlmacen(id_herramienta = HerramientasAlmacen.objects.get(id_herramienta = idHerramientaActualizar),
+                                                  cantidad_agregar = intCantidadHerramientaActualizar,
+                                                  stockActualizado = intStockActualizado,
+                                                  codigoActualizado = codigoHerramientaActualizar,
+                                                  fecha_solicitud_alta = fachaSolicitud,
+                                                  orden_compra_evidence_act = odcActualizada,
+                                                  proveedor_alta = proveedorHerramientaActualizada,
+                                                  estatus_alta = "pendiente")
+            solicitudActualizacion.save()
             
-            if actualizacion:
-                request.session['herramientaActualizada'] = "La herramienta " + nombreHerramienta + " ha sido actualizada satisfactoriamente!"
+            if solicitudActualizacion:
+                
+                #Mandar correo a dani..
+                asunto = "CS | Nueva solicitud de actualización de herramienta."
+                plantilla = "empleadosCustom/almacen/correos/correoSolicitudAlta.html"
+                
+                consultaHerramienta = HerramientasAlmacen.objects.filter(id_herramienta = idHerramientaActualizar)
+                
+                
+                existenciaBool = False
+                stockBool = False
+                codigoBool = False
+                odcBool = False
+                proveedorBool = False
+                
+                mensajeExistencia = ""
+                mensajeStock = ""
+                mensajeCodigo = ""
+                mensajeODC = ""
+                mensajeProveedor = ""
+                
+                ultimaSolicitud = 0
+                consultaSolicitudes = altasAlmacen.objects.all()
+                for solicitudes in consultaSolicitudes:
+                    ultimaSolicitud = solicitudes.id_alta
+               
+                
+                
+                for datoHerramienta in consultaHerramienta:
+                    existenciaActual = datoHerramienta.cantidad_existencia
+                    stockActual = datoHerramienta.stock
+                    codigoActual = datoHerramienta.codigo_herramienta
+                    odcActual = datoHerramienta.orden_compra_evidence
+                    proveedorActual = datoHerramienta.proveedor
+                    
+                if intCantidadHerramientaActualizar == 0:
+                    existenciaBool = False
+                    mensajeExistencia = "No se actualizarán cantidades en existencia."
+                else:
+                    existenciaBool = True
+                    suma = existenciaActual+intCantidadHerramientaActualizar
+                    mensajeExistencia = "Se solicita actualizar las cantidades de "+str(existenciaActual)+ " a "+str(suma) + " unidades. (Se agregarán "+str(intCantidadHerramientaActualizar)+" unidades)"
+            
+                if intStockActualizado == stockActual:
+                    stockBool = False
+                    mensajeStock  ="No se actualizará la cantidad en Stock."
+                else:
+                    stockBool = True
+                    mensajeStock = "Se solicita actualizar el stock de "+str(stockActual) + " a "+str(intStockActualizado) + " unidades."
+                    
+                if codigoHerramientaActualizar == codigoActual:
+                    codigoBool = False
+                    mensajeCodigo = "No se actualizará el código de la herramienta."
+                else:
+                    codigoBool = True
+                    mensajeCodigo = "Se actualizará el código de la herramienta de "+str(codigoActual)+ " a "+ str(codigoHerramientaActualizar)
+                    
+                if odcActualizada == odcActual:
+                    odcBool = False
+                    mensajeODC = "No se actualizará la ODC ligada en evidence."
+                else:
+                    odcBool = True
+                    mensajeODC = "Se actualizará la última ODC en Evidence de esta herramienta: "+str(odcActualizada)
+                    
+                if proveedorHerramientaActualizada == proveedorActual:
+                    proveedorBool = False
+                    mensajeProveedor = "No se actualizará el proveedor de esta herramienta."
+                else:
+                    proveedorBool = True
+                    mensajeProveedor = "Se actualizó al proveedor: "+str(proveedorHerramientaActualizada)
+                
+                
+                html_mensaje = render_to_string(plantilla, {"ultimaSolicitud":ultimaSolicitud,"fecha_solicitud_actualizacion":fachaSolicitud,
+                                                            "consultaHerramienta":consultaHerramienta,
+                                                            "existenciaBool":existenciaBool, "mensajeExistencia":mensajeExistencia,
+                                                            "stockBool":stockBool,"mensajeStock":mensajeStock,
+                                                            "codigoBool":codigoBool, "mensajeCodigo":mensajeCodigo,
+                                                            "odcBool":odcBool,"mensajeODC":mensajeODC,
+                                                            "proveedorBool":proveedorBool, "mensajeProveedor":mensajeProveedor})
+                email_remitente = settings.EMAIL_HOST_USER
+                email_destino = ['sistemas@customco.com.mx']
+                mensaje = EmailMessage(asunto, html_mensaje, email_remitente, email_destino)
+                mensaje.content_subtype = 'html'
+                mensaje.send()
+                
+                request.session['herramientaActualizada'] = "Se ha solicitado la actualización! Correo electrónico mandado a Jefe de Logistica y compras."
                 
                 return redirect('/verHerramientasALM/')
     #Si le da al inicio y no hay una sesión iniciada..
@@ -1649,7 +1795,7 @@ def excelInventario(request):
     estilo_fuente = xlwt.XFStyle()
     estilo_fuente.font.bold = True
     
-    columnas = ['Id Herramienta','Código Herramienta', 'Nombre herramienta', 'Descripción', 'Marca', 'Unidad','Tipo', 'SKU','Fecha de alta en CS','Cantidad en préstamos','Stock','Cantidad en existencia','Cantidad Dañadas','Total Cantidades','Costo unitario','Cantidad Extraviadas','Costo Total', 'Costo Total Daño', 'Costo Total Extravío', 'Costo Pérdida', 'Costo Real total', 'Proveedor', 'ODC Evidence ligada' ]
+    columnas = ['Id Herramienta','Código Herramienta', 'Nombre herramienta', 'Descripción', 'Marca', 'Unidad','Tipo','Categoria/Nombre corto', 'SKU','Fecha de alta en CS','Cantidad en préstamos','Cantidad en existencia','Cantidad Dañadas en inventario','Total Cantidades','Stock','Costo unitario','Costo Total Activo','Costo Total Inventario físico','Cantidad Extraviadas','Cantidad Dañadas Fuera del inventario', 'Costo Pérdida', 'Costo Real total (Costo total Activo - Costo Total pérdida) ', 'Proveedor', 'ODC Evidence ligada' ]
     for campo in range(len(columnas)):
         hoja.write(numero_fila, campo, columnas[campo], estilo_fuente)
         
@@ -1660,6 +1806,7 @@ def excelInventario(request):
         idHerramienta = herramienta.id_herramienta
         codigoHerramienta = herramienta.codigo_herramienta,
         nombreHerramienta = herramienta.nombre_herramienta
+        nombreCorto = herramienta.nombre_corto
         descripcionHerramienta = herramienta.descripcion_herramienta,
         marca = herramienta.marca
         unidad = herramienta.unidad
@@ -1690,9 +1837,9 @@ def excelInventario(request):
                 if idH == idHerramienta:
                     contadorHerramientasEnPrestamo = contadorHerramientasEnPrestamo + can
         
-        #cantidad dañadas
+        #cantidad dañadas en inventario
         cantidadHerramientasDañadas = 0
-        consultaHerramientasDañadas = HerramientasAlmacenInactivas.objects.filter(id_herramienta_id__id_herramienta = idHerramienta, motivo_baja="D")
+        consultaHerramientasDañadas = HerramientasAlmacenInactivas.objects.filter(id_herramienta_id__id_herramienta = idHerramienta, motivo_baja="D", enInventario="Si")
         
         for herramientaDañada in consultaHerramientasDañadas:
             cantidadHerramientasDañadas = cantidadHerramientasDañadas + 1
@@ -1707,22 +1854,38 @@ def excelInventario(request):
         for herramientaExtraviada in consultaHerramientasExtraviadas:
             cantidadHerramientasExtraviadas = cantidadHerramientasExtraviadas + 1
             
+         #cantidad dañadas en inventario
+        cantidadHerramientasDañadasNoInventariadas = 0
+        consultaHerramientasDañadasNoInventariadas = HerramientasAlmacenInactivas.objects.filter(id_herramienta_id__id_herramienta = idHerramienta, motivo_baja="D", enInventario="No")
+        
+        for herramientaDañadaNoInventariada in consultaHerramientasDañadasNoInventariadas:
+            cantidadHerramientasDañadasNoInventariadas = cantidadHerramientasDañadasNoInventariadas + 1
+            
         #costo total
         #Costo de total de herramientas en existencia, más herramientas en prestamo, mas dañadas
         
         sumaHerramientas = existencias + contadorHerramientasEnPrestamo + cantidadHerramientasDañadas
         costoTotal = float(sumaHerramientas) * costo_unitario
         
+        costoTotalDaño = cantidadHerramientasDañadas
+        
         #costo total daño
         costoTotalDaño = float(cantidadHerramientasDañadas) * costo_unitario
         #costo total extravio
         costoTotalExtravio = float(cantidadHerramientasExtraviadas) * costo_unitario
-        #costo perdida
-        costoTotalPerdida = costoTotalDaño + costoTotalExtravio
-        #costo real total
-        costoRealTotal = costoTotal - costoTotalPerdida
         
-        arrayHerramientas.append([idHerramienta, codigoHerramienta, nombreHerramienta, descripcionHerramienta, marca, unidad, tipo, sku, fecha_alta,contadorHerramientasEnPrestamo, stock, existencias,cantidadHerramientasDañadas, totalCantidades,costo_unitario, cantidadHerramientasExtraviadas, costoTotal, costoTotalDaño, costoTotalExtravio, costoTotalPerdida, costoRealTotal, proveedor, ordenCompra ])
+        costoTotalDañoNoInventariado = float(cantidadHerramientasDañadasNoInventariadas)* costo_unitario
+        #costo perdida
+        costoTotalPerdida = costoTotalDaño + costoTotalExtravio + costoTotalDañoNoInventariado
+       
+        
+        sumaActivo = existencias + contadorHerramientasEnPrestamo
+        costoTotalActivo = float(sumaActivo) * costo_unitario
+         #costo real total
+        costoRealTotal = costoTotalActivo - costoTotalPerdida
+        
+        
+        arrayHerramientas.append([idHerramienta, codigoHerramienta, nombreHerramienta, descripcionHerramienta, marca, unidad, tipo,nombreCorto, sku, fecha_alta,contadorHerramientasEnPrestamo, existencias,cantidadHerramientasDañadas, totalCantidades,stock,costo_unitario,costoTotalActivo,costoTotal, cantidadHerramientasExtraviadas,cantidadHerramientasDañadasNoInventariadas, costoTotalPerdida, costoRealTotal, proveedor, ordenCompra ])
         
         
             
@@ -1753,7 +1916,7 @@ def excelInventarioHerramientas(request):
     estilo_fuente = xlwt.XFStyle()
     estilo_fuente.font.bold = True
     
-    columnas = ['Id Herramienta','Código Herramienta', 'Nombre herramienta', 'Marca', 'Tipo', 'SKU','Stock','Cantidad en existencia Almacén','Cantidad Dañadas','Total Cantidades','Total Cantidades Contadas','¿Con faltante?','Diferencia', 'Total Cantidades en prestamo']
+    columnas = ['Id Herramienta','Código Herramienta', 'Nombre herramienta', 'Marca', 'Tipo','Categoria/Nombre corto', 'SKU','Stock','Cantidad en existencia Almacén','Cantidad Dañadas','Total Cantidades','Total Cantidades Contadas','¿Con faltante?','Diferencia', 'Total Cantidades en prestamo']
     for campo in range(len(columnas)):
         hoja.write(numero_fila, campo, columnas[campo], estilo_fuente)
         
@@ -1764,6 +1927,7 @@ def excelInventarioHerramientas(request):
         idHerramienta = herramienta.id_herramienta
         codigoHerramienta = herramienta.codigo_herramienta
         nombreHerramienta = herramienta.nombre_herramienta
+        nombreCorto = herramienta.nombre_corto
         marca = herramienta.marca
         tipo = herramienta.tipo_herramienta
         sku = herramienta.sku
@@ -1801,7 +1965,7 @@ def excelInventarioHerramientas(request):
         
        
         
-        arrayHerramientas.append([idHerramienta, codigoHerramienta, nombreHerramienta, marca,  tipo, sku, stock, existencias,cantidadHerramientasDañadas, totalCantidades, "", "", "", contadorHerramientasEnPrestamo])
+        arrayHerramientas.append([idHerramienta, codigoHerramienta, nombreHerramienta, marca,  tipo,nombreCorto, sku, stock, existencias,cantidadHerramientasDañadas, totalCantidades, "", "", "", contadorHerramientasEnPrestamo])
         
         
             
@@ -2338,10 +2502,10 @@ def pdfCostosAlmacén(request):
         
         h1 = Paragraph('''Herramientas en almacén''', styleBH)
         h2 = Paragraph('''Herramientas en préstamo''', styleBH)
-        h3 = Paragraph('''Herramientas Activas''', styleBH)
-        h4 = Paragraph('''Herramientas Dañadas''', styleBH)
-        h5 = Paragraph('''Herramientas Dañadas inactivas''', styleBH)
-        h6 = Paragraph('''Herramientas Extraviadas''', styleBH)
+        h3 = Paragraph('''Herramientas Activas (en almacén + prestadas)''', styleBH)
+        h4 = Paragraph('''Herramientas Dañadas (siguen en inventario físico)''', styleBH)
+        h5 = Paragraph('''Herramientas Dañadas inactivas (fuera de inventario)''', styleBH)
+        h6 = Paragraph('''Herramientas Extraviadas (fuera de inventario)''', styleBH)
         filasTabla=[]
         filasTabla.append([h1, h2, h3, h4, h5, h6])
         #Tabla
@@ -2476,8 +2640,8 @@ def pdfCostosAlmacén(request):
         
         totalUnidadesPerdida = cantidadHerramientasDañadas + cantidadHerramientasDañadasInactivas + cantidadHerramientasExtraviadas
         sumaUnidades = cantidadHerramientasActivas+ totalUnidadesPerdida
-        multiplicacion = totalUnidadesPerdida * sumaUnidades
-        resultado = multiplicacion / 100
+        multiplicacion = totalUnidadesPerdida * 100
+        resultado = totalUnidadesPerdida / sumaUnidades
         resultadoMasChido = resultado*100
         
         resultadoConDos = round(resultadoMasChido,2)

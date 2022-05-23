@@ -324,6 +324,7 @@ class HerramientasAlmacen (models.Model):
     codigo_herramienta = models.CharField(max_length=6)
     tipo_herramienta = models.CharField(max_length=15, null=True)
     nombre_herramienta = models.CharField(max_length=100)
+    nombre_corto = models.CharField(max_length=60, null=True)
     descripcion_herramienta = models.TextField()
     marca = models.CharField(max_length=50)
     unidad = models.CharField(max_length=50)
@@ -347,6 +348,7 @@ class HerramientasAlmacen (models.Model):
             'codigo': self.codigo_herramienta,
             'tipo_herramienta': self.tipo_herramienta,
             'nombre_herramienta': self.nombre_herramienta,
+            'nombre_corto': self.nombre_corto,
             'descripcion_herramienta': self.descripcion_herramienta,
             'marca': self.marca,
             'unidad': self.unidad,
@@ -400,3 +402,35 @@ class RequisicionCompraAlmacen (models.Model):
 
     def __str__(self):
         return self.id_requi
+    
+class altasAlmacen (models.Model):
+    id_alta = models.AutoField(primary_key=True)
+    id_herramienta = models.ForeignKey(HerramientasAlmacen, on_delete=models.CASCADE, null=True)
+    cantidad_agregar = models.IntegerField()
+    stockActualizado = models.IntegerField()
+    codigoActualizado = models.CharField(max_length=10, null=True)
+    fecha_solicitud_alta = models.DateField()
+    orden_compra_evidence_act = models.CharField(max_length=30, null=True)
+    proveedor_alta = models.CharField(max_length=100, null=True)
+    estatus_alta = models.CharField(max_length=30)
+    token = models.CharField(max_length=30, null = True)
+    fecha_alta = models.DateField(null=True)
+    
+
+    def __str__(self):
+        return self.id_alta
+
+class bajasAlmacen (models.Model):
+    id_baja = models.AutoField(primary_key=True)
+    id_herramienta = models.ForeignKey(HerramientasAlmacen, on_delete=models.CASCADE)
+    motivo_baja = models.CharField(max_length=10)
+    explicacion_baja = models.TextField()
+    cantidad_baja = models.IntegerField()
+    fecha_solicitud_baja = models.DateField()
+    estatus_baja = models.CharField(max_length=30)
+    token = models.CharField(max_length=30)
+    fecha_baja = models.DateField()
+    
+
+    def __str__(self):
+        return self.id_alta

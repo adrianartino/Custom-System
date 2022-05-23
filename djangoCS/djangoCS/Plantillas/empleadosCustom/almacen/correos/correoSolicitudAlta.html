@@ -45,18 +45,18 @@
                            margin-top: 0px;
                            margin-bottom: 8px;
                            color: #666666;
-                           ">Hola, compañeros!</h2>
+                           ">Hola, Daniel!</h2>
                 <p style="
                           margin: 0px;
                           color: #666666;
                           ">
-                    Se ha reportado la <span style="color:#FA1834">baja de una herramienta</span>, la cual se solicita una requisición de compra para su reposición.
+                    Se solicita tu atención para generar <span style="color:#02b159">TOKEN de movimiento</span> a la solicitud número <span  style="color:#2b2ecf">#{{ultimaSolicitud}}</span> en CS.
                 </p><br>
                 <p style="
                           margin: 0px;
                           color: #666666;
                           ">
-                    A continuación, proporcionamos los datos de la herramienta:
+                    A continuación, proporcionamos los datos de la herramienta a actualizar:
                 </p>
             </td>
         </tr>
@@ -72,63 +72,99 @@
             <th>ID</th>
             <th>Código</th>
             <th>SKU</th>
-            <th>Tipo</th>
+            <th>Categoría</th>
             <th>Nombre</th>
             <th>Marca</th>
             <th>Imagen</th>
-            <th>Descripción</th>
-            <th>Existencia en almacén</th>
+            <th>Existencia Actual en almacén</th>
             <th>Proveedor</th>
             <th>ODC Evidence</th>
         </tr>
     </thead>
     <tbody>
+        {% for datoHerramienta in consultaHerramienta %}
         <tr >
-            <td style="font-family: sans-serif;font-size:14px;">{{idHerramientaDañada}}</td>
-            <td style="font-family: sans-serif;font-size:14px;">{{codigoHerramientaDañada}}</td>
-            <td style="font-family: sans-serif;font-size:14px;">{{skuHerramientaDañada}}</td>
-            <td style="font-family: sans-serif;font-size:14px;">{{tipoHerramientaDañada}}</td>
-            <td style="font-family: sans-serif;font-size:14px;">{{nombreHerramientaDañada}}</td>
-            <td style="font-family: sans-serif;font-size:14px;">{{marcaHerramientaDañada}}</td>
-            {% if imagenHerramientaDañada == "Sin imagen" %}
+            <td style="font-family: sans-serif;font-size:14px;">{{datoHerramienta.id_herramienta}}</td>
+            <td style="font-family: sans-serif;font-size:14px;">{{datoHerramienta.codigo}}</td>
+            <td style="font-family: sans-serif;font-size:14px;">{{datoHerramienta.sku}}</td>
+            <td style="font-family: sans-serif;font-size:14px;">{{datoHerramienta.nombre_corto}}</td>
+            <td style="font-family: sans-serif;font-size:14px;">{{datoHerramienta.nombre_herramienta}}</td>
+            <td style="font-family: sans-serif;font-size:14px;">{{datoHerramienta.marca}}</td>
+            {% if datoHerramienta.imagen_herramienta == "Sin imagen" %}
             <td style="font-family: sans-serif;font-size:14px;">Sin imagen</td>
             {% else %}
-            <td style="font-family: sans-serif;font-size:14px;"><center><img src="http://localhost:8000{{imagenHerramientaDañada.url}}" alt="herramienta" width="60"></center></td>
+            <td style="font-family: sans-serif;font-size:14px;"><center><img src="http://localhost:8000{{datoHerramienta.imagen_herramienta.url}}" alt="herramienta" width="60"></center></td>
             {% endif %}
-            <td style="font-family: sans-serif;font-size:14px;">{{descripcionHerramientaDañada}}</td>
-            <td style="font-family: sans-serif;font-size:14px;">{{restaCantidad}} unidades</td>
-            <td style="font-family: sans-serif;font-size:14px;">{{proveedor}}</td>
-            <td style="font-family: sans-serif;font-size:14px;">{{odcEvidence}}</td>
+            <td style="font-family: sans-serif;font-size:14px;">{{datoHerramienta.cantidad_existencia}} unidades</td>
+            <td style="font-family: sans-serif;font-size:14px;">{{datoHerramienta.proveedor}}</td>
+            <td style="font-family: sans-serif;font-size:14px;">{{datoHerramienta.orden_compra_evidence}}</td>
         
         </tr>
+        {% endfor %}
     
     
 </tbody></table>
 <br>
 <table>
     <tbody>
+        {% if existenciaBool %}
         <tr>
-            <td style="font-family: sans-serif;font-size:14px;"><span style="font-weight: bold;">Daño:</span> {{motivoDañoHerramientaDañada}}</td>
-        </tr>
-        <tr>
-            <td style="font-family: sans-serif;font-size:14px;"><span style="font-weight: bold;">Motivo:</span> {{explicacionDañoHerramientaDañada}}</td>
-        </tr>
-        <tr>
-        
-        
-        
-        {% if prestamo %}
-        <tr>
-            <td style="font-family: sans-serif;font-size:14px;">    Con préstamo ligado</td>
+            <td style="font-family: sans-serif;font-size:14px;"><p><span style="font-weight: bold;">Solicitud Existencia:</span><span style="color:#F44336;"> {{mensajeExistencia}}</span></p></td>
         </tr>
         {% else %}
         <tr>
-            <td style="font-family: sans-serif;font-size:14px;"><span style="font-weight: bold;">Préstamo:</span> Sin préstamo ligado, baja realizada por Almacenista.</td>
+            <td style="font-family: sans-serif;font-size:14px;"><span style="font-weight: bold;">Solicitud Existencia:</span > {{mensajeExistencia}}</td>
         </tr>
         {% endif %}
+
+
+        {% if stockBool %}
+        <tr>
+            <td style="font-family: sans-serif;font-size:14px;"><span style="font-weight: bold;">Solicitud Stock:</span style="color:#F44336;> {{mensajeStock}}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td style="font-family: sans-serif;font-size:14px;"><span style="font-weight: bold;">Solicitud Stock:</span > {{mensajeStock}}</td>
+        </tr>
+        {% endif %}
+
+        {% if codigoBool %}
+        <tr>
+            <td style="font-family: sans-serif;font-size:14px;"><span style="font-weight: bold;">Solicitud Código:</span style="color:#F44336;> {{mensajeCodigo}}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td style="font-family: sans-serif;font-size:14px;"><span style="font-weight: bold;">Solicitud Código:</span> {{mensajeCodigo}}</td>
+        </tr>
+        {% endif %}
+
+        {% if odcBool %}
+        <tr>
+            <td style="font-family: sans-serif;font-size:14px;"><span style="font-weight: bold;">Solicitud ODC:</span style="color:#F44336;> {{mensajeODC}}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td style="font-family: sans-serif;font-size:14px;"><span style="font-weight: bold;">Solicitud ODC:</span > {{mensajeODC}}</td>
+        </tr>
+        {% endif %}
+
+        {% if proveedorBool %}
+        <tr>
+            <td style="font-family: sans-serif;font-size:14px;"><span style="font-weight: bold;">Solicitud Proveedor:</span style="color:#F44336;> {{mensajeProveedor}}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td style="font-family: sans-serif;font-size:14px;"><span style="font-weight: bold;">Solicitud Proveedor:</span> {{mensajeProveedor}}</td>
+        </tr>
+        {% endif %}
+        
+        
+        
+        
+        
         <br>
         <tr>
-            <td colspan="3" style="font-family: sans-serif;font-size:14px;">Favor de ir a <a href="https://erp.evidencetech.app/access">Evidence</a> , para realizar la requisición de compra de la herramienta.</td>
+            <td colspan="3" style="font-family: sans-serif;font-size:14px;">Favor de ir a <a href="https://erp.evidencetech.app/access">Evidence</a> , para generar el TOKEN en la solicitud #{{ultimaSolicitud}}.</td>
         </tr>
         <tr>
         
