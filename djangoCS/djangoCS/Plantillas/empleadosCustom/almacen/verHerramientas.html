@@ -98,6 +98,17 @@ Herramientas | Custom System
                             </button>
                         </form>
                     </div>
+                    <div class="col-xs-12 col-sm-2">
+                        <form action="/excelInventarioHerramientasCategoria/" method="POST">{% csrf_token %}
+                            <input type="hidden" name="activo" value="A">
+                            <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
+                                data-toggle="tooltip" data-placement="bottom"
+                                title="Descargar formato de ciclico por categoría">
+                                <i class="material-icons">grid_on</i>
+                                <span>Inventario Categoría</span>
+                            </button>
+                        </form>
+                    </div>
                     <div class="col-xs-12 col-sm-4">
                         <a class="label bg-blue-grey" style="font-size:small; " href="/agregarHerramientasALM/">Agregar
                             Herramienta</a>
@@ -597,7 +608,7 @@ Herramientas | Custom System
                                 </span>
                                 <div class="form-line">
                                     <input  type="text" class="form-control date"
-                                        placeholder="Ingresar Folio ODC" maxlength="30" value="{{herramienta.orden_compra_evidence}} "
+                                        placeholder="Ingresar Folio ODC" maxlength="30" value="{{herramienta.orden_compra_evidence}}"
                                         title="No se permiten caracteres especiales." name="odcActualizada" required >
                                 </div>
                                 

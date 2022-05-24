@@ -406,15 +406,14 @@ class RequisicionCompraAlmacen (models.Model):
 class altasAlmacen (models.Model):
     id_alta = models.AutoField(primary_key=True)
     id_herramienta = models.ForeignKey(HerramientasAlmacen, on_delete=models.CASCADE, null=True)
-    cantidad_agregar = models.IntegerField()
-    stockActualizado = models.IntegerField()
-    codigoActualizado = models.CharField(max_length=10, null=True)
-    fecha_solicitud_alta = models.DateField()
-    orden_compra_evidence_act = models.CharField(max_length=30, null=True)
-    proveedor_alta = models.CharField(max_length=100, null=True)
-    estatus_alta = models.CharField(max_length=30)
-    token = models.CharField(max_length=30, null = True)
+    cantidad_agregar = models.CharField(max_length=200, null=True)
+    stockActualizado = models.CharField(max_length=200, null=True)
+    codigoActualizado = models.CharField(max_length=200, null=True)
     fecha_alta = models.DateField(null=True)
+    orden_compra_evidence_act = models.CharField(max_length=200, null=True)
+    proveedor_alta = models.CharField(max_length=200, null=True)
+    estatus_alta = models.CharField(max_length=30)
+    requi = models.CharField(max_length=30, null = True)
     
 
     def __str__(self):

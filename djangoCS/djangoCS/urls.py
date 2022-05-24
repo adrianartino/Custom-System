@@ -205,6 +205,7 @@ urlpatterns = [
     path("descontarDeInventario/", almacen.descontarDeInventario),
     path("pdfCostosAlmacén/", almacen.pdfCostosAlmacén),
     path("listaAltasAlmacen/", almacen.listaAltasAlmacen),
+    path("excelInventarioHerramientasCategoria/", almacen.excelInventarioHerramientasCategoria),
     #soportes tecnicos
     path("verSoportes/",views.verSoportes),
     path("agregarSoporteEquipoComputo/",views.agregarSoporteEquipoComputo),

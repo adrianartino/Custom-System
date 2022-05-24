@@ -1514,26 +1514,47 @@ def actualizarCantidadesHerramientasAlmacen(request):
             odcActualizada = request.POST['odcActualizada']
             proveedorHerramientaActualizada = request.POST['proveedorHerramientaActualizada']
             
-        
+            consultaHerramienta = HerramientasAlmacen.objects.filter(id_herramienta = idHerramientaActualizar)
+            for datoHerramienta in consultaHerramienta:
+                    existenciaActual = datoHerramienta.cantidad_existencia
+                    stockActual = datoHerramienta.stock
+                    codigoActual = datoHerramienta.codigo_herramienta
+                    odcActual = datoHerramienta.orden_compra_evidence
+                    proveedorActual = datoHerramienta.proveedor
+                    
+            sumaExistencia = int(existenciaActual)+int(cantidadHerramientaActualizar)
+            if sumaExistencia > stockActual:
+                    actualizacionHerramienta = HerramientasAlmacen.objects.filter(id_herramienta = idHerramientaActualizar).update(
+                        cantidad_existencia = sumaExistencia,
+                        stock = sumaExistencia,
+                        codigo_herramienta = codigoHerramientaActualizar,
+                        orden_compra_evidence = odcActualizada,
+                        proveedor = proveedorHerramientaActualizada
+                    )
+            else:
+                actualizacionHerramienta = HerramientasAlmacen.objects.filter(id_herramienta = idHerramientaActualizar).update(
+                        cantidad_existencia = sumaExistencia,
+                        stock = intStockActualizado,
+                        codigo_herramienta = codigoHerramientaActualizar,
+                        orden_compra_evidence = odcActualizada,
+                        proveedor = proveedorHerramientaActualizada
+                )
             
             #Actualizar cantidad
-            solicitudActualizacion = altasAlmacen(id_herramienta = HerramientasAlmacen.objects.get(id_herramienta = idHerramientaActualizar),
-                                                  cantidad_agregar = intCantidadHerramientaActualizar,
-                                                  stockActualizado = intStockActualizado,
-                                                  codigoActualizado = codigoHerramientaActualizar,
-                                                  fecha_solicitud_alta = fachaSolicitud,
-                                                  orden_compra_evidence_act = odcActualizada,
-                                                  proveedor_alta = proveedorHerramientaActualizada,
-                                                  estatus_alta = "pendiente")
-            solicitudActualizacion.save()
+           
             
-            if solicitudActualizacion:
+            if actualizacionHerramienta:
+                
+                contadorActualizaciones = 0
+                actualizaciones = altasAlmacen.objects.all()
+                for actualizacion in actualizaciones:
+                    contadorActualizaciones = actualizacion.id_alta
+                
+                contadorActualizaciones = contadorActualizaciones+1
                 
                 #Mandar correo a dani..
-                asunto = "CS | Nueva solicitud de actualización de herramienta."
+                asunto = "CS | Nueva actualización de herramienta. Numero "+str(contadorActualizaciones)
                 plantilla = "empleadosCustom/almacen/correos/correoSolicitudAlta.html"
-                
-                consultaHerramienta = HerramientasAlmacen.objects.filter(id_herramienta = idHerramientaActualizar)
                 
                 
                 existenciaBool = False
@@ -1553,43 +1574,41 @@ def actualizarCantidadesHerramientasAlmacen(request):
                 for solicitudes in consultaSolicitudes:
                     ultimaSolicitud = solicitudes.id_alta
                
+                #Actualizacion Herramienta
+                sumaExistencia = existenciaActual + intCantidadHerramientaActualizar
                 
-                
-                for datoHerramienta in consultaHerramienta:
-                    existenciaActual = datoHerramienta.cantidad_existencia
-                    stockActual = datoHerramienta.stock
-                    codigoActual = datoHerramienta.codigo_herramienta
-                    odcActual = datoHerramienta.orden_compra_evidence
-                    proveedorActual = datoHerramienta.proveedor
-                    
                 if intCantidadHerramientaActualizar == 0:
                     existenciaBool = False
                     mensajeExistencia = "No se actualizarán cantidades en existencia."
                 else:
                     existenciaBool = True
                     suma = existenciaActual+intCantidadHerramientaActualizar
-                    mensajeExistencia = "Se solicita actualizar las cantidades de "+str(existenciaActual)+ " a "+str(suma) + " unidades. (Se agregarán "+str(intCantidadHerramientaActualizar)+" unidades)"
+                    mensajeExistencia = "Se actualizaron las cantidades de "+str(existenciaActual)+ " a "+str(suma) + " unidades. (Se agregaron "+str(intCantidadHerramientaActualizar)+" unidades)"
             
                 if intStockActualizado == stockActual:
                     stockBool = False
-                    mensajeStock  ="No se actualizará la cantidad en Stock."
+                    if sumaExistencia > stockActual:
+                        mensajeStock = "Se actualizó el stock de "+str(sumaExistencia-intCantidadHerramientaActualizar) + " a "+str(sumaExistencia) + " unidades."
+                        
+                    else:
+                        mensajeStock  ="No se actualizará la cantidad en Stock."
                 else:
                     stockBool = True
-                    mensajeStock = "Se solicita actualizar el stock de "+str(stockActual) + " a "+str(intStockActualizado) + " unidades."
+                    mensajeStock = "Se actualizó el stock de "+str(stockActual) + " a "+str(intStockActualizado) + " unidades."
                     
                 if codigoHerramientaActualizar == codigoActual:
                     codigoBool = False
                     mensajeCodigo = "No se actualizará el código de la herramienta."
                 else:
                     codigoBool = True
-                    mensajeCodigo = "Se actualizará el código de la herramienta de "+str(codigoActual)+ " a "+ str(codigoHerramientaActualizar)
+                    mensajeCodigo = "Se actualizó el código de la herramienta de "+str(codigoActual)+ " a "+ str(codigoHerramientaActualizar)
                     
                 if odcActualizada == odcActual:
                     odcBool = False
                     mensajeODC = "No se actualizará la ODC ligada en evidence."
                 else:
                     odcBool = True
-                    mensajeODC = "Se actualizará la última ODC en Evidence de esta herramienta: "+str(odcActualizada)
+                    mensajeODC = "Se actualizó la última ODC en Evidence de esta herramienta: "+str(odcActualizada)
                     
                 if proveedorHerramientaActualizada == proveedorActual:
                     proveedorBool = False
@@ -1597,6 +1616,7 @@ def actualizarCantidadesHerramientasAlmacen(request):
                 else:
                     proveedorBool = True
                     mensajeProveedor = "Se actualizó al proveedor: "+str(proveedorHerramientaActualizada)
+                
                 
                 
                 html_mensaje = render_to_string(plantilla, {"ultimaSolicitud":ultimaSolicitud,"fecha_solicitud_actualizacion":fachaSolicitud,
@@ -1612,7 +1632,18 @@ def actualizarCantidadesHerramientasAlmacen(request):
                 mensaje.content_subtype = 'html'
                 mensaje.send()
                 
-                request.session['herramientaActualizada'] = "Se ha solicitado la actualización! Correo electrónico mandado a Jefe de Logistica y compras."
+                alta = altasAlmacen(id_herramienta = HerramientasAlmacen.objects.get(id_herramienta = idHerramientaActualizar),
+                                                  cantidad_agregar = mensajeExistencia,
+                                                  stockActualizado = mensajeStock,
+                                                  codigoActualizado = mensajeCodigo,
+                                                  fecha_alta = fachaSolicitud,
+                                                  orden_compra_evidence_act = mensajeODC,
+                                                  proveedor_alta = mensajeProveedor,
+                                                  estatus_alta = "Realizada",
+                                                  requi = "Sin requisición ligada")
+                alta.save()
+                
+                request.session['herramientaActualizada'] = "Se ha realizado la actualización! Correo electrónico mandado a Jefe de Logistica y compras."
                 
                 return redirect('/verHerramientasALM/')
     #Si le da al inicio y no hay una sesión iniciada..
@@ -2373,10 +2404,22 @@ def entradaHerramientaPorRequi(request):
             consultaHerramienta = HerramientasAlmacen.objects.filter(id_herramienta = idHerramientaEntrada)
             for dato in consultaHerramienta:
                 existenciaActual = dato.cantidad_existencia
+                odcActual = dato.orden_compra_evidence
+                proveedorActual = dato.proveedor
+                stockActual = dato.stock
+                codigoHerramientaActualizar = dato.codigo_herramienta
+                odcActual = dato.orden_compra_evidence
+                proveedorActual = dato.proveedor
             
             existenciaActualizada = int(existenciaActual) + int(cantidadHerramientaEntrada)
             
-            actualizacionHerramienta = HerramientasAlmacen.objects.filter(id_herramienta = idHerramientaEntrada).update(cantidad_existencia = existenciaActualizada,
+            if stockActual < existenciaActualizada:
+            
+                actualizacionHerramienta = HerramientasAlmacen.objects.filter(id_herramienta = idHerramientaEntrada).update(cantidad_existencia = existenciaActualizada,
+                                                                                                                        proveedor = proveedorEntrada, orden_compra_evidence = odcEntrada, stock = existenciaActualizada)
+            else:
+            
+                actualizacionHerramienta = HerramientasAlmacen.objects.filter(id_herramienta = idHerramientaEntrada).update(cantidad_existencia = existenciaActualizada,
                                                                                                                         proveedor = proveedorEntrada, orden_compra_evidence = odcEntrada)
             
             if actualizacionHerramienta:
@@ -2387,8 +2430,99 @@ def entradaHerramientaPorRequi(request):
                 actRequi.fehca_requiEntrada = fechaEntrada
                 actRequi.save()
                 
+                fecha = datetime.now()
                 
-                request.session['herramientaEntrada'] = "Se le ha dado entrada a la requisición {{idRequi}} satisfactoriamente!"
+               
+                
+                #Guardar alta y mandar correo
+                existenciaBool = False
+            
+                odcBool = False
+                proveedorBool = False
+                
+                mensajeExistencia = ""
+                mensajeODC = ""
+                mensajeProveedor = ""
+                
+                ultimaSolicitud = 0
+                consultaSolicitudes = altasAlmacen.objects.all()
+                for solicitudes in consultaSolicitudes:
+                    ultimaSolicitud = solicitudes.id_alta
+               
+                
+                if existenciaActualizada == 0:
+                    existenciaBool = False
+                    mensajeExistencia = "No se actualizarán cantidades en existencia."
+                else:
+                    existenciaBool = True
+                    mensajeExistencia = "Se actualizaron las cantidades de "+str(existenciaActual)+ " a "+str(existenciaActualizada) + " unidades. (Se agregarán "+str(cantidadHerramientaEntrada)+" unidades)"
+            
+                if odcEntrada == odcActual:
+                    odcBool = False
+                    mensajeODC = "No se actualizará la ODC ligada en evidence."
+                else:
+                    odcBool = True
+                    mensajeODC = "Se actualizó la última ODC en Evidence de esta herramienta: "+str(odcEntrada)
+                    
+                if proveedorEntrada == proveedorActual:
+                    proveedorBool = False
+                    mensajeProveedor = "No se actualizará el proveedor de esta herramienta."
+                else:
+                    proveedorBool = True
+                    mensajeProveedor = "Se actualizó al proveedor: "+str(proveedorEntrada)
+                
+                
+                stockBool = False
+                codigoBool = False
+                mensajeStock = "No se actualizará la cantidad en Stock."
+                mensajeCodigo = "No se actualizará el código de la herramienta."
+                if stockActual < existenciaActualizada:
+                    stockBool = True
+                    mensajeStock = "Se actualizó el stock de "+str(stockActual) + " a "+str(existenciaActualizada) + " unidades."
+                
+                fecha = datetime.now()
+                contadorActualizaciones = 0
+                actualizaciones = altasAlmacen.objects.all()
+                for actualizacion in actualizaciones:
+                    contadorActualizaciones = actualizacion.id_alta
+                
+                contadorActualizaciones = contadorActualizaciones+1
+                
+                porRequi = True
+                idRequi = str(idRequi)
+                
+                asunto = "CS | Nueva actualización de herramienta. Numero "+str(contadorActualizaciones)
+                plantilla = "empleadosCustom/almacen/correos/correoSolicitudAlta.html"
+                html_mensaje = render_to_string(plantilla, {"ultimaSolicitud":ultimaSolicitud,"fecha_solicitud_actualizacion":fecha,
+                                                            "consultaHerramienta":consultaHerramienta,
+                                                            "existenciaBool":existenciaBool, "mensajeExistencia":mensajeExistencia,
+                                                            "stockBool":stockBool,"mensajeStock":mensajeStock,
+                                                            "codigoBool":codigoBool, "mensajeCodigo":mensajeCodigo,
+                                                            "odcBool":odcBool,"mensajeODC":mensajeODC,
+                                                            "proveedorBool":proveedorBool, "mensajeProveedor":mensajeProveedor, "porRequi":porRequi, "idRequi":idRequi})
+                email_remitente = settings.EMAIL_HOST_USER
+                email_destino = ['sistemas@customco.com.mx']
+                mensaje = EmailMessage(asunto, html_mensaje, email_remitente, email_destino)
+                mensaje.content_subtype = 'html'
+                mensaje.send()
+                
+                
+               
+                alta = altasAlmacen(id_herramienta = HerramientasAlmacen.objects.get(id_herramienta = idHerramientaEntrada),
+                                                  cantidad_agregar = mensajeExistencia,
+                                                  stockActualizado = mensajeStock,
+                                                  codigoActualizado = mensajeCodigo,
+                                                  fecha_alta = fecha,
+                                                  orden_compra_evidence_act = mensajeODC,
+                                                  proveedor_alta = mensajeProveedor,
+                                                  estatus_alta = "Realizada",
+                                                  requi = str(idRequi))
+                alta.save()
+                
+                
+                
+                
+                request.session['herramientaEntrada'] = "Se le ha dado entrada a la requisición "+str(idRequi)+" satisfactoriamente!"
                 
                 
                 return redirect('/verRequisicionesHerramientas/')
@@ -2777,7 +2911,7 @@ def listaAltasAlmacen(request):
         nombreCompleto = nombreini + " " + apellidosini #Blanca Yesenia Gaeta Talamantes
         
         arrayHerramientasPendientes = []
-        altasPendientes = altasAlmacen.objects.filter(estatus_alta = "pendiente")
+        altasPendientes = altasAlmacen.objects.filter(estatus_alta = "Realizada")
         
         boolCambioCantidad = []
         cambioCantidad = []
@@ -2858,13 +2992,10 @@ def listaAltasAlmacen(request):
                 boolCambioProveedor.append("Actualizar proveedor")
                 cambioProveedor.append(proveedorActualizar)
                 
-        listaAltasPendientes = zip(altasPendientes,arrayHerramientasPendientes,
-                                   boolCambioCantidad, cambioCantidad,
-                                   boolCambioCodigo, cambioCodigo,
-                                   boolCambioStock, cambioStock,
-                                   boolCambioODC, cambioODC,
-                                   boolCambioProveedor, cambioProveedor)
+        listaAltasPendientes = zip(altasPendientes,arrayHerramientasPendientes)
             
+            
+        
             
                 
               
@@ -2877,3 +3008,82 @@ def listaAltasAlmacen(request):
     #Si le da al inicio y no hay una sesión iniciada..
     else:
         return redirect('/login/') #redirecciona a url de inicio
+    
+def excelInventarioHerramientasCategoria(request):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename=Inventario Cíclico Herramientas Almacén x Categoría '+str(datetime.today().strftime('%Y-%m-%d'))+'.xls'
+    
+    #creación de libro de excel
+    libro = xlwt.Workbook(encoding='utf-8')
+    hoja = libro.add_sheet('Reporte de existencias')
+    
+    numero_fila = 0
+    estilo_fuente = xlwt.XFStyle()
+    estilo_fuente.font.bold = True
+    
+    columnas = ['Id Herramienta','Código Herramienta', 'Nombre herramienta', 'Marca', 'Tipo','Categoria/Nombre corto', 'SKU','Stock','Cantidad en existencia Almacén','Cantidad Dañadas','Total Cantidades','Total Cantidades Contadas','¿Con faltante?','Diferencia', 'Total Cantidades en prestamo']
+    for campo in range(len(columnas)):
+        hoja.write(numero_fila, campo, columnas[campo], estilo_fuente)
+        
+    todasLasHerramientas = HerramientasAlmacen.objects.all()
+    
+    arrayHerramientas = []
+    for herramienta in todasLasHerramientas:
+        idHerramienta = herramienta.id_herramienta
+        codigoHerramienta = herramienta.codigo_herramienta
+        nombreHerramienta = herramienta.nombre_herramienta
+        nombreCorto = herramienta.nombre_corto
+        marca = herramienta.marca
+        tipo = herramienta.tipo_herramienta
+        sku = herramienta.sku
+        stock = herramienta.stock
+        existencias = herramienta.cantidad_existencia
+        
+        
+        #CantidadPrestamos ya esta..
+        contadorHerramientasEnPrestamo = 0
+        consultaPrestamosDeHerramienta = PrestamosAlmacen.objects.filter(estatus="En prestamo")
+        for dato in consultaPrestamosDeHerramienta:
+            idsHerramientas = dato.id_herramientaInstrumento
+            cantidadesHerramientas = dato.cantidades_solicitadas
+            
+            arregloIdsHerramientas = idsHerramientas.split(",")
+            arregloCantidadesHerramientas = cantidadesHerramientas.split(",")
+            
+            listaHerramientasEnPrestamo = zip(arregloIdsHerramientas,arregloCantidadesHerramientas)
+            
+            for idhhh, cantidad in listaHerramientasEnPrestamo:
+                idH = int(idhhh)
+                can = int(cantidad)
+                if idH == idHerramienta:
+                    contadorHerramientasEnPrestamo = contadorHerramientasEnPrestamo + can
+        
+        #cantidad dañadas
+        cantidadHerramientasDañadas = 0
+        consultaHerramientasDañadas = HerramientasAlmacenInactivas.objects.filter(id_herramienta_id__id_herramienta = idHerramienta, motivo_baja="D")
+        
+        for herramientaDañada in consultaHerramientasDañadas:
+            cantidadHerramientasDañadas = cantidadHerramientasDañadas + 1
+            
+        #Total cantidades
+        totalCantidades = existencias + cantidadHerramientasDañadas
+        
+       
+        
+        arrayHerramientas.append([idHerramienta, codigoHerramienta, nombreHerramienta, marca,  tipo,nombreCorto, sku, stock, existencias,cantidadHerramientasDañadas, totalCantidades, "", "", "", contadorHerramientasEnPrestamo])
+        
+        
+            
+        
+    estilo_fuente = xlwt.XFStyle()
+    for herramienta in arrayHerramientas:
+        numero_fila+=1
+        for columna in range(len(herramienta)):
+            hoja.write(numero_fila, columna, str(herramienta[columna]), estilo_fuente)
+        
+    
+    
+    
+        
+    libro.save(response)
+    return response 

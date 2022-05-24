@@ -42,8 +42,8 @@ Actualizaciones | Custom System
         <div class="card">
             <div class="header">
                 <h2 style="font-family: 'Oswald', sans-serif;">
-                    Actualizacion de herramientas Pendientes de almacén.
-                    <small style="color: #790C05;">Vista de listado de solicituddes de alta/actualización de herraienta en el sistema.</small>
+                    Actualizacion de herramientas de almacén.
+                    <small style="color: #790C05;">Vista de listado de solicituddes de alta/actualización y bajas de herraienta en el sistema.</small>
                 </h2>
 
                 <br>
@@ -53,8 +53,8 @@ Actualizaciones | Custom System
                         <i class="material-icons">build</i>
                     </span>
                     <select class="form-control show-tick" id="filtoHerramientas" onchange="cambioFiltro();">
-                        <option value="existentes">Solicitudes pendientes de autorizar.</option>
-                        <option value="dañada">Actualizaciones realizadas.</option>
+                        <option value="existentes">Actualizaciones de herramientas</option>
+                        <option value="dañada">Bajas realizadas.</option>
 
                     </select>
                 </div>
@@ -76,19 +76,20 @@ Actualizaciones | Custom System
 
                     <table class="table table-bordered  table-hover dataTable js-exportable">
                         <thead>
-                            <tr style="background-color: #FF9800; color: black;">
+                            <tr style="background-color: #8BC34A; color: black;">
                                 <th>ID</th>
                                 <th>Datos Herramienta</th>
                                 
                                 <th>Imagen</th>
                                 <th>Existencia Actual</th>
                                 <th>Stock Actual</th>
-                                <th>Fecha Solicitud</th>
+                                <th>Fecha Actualización</th>
                                 <th>Cantidad a agregar</th>
                                 <th>Codigo Actualizar</th>
                                 <th>Stock Actualizar</th>
                                 <th>ODC Actualizar</th>
                                 <th>Proveedor Actualizar</th>
+                                <th>Requisición Ligada?</th>
                                 <th>Estatus</th>
                                 
                                 
@@ -98,21 +99,21 @@ Actualizaciones | Custom System
                             <tr>
                                 <th>ID</th>
                                 <th>Datos Herramienta</th>
-                                
                                 <th>Imagen</th>
                                 <th>Existencia Actual</th>
                                 <th>Stock Actual</th>
-                                <th>Fecha Solicitud</th>
+                                <th>Fecha Actualización</th>
                                 <th>Cantidad a agregar</th>
                                 <th>Codigo Actualizar</th>
                                 <th>Stock Actualizar</th>
                                 <th>ODC Actualizar</th>
                                 <th>Proveedor Actualizar</th>
+                                <th>Requisición Ligada?</th>
                                 <th>Estatus</th>
                             </tr>
                         </tfoot>
                         <tbody class="animate__animated animate__backInDown">
-                            {% for altaPendiente, herramienta,boolCambioCantidad, cambioCantidad,boolCambioCodigo, cambioCodigo,boolCambioStock, cambioStock, boolCambioODC, cambioODC, boolCambioProveedor, cambioProveedor in listaAltasPendientes %}
+                            {% for altaPendiente, herramienta in listaAltasPendientes %}
                             <tr>
                                 <td>
                                     <h4><span class="label bg-black">{{altaPendiente.id_alta}}</span></h4>
@@ -145,87 +146,88 @@ Actualizaciones | Custom System
                                     <p class="font-bold col-blue">{{herramienta.6}} unidades</p>
                                 </td>
                                 <td>
-                                    <h4><span class="label bg-pink">{{altaPendiente.fecha_solicitud_alta}}</span></h4>
+                                    <h4><span class="label bg-pink">{{altaPendiente.fecha_alta}}</span></h4>
                                 </td>
 
 
-                                {% if boolCambioCantidad == "No actualizar cantidad" %}
+                                {% if altaPendiente.cantidad_agregar == "No se actualizarán cantidades en existencia." %}
                                 <td  style="white-space: nowrap!important;">
                                     <center>
-                                        <button type="button" class="btn bg-red waves-effect">
-                                            <i class="material-icons">cancel</i>
-                                        </button>
+                                        <h4><span class="label bg-red">No se actualizó</span></h4>
                                     </center>
                                     
                                 </td>
                                 {% else %}
+                                
                                 <td  style="white-space: nowrap!important;">
-                                    <p class="font-bold col-green">Se agregarán {{cambioCantidad}} unidades.</p>
+                                    <p class="font-bold col-green">{{altaPendiente.cantidad_agregar}}</p>
                                 </td>
                                 {% endif %}
 
-                                {% if boolCambioCodigo == "No actualizar codigo" %}
+                                {% if altaPendiente.codigoActualizado == "No se actualizará el código de la herramienta." %}
                                 <td>
                                     <center>
-                                        <button type="button" class="btn bg-red waves-effect">
-                                            <i class="material-icons">cancel</i>
-                                        </button>
+                                        <h4><span class="label bg-red">No se actualizó</span></h4>
                                     </center>
                                 </td>
                                 {% else %}
                                 <td style="white-space: nowrap!important;">
-                                    <p class="font-bold col-green">Se cambiará el código de {{herramienta.0}} a {{cambioCodigo}}.</p>
+                                    <p class="font-bold col-green">{{altaPendiente.codigoActualizado}}</p>
                                     
                                 </td>
                                 {% endif %}
 
-                                {% if boolCambioStock == "No actualizar stock" %}
+                                {% if altaPendiente.stockActualizado == "No se actualizará la cantidad en Stock." %}
                                 <td>
                                     <center>
-                                        <button type="button" class="btn bg-red waves-effect">
-                                            <i class="material-icons">cancel</i>
-                                        </button>
+                                        <h4><span class="label bg-red">No se actualizó</span></h4>
                                     </center>
                                 </td>
                                 {% else %}
                                 <td style="white-space: nowrap!important;">
-                                    <p class="font-bold col-green">Se cambiará el stock de {{herramienta.1}} a {{cambioStock}} unidades.</p>
+                                    <p class="font-bold col-green">{{altaPendiente.stockActualizado}}</p>
                                     
                                 </td>
                                 {% endif %}
 
-                                {% if boolCambioODC == "No actualizar odc" %}
+                                {% if altaPendiente.orden_compra_evidence_act == "No se actualizará la ODC ligada en evidence." %}
                                 <td>
                                     <center>
-                                        <button type="button" class="btn bg-red waves-effect">
-                                            <i class="material-icons">cancel</i>
-                                        </button>
+                                        <h4><span class="label bg-red">No se actualizó</span></h4>
                                     </center>
                                 </td>
                                 {% else %}
                                 <td style="white-space: nowrap!important;">
-                                    <p class="font-bold col-green">Se actualizará la ODC ligada a la  {{cambioODC}}.</p>
+                                    <p class="font-bold col-green">{{altaPendiente.orden_compra_evidence_act}}</p>
                                 </td>
                                 {% endif %}
 
-                                {% if boolCambioProveedor == "No actualizar proveedor" %}
+                                {% if altaPendiente.proveedor_alta == "No se actualizará el proveedor de esta herramienta." %}
                                 <td>
                                     <center>
-                                        <button type="button" class="btn bg-red waves-effect">
-                                            <i class="material-icons">cancel</i>
-                                        </button>
+                                        <h4><span class="label bg-red">No se actualizó</span></h4>
                                     </center>
                                 </td>
                                 {% else %}
                                 <td style="white-space: nowrap!important;">
-                                    <p class="font-bold col-green">Se actualizará el proveedor de {{herramienta.7}} a {{cambioProveedor}}.</p>
+                                    <p class="font-bold col-green">{{altaPendiente.proveedor_alta}}</p>
                     
                                 </td>
                                 {% endif %}
 
+                                {% if altaPendiente.requi == "Sin requisición ligada" %}
+                                <td>
+                                    <h4><span class="label bg-grey">Sin requisición ligada</span></h4>
+                                </td>
+                                {% else %}
+                                <td>
+                                    <h4><span class="label bg-blue">Requisición de compra N° {{altaPendiente.requi}}</span></h4>
+                                </td>
+                                {% endif %}
+
 
                                 <td>
-                                    <h4><span class="label bg-red">Pendiente</span></h4>
+                                    <h4><span class="label bg-green">Realizada</span></h4>
                                 </td>
                             </tr>
                             
