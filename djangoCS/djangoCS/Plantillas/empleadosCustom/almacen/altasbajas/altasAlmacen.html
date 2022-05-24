@@ -1,0 +1,786 @@
+{% extends "empleadosCustom/menu/menu.html" %}
+{% load static %}
+
+{% block titulo %}
+Actualizaciones | Custom System
+{% endblock %}
+
+{% block estilos %}
+<!-- Favicon-->
+<link rel="icon" href={% static 'images/icons/ra.ico' %} type="image/x-icon">
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
+    type="text/css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+
+<!-- Bootstrap Core Css -->
+<link href={% static 'panel/plugins/bootstrap/css/bootstrap.css' %} rel="stylesheet">
+
+<!-- Waves Effect Css -->
+<link href={% static 'panel/plugins/node-waves/waves.css' %} rel="stylesheet" />
+
+<!-- Animation Css -->
+<link href={% static 'panel/plugins/animate-css/animate.css' %} rel="stylesheet" />
+
+<!-- JQuery DataTable Css -->
+<link href={% static 'panel/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css' %} rel="stylesheet">
+
+<!-- Bootstrap Select Css -->
+<link href={% static 'panel/plugins/bootstrap-select/css/bootstrap-select.css' %} rel="stylesheet" />
+
+<!-- Custom Css -->
+<link href={% static 'panel/css/style.css' %} rel="stylesheet">
+
+<!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+<link href={% static 'panel/css/themes/all-themes.css' %} rel="stylesheet" />
+{% endblock %}
+
+{% block contenido %}
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h2 style="font-family: 'Oswald', sans-serif;">
+                    Actualizacion de herramientas Pendientes de almacén.
+                    <small style="color: #790C05;">Vista de listado de solicituddes de alta/actualización de herraienta en el sistema.</small>
+                </h2>
+
+                <br>
+                <label for="email_address">Filtro Estatus de herramientas:</label>
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="material-icons">build</i>
+                    </span>
+                    <select class="form-control show-tick" id="filtoHerramientas" onchange="cambioFiltro();">
+                        <option value="existentes">Solicitudes pendientes de autorizar.</option>
+                        <option value="dañada">Actualizaciones realizadas.</option>
+
+                    </select>
+                </div>
+            
+
+            </div>
+
+            <div class="body" id="divActivos">
+                <div class="row clear-fix">
+                    
+                    <div class="col-xs-12 col-sm-4">
+                        <a class="label bg-blue-grey" style="font-size:small; " href="/verHerramientasALM/">Ver
+                            Herramientas</a>
+                    </div>
+
+                </div>
+
+                <div class="table-responsive">
+
+                    <table class="table table-bordered  table-hover dataTable js-exportable">
+                        <thead>
+                            <tr style="background-color: #FF9800; color: black;">
+                                <th>ID</th>
+                                <th>Datos Herramienta</th>
+                                
+                                <th>Imagen</th>
+                                <th>Existencia Actual</th>
+                                <th>Stock Actual</th>
+                                <th>Fecha Solicitud</th>
+                                <th>Cantidad a agregar</th>
+                                <th>Codigo Actualizar</th>
+                                <th>Stock Actualizar</th>
+                                <th>ODC Actualizar</th>
+                                <th>Proveedor Actualizar</th>
+                                <th>Estatus</th>
+                                
+                                
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>ID</th>
+                                <th>Datos Herramienta</th>
+                                
+                                <th>Imagen</th>
+                                <th>Existencia Actual</th>
+                                <th>Stock Actual</th>
+                                <th>Fecha Solicitud</th>
+                                <th>Cantidad a agregar</th>
+                                <th>Codigo Actualizar</th>
+                                <th>Stock Actualizar</th>
+                                <th>ODC Actualizar</th>
+                                <th>Proveedor Actualizar</th>
+                                <th>Estatus</th>
+                            </tr>
+                        </tfoot>
+                        <tbody class="animate__animated animate__backInDown">
+                            {% for altaPendiente, herramienta,boolCambioCantidad, cambioCantidad,boolCambioCodigo, cambioCodigo,boolCambioStock, cambioStock, boolCambioODC, cambioODC, boolCambioProveedor, cambioProveedor in listaAltasPendientes %}
+                            <tr>
+                                <td>
+                                    <h4><span class="label bg-black">{{altaPendiente.id_alta}}</span></h4>
+                                </td>
+                                <td style="white-space: nowrap!important;">
+                                    <div>
+                                        <p>Código: <span class="label bg-indigo">{{herramienta.0}}</span></p>
+                                    </div>
+                                    <div>
+                                        <p>SKU: <span class="label bg-indigo">{{herramienta.1}}</span></p>
+                                    </div>
+                                    <div>
+                                        <p>Nombre: <span class="font-bold col-black">{{herramienta.2}}</span></p>
+                                    </div>
+                                    <div>
+                                        <p>Categoría: <span class="font-bold col-black">{{herramienta.3}}</span></p>
+                                    </div>
+                                </td>
+                                
+                                {% if herramienta.4 %}
+                                    <th> <img src="{{herramienta.4.url}}" width="120" height="150" alt="lap">
+                                    </th>
+                                {% else %}
+                                    <th style="color: black;">Sin imagen</th>
+                                {% endif %}
+                                <td style="white-space: nowrap!important;">
+                                    <p class="font-bold col-green">{{herramienta.5}} unidades</p>
+                                </td>
+                                <td style="white-space: nowrap!important;">
+                                    <p class="font-bold col-blue">{{herramienta.6}} unidades</p>
+                                </td>
+                                <td>
+                                    <h4><span class="label bg-pink">{{altaPendiente.fecha_solicitud_alta}}</span></h4>
+                                </td>
+
+
+                                {% if boolCambioCantidad == "No actualizar cantidad" %}
+                                <td  style="white-space: nowrap!important;">
+                                    <span >No se actualizará la cantidad.</span>
+                                </td>
+                                {% else %}
+                                <td  style="white-space: nowrap!important;">
+                                    <p class="font-bold col-green">Se agregarán {{cambioCantidad}} unidades.</p>
+                                </td>
+                                {% endif %}
+
+                                {% if boolCambioCodigo == "No actualizar codigo" %}
+                                <td>
+                                    <h4><span class="label bg-black">No se actualizará el código.</span></h4>
+                                </td>
+                                {% else %}
+                                <td>
+                                    <h4><span class="label bg-black">Se cambiará el código de {{herramienta.0}} a {{cambioCodigo}}.</span></h4>
+                                </td>
+                                {% endif %}
+
+                                {% if boolCambioStock == "No actualizar stock" %}
+                                <td>
+                                    <h4><span class="label bg-black">No se actualizará el stock.</span></h4>
+                                </td>
+                                {% else %}
+                                <td>
+                                    <h4><span class="label bg-black">Se cambiará el stock de {{herramienta.1}} a {{cambioStock}} unidades.</span></h4>
+                                </td>
+                                {% endif %}
+
+                                {% if boolCambioODC == "No actualizar odc" %}
+                                <td>
+                                    <h4><span class="label bg-black">No se actualizará la ODC ligada.</span></h4>
+                                </td>
+                                {% else %}
+                                <td>
+                                    <h4><span class="label bg-black">Se actualizará la ODC ligada a la  {{cambioODC}}.</span></h4>
+                                </td>
+                                {% endif %}
+
+                                {% if boolCambioProveedor == "No actualizar proveedor" %}
+                                <td>
+                                    <h4><span class="label bg-black">No se actualizará el proveedor.</span></h4>
+                                </td>
+                                {% else %}
+                                <td>
+                                    <h4><span class="label bg-black">Se actualizará el proveedor de {{herramienta.7}} a {{cambioProveedor}}.</span></h4>
+                                </td>
+                                {% endif %}
+
+
+                                <td>
+                                    <h4><span class="label bg-black">Pendiente</span></h4>
+                                </td>
+                            </tr>
+                            
+                            {% endfor %}
+
+
+
+
+                        </tbody>
+                    </table>
+                </div>
+                <br>
+            </div>
+
+            <div class="body" id="divInactivos">
+                
+                <div class="table-responsive">
+
+                    <table class="table table-bordered table-striped table-hover dataTable js-exportable ">
+                        <thead>
+                            <tr style="background-color: #FF5722; color: whitesmoke;">
+                                <th>ID Daño</th>
+                                <th>ID Herramienta / código</th>
+                                <th>Tipo/código</th>
+                                <th>Nombre</th>
+                                <th>Marca</th>
+                                <th>Descripcion</th>
+                                <th>Cantidad Baja</th>
+                                <th>Préstamo</th>
+                                <th>Motivo baja</th>
+                                <th>Descripción de baja</th>
+                                <th>Fecha de baja</th>
+                                <th>Descontar de inventario?</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>ID Daño</th>
+                                <th>ID Herramienta / código</th>
+                                <th>Tipo</th>
+                                <th>Nombre</th>
+                                <th>Marca</th>
+                                <th>Descripcion</th>
+                                <th>Cantidad Baja</th>
+                                <th>Préstamo</th>
+                                <th>Motivo baja</th>
+                                <th>Descripción de baja</th>
+                                <th>Fecha de baja</th>
+                                <th>Descontar de inventario?</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            {% for daño, datoHerramienta in listaDañadas %}
+                            <tr>
+                                <td>{{daño.id_herramientaInactiva}}</td>
+                                <td>
+                                    <div>
+                                        <h4><span class="label bg-black">{{datoHerramienta.0}}</span></h4>
+                                    </div>
+                                    <div>
+                                        <h4><span class="label bg-teal">{{datoHerramienta.2}}</span></h4>
+                                    </div>
+                                </td>
+                                {% if datoHerramienta.1 == "Herramienta" %}
+                                <td><div><i class="material-icons" style="font-size: 10px; display:inline;">build</i>{{datoHerramienta.1}}</div> </td>
+                                {% elif datoHerramienta.1 == "Instrumento" %}
+                                <td><div><i class="material-icons" style="font-size: 10px; display:inline;">flash_auto</i>{{hdatoHerramienta.1}}</div> </td>
+                                {% endif %}
+                                <td>{{datoHerramienta.3}}</td>
+                                <td>{{datoHerramienta.4}}</td>
+                                <td>{{datoHerramienta.5}}</td>
+                                <td>1 unidad</td>
+                                {% if daño.id_prestamo == None %}
+                                <td><h4><span class="label bg-orange">Sin prestamo asociado</span></h4><h4><span class="label bg-orange">Dado de baja por almacén</span></h4></td>
+                                {% else %}
+                                <td><a href=""><h4><span class="label bg-light-green">Prestamo {{datoHerramienta.6}} - {{datoHerramienta.7}}</span></h4></a> </td>
+                                {% endif %}
+
+                                {% if daño.motivo_baja == "D" %}
+                                <td>
+                                    <div>
+                                        <h4><span class="label bg-amber">Daño</span></h4>
+                                    </div> 
+                                    
+                                </td>
+                                {% elif daño.motivo_baja == "E" %}
+                                <td><h4><span class="label bg-amber">Extravío</span></h4> </td>
+                                {% endif %}
+                                <td>{{daño.explicacion_baja}}</td>
+                                <td>{{daño.fecha_baja}}</td>
+                                <td>
+                                    <div>
+                                        <form action="/descontarDeInventario/" method="POST">{% csrf_token %}
+                                        <center>
+                                            <input type="hidden" name="idHerramientaADescontarInventario" value="{{daño.id_herramientaInactiva}}">
+                                            <button type="submit" class="btn btn-danger btn-sm waves-effect" data-toggle="tooltip" data-placement="bottom"
+                                            title="Al dar clic, ya no se contará esta herramienta en inventario.">
+                                                <i class="material-icons">clear</i>
+                                            </button>
+                                        </center>
+                                        </form>
+                                    </div>
+                                </td>
+                                
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <br>
+
+            </div>
+
+            <div class="body" id="noEnInventario">
+                
+                <div class="table-responsive">
+
+                    <table class="table table-bordered table-striped table-hover dataTable js-exportable ">
+                        <thead>
+                            <tr style="background-color: #F44336; color: whitesmoke;">
+                                <th>ID Daño</th>
+                                <th>ID Herramienta / código</th>
+                                <th>Tipo/código</th>
+                                <th>Nombre</th>
+                                <th>Marca</th>
+                                <th>Descripcion</th>
+                                <th>Cantidad Baja</th>
+                                <th>Préstamo</th>
+                                <th>Motivo baja</th>
+                                <th>Descripción de baja</th>
+                                <th>Fecha de baja</th>
+                                <th>Quitar de pérdida</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>ID Daño</th>
+                                <th>ID Herramienta / código</th>
+                                <th>Tipo</th>
+                                <th>Nombre</th>
+                                <th>Marca</th>
+                                <th>Descripcion</th>
+                                <th>Cantidad Baja</th>
+                                <th>Préstamo</th>
+                                <th>Motivo baja</th>
+                                <th>Descripción de baja</th>
+                                <th>Fecha de baja</th>
+                                <th>Quitar de pérdida</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            {% for daño, datoHerramienta in listaDañadasFuera %}
+                            <tr>
+                                <td>{{daño.id_herramientaInactiva}}</td>
+                                <td>
+                                    <div>
+                                        <h4><span class="label bg-black">{{datoHerramienta.0}}</span></h4>
+                                    </div>
+                                    <div>
+                                        <h4><span class="label bg-teal">{{datoHerramienta.2}}</span></h4>
+                                    </div>
+                                </td>
+                                {% if datoHerramienta.1 == "Herramienta" %}
+                                <td><div><i class="material-icons" style="font-size: 10px; display:inline;">build</i>{{datoHerramienta.1}}</div> </td>
+                                {% elif datoHerramienta.1 == "Instrumento" %}
+                                <td><div><i class="material-icons" style="font-size: 10px; display:inline;">flash_auto</i>{{hdatoHerramienta.1}}</div> </td>
+                                {% endif %}
+                                <td>{{datoHerramienta.3}}</td>
+                                <td>{{datoHerramienta.4}}</td>
+                                <td>{{datoHerramienta.5}}</td>
+                                <td>1 unidad</td>
+                                {% if daño.id_prestamo == None %}
+                                <td><h4><span class="label bg-orange">Sin prestamo asociado</span></h4><h4><span class="label bg-orange">Dado de baja por almacén</span></h4></td>
+                                {% else %}
+                                <td><a href=""><h4><span class="label bg-light-green">Prestamo {{datoHerramienta.6}} - {{datoHerramienta.7}}</span></h4></a> </td>
+                                {% endif %}
+
+                                {% if daño.motivo_baja == "D" %}
+                                <td>
+                                    <div>
+                                        <h4><span class="label bg-amber">Daño</span></h4>
+                                    </div> 
+                                    
+                                </td>
+                                {% elif daño.motivo_baja == "E" %}
+                                <td><h4><span class="label bg-amber">Extravío</span></h4> </td>
+                                {% endif %}
+                                <td>{{daño.explicacion_baja}}</td>
+                                <td>{{daño.fecha_baja}}</td>
+                                <td>
+                                    <div>
+                                        <form action="/descontarDeInventario/" method="POST">{% csrf_token %}
+                                        <center>
+                                            <input type="hidden" name="idHerramientaADescontarInventario" value="{{daño.id_herramientaInactiva}}">
+                                            <button type="submit" class="btn btn-danger btn-sm waves-effect" data-toggle="tooltip" data-placement="bottom"
+                                            title="Al dar clic, ya no se contará esta herramienta en inventario.">
+                                                <i class="material-icons">clear</i>
+                                            </button>
+                                        </center>
+                                        </form>
+                                    </div>
+                                </td>
+                                
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <br>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+{% for herramienta, prestamos in registrosHerramientasModal %}
+<!-- Default Size -->
+<div class="modal fade" id="modalHerramienta{{herramienta.id_herramienta}}" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" style="border-radius: 16px;">
+            <div class="modal-header">
+                <center>
+                    <h1 style="color: green; font-family: 'Oswald', sans-serif;">EDITAR CANTIDADES (ENTRADA) <i
+                            class="material-icons" style="color:black; font-size:100%">get_app</i></h1>
+                    <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
+
+                </center>
+            </div>
+            <div class="modal-body">
+                <form action="/actualizarCantidadesHerramientasAlmacen/" method="POST">{% csrf_token %}
+                    <div class="body table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr class="bg-teal">
+                                    <th>ID - Código</th>
+                                    <th>Nombre</th>
+                                    <th>Imagen</th>
+                                    <th>Existencia Actual Funcional</th>
+                                    <th>Stock Necesario</th>
+                                    <th>Cantidad a agregar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div>
+                                            <h4><span class="label bg-black" >{{herramienta.id_herramienta}}</span></h4>
+                                        </div>
+                                        <div>
+                                            <input type="text" class="form-control date"
+                                        placeholder="Cantidad" maxlength="6"  value="{{herramienta.codigo_herramienta}}"
+                                         name="codigoHerramientaActualizar" required>
+                                        </div>
+                                    </td>
+                                    <td style="color: black;">{{herramienta.nombre_herramienta}}</td>
+                                    {% if herramienta.imagen_herramienta %}
+                                    <th> <img src="{{herramienta.imagen_herramienta.url}}" width="120" height="150" alt="lap">
+                                    </th>
+                                    {% else %}
+                                    <th style="color: black;">Sin imagen</th>
+                                    {% endif %}
+                                    <td style="color: black;">
+                                        <center>
+                                            <div>
+                                                <h4><span class="label bg-indigo" >{{herramienta.cantidad_existencia}} unidades</span></h4>
+                                            </div>
+                                            <div>+</div>
+                                            <div>
+                                                <h4><span class="label bg-indigo" >{{prestamos}} unidades en préstamo</span></h4>
+                                            </div>
+                                        </center>
+                                        
+                                    </td>
+                                    <td >
+                                        <div>
+                                            <p style="color: crimson;">{{herramienta.stock}} unidades</p>
+                                        </div>
+                                        <input type="number" class="form-control date"
+                                        placeholder="Cantidad" maxlength="4" max="1000" min="1" step="1" value="{{herramienta.stock}}"
+                                         name="cantidadHerramientaActualizarStock" required>
+                                        </td>
+                                    <td> <input type="number" class="form-control date"
+                                        placeholder="Cantidad" maxlength="4" max="1000" min="0" step="1" value="0"
+                                         name="cantidadHerramientaActualizar" required></td>
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+
+
+
+                    </div>
+                    <div class="row clearfix">
+                        <div class="col-md-3">
+                            <label for="password">Orden de compra Evidence:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <img src="{% static 'images/icons/logoevidence.ico' %}" alt="logoEvidence" width="25">
+                                </span>
+                                <div class="form-line">
+                                    <input  type="text" class="form-control date"
+                                        placeholder="Ingresar Folio ODC" maxlength="30" value="{{herramienta.orden_compra_evidence}} "
+                                        title="No se permiten caracteres especiales." name="odcActualizada" required >
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <label for="password">Proveedor:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">local_shipping</i>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" class="form-control date"
+                                        placeholder="Ingresar Proveedor" maxlength="30" value="{{herramienta.proveedor}}"
+                                        title="No se permiten caracteres especiales." name="proveedorHerramientaActualizada" required >
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <center>
+                        <input type="hidden" value="{{herramienta.id_herramienta}}" name="idHerramientaActualizar">
+                        
+                        <button type="submit" class="btn bg-green waves-effect">
+                            <i class="material-icons">loop</i>
+                            <span>SOLICITAR TOKEN PARA ACTUALIZAR DATOS</span>
+                        </button>
+                    </center>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endfor %}
+
+{% for herramientaBaja, cantidadPrestamo in registrosHerramientasModalBaja %}
+<!-- Default Size -->
+<div class="modal fade" id="modalHerramientaBaja{{herramientaBaja.id_herramienta}}" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" style="border-radius: 16px;">
+            <div class="modal-header">
+                <center>
+                    <h1 style="color: crimson; font-family: 'Oswald', sans-serif;">DAR DE BAJA HERRAMIENTA <i
+                            class="material-icons" style="color:black; font-size:100%">backspace</i></h1>
+                    <h4 style=" font-family: 'Oswald', sans-serif;">(Por daño o extravío)</h4>
+                    <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
+
+                </center>
+            </div>
+            <div class="modal-body">
+                <form action="/bajaHerramientaAlmacen/" method="POST">{% csrf_token %}
+                    <div class="body table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr class="bg-teal">
+                                    <th>ID - Código</th>
+                                    <th>Nombre</th>
+                                    <th>Descripción</th>
+                                    <th>Imagen</th>
+                                    <th>Existencia Actual Funcional</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div>
+                                            <h4><span class="label bg-black" >{{herramientaBaja.id_herramienta}}</span></h4>
+                                        </div>
+                                        <div>
+                                            <h4><span class="label bg-teal">{{herramientaBaja.codigo_herramienta}}</span></h4>
+                                        </div>
+                                    </td>
+                                    <td style="color: black;">{{herramientaBaja.nombre_herramienta}}</td>
+                                    <td style="color: black;">{{herramientaBaja.descripcion_herramienta}}</td>
+                                    {% if herramientaBaja.imagen_herramienta %}
+                                    <th> <img src="{{herramientaBaja.imagen_herramienta.url}}" width="120" height="150" alt="lap">
+                                    </th>
+                                    {% else %}
+                                    <th style="color: black;">Sin imagen</th>
+                                    {% endif %}
+                                    <td style="color: black;">
+                                        <center>
+                                            <div>
+                                                <h4><span class="label bg-black" >{{herramientaBaja.cantidad_existencia}} unidades</span></h4>
+                                            </div>
+                                            <div>+</div>
+                                            <div>
+                                                <h4><span class="label bg-black" >{{cantidadPrestamo}} unidades en préstamo</span></h4>
+                                            </div>
+                                        </center>
+                                        
+                                    </td>
+                                    
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+
+
+
+                    </div>
+                    <div class="row clearfix">
+                        <div class="col-md-6">
+                            <h2><span class="label bg-black">CANTIDAD DE BAJA:</span> <span class="label bg-red">1 unidad.</span> </h2>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Motivo de baja:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">settings</i>
+                                </span>
+                                <select class="form-control show-tick" id="marcas" name="motivoBaja" required>
+                                    <option value="D" selected>Daño</option>
+                                    <option value="E">Extravío</option>
+                                    
+                                </select>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="row clearfix">
+                        <div class="col-md-3">
+                            <h2><span class="label bg-black">MOTIVO DE BAJA:</span></h2>
+                        </div>
+                        <div class="col-md-9">
+                            <label for="password"><span style="color: #078F68;">* </span>Agregar Motivo:</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <textarea style="border: 1px;" name="explicacion" cols="30" rows="6"
+                                            maxlength="255" class="form-control no-resize" required></textarea>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <br>
+                    <center>
+                        <input type="hidden" value="{{herramientaBaja.id_herramienta}}" name="idHerramientaBaja">
+                        <p><span class="font-bold col-red">Nota:</span><span class="col-black">Al dar de baja la herramienta, se restará 1 en cantidad en existencia, no en préstamo.</span></p>
+                        <button type="submit" class="btn bg-red waves-effect">
+                            <i class="material-icons">clear</i>
+                            <span>Dar de baja herramienta</span>
+                        </button>
+                    </center>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endfor %}
+
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+{% if herramientaAct %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Enhorabuena..!',
+        text: ' {{herramientaAct}}',
+        footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
+
+{% if herramientaDescontada %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Enhorabuena..!',
+        text: ' {{herramientaDescontada}}',
+        footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
+
+
+
+<script type="text/javascript">
+    function inicio() {
+        var div1 = document.getElementById("divInactivos");
+        var noEnInventario = document.getElementById("noEnInventario");
+        div1.style.display = "none"; /* bloquear u ocultar la tabla..*/
+        noEnInventario.style.display = "none";
+    }
+    window.onload = inicio;
+
+    function cambioFiltro(valor) {
+        var cod = document.getElementById("filtoHerramientas").value;
+        
+        var div = document.getElementById("divActivos");
+        var div1 = document.getElementById("divInactivos");
+        var noEnInventario = document.getElementById("noEnInventario");
+        /* Si la tabla de Empleados Activos está activa..*/
+        if (cod === "existentes") {
+            //Bloquear la tabla de empleados Activos.. 
+            div.style.display = "block";
+            div1.style.display = "none";
+            noEnInventario.style.display = "none";
+        } else if(cod === "dañada"){ //Si la tabla de empleados Activos está inactiva
+            div.style.display = "none"; //Desbloquear la tabla de empleados Activos
+            div1.style.display = "block";
+            noEnInventario.style.display = "none";
+        }else if(cod === "extraviada"){ //Si la tabla de empleados Activos está inactiva
+            div.style.display = "none"; //Desbloquear la tabla de empleados Activos
+            div1.style.display = "none";
+            noEnInventario.style.display = "block";
+        }
+
+    }
+</script>
+{% endblock %}
+
+{% block estilosJs %}
+<!-- Jquery Core Js -->
+<script src={% static 'panel/plugins/jquery/jquery.min.js' %}></script>
+
+<!-- Bootstrap Core Js -->
+<script src={% static 'panel/plugins/bootstrap/js/bootstrap.js' %}></script>
+
+<!-- Select Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-select/js/bootstrap-select.js' %}></script>
+
+<!-- Slimscroll Plugin Js -->
+<script src={% static 'panel/plugins/jquery-slimscroll/jquery.slimscroll.js' %}></script>
+
+
+<!-- Bootstrap Colorpicker Js -->
+<script src={% static 'panel/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js' %}></script>
+
+<!-- Dropzone Plugin Js -->
+<script src={% static 'panel/plugins/dropzone/dropzone.js' %}></script>
+
+<!-- Input Mask Plugin Js -->
+<script src={% static 'panel/plugins/jquery-inputmask/jquery.inputmask.bundle.js' %}></script>
+
+<!-- Multi Select Plugin Js -->
+<script src={% static 'panel/plugins/multi-select/js/jquery.multi-select.js' %}></script>
+
+<!-- Jquery Spinner Plugin Js -->
+<script src={% static 'panel/plugins/jquery-spinner/js/jquery.spinner.js' %}></script>
+
+<!-- Bootstrap Tags Input Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js' %}></script>
+
+<!-- noUISlider Plugin Js -->
+<script src={% static 'panel/plugins/nouislider/nouislider.js' %}></script>
+<!-- Waves Effect Plugin Js -->
+<script src={% static 'panel/plugins/node-waves/waves.js' %}></script>
+
+<!-- Jquery DataTable Plugin Js -->
+<script src={% static 'panel/plugins/jquery-datatable/jquery.dataTables.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.flash.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/jszip.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/pdfmake.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/vfs_fonts.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.html5.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.print.min.js' %}></script>
+
+<!-- Custom Js -->
+<script src={% static 'panel/js/admin.js' %}></script>
+<script src={% static 'panel/js/pages/ui/tooltips-popovers.js' %}></script>
+<script src={% static 'panel/js/pages/tables/jquery-datatable.js' %}></script>
+<script src={% static 'panel/js/pages/forms/advanced-form-elements.js' %}></script>
+
+<!-- Demo Js -->
+<script src={% static 'panel/js/demo.js' %}></script>
+{% endblock %}

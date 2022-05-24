@@ -204,6 +204,7 @@ urlpatterns = [
     path("entradaHerramientaPorRequi/", almacen.entradaHerramientaPorRequi),
     path("descontarDeInventario/", almacen.descontarDeInventario),
     path("pdfCostosAlmacén/", almacen.pdfCostosAlmacén),
+    path("listaAltasAlmacen/", almacen.listaAltasAlmacen),
     #soportes tecnicos
     path("verSoportes/",views.verSoportes),
     path("agregarSoporteEquipoComputo/",views.agregarSoporteEquipoComputo),

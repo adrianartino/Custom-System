@@ -367,7 +367,12 @@
                             <li class="active">
                                 {% else %}
                             <li>
+                                {% if estaEnAltasAlmacen %}
+                            <li class="active">
+                                {% else %}
+                            <li>
                             
+                                {% endif %}
                                 {% endif %}
                                 {% endif %}
                                 {% endif %}
@@ -385,9 +390,14 @@
                                     <i class="material-icons" style="color: #336BFF !important;">assignment</i>
                                     <span class="colorTextoSeleccionado">Inventario</span>
                                     {% else %}
+                                    {% if estaEnAltasAlmacen %}
+                                    <i class="material-icons" style="color: #336BFF !important;">assignment</i>
+                                    <span class="colorTextoSeleccionado">Inventario</span>
+                                    {% else %}
                                    
                                     <i class="material-icons colorGrisIcono">assignment</i>
                                     <span class="colorBlanco">Inventario</span>
+                                    {% endif %}
                                     {% endif %}
                                     {% endif %}
                                     {% endif %}
@@ -427,6 +437,18 @@
                                         <a href="/verRequisicionesHerramientas/" style="color: #e74c3c !important;">Ver requisiciones de herramientas</a>
                                         {% else %}
                                         <a href="/verRequisicionesHerramientas/" class="colorBlanco" >Ver requisiciones de herramientas</a>
+                                        {% endif %}
+                                    </li>
+
+                                    {% if estaEnAltasAlmacen %}
+                                    <li class="active">
+                                        {% else %}
+                                    <li>
+                                        {% endif %}
+                                        {% if estaEnAltasAlmacen %}
+                                        <a href="/listaAltasAlmacen/" style="color: #e74c3c !important;">Actualizaciones pendientes</a>
+                                        {% else %}
+                                        <a href="/listaAltasAlmacen/" class="colorBlanco">Actualizaciones pendientes</a>
                                         {% endif %}
                                     </li>
 

@@ -2755,3 +2755,125 @@ def pdfCostosAlmacén(request):
         return respuesta
     else:
         return redirect('/login/') #redirecciona a url de inicio
+    
+    
+def listaAltasAlmacen(request):
+    
+    #Si ya hay una sesión iniciada..
+    if "idSesion" in request.session:
+        
+        
+        estaEnAlmacen = True
+        estaEnAltasAlmacen = True
+        almacen = True
+        solicitantePrestamo = True
+
+
+        id_admin=request.session["idSesion"]
+        nombreini = request.session['nombres']
+        apellidosini = request.session['apellidos']
+        correo = request.session['correoSesion']
+        foto = fotoAdmin(request)
+        nombreCompleto = nombreini + " " + apellidosini #Blanca Yesenia Gaeta Talamantes
+        
+        arrayHerramientasPendientes = []
+        altasPendientes = altasAlmacen.objects.filter(estatus_alta = "pendiente")
+        
+        boolCambioCantidad = []
+        cambioCantidad = []
+        
+        boolCambioCodigo = []
+        cambioCodigo = []
+        
+        boolCambioStock = []
+        cambioStock = []
+        
+        boolCambioODC = []
+        cambioODC = []
+        
+        boolCambioProveedor = []
+        cambioProveedor = []
+        
+        for altaPendiente in altasPendientes:
+            idHerramienta = altaPendiente.id_herramienta_id
+            consultaHerramienta = HerramientasAlmacen.objects.filter(id_herramienta = idHerramienta)
+            
+            #Datos de herramienta
+            for datoHerramienta in consultaHerramienta:
+                codigoActual = datoHerramienta.codigo_herramienta
+                skuActual = datoHerramienta.sku
+                nombreActual = datoHerramienta.nombre_herramienta
+                nombreCorto = datoHerramienta.nombre_corto
+                imagen = datoHerramienta.imagen_herramienta
+                existenciaActual = datoHerramienta.cantidad_existencia
+                stockActual = datoHerramienta.stock
+                odcActual = datoHerramienta.orden_compra_evidence
+                proveedorActual = datoHerramienta.proveedor
+             
+            arrayHerramientasPendientes.append([codigoActual,skuActual,nombreActual,nombreCorto,imagen,existenciaActual,stockActual,proveedorActual]) 
+            
+            
+            #Cantidades
+            cantidadActualizar = altaPendiente.cantidad_agregar
+            if cantidadActualizar == 0:
+                boolCambioCantidad.append("No actualizar cantidad")
+                cambioCantidad.append("No actualizar cantidad")
+            else:
+                boolCambioCantidad.append("Actualizar cantidad")
+                cambioCantidad.append(cantidadActualizar)
+                
+            #Codigo
+            codigoActualizar = altaPendiente.codigoActualizado
+            if codigoActualizar == codigoActual:
+                boolCambioCodigo.append("No actualizar codigo")
+                cambioCodigo.append("No actualizar codigo")
+            else:
+                boolCambioCodigo.append("Actualizar codigo")
+                cambioCodigo.append(codigoActualizar)
+                
+            #Stock
+            stockActualizar = altaPendiente.stockActualizado
+            if stockActualizar == stockActual:
+                boolCambioStock.append("No actualizar stock")
+                cambioStock.append("No actualizar stock")
+            else:
+                boolCambioStock.append("Actualizar stock")
+                cambioStock.append(stockActualizar)
+                
+            #ODC
+            odcActualizar = altaPendiente.orden_compra_evidence_act
+            if odcActualizar == odcActual:
+                boolCambioODC.append("No actualizar odc")
+                cambioODC.append("No actualizar odc")
+            else:
+                boolCambioODC.append("Actualizar odc")
+                cambioODC.append(odcActualizar)
+            
+            #Proveedor
+            proveedorActualizar = altaPendiente.proveedor_alta
+            if proveedorActualizar == proveedorActual:
+                boolCambioProveedor.append("No actualizar proveedor")
+                cambioProveedor.append("No actualizar proveedor")
+            else:
+                boolCambioProveedor.append("Actualizar proveedor")
+                cambioProveedor.append(proveedorActualizar)
+                
+        listaAltasPendientes = zip(altasPendientes,arrayHerramientasPendientes,
+                                   boolCambioCantidad, cambioCantidad,
+                                   boolCambioCodigo, cambioCodigo,
+                                   boolCambioStock, cambioStock,
+                                   boolCambioODC, cambioODC,
+                                   boolCambioProveedor, cambioProveedor)
+            
+            
+                
+              
+            
+        
+        
+        
+
+        return render(request, "empleadosCustom/almacen/altasbajas/altasAlmacen.html", {"solicitantePrestamo":solicitantePrestamo,"estaEnAlmacen":estaEnAlmacen,"estaEnAltasAlmacen":estaEnAltasAlmacen,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "listaAltasPendientes":listaAltasPendientes})
+    #Si le da al inicio y no hay una sesión iniciada..
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
