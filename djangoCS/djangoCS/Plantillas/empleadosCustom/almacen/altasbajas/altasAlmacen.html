@@ -139,7 +139,7 @@ Actualizaciones | Custom System
                                     <th style="color: black;">Sin imagen</th>
                                 {% endif %}
                                 <td style="white-space: nowrap!important;">
-                                    <p class="font-bold col-green">{{herramienta.5}} unidades</p>
+                                    <p class="font-bold col-orange">{{herramienta.5}} unidades</p>
                                 </td>
                                 <td style="white-space: nowrap!important;">
                                     <p class="font-bold col-blue">{{herramienta.6}} unidades</p>
@@ -151,7 +151,12 @@ Actualizaciones | Custom System
 
                                 {% if boolCambioCantidad == "No actualizar cantidad" %}
                                 <td  style="white-space: nowrap!important;">
-                                    <span >No se actualizará la cantidad.</span>
+                                    <center>
+                                        <button type="button" class="btn bg-red waves-effect">
+                                            <i class="material-icons">cancel</i>
+                                        </button>
+                                    </center>
+                                    
                                 </td>
                                 {% else %}
                                 <td  style="white-space: nowrap!important;">
@@ -161,47 +166,66 @@ Actualizaciones | Custom System
 
                                 {% if boolCambioCodigo == "No actualizar codigo" %}
                                 <td>
-                                    <h4><span class="label bg-black">No se actualizará el código.</span></h4>
+                                    <center>
+                                        <button type="button" class="btn bg-red waves-effect">
+                                            <i class="material-icons">cancel</i>
+                                        </button>
+                                    </center>
                                 </td>
                                 {% else %}
-                                <td>
-                                    <h4><span class="label bg-black">Se cambiará el código de {{herramienta.0}} a {{cambioCodigo}}.</span></h4>
+                                <td style="white-space: nowrap!important;">
+                                    <p class="font-bold col-green">Se cambiará el código de {{herramienta.0}} a {{cambioCodigo}}.</p>
+                                    
                                 </td>
                                 {% endif %}
 
                                 {% if boolCambioStock == "No actualizar stock" %}
                                 <td>
-                                    <h4><span class="label bg-black">No se actualizará el stock.</span></h4>
+                                    <center>
+                                        <button type="button" class="btn bg-red waves-effect">
+                                            <i class="material-icons">cancel</i>
+                                        </button>
+                                    </center>
                                 </td>
                                 {% else %}
-                                <td>
-                                    <h4><span class="label bg-black">Se cambiará el stock de {{herramienta.1}} a {{cambioStock}} unidades.</span></h4>
+                                <td style="white-space: nowrap!important;">
+                                    <p class="font-bold col-green">Se cambiará el stock de {{herramienta.1}} a {{cambioStock}} unidades.</p>
+                                    
                                 </td>
                                 {% endif %}
 
                                 {% if boolCambioODC == "No actualizar odc" %}
                                 <td>
-                                    <h4><span class="label bg-black">No se actualizará la ODC ligada.</span></h4>
+                                    <center>
+                                        <button type="button" class="btn bg-red waves-effect">
+                                            <i class="material-icons">cancel</i>
+                                        </button>
+                                    </center>
                                 </td>
                                 {% else %}
-                                <td>
-                                    <h4><span class="label bg-black">Se actualizará la ODC ligada a la  {{cambioODC}}.</span></h4>
+                                <td style="white-space: nowrap!important;">
+                                    <p class="font-bold col-green">Se actualizará la ODC ligada a la  {{cambioODC}}.</p>
                                 </td>
                                 {% endif %}
 
                                 {% if boolCambioProveedor == "No actualizar proveedor" %}
                                 <td>
-                                    <h4><span class="label bg-black">No se actualizará el proveedor.</span></h4>
+                                    <center>
+                                        <button type="button" class="btn bg-red waves-effect">
+                                            <i class="material-icons">cancel</i>
+                                        </button>
+                                    </center>
                                 </td>
                                 {% else %}
-                                <td>
-                                    <h4><span class="label bg-black">Se actualizará el proveedor de {{herramienta.7}} a {{cambioProveedor}}.</span></h4>
+                                <td style="white-space: nowrap!important;">
+                                    <p class="font-bold col-green">Se actualizará el proveedor de {{herramienta.7}} a {{cambioProveedor}}.</p>
+                    
                                 </td>
                                 {% endif %}
 
 
                                 <td>
-                                    <h4><span class="label bg-black">Pendiente</span></h4>
+                                    <h4><span class="label bg-red">Pendiente</span></h4>
                                 </td>
                             </tr>
                             
