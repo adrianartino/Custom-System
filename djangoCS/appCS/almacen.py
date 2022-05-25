@@ -923,6 +923,11 @@ def verHerramientasALM(request):
             del request.session['herramientaDescontada']
             return render(request, "empleadosCustom/almacen/verHerramientas.html", {"solicitantePrestamo":solicitantePrestamo,"estaEnAlmacen":estaEnAlmacen,"estaEnVerHerramientas":estaEnVerHerramientas,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "registrosHerramientas":registrosHerramientas, "registrosHerramientasModal":registrosHerramientasModal, "registrosHerramientasModalBaja":registrosHerramientasModalBaja, "listaDañadas":listaDañadas,"listaDañadasFuera":listaDañadasFuera, "herramientaDescontada":herramientaDescontada, "listaHerramientas":listaHerramientas, "costoTotalTotal":costoTotalTotal})
             
+        if "herramientaDañadaEliminada" in request.session:
+            herramientaDañadaEliminada = request.session['herramientaDañadaEliminada']
+            del request.session['herramientaDañadaEliminada']
+            return render(request, "empleadosCustom/almacen/verHerramientas.html", {"solicitantePrestamo":solicitantePrestamo,"estaEnAlmacen":estaEnAlmacen,"estaEnVerHerramientas":estaEnVerHerramientas,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "registrosHerramientas":registrosHerramientas, "registrosHerramientasModal":registrosHerramientasModal, "registrosHerramientasModalBaja":registrosHerramientasModalBaja, "listaDañadas":listaDañadas,"listaDañadasFuera":listaDañadasFuera, "herramientaDañadaEliminada":herramientaDañadaEliminada, "listaHerramientas":listaHerramientas, "costoTotalTotal":costoTotalTotal})
+            
         
 
         return render(request, "empleadosCustom/almacen/verHerramientas.html", {"solicitantePrestamo":solicitantePrestamo,"estaEnAlmacen":estaEnAlmacen,"estaEnVerHerramientas":estaEnVerHerramientas,"almacen":almacen,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "foto":foto, "correo":correo, "registrosHerramientas":registrosHerramientas, "registrosHerramientasModalBaja":registrosHerramientasModalBaja, "registrosHerramientasModal":registrosHerramientasModal, "listaDañadas":listaDañadas,"listaDañadasFuera":listaDañadasFuera, "listaHerramientas":listaHerramientas, "costoTotalTotal":costoTotalTotal})
@@ -3011,75 +3016,110 @@ def listaAltasAlmacen(request):
     
 def excelInventarioHerramientasCategoria(request):
     response = HttpResponse(content_type='application/ms-excel')
-    response['Content-Disposition'] = 'attachment; filename=Inventario Cíclico Herramientas Almacén x Categoría '+str(datetime.today().strftime('%Y-%m-%d'))+'.xls'
+    response['Content-Disposition'] = 'attachment; filename=Inventario Cíclico Herramientas Almacen x Categoria '+str(datetime.today().strftime('%Y-%m-%d'))+'.xls'
     
     #creación de libro de excel
     libro = xlwt.Workbook(encoding='utf-8')
-    hoja = libro.add_sheet('Reporte de existencias')
+    hoja = libro.add_sheet('Reporte de categorias')
     
     numero_fila = 0
     estilo_fuente = xlwt.XFStyle()
     estilo_fuente.font.bold = True
     
-    columnas = ['Id Herramienta','Código Herramienta', 'Nombre herramienta', 'Marca', 'Tipo','Categoria/Nombre corto', 'SKU','Stock','Cantidad en existencia Almacén','Cantidad Dañadas','Total Cantidades','Total Cantidades Contadas','¿Con faltante?','Diferencia', 'Total Cantidades en prestamo']
+    columnas = ['Número Categoría','Nombre Categoría', 'Cantidad En Existencia','Cantidad Dañada en inventario','Cantidad contada','Sobrante/Faltante','Cuántas unidades?', 'Cantidad en Préstamo','Cantidad Dañada Fuera de inventario', 'Cantidades extraviadas fuera de inventario']
     for campo in range(len(columnas)):
         hoja.write(numero_fila, campo, columnas[campo], estilo_fuente)
         
+    categorias = ["Martillo", "Llave Perica", "Llave Inglesa", "Llave Torx", "Llave Allen", "Llave medida","Multimetro"]
     todasLasHerramientas = HerramientasAlmacen.objects.all()
     
-    arrayHerramientas = []
-    for herramienta in todasLasHerramientas:
-        idHerramienta = herramienta.id_herramienta
-        codigoHerramienta = herramienta.codigo_herramienta
-        nombreHerramienta = herramienta.nombre_herramienta
-        nombreCorto = herramienta.nombre_corto
-        marca = herramienta.marca
-        tipo = herramienta.tipo_herramienta
-        sku = herramienta.sku
-        stock = herramienta.stock
-        existencias = herramienta.cantidad_existencia
+    arrayExcel = []
+    arrayNumeroCategoria = []
+    nombreCategoria = []
+    arrayCantidadesCategoria = []
+    arrayDañadasEnInventario = []
+    totalesInventarioCategoria = []
+    totalesEnPrestamo = []
+    totalesDañadasFuera = []
+    totalesExtraviadas = []
+    
+    numCategoria = 0
+    for categoria in categorias:
+        numCategoria = numCategoria + 1
+        nombreCategoria = categoria
         
+        totalEnInventario = 0
+        contadorProductosEnCategoriaInventarioFisicoDisponible = 0
+        contadorProductosDañadosEnInventario = 0
+        contadorHerramientaEnPrestamo = 0 
+        contadorProductosDañadosFueraInventario = 0
+        contadorHerramientasExtraviadas = 0
+        consultaHerramientasCategoria = HerramientasAlmacen.objects.filter(nombre_corto = categoria)
         
-        #CantidadPrestamos ya esta..
-        contadorHerramientasEnPrestamo = 0
-        consultaPrestamosDeHerramienta = PrestamosAlmacen.objects.filter(estatus="En prestamo")
-        for dato in consultaPrestamosDeHerramienta:
-            idsHerramientas = dato.id_herramientaInstrumento
-            cantidadesHerramientas = dato.cantidades_solicitadas
+        for herramienta in consultaHerramientasCategoria: 
+            cantidadEnExistenciaActualInventario = herramienta.cantidad_existencia
+            contadorProductosEnCategoriaInventarioFisicoDisponible = contadorProductosEnCategoriaInventarioFisicoDisponible + cantidadEnExistenciaActualInventario
+            idHerramienta = herramienta.id_herramienta
             
-            arregloIdsHerramientas = idsHerramientas.split(",")
-            arregloCantidadesHerramientas = cantidadesHerramientas.split(",")
             
-            listaHerramientasEnPrestamo = zip(arregloIdsHerramientas,arregloCantidadesHerramientas)
+            consultaHerramientasDañadasEnInventario = HerramientasAlmacenInactivas.objects.filter(id_herramienta_id__id_herramienta = idHerramienta, enInventario = "Si", motivo_baja = "D")
+            numeroDañosHerramienta = 0
+            for daño in consultaHerramientasDañadasEnInventario:
+                numeroDañosHerramienta = numeroDañosHerramienta + 1
+            contadorProductosDañadosEnInventario = contadorProductosDañadosEnInventario + numeroDañosHerramienta
             
-            for idhhh, cantidad in listaHerramientasEnPrestamo:
-                idH = int(idhhh)
-                can = int(cantidad)
-                if idH == idHerramienta:
-                    contadorHerramientasEnPrestamo = contadorHerramientasEnPrestamo + can
+            #numero de prestamos
+            consultaPrestamos = PrestamosAlmacen.objects.filter(estatus = "En prestamo")
+            contadorHerramientaEnPrestamo = 0
+            for prestamo in consultaPrestamos:
+                idsHerramientasPrestadas = prestamo.id_herramientaInstrumento
+                cantidadesHerramientasPrestadas = prestamo.cantidades_solicitadas
+                
+                arregloIdsHerramientasPrestadas = idsHerramientasPrestadas.split(",")
+                arregloCantidadesHerramientas = cantidadesHerramientasPrestadas.split(",")
+                
+                listaHerramientasEnPrestamo = zip(arregloIdsHerramientasPrestadas, arregloCantidadesHerramientas)
+                
+                for idH, cantidad in listaHerramientasEnPrestamo:
+                    intidH = int(idH)
+                    if intidH == idHerramienta:
+                        contadorHerramientaEnPrestamo = contadorHerramientaEnPrestamo + int(cantidad)
+
+            #Herramientas dañadas fuera de inventario
+            consultaHerramientasDañadasFueraInventario = HerramientasAlmacenInactivas.objects.filter(id_herramienta_id__id_herramienta = idHerramienta, enInventario = "No", motivo_baja = "D")
+            numeroDañosHerramientaFueraAlmacen = 0
+            for daño in consultaHerramientasDañadasFueraInventario:
+                numeroDañosHerramientaFueraAlmacen = numeroDañosHerramientaFueraAlmacen + 1
+            contadorProductosDañadosFueraInventario = contadorProductosDañadosFueraInventario + numeroDañosHerramientaFueraAlmacen
         
-        #cantidad dañadas
-        cantidadHerramientasDañadas = 0
-        consultaHerramientasDañadas = HerramientasAlmacenInactivas.objects.filter(id_herramienta_id__id_herramienta = idHerramienta, motivo_baja="D")
+            #Herramientas extraviadas
+            consultaHerramientasExtraviadas = HerramientasAlmacenInactivas.objects.filter(id_herramienta_id__id_herramienta = idHerramienta, enInventario = "No", motivo_baja = "E")
+            numeroDañosHerramientaExtraviadas = 0
+            for daño in consultaHerramientasExtraviadas:
+                numeroDañosHerramientaExtraviadas = numeroDañosHerramientaExtraviadas + 1
+            contadorHerramientasExtraviadas = contadorHerramientasExtraviadas + numeroDañosHerramientaExtraviadas
         
-        for herramientaDañada in consultaHerramientasDañadas:
-            cantidadHerramientasDañadas = cantidadHerramientasDañadas + 1
+        
+        totalEnInventario = int(contadorProductosEnCategoriaInventarioFisicoDisponible) + int(contadorProductosDañadosEnInventario)
             
-        #Total cantidades
-        totalCantidades = existencias + cantidadHerramientasDañadas
+        arrayCantidadesCategoria.append(contadorProductosEnCategoriaInventarioFisicoDisponible)
+        arrayDañadasEnInventario.append(contadorProductosDañadosEnInventario)
+        totalesInventarioCategoria.append(totalEnInventario)
+        totalesEnPrestamo.append(contadorHerramientaEnPrestamo)
+        totalesDañadasFuera.append(contadorProductosDañadosFueraInventario)
+        totalesExtraviadas.append(contadorHerramientasExtraviadas)
         
-       
-        
-        arrayHerramientas.append([idHerramienta, codigoHerramienta, nombreHerramienta, marca,  tipo,nombreCorto, sku, stock, existencias,cantidadHerramientasDañadas, totalCantidades, "", "", "", contadorHerramientasEnPrestamo])
-        
-        
+        arrayExcel.append([numCategoria, nombreCategoria,contadorProductosEnCategoriaInventarioFisicoDisponible,
+                           contadorProductosDañadosEnInventario,totalEnInventario, "", "","",
+                           contadorHerramientaEnPrestamo,contadorProductosDañadosFueraInventario,
+                           contadorHerramientasExtraviadas])
             
         
     estilo_fuente = xlwt.XFStyle()
-    for herramienta in arrayHerramientas:
+    for categoria in arrayExcel:
         numero_fila+=1
-        for columna in range(len(herramienta)):
-            hoja.write(numero_fila, columna, str(herramienta[columna]), estilo_fuente)
+        for columna in range(len(categoria)):
+            hoja.write(numero_fila, columna, str(categoria[columna]), estilo_fuente)
         
     
     
@@ -3087,3 +3127,25 @@ def excelInventarioHerramientasCategoria(request):
         
     libro.save(response)
     return response 
+
+def quitarPerdida(request):
+    #Si ya hay una sesión iniciada..
+    
+    if "idSesion" in request.session:
+        
+        
+        if request.method == "POST":
+            idHerramientaAEliminarDaño = request.POST['idDañoEliminar']
+            
+            
+            herramientaDañadaBorrada = HerramientasAlmacenInactivas.objects.get(id_herramientaInactiva = idHerramientaAEliminarDaño)
+            herramientaDañadaBorrada.delete()
+            if herramientaDañadaBorrada:
+                request.session['herramientaDañadaEliminada'] = "Se ha eliminado el daño y ya no se contará en cuenta!"
+                
+                
+                return redirect('/verHerramientasALM/')
+    #Si le da al inicio y no hay una sesión iniciada..
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+    

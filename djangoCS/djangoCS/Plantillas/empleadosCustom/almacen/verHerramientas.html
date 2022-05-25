@@ -65,7 +65,7 @@ Herramientas | Custom System
 
             <div class="body" id="divActivos">
                 <div class="row clear-fix">
-                    <div class="col-xs-12 col-sm-1">
+                    <div class="col-md-1">
                         <form action="/pdfCostosAlmacén/" method="POST">{% csrf_token %}
                             <input type="hidden" name="activo" value="A">
                             <button type="submit" class="btn bg-red waves-effect animate__animated animate__flipInX"
@@ -76,7 +76,7 @@ Herramientas | Custom System
                             </button>
                         </form>
                     </div>
-                    <div class="col-xs-12 col-sm-1">
+                    <div class="col-md-1">
                         <form action="/excelInventario/" method="POST">{% csrf_token %}
                             <input type="hidden" name="activo" value="A">
                             <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
@@ -87,7 +87,7 @@ Herramientas | Custom System
                             </button>
                         </form>
                     </div>
-                    <div class="col-xs-12 col-sm-1">
+                    <div class="col-md-1">
                         <form action="/excelInventarioHerramientas/" method="POST">{% csrf_token %}
                             <input type="hidden" name="activo" value="A">
                             <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
@@ -98,18 +98,18 @@ Herramientas | Custom System
                             </button>
                         </form>
                     </div>
-                    <div class="col-xs-12 col-sm-2">
+                    <div class="col-md-2">
                         <form action="/excelInventarioHerramientasCategoria/" method="POST">{% csrf_token %}
                             <input type="hidden" name="activo" value="A">
                             <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
                                 data-toggle="tooltip" data-placement="bottom"
                                 title="Descargar formato de ciclico por categoría">
                                 <i class="material-icons">grid_on</i>
-                                <span>Inventario Categoría</span>
+                                <span>Cíclico Categoría</span>
                             </button>
                         </form>
                     </div>
-                    <div class="col-xs-12 col-sm-4">
+                    <div class="col-md-1">
                         <a class="label bg-blue-grey" style="font-size:small; " href="/agregarHerramientasALM/">Agregar
                             Herramienta</a>
                     </div>
@@ -494,11 +494,11 @@ Herramientas | Custom System
                                 <td>{{daño.fecha_baja}}</td>
                                 <td>
                                     <div>
-                                        <form action="/descontarDeInventario/" method="POST">{% csrf_token %}
+                                        <form action="/quitarPerdida/" method="POST">{% csrf_token %}
                                         <center>
-                                            <input type="hidden" name="idHerramientaADescontarInventario" value="{{daño.id_herramientaInactiva}}">
+                                            <input type="hidden" name="idDañoEliminar" value="{{daño.id_herramientaInactiva}}">
                                             <button type="submit" class="btn btn-danger btn-sm waves-effect" data-toggle="tooltip" data-placement="bottom"
-                                            title="Al dar clic, ya no se contará esta herramienta en inventario.">
+                                            title="Al dar clic, ya no se contará como una pérdida.">
                                                 <i class="material-icons">clear</i>
                                             </button>
                                         </center>
@@ -634,7 +634,7 @@ Herramientas | Custom System
                         
                         <button type="submit" class="btn bg-green waves-effect">
                             <i class="material-icons">loop</i>
-                            <span>SOLICITAR TOKEN PARA ACTUALIZAR DATOS</span>
+                            <span>ACTUALIZAR DATOS</span>
                         </button>
                     </center>
                 </form>
@@ -791,6 +791,17 @@ Herramientas | Custom System
 </script>
 {% endif %}
 
+{% if herramientaDañadaEliminada %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Enhorabuena..!',
+        text: ' {{herramientaDañadaEliminada}}',
+        footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
 
 
 <script type="text/javascript">
