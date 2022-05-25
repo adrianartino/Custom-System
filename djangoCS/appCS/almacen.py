@@ -3026,7 +3026,7 @@ def excelInventarioHerramientasCategoria(request):
     estilo_fuente = xlwt.XFStyle()
     estilo_fuente.font.bold = True
     
-    columnas = ['Número Categoría','Nombre Categoría', 'Cantidad En Existencia','Cantidad Dañada en inventario','Cantidad contada','Sobrante/Faltante','Cuántas unidades?', 'Cantidad en Préstamo','Cantidad Dañada Fuera de inventario', 'Cantidades extraviadas fuera de inventario']
+    columnas = ['Número Categoría','Nombre Categoría', 'Cantidad En Existencia','Cantidad Dañada en inventario','Cantidad Total en inventario','Cantidad contada','Sobrante/Faltante','Cuántas unidades?', 'Cantidad en Préstamo','Cantidad Dañada Fuera de inventario', 'Cantidades extraviadas fuera de inventario']
     for campo in range(len(columnas)):
         hoja.write(numero_fila, campo, columnas[campo], estilo_fuente)
         
