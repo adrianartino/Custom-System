@@ -282,16 +282,17 @@ Inicio | Custom System
                             </tr>
                         </thead>
                         <tbody>
-
+                            {% for imp in impresoras_año %}
                             <tr>
-                                {% for imp in impresoras_año %}
+                               
                                 <th>{{imp.0}}</th>
                                 <th><label class="{{imp.2}}">{{imp.1}}</label></th>
                                 <th>{{imp.3}}</th>
                                 <th>{{imp.4}}</th>
-                                {% endfor %}
+                                
 
                             </tr>
+                            {% endfor %}
 
                         </tbody>
                     </table>

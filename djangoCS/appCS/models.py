@@ -61,6 +61,19 @@ class Mouses (models.Model):
 
     def __str__(self):
         return self.id_mouse
+    
+
+class Mochilas (models.Model):
+    id_mochila = models.AutoField(primary_key=True)
+    marca = models.CharField(max_length=30)
+    modelo = models.CharField(max_length=30)
+    estado = models.CharField(max_length=30)
+    foto = models.ImageField(upload_to="mochilas", null = True)
+    id_empleado = models.ForeignKey(Empleados, on_delete=models.CASCADE, null=True)
+    activo = models.CharField(max_length=2)
+
+    def __str__(self):
+        return self.id_mochila
 
 class Teclados (models.Model):
     id_teclado = models.AutoField(primary_key=True)

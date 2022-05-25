@@ -568,6 +568,16 @@
                     <li class="active">
                         {% else %}
                     <li>
+                        {% if estaEnVerMochilas %}
+                    <li class="active">
+                        {% else %}
+                    <li>
+                        {% if estaEnAgregarMochilas %}
+                    <li class="active">
+                        {% else %}
+                    <li>
+                        {% endif %}
+                        {% endif %}
                         {% endif %}
                         {% endif %}
                         {% endif %}
@@ -617,8 +627,18 @@
                             <i class="material-icons colorAmarilloIcono" >settings_input_component</i>
                             <span style="color: #2EB086 !important;"> Equipos de sistemas</span>
                             {% else %}
+                            {% if estaEnVerMochilas %}
+                            <i class="material-icons colorAmarilloIcono" >settings_input_component</i>
+                            <span style="color: #2EB086 !important;"> Equipos de sistemas</span>
+                            {% else %}
+                            {% if estaEnAgregarMochilas %}
+                            <i class="material-icons colorAmarilloIcono" >settings_input_component</i>
+                            <span style="color: #2EB086 !important;"> Equipos de sistemas</span>
+                            {% else %}
                             <i class="material-icons colorGrisIcono">settings_input_component</i>
                             <span class="colorBlanco"> Equipos de sistemas</span>
+                            {% endif %}
+                            {% endif %}
                             {% endif %}
                             {% endif %}
                             {% endif %}
@@ -888,6 +908,64 @@
 
                                 </ul>
                             </li>
+
+
+                            <!-- Aqui terminaaa -->
+                            {% if estaEnVerMochilas %}
+                            <li class="active">
+                            {% else %}
+                            <li>
+                            {% if estaEnAgregarMochilas %}
+                            <li class="active">
+                            {% else %}
+                            <li>
+                            {% endif %}
+                            {% endif %}
+
+                                
+                                <a href="javascript:void(0);" class="menu-toggle">
+                                    {% if estaEnVerMochilas %}
+                                    <i class="material-icons" style="color: #336BFF !important;">business_center</i>
+                                    <span class="colorTextoSeleccionado">Mochilas</span>
+                                    {% else %}
+                                    {% if estaEnAgregarMochilas %}
+                                    <i class="material-icons" style="color: #336BFF !important;">business_center</i>
+                                    <span class="colorTextoSeleccionado">Mochilas</span>
+                                    {% else %}
+                                    
+                                    <i class="material-icons colorGrisIcono">business_center</i>
+                                    <span class="colorBlanco">Mochilas</span>
+                                    {% endif %}
+                                    {% endif %}
+                                </a>
+                                <ul class="ml-menu">
+                                        {% if estaEnVerMochilas %}
+                                        <li class="active">
+                                            {% else %}
+                                        <li>
+                                        {% endif %}
+                                        {% if estaEnVerMochilas %}
+                                        <a href="/verMochilas/" style="color: #d49e0a !important;">Ver Mochilas</a>
+                                        {% else %}
+
+                                        <a href="/verMochilas/" class="colorBlanco">Ver Mochilas</a>
+                                        {% endif %}
+
+                                    </li>
+                                        {% if estaEnAgregarMochilas %}
+                                        <li class="active">
+                                            {% else %}
+                                        <li>
+                                        {% endif %}
+                                        {% if estaEnAgregarMochilas %}
+                                        <a href="/agregarMochila/" style="color: #d49e0a !important;">Agregar mochila</a>
+                                        {% else %}
+                                        <a href="/agregarMochila/" class="colorBlanco">Agregar mochila</a>
+                                        {% endif %}
+                                    </li>
+
+                                </ul>
+                            </li>
                             <!-- Aqui terminaaa -->
                         </ul>
                     </li>
@@ -995,6 +1073,104 @@
                                 <a href="/agregarUSB/" class="colorTextoSeleccionado">Agregar memorias USB</a>
                                 {% else %}
                                 <a href="/agregarUSB/" class="colorBlanco">Agregar memorias USB</a>
+                                {% endif %}
+                            </li>
+
+                        </ul>
+                    </li>
+
+
+                    <!---termina modulo USB-->
+
+                    {% if estaEnVerCelulares %}
+                    <li class="active">
+                        {% else %}
+                    <li>
+                        {% if estaEnAgregarCelulares %}
+                    <li class="active">
+                        {% else %}
+                    <li>
+                    {% if estaEnVerCartasCelulares %}
+                    <li class="active">
+                        {% else %}
+                    <li>
+                        {% if estaEnAgregarResponsivaCelulares %}
+                        <li class="active">
+                            {% else %}
+                        <li>
+                        {% endif %}
+                        {% endif %}
+                        {% endif %}
+                        {% endif %}
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            {% if estaEnVerCelulares %}
+                            <i class="material-icons colorAmarilloIcono" >phone_android</i>
+                            <span style="color: #2EB086 !important;">Equipos Móviles</span>
+                            {% else %}
+                            {% if estaEnAgregarCelulares %}
+                            <i class="material-icons colorAmarilloIcono" >phone_android</i>
+                            <span style="color: #2EB086 !important;">Equipos Móviles</span>
+                            {% else %}
+                            {% if estaEnVerCartasCelulares %}
+                            <i class="material-icons colorAmarilloIcono" >phone_android</i>
+                            <span style="color: #2EB086 !important;">Equipos Móviles</span>
+                            {% else %}
+                            {% if estaEnAgregarResponsivaCelulares %}
+                            <i class="material-icons colorAmarilloIcono" >phone_android</i>
+                            <span style="color: #2EB086 !important;">Equipos Móviles</span>
+                            {% else %}
+                            <i class="material-icons colorGrisIcono">phone_android</i>
+                            <span class="colorBlanco">Equipos Móviles</span>
+                            {% endif %}
+                            {% endif %}
+                            {% endif %}
+                            {% endif %}
+                        </a>
+                        <ul class="ml-menu">
+                            {% if estaEnVerCelulares %}
+                            <li class="active">
+                                {% else %}
+                            <li>
+                                {% endif %}
+                                {% if estaEnVerCelulares %}
+                                <a href="/verCelulares/" class="colorTextoSeleccionado">Ver equipos móviles</a>
+                                {% else %}
+                                <a href="/verCelulares/" class="colorBlanco">Ver equipos móviles</a>
+                                {% endif %}
+                            </li>
+                            {% if estaEnAgregarCelulares %}
+                            <li class="active">
+                                {% else %}
+                            <li>
+                                {% endif %}
+                                {% if estaEnAgregarCelulares %}
+                                <a href="/agregarCelulares/" class="colorTextoSeleccionado">Agregar equipo movil</a>
+                                {% else %}
+                                <a href="/agregarCelulares/" class="colorBlanco">Agregar equipo movil</a>
+                                {% endif %}
+                            </li>
+
+                            {% if estaEnVerCartasCelulares %}
+                            <li class="active">
+                                {% else %}
+                            <li>
+                                {% endif %}
+                                {% if estaEnVerCartasCelulares %}
+                                <a href="/cartasCelulares/" class="colorTextoSeleccionado">Ver cartas responsivas</a>
+                                {% else %}
+                                <a href="/cartasCelulares/" class="colorBlanco">Ver cartas responsivas</a>
+                                {% endif %}
+                            </li>
+
+                            {% if estaEnAgregarResponsivaCelulares %}
+                            <li class="active">
+                                {% else %}
+                            <li>
+                                {% endif %}
+                                {% if estaEnAgregarResponsivaCelulares %}
+                                <a href="/agregarCartaCelulares/" class="colorTextoSeleccionado">Agregar carta responsiva movil</a>
+                                {% else %}
+                                <a href="/agregarCartaCelulares/" class="colorBlanco">Agregar carta responsiva movil</a>
                                 {% endif %}
                             </li>
 

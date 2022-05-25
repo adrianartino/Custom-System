@@ -15,7 +15,7 @@ from django.shortcuts import redirect
 from django.db.models import Q
 
 #Importación de modelos
-from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Encuestas, Preguntas, Respuestas,Mouses, Teclados, Monitores, Telefonos, DiscosDuros, EmpleadosDiscosDuros, MemoriasUSB, PrestamosSistemas, SoportesTecnicos, ImplementacionSoluciones
+from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Encuestas, Preguntas, Respuestas,Mouses, Teclados, Monitores, Telefonos, DiscosDuros, EmpleadosDiscosDuros, MemoriasUSB, PrestamosSistemas, SoportesTecnicos, ImplementacionSoluciones, Mochilas
 
 #Librería para manejar archivos en Python
 from django.core.files.base import ContentFile
@@ -13335,4 +13335,183 @@ def agregarImplementacion(request):
                                                           "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
     else:
         return redirect('/login/') #redirecciona a url de inicio
+    
+    
+    
+def verMochilas(request):
+    
+    if "idSesion" in request.session:
 
+        estaEnVerMochilas = True
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        
+        nombreCompleto = nombre + " " + apellidos
+        
+        foto = fotoAdmin(request)
+        
+        
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+        
+        #Listas a utilizar
+        mochilasActivas = []
+        mochilasActivasPrestamos = []
+        mochilasActivasPrestamos = []
+        idsMochilasPrestamos = []
+        
+        #Lista de todos los mouses
+        listaMochilas = Mochilas.objects.all()
+        mochilasPrestadas = PrestamosSistemas.objects.filter(devolucion = "N", tabla = "Mochilas")
+        for moP in mochilasPrestadas:
+            idMochila = moP.id_producto
+            idsMochilasPrestamos.append(idMochila)
+
+        
+        for mochila in listaMochilas:
+            idMochila = str(mochila.id_mochila)
+            marca = mochila.marca
+            modelo = mochila.modelo
+            estado = mochila.estado
+            fotoMochila = mochila.foto
+            if mochila.id_empleado_id == None:
+                ConEmpleado = False
+
+            else:
+                ConEmpleado = True
+                idEmpleado = str(mochila.id_empleado_id)
+            activo = mochila.activo
+            
+            if activo == "A":
+                if ConEmpleado == True:
+                     
+                    #sacar info de eempleado
+                    infoEmpleado = Empleados.objects.filter(id_empleado = int(idEmpleado))
+                    for dato in infoEmpleado:
+                        idArea = dato.id_area_id
+                        nombre = dato.nombre
+                        apellidos = dato.apellidos
+                        
+                        empleado = nombre + " " + apellidos
+                        
+                        consultaArea = Areas.objects.filter(id_area = idArea)
+                        for datoArea in consultaArea:
+                            nombreArea = datoArea.nombre
+                            colorArea = datoArea.color
+                    
+                   
+
+                elif ConEmpleado == False:
+                    empleado = "Sin empleado"
+                    nombreArea = "Sin departamento"
+                    colorArea = "Sin color"
+                        
+                mochilasActivas.append([idMochila, marca, modelo, estado, fotoMochila, empleado, nombreArea, colorArea])
+
+                if idMochila in idsMochilasPrestamos:
+                    for mochilaP in mochilasPrestadas:
+                        idMochilaP = mochilaP.id_producto
+                        if idMochila == idMochilaP:
+                            fechaEntrega = mochilaP.fecha_prestamo
+                            firmaEn = mochilaP.firma_entrega
+                        
+                        mochilasActivasPrestamos.append([fechaEntrega, firmaEn])
+                else:
+                    mochilasActivasPrestamos.append("Sin prestamo")
+                
+            lista = zip(mochilasActivas, mochilasActivasPrestamos)
+
+                
+                            
+
+
+
+
+
+            #No tiene un equipo asignado, puede variar el estado..
+            
+            if activo == "I":
+                mochilasActivasPrestamos.append([idMochila, marca, modelo, estado, fotoMochila])
+
+            
+            if "idMonitorBaja" in request.session:
+                baja = True
+                mensaje = "Se dio de baja al monitor " + request.session['idMonitorBaja']
+                del request.session["idMonitorBaja"]
+                return render(request, "Sistemas/Mochilas/verMochilas.html", {"estaEnVerMochilas":estaEnVerMochilas,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,"mochilasActivas":mochilasActivas, "mochilasActivasPrestamos":mochilasActivasPrestamos,
+            "mochilasActivasPrestamos":mochilasActivasPrestamos, "lista":lista, "idsMochilasPrestamos":idsMochilasPrestamos, "baja":baja, "mensaje":mensaje})
+
+            if "idMonitorBaja" in request.session:
+                alta = True
+                mensaje = "Se dio de alta al monitor " + request.session['idMonitorBaja']
+                del request.session["idMonitorBaja"]
+                return render(request, "Sistemas/Mochilas/verMochilas.html", {"estaEnVerMochilas":estaEnVerMochilas,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,"mochilasActivas":mochilasActivas, "mochilasActivasPrestamos":mochilasActivasPrestamos,
+            "mochilasActivasPrestamos":mochilasActivasPrestamos, "lista":lista, "idsMochilasPrestamos":idsMochilasPrestamos, "alta":alta, "mensaje":mensaje})
+
+        return render(request, "Sistemas/Mochilas/verMochilas.html", {"estaEnVerMochilas":estaEnVerMochilas,"id_admin":id_admin, "lista":lista, "mochilasActivasPrestamos":mochilasActivasPrestamos, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto, "mochilasActivas":mochilasActivas, "mochilasActivasPrestamos":mochilasActivasPrestamos})
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+
+def agregarMochila(request):
+    
+    if "idSesion" in request.session:
+
+        estaEnAgregarMochilas = True
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        
+        nombreCompleto = nombre + " " + apellidos
+        
+        foto = fotoAdmin(request)
+        
+        
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+        
+        #consulta equipos
+        empleados = Empleados.objects.filter(activo="A")
+        
+        #Si se le dio clic al botón de Guardar Monitor
+        if request.method == "POST":
+            
+            marcaMochila = request.POST['marcaMochila']
+            modeloMochila = request.POST['modeloMochila']
+            estadoMochila = request.POST['estadoMochila']
+            imagenchila = request.FILES.get('imagenMochila')
+            empleadoMochila = request.POST['empleadoMochila']
+            
+            #Si el mouse fue guardado sin equipo..
+            if empleadoMochila == "SinEmpleado":
+                registroMochila = Mochilas(marca = marcaMochila, modelo = modeloMochila, 
+                                       estado = estadoMochila, foto = imagenchila, activo = "I")
+                registroMochila.save()
+            
+            #Si el mouse se guardó con un equipo...
+            elif empleadoMochila != "SinEquipo":
+                intEmpleado = int(empleadoMochila)
+                registroMochila = Mochilas(marca = marcaMochila, modelo = modeloMochila, 
+                                       estado = estadoMochila, foto = imagenchila, activo = "A", id_empleado = Empleados.objects.get(id_empleado = empleadoMochila))
+                registroMochila.save()
+            
+            #Variables para el mensaje
+            if registroMochila:
+                registroMochilaCompletado = True
+                texto  = "Se ha registrado la mochila "+ marcaMochila + " " + modeloMochila
+                
+            return render(request, "Sistemas/Mochilas/agregarMochilas.html", {"estaEnAgregarMochilas":estaEnAgregarMochilas,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto, 
+                                                                            "empleados":empleados, "registroMochilaCompletado":registroMochilaCompletado, "texto":texto})
+
+        
+
+        return render(request, "Sistemas/Mochilas/agregarMochilas.html", {"estaEnAgregarMochilas":estaEnAgregarMochilas,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto, 
+                                                                            "empleados":empleados})
+    else:
+        return redirect('/login/') #redirecciona a url de inicio

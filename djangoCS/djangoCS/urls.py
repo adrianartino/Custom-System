@@ -221,6 +221,11 @@ urlpatterns = [
     path("revisarImplementacion/", viewEmpleados.revisarImplementacion),
     path("firmarImplementacion/", viewEmpleados.firmarImplementacion),
     path("excelImplementacion/", viewEmpleados.excelImplementacion),
+    
+    
+    #Mochilas
+    path("verMochilas/", views.verMochilas),
+    path("agregarMochila/", views.agregarMochila)
 
 
 ]
