@@ -225,7 +225,20 @@ urlpatterns = [
     
     #Mochilas
     path("verMochilas/", views.verMochilas),
-    path("agregarMochila/", views.agregarMochila)
+    path("agregarMochila/", views.agregarMochila),
+    path("altaMochila/", views.altaMochila),
+    path("bajaMochila/", views.bajaMochila),
+    path("xlMochilas/", views.xlMochilas),
+    path("editarMochila/", views.editarMochila),
+    
+    #Celulares
+    path("agregarCelulares/", views.agregarCelulares),
+    path("verCelulares/", views.verCelulares),
+    path("bajaCelular/", views.bajaCelular),
+    path("altaCelular/", views.altaCelular),
+    path("editarCelular/", views.editarCelular),
+    path("xlCelulares/", views.xlCelulares),
+    path("agregarCartaCelulares/", views.agregarCartaCelulares)
 
 
 ]

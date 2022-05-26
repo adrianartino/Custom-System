@@ -1,0 +1,449 @@
+{% extends "Menu/menu.html" %}
+{% load static %}
+
+{% block titulo %}
+Agregar Celular | Custom System
+{% endblock %}
+
+{% block estilos %}
+<!-- Favicon-->
+<link rel="icon" href={% static 'images/icons/ra.ico' %} type="image/x-icon">
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
+    type="text/css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+
+<!-- Bootstrap Core Css -->
+<link href={% static 'panel/plugins/bootstrap/css/bootstrap.css' %} rel="stylesheet">
+
+<!-- Waves Effect Css -->
+<link href={% static 'panel/plugins/node-waves/waves.css' %} rel="stylesheet" />
+
+<!-- Animation Css -->
+<link href={% static 'panel/plugins/animate-css/animate.css' %} rel="stylesheet" />
+
+<!-- Bootstrap Material Datetime Picker Css -->
+<link href={% static 'panel/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css' %}
+    rel="stylesheet" />
+
+<!-- Bootstrap DatePicker Css -->
+<link href={% static 'panel/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css' %} rel="stylesheet" />
+
+<!-- Wait Me Css -->
+<link href={% static 'panel/plugins/waitme/waitMe.css' %} rel="stylesheet" />
+
+<!-- Bootstrap Select Css -->
+<link href={% static 'panel/plugins/bootstrap-select/css/bootstrap-select.css' %} rel="stylesheet" />
+
+<!-- Custom Css -->
+<link href={% static 'panel/css/style.css' %} rel="stylesheet">
+
+<!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+<link href={% static 'panel/css/themes/all-themes.css' %} rel="stylesheet" />
+
+<script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
+
+
+{% endblock %}
+
+{% block contenido %}
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h2 style="font-family: 'Oswald', sans-serif;">
+                    AGREGAR CELULARES
+                    <small style="color: #790C05;">Formulario para agregar un equipo móvil al sistema.</small>
+                </h2>
+
+            </div>
+            <div class="body">
+                <form action="/agregarCelulares/" enctype="multipart/form-data" method="POST">{% csrf_token %}
+                    <div class="row clearfix">
+                        <div class="col-md-3">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Marca:</label>
+
+                            <div class="input-group">
+                                
+                                <select class="form-control show-tick" id="marcas" name="marca">
+                                    <option value="HISENSE" selected>HISENSE</option>
+                                    <option value="HUAWEI">HUAWEI</option>
+                                    <option value="LANIX">LANIX</option>
+                                    <option value="MOTOROLA">MOTOROLA</option>
+                                    <option value="POCO">POCO</option>
+                                    <option value="REALME">REALME</option>
+                                    <option value="OPPO">OPPO</option>
+                                    <option value="XIAOMI">XIAOMI</option>
+                                    <option value="SAMSUNG">SAMSUNG</option>
+                                    <option value="ZTE">ZTE</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Modelo:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">branding_watermark</i>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" class="form-control date" placeholder="Ingresar Modelo"
+                                        maxlength="50" name="modelo" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Color:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">palette</i>
+                                </span>
+                                <select class="form-control show-tick" name="color" required>
+                                    <option value="Negro">Negro</option>
+                                    <option value="Gris">Gris</option>
+                                    <option value="Azul">Azul</option>
+                                    <option value="Blanco">Blanco</option>
+                                    <option value="Rojo">Rojo</option>
+                                    <option value="Verde">Verde</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="email_address">Imagen de celular:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">add_photo_alternate</i>
+                                </span>
+                                <div class="form-line">
+                                    <input type="file" name="imgcel" id="txtimagen">
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+
+
+                    <div class="row clearfix">
+                        <div class="col-md-3">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Memoria RAM:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">trending_up</i>
+                                </span>
+                                <select class="form-control show-tick" name="memram" required>
+                                    <option value="1">1 GB</option>
+                                    <option value="2">2 GB</option>
+                                    <option value="3">3 GB</option>
+                                    <option value="4">4 GB</option>
+                                    <option value="6">6 GB</option>
+                                    <option value="8">8 GB</option>
+                                    <option value="12">12 GB</option>
+                                    <option value="16">16 GB</option>
+                                    <option value="32">32 GB</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Tipo Cargador:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">battery_charging_full</i>
+                                </span>
+                                <select class="form-control show-tick" name="tipoCargador" required>
+                                    <option value="Tipo C">Tipo C</option>
+                                    <option value="Micro USB">Micro USB</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="email_address">Modelo Cargador:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">battery_charging_full</i>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" class="form-control date" placeholder="Ingresar Cargador"
+                                        maxlength="50" name="modeloCargador">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Estado:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">build</i>
+                                </span>
+                                <select class="form-control show-tick" name="estado" required>
+                                    <option value="Funcional">Funcional</option>
+                                    <option value="Reparación">Reparación</option>
+                                    <option value="Basura">Basura</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="row clearfix">
+                        <div class="col-md-3">
+                            <label for="email_address">Número de serie:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">battery_charging_full</i>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" class="form-control date" placeholder="Ingresar Número de serie"
+                                        maxlength="50" name="numSerie" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="email_address">Número IMEI:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">battery_charging_full</i>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" class="form-control date" placeholder="Ingresar Número de IMEI"
+                                        maxlength="50" name="numImei" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="email_address">Número de teléfono:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">phone</i>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" class="form-control date" placeholder="Ingresar Número de teléfono"
+                                        maxlength="50" name="numTelefono" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Propietario:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">badge</i>
+                                </span>
+                                <select class="form-control show-tick" name="propietario" required>
+                                    <option value="nopropietario">Sin propietario</option>
+                                    {% for propietario in info_empleados %}
+                                    <option value="{{propietario.id_empleado}}">{{propietario.nombre}}
+                                        {{propietario.apellidos}}</option>
+
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        
+                        
+
+                       
+
+
+                    </div>
+                    <div class="row clearfix">
+                        <div class="col-md-3">
+                            <label for="email_address">Plan contratado:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">battery_charging_full</i>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" class="form-control date" placeholder="Ingresar plan contratado"
+                                        maxlength="50" name="nombrePlan">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <h2 class="card-inside-title"><span style="color: #078F68;">* </span>Fecha de Contratación Plan:</h2>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">date_range</i>
+                                </span>
+                                <div class="form-line" id="bs_datepicker_container">
+                                    <input type="text" class="form-control" name="fechaContrato"
+                                        placeholder="Seleccionar fecha" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <h2 class="card-inside-title"><span style="color: #078F68;">* </span>Duración pagando en meses:</h2>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">date_range</i>
+                                </span>
+                                <input type="number" value="1" max="48" min="1" step="1" name="mesesContrato" >
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Compañía:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">build</i>
+                                </span>
+                                <select class="form-control show-tick" name="compañia" required>
+                                    <option value="Telcel">Telcel</option>
+                                    <option value="AT&T">AT&T</option>
+                                    <option value="Movistar">Movistar</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                    </div>
+
+
+
+
+
+                    <br>
+                    <button type="submit"
+                        class="btn btn-warning m-t-15 waves-effect animate__animated animate__flipInX"><i
+                            class="material-icons">laptop_mac</i> Guardar Celular</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+{% if compuSin %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Wujuu..',
+        text: ' {{textoCompu}}',
+        footer: '<span style="color: green!important"> Sigue navegando por Custom System! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
+{% if compuCon %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Wujuu..',
+        text: ' {{textoCompu}}',
+        footer: '<span style="color: green!important"> Sigue navegando por Custom System! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
+{% endblock %}
+
+{% block estilosJs %}
+
+<script>
+    function soloLetras(e) {
+        key = e.keyCode || e.which;
+        tecla = String.fromCharCode(key).toLowerCase();
+        letras = " áéíóúabcdefghijklmnñopqrstuvwxyz";
+        especiales = "8-37-39-46";
+
+        tecla_especial = false
+        for (var i in especiales) {
+            if (key == especiales[i]) {
+                tecla_especial = true;
+                break;
+            }
+        }
+
+        if (letras.indexOf(tecla) == -1 && !tecla_especial) {
+            return false;
+        }
+    }
+
+    function validaNumericos(event) {
+        if (event.charCode >= 48 && event.charCode <= 57) {
+            return true;
+        }
+        return false;
+    }
+
+    function cambiarImagen() {
+        var selection = document.getElementById('marcas');
+        var marca = selection.options[selection.selectedIndex].value;
+        var primeraparte = "/static/images/"
+        var segundaparte = ".png"
+        var todo = primeraparte + marca + segundaparte
+        document.getElementById('marcaslap').src = todo
+        document.getElementById('valorSelect').value = todo;
+    }
+</script>
+<!-- Jquery Core Js -->
+<script src={% static 'panel/plugins/jquery/jquery.min.js' %}></script>
+
+<!-- Bootstrap Core Js -->
+<script src={% static 'panel/plugins/bootstrap/js/bootstrap.js' %}></script>
+
+<!-- Select Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-select/js/bootstrap-select.js' %}></script>
+
+<!-- Slimscroll Plugin Js -->
+<script src={% static 'panel/plugins/jquery-slimscroll/jquery.slimscroll.js' %}></script>
+
+<!-- Bootstrap Colorpicker Js -->
+<script src={% static 'panel/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js' %}></script>
+
+<!-- Dropzone Plugin Js -->
+<script src={% static 'panel/plugins/dropzone/dropzone.js' %}></script>
+
+<!-- Input Mask Plugin Js -->
+<script src={% static 'panel/plugins/jquery-inputmask/jquery.inputmask.bundle.js' %}></script>
+
+<!-- Multi Select Plugin Js -->
+<script src={% static 'panel/plugins/multi-select/js/jquery.multi-select.js' %}></script>
+
+<!-- Jquery Spinner Plugin Js -->
+<script src={% static 'panel/plugins/jquery-spinner/js/jquery.spinner.js' %}></script>
+
+<!-- Bootstrap Tags Input Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js' %}></script>
+
+<!-- noUISlider Plugin Js -->
+<script src={% static 'panel/plugins/nouislider/nouislider.js' %}></script>
+
+<!-- Waves Effect Plugin Js -->
+<script src={% static 'panel/plugins/node-waves/waves.js' %}></script>
+
+<!-- Autosize Plugin Js -->
+<script src={% static 'panel/plugins/autosize/autosize.js' %}></script>
+
+<!-- Moment Plugin Js -->
+<script src={% static 'panel/plugins/momentjs/moment.js' %}></script>
+
+<!-- Bootstrap Material Datetime Picker Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js' %}>
+</script>
+
+<!-- Bootstrap Datepicker Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js' %}></script>
+
+<!-- Jquery DataTable Plugin Js -->
+<script src={% static 'panel/plugins/jquery-datatable/jquery.dataTables.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.flash.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/jszip.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/pdfmake.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/vfs_fonts.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.html5.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.print.min.js' %}></script>
+
+<!-- Custom Js -->
+<script src={% static 'panel/js/admin.js' %}></script>
+<script src={% static 'panel/js/pages/forms/basic-form-elements.js' %}></script>
+<script src={% static 'panel/js/pages/tables/jquery-datatable.js' %}></script>
+<script src={% static 'panel/js/pages/forms/advanced-form-elements.js' %}></script>
+
+
+<!-- Demo Js -->
+<script src={% static 'panel/js/demo.js' %}></script>
+
+{% endblock %}

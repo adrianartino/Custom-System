@@ -1,0 +1,587 @@
+{% extends "Menu/menu.html" %}
+{% load static %}
+
+{% block titulo %}
+Responsiva Celular | CS
+{% endblock %}
+
+{% block estilos %}
+<!-- Favicon-->
+<link rel="icon" href={% static 'images/icons/ra.ico' %} type="image/x-icon">
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
+    type="text/css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+
+<!-- Bootstrap Core Css -->
+<link href={% static 'panel/plugins/bootstrap/css/bootstrap.css' %} rel="stylesheet">
+
+<!-- Waves Effect Css -->
+<link href={% static 'panel/plugins/node-waves/waves.css' %} rel="stylesheet" />
+
+<!-- Animation Css -->
+<link href={% static 'panel/plugins/animate-css/animate.css' %} rel="stylesheet" />
+
+<!-- Morris Chart Css-->
+<link href={% static 'panel/plugins/morrisjs/morris.css' %} rel="stylesheet" />
+
+<!-- Bootstrap Select Css -->
+<link href={% static 'panel/plugins/bootstrap-select/css/bootstrap-select.css' %} rel="stylesheet" />
+
+<!-- Custom Css -->
+<link href={% static 'panel/css/style.css' %} rel="stylesheet">
+
+<!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+<link href={% static 'panel/css/themes/all-themes.css' %} rel="stylesheet" />
+
+{% endblock %}
+
+{% block contenido %}
+<div class="row clearfix">
+    <div >
+        <div class="card">
+            <div class="body">
+                <center>
+                    <h1>CARTA COMPROMISO Y ENTREGA DE EQUIPO MÓVIL.</h1>
+                    <img src={% static 'images/custom-png.png' %} width="300" alt="User" />
+                </center>
+                <h3>Sobre el uso general del CELULAR.</h3>
+                <h4>Sobre la usabilidad del celular se deben tener las siguientes consideraciones</h4>
+                <p class="m-t-10 m-b-30">
+                    1 •	El Trabajador es el único responsable del celular que se le asigna. 
+                </p>
+                <p class="m-t-10 m-b-30">
+                    2 • Mantener en condiciones de operación y limpieza el equipo recibido.
+                </p>
+                <p class="m-t-10 m-b-30">
+                    3 •	No permitir el acceso de terceros al uso del equipo.
+                </p>
+                <p class="m-t-10 m-b-30">
+                    4 •	No modificar la configuración del equipo a menos que al trabajador se le de autorización por parte del encargado de sistemas para ello.
+                </p>
+                <p class="m-t-10 m-b-30">
+                    5 •	Utilizar el equipo para los propósitos de negocio establecido por la empresa.
+                </p>
+                <p class="m-t-10 m-b-30">
+                    6 •	No instalar ningún tipo de software sin ser expresamente autorizado por la empresa.
+                </p>
+                <p class="m-t-10 m-b-30">
+                    7 •	Cumplir con las normas de seguridad relativas a la custodia del equipo aún fuera del horario laboral.
+                </p>
+                <p class="m-t-10 m-b-30">
+                    8 •	No ejecutar servicios de mantenimiento en el equipo, en caso de ser necesario solicitarlo al área de sistemas para que dicho servicio sea canalizado por la empresa.
+                </p>
+                <p class="m-t-10 m-b-30">
+                    9 •	Entregar del equipo con todos sus accesorios en caso de terminación de la relación laboral cualquier que sea el motivo.
+                </p>
+                <p class="m-t-10 m-b-30">
+                    10 • El celular es una herramienta de trabajo que se debe utilizar para facilitar las comunicaciones entre oficinas y además con las personas que prestan su servicio fuera de las mismas. 
+                </p>
+                <p class="m-t-10 m-b-30">
+                    11 • El celular debe permanecer encendido y cargado.
+                </p>
+                <p class="m-t-10 m-b-30">
+                    12 • Los celulares deben estar a servicio permanente de las áreas u oficinas de la empresa a que fueron asignados. 
+                <p class="m-t-10 m-b-30">
+                    13 • Será responsabilidad de los usuarios la custodia, cuidado y buen uso de los teléfonos celulares. 
+                </p>
+                <p class="m-t-10 m-b-30">
+                    14 • En caso de ser asignado a una persona, ésta se hace responsable íntegramente por el equipo.
+                </p>
+                <p class="m-t-10 m-b-30">
+                    15 • Mantener en buen estado el equipo a su disposición, cualquier fallo físico o de software deberá ser informado inmediatamente al Ing. Marcos Adrián Guerrero Artiño y al correo sistemas@customco.com.mx
+                </p>
+                <p class="m-t-10 m-b-30">
+                    16 • El control de gastos de la línea, es decir, el control del límite tanto de mensajes, llamadas y megas de navegación se llevará a cabo personalmente por el responsable del equipo.
+                </p>
+                <p class="m-t-10 m-b-30">
+                    17 • En caso de excedentes de facturación se revisara individualmente cada caso y se tomara una decisión en cuanto al monto excedido que deberá ser cubierto por el trabajador en caso de que se determinara un uso inadecuado de la línea.  
+                </p>
+                <p class="m-t-10 m-b-30">
+                    18 • La empresa se reserva el derecho de cambiar, eliminar, reemplazar el servicio, equipo, compañía proveedora, etc., así como las condiciones y restricciones vigentes.  
+                </p>
+                <p class="m-t-10 m-b-30">
+                    19 • No existirá ninguna forma de reembolso o asignación por gastos de celulares personales.  
+                </p>
+                <br>
+                <h4 style="text-align: justify;">
+                    PÉRDIDAS Y/O DAÑO DEL EQUIPO. Ante la pérdida del equipo, ya sea por sustracción o extravío, deberá dar cuenta en 
+                    forma inmediata al Ing. Marcos Adrián Guerrero Artiño, encargado del departamento de sistemas. El costo que 
+                    se derive de la pérdida del equipo será del monto total que corresponda al costo el equipo en el mercado. 
+                    El administrador tramitará la reposición del equipo perdido o robado y el costo de dicho trámite será a cargo del 
+                    usuario. El tiempo de la reposición del equipo estará sujeto a la disponibilidad de inventario para reposición con 
+                    los que cuente la compañía Claro. En caso de causar daños físicos por mal uso al Equipo que deriven en un mal funcionamiento 
+                    del mismo tales como daño de la pantalla, daños causados por humedad o mojar el equipo o sobrecalentamiento, el costo de estas 
+                    reparaciones correrá por cuenta del usuario.
+                </h4>
+                {% if compuSeleccionada %}
+
+                {% else %}
+                <div class="body">
+                    <form id="form_validation" action="/agregarCarta/" method="POST">{% csrf_token %}
+                        <div class="row clearfix">
+                            <div class="col-md-3">
+
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email_address">Celular:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <i class="material-icons">computer</i>
+                                    </span>
+                                    
+                                    <select class="form-control show-tick" name="compuSeleccionada">
+                                        {% if celularesInactivos %}
+                                            {% for celular in celularesInactivos %}
+                                            <option value="{{celular.id_celular}}">ID: {{celular.id_celular}} - {{celular.marca}} - {{celular.modelo}}
+                                                {{equipo.modelo}}</option>
+                                            {% endfor %}
+                                        {% else %}
+                                            <option value="Ninguno">No hay celulares para asignar</option>
+                                        {% endif %}
+                                    </select>
+                                    
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-md-3">
+
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email_address">Empleado:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <i class="material-icons">person</i>
+                                    </span>
+
+                                    <select class="form-control show-tick" name="empleadoSeleccionado">
+                                        {% for empleado, area in lista %}
+                                        <option value="{{empleado.id_empleado}}">{{empleado.nombre}}
+                                            {{empleado.apellidos}} - {{area.0}}</option>
+                                        {% endfor %}
+                                    </select>
+
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+
+                            </div>
+                        </div>
+                        <center>
+                            {% if celularesInactivos %}
+                            <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i
+                                class="material-icons">save</i> Preguardar Celular</button>
+                                         
+                            {% else %}
+                                <h1>No se puede realizar carta porque no hay equipos inactivos.</h1>
+                            {% endif %}
+                            
+                        </center>
+
+                    </form>
+                </div>
+                <center>
+
+                    <h2>{{fecha}}</h2>
+
+                </center>
+                {% endif %}
+
+                {% if compuSeleccionada %}
+
+                <p class="m-t-10 m-b-30">
+                    Por medio de la presente hago constar que he recibido del departamento de sistemas de la empresa
+                    Custom&Co S.A de C.V. equipo de cómputo que consta de:
+                </p>
+                <h2>{{compuSeleccionada}}</h2>
+
+                <div class="row clearfix">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="card">
+                            <div class="header">
+                                <h2>
+                                    CARACTERÍSTICAS DE EQUIPO
+                                </h2>
+                                <h1>{{n}}</h1>
+                                <ul class="header-dropdown m-r--5">
+                                    <li class="dropdown">
+                                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"
+                                            role="button" aria-haspopup="true" aria-expanded="false">
+                                            <i class="material-icons">more_vert</i>
+                                        </a>
+                                        <ul class="dropdown-menu pull-right">
+                                            <li><a href="javascript:void(0);">Action</a></li>
+                                            <li><a href="javascript:void(0);">Another action</a></li>
+                                            <li><a href="javascript:void(0);">Something else here</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="body">
+                                <div class="table-responsive">
+                                    <table
+                                        class="table table-bordered table-striped table-hover dataTable js-exportable">
+                                        <thead>
+                                            <tr>
+                                                <th>ID Equipo</th>
+                                                <th>Tipo</th>
+                                                <th>Marca</th>
+                                                <th>Modelo</th>
+                                                <th>Color</th>
+                                                <th>Imagen</th>
+                                                <th>Memoria RAM</th>
+                                                <th>Procesador</th>
+                                                <th>Sistema Operativo</th>
+                                                <th>Cargador</th>
+                                                <th>Estado</th>
+                                                <th>Activo</th>
+
+
+
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <th>ID Equipo</th>
+                                                <th>Tipo</th>
+                                                <th>Marca</th>
+                                                <th>Modelo</th>
+                                                <th>Color</th>
+                                                <th>Imagen</th>
+                                                <th>Memoria RAM</th>
+                                                <th>Procesador</th>
+                                                <th>Sistema Operativo</th>
+                                                <th>Cargador</th>
+                                                <th>Estado</th>
+                                                <th>Activo</th>
+
+                                            </tr>
+                                        </tfoot>
+                                        <tbody>
+                                            <tr>
+
+                                                {% for equipo in datosEquipo %}
+                                                <th>{{equipo.id_equipo}}</th>
+                                                <th>{{equipo.tipo}}</th>
+                                                <th>{{equipo.marca}}</th>
+                                                <th>{{equipo.modelo}}</th>
+                                                <th>{{equipo.color}}</th>
+                                                <th>
+                                                    <center>
+                                                        <img src="{{equipo.imagen.url}}" width="60%" alt="lap">
+                                                    </center>
+                                                </th>
+                                                <th>{{equipo.memoriaram}}</th>
+                                                <th>{{equipo.procesador}}</th>
+                                                <th>{{equipo.sistemaoperativo}}</th>
+                                                <th>{{equipo.modelocargador}}</th>
+                                                <th>{{equipo.estado}}</th>
+                                                <th>{{equipo.activo}}</th>
+                                                {% endfor %}
+
+
+                                            </tr>
+
+
+
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p class="m-t-10 m-b-30">
+                    El cual me es confiado para uso exclusivo del desempeño de mis actividades laborales asignadas. Se
+                    me entregó una copia de la política y estoy consciente de que "Toda la información
+                    que los equipos puedan contener, almacenar o procesar es considerada confidencial, por lo que me
+                    comprometo a mantener activo el bloqueo del eqeuipo mediante contraseña para evitar
+                    el acceso no autorizado".
+                </p>
+                <p class="m-t-10 m-b-30">
+                    Así mismo en cso de tener el equipo un daño o perjuicio por mal uso u operación, este será bajo mi
+                    responsabilidad y costo según lo establecido en la "POLÍTICA DE ASIGNACIÓN Y USO DE EQUIPO DE
+                    CÓMPUTO"
+                    vigente, la cual se me entrega una copia junto con esta responsiva.
+                </p>
+                <div class="row clearfix">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="card">
+                            <div class="header">
+                                <h2>
+                                    DATOS DE EMPLEADO
+                                </h2>
+                                <ul class="header-dropdown m-r--5">
+                                    <li class="dropdown">
+                                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"
+                                            role="button" aria-haspopup="true" aria-expanded="false">
+                                            <i class="material-icons">more_vert</i>
+                                        </a>
+                                        <ul class="dropdown-menu pull-right">
+                                            <li><a href="javascript:void(0);">Action</a></li>
+                                            <li><a href="javascript:void(0);">Another action</a></li>
+                                            <li><a href="javascript:void(0);">Something else here</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="body">
+                                <div class="table-responsive">
+                                    <table
+                                        class="table table-bordered table-striped table-hover dataTable js-exportable">
+                                        <thead>
+                                            <tr>
+                                                <th>ID Empleado</th>
+                                                <th>Nombre</th>
+                                                <th>Apellidos</th>
+                                                <th>Área</th>
+                                                <th>Puesto</th>
+                                                <th>Correo</th>
+
+                                                <th>Activo</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <th>ID Empleado</th>
+                                                <th>Nombre</th>
+                                                <th>Apellidos</th>
+                                                <th>Área</th>
+                                                <th>Puesto</th>
+                                                <th>Correo</th>
+
+                                                <th>Activo</th>
+
+                                            </tr>
+                                        </tfoot>
+                                        <tbody>
+                                            <tr>
+                                                {% for empleados in empleadoDatos%}
+                                                <td>{{empleados.id_empleado}}</td>
+                                                <td>{{empleados.nombre}}</td>
+                                                <td>{{empleados.apellidos}}</td>
+                                                <td><span class="{{color}}">{{areaNombre}}</span></td>
+                                                <td>{{empleados.puesto}}</td>
+                                                <td>{{empleados.correo}}</td>
+                                                <td>{{empleados.activo}}</td>
+                                                {% endfor %}
+
+
+                                            </tr>
+
+
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                {% else %}
+
+                {% endif %}
+
+
+
+            </div>
+        </div>
+
+        {% if compuSeleccionada2 %}
+        <!-- aqui va lo del canvas -->
+        <div style="background-color: #fff; background-clip: border-box;
+        border: 1px solid rgba(0, 0, 0, 0.125);
+        border-radius: 0.25rem;">
+            <div class="row clearfix" > 
+                <center>
+                    <h2>Ingresar Firma Electrónica</h2>
+                    <h4>Se solicita ingresar la firma electrónica del empleado para el archivo virtual.</h4>
+                </center>
+            </div>
+            <br>
+            <center>
+
+                <canvas id="sheet" width="400" height="250" style="border: 1px solid black"></canvas>
+                <div class="row clearfix">
+                    <button type="button"  onclick="limpiar()"
+                    class="btn btn-success m-t-15 waves-effect animate__animated animate__flipInX">
+                    <i class="material-icons">delete_sweep</i> Limpiar firma</button>
+                    
+                </div>
+                <div clas="row clearfix">  
+                    
+                    <form action="/guardarImagen/" method="POST">{% csrf_token %}
+                        {% for equipo in datosEquipo %}
+                        <input type="hidden" name="idEquipo" value="{{equipo.id_equipo}}">
+                        {% endfor %}
+                        {% for empleado in empleadoDatos %}
+                        <input type="hidden" name="idEmpleado" value="{{empleado.id_empleado}}">
+                        {% endfor %}
+                        <input type="hidden" name="canvasData" id="my_hidden">
+                        <button type="submit"  onclick="save()"
+                    class="btn btn-warning m-t-15 waves-effect animate__animated animate__flipInX">
+                    <i class="material-icons">save</i> Guardar carta</button>
+                    </form>
+                    <br>
+                    
+
+                    <form action="/firmarCarta/" method="POST">{% csrf_token %}
+                        {% for equipo in datosEquipo %}
+                        <input type="hidden" name="idEquipo" value="{{equipo.id_equipo}}">
+                        {% endfor %}
+                        {% for empleado in empleadoDatos %}
+                        <input type="hidden" name="idEmpleado" value="{{empleado.id_empleado}}">
+                        {% endfor %}
+                        <button type="submit" class="btn bg-red waves-effect"><i class="material-icons">blur_on</i>QR</button>
+                    </form>
+                <div>
+                <br>
+            </center>
+            
+        </div>
+        {% endif %}
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+{% if hayError %}
+<script type="text/javascript">
+    Swal.fire({
+        icon: 'error',
+        title: 'Algo salio mal..',
+        text: ' {{textoError}}',
+        footer: '<span style="color: red!important"> Corrige los datos para realizar carta! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
+
+<script>
+    
+
+    var canvas = document.getElementById('sheet'), g = canvas.getContext("2d");
+    g.strokeStyle = "hsl(208, 100%, 43%)";
+    g.lineJoin = "round";
+    g.lineWidth = 1;
+    g.filter = "blur(1px)";
+
+    const
+    relPos = pt => [pt.pageX - canvas.offsetLeft, pt.pageY - canvas.offsetTop],
+    drawStart = pt => { with(g) { beginPath(); moveTo.apply(g, pt); stroke(); }},
+    drawMove = pt => { with(g) { lineTo.apply(g, pt); stroke(); }},
+
+    pointerDown = e => drawStart(relPos(e.touches ? e.touches[0] : e)),
+    pointerMove = e => drawMove(relPos(e.touches ? e.touches[0] : e)),
+
+    draw = (method, move, stop) => e => {
+        if(method=="add") pointerDown(e);
+        canvas[method+"EventListener"](move, pointerMove);
+        canvas[method+"EventListener"](stop, g.closePath);
+    };
+
+    canvas.addEventListener("mousedown", draw("add","mousemove","mouseup"));
+    canvas.addEventListener("touchstart", draw("add","touchmove","touchend"));
+    canvas.addEventListener("mouseup", draw("remove","mousemove","mouseup"));
+    canvas.addEventListener("touchend", draw("remove","touchmove","touchend"));
+
+    function limpiar(){
+        g.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function save() {
+        var canvas = document.getElementById('sheet');
+        var inputVacio = document.getElementById('my_hidden');
+        inputVacio.value = canvas.toDataURL();
+        document.forms["form1"].submit();
+    }
+
+    
+
+</script>
+{% endblock %}
+
+{% block estilosJs %}
+<!-- Jquery Core Js -->
+<script src={% static 'panel/plugins/jquery/jquery.min.js' %}></script>
+
+<!-- Bootstrap Core Js -->
+<script src={% static 'panel/plugins/bootstrap/js/bootstrap.js' %}></script>
+
+<!-- Select Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-select/js/bootstrap-select.js' %}></script>
+
+<!-- Slimscroll Plugin Js -->
+<script src={% static 'panel/plugins/jquery-slimscroll/jquery.slimscroll.js' %}></script>
+
+<!-- Bootstrap Colorpicker Js -->
+<script src={% static 'panel/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js' %}></script>
+
+<!-- Dropzone Plugin Js -->
+<script src={% static 'panel/plugins/dropzone/dropzone.js' %}></script>
+
+<!-- Input Mask Plugin Js -->
+<script src={% static 'panel/plugins/jquery-inputmask/jquery.inputmask.bundle.js' %}></script>
+
+<!-- Multi Select Plugin Js -->
+<script src={% static 'panel/plugins/multi-select/js/jquery.multi-select.js' %}></script>
+
+<!-- Jquery Spinner Plugin Js -->
+<script src={% static 'panel/plugins/jquery-spinner/js/jquery.spinner.js' %}></script>
+
+<!-- Bootstrap Tags Input Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js' %}></script>
+
+<!-- noUISlider Plugin Js -->
+<script src={% static 'panel/plugins/nouislider/nouislider.js' %}></script>
+
+<!-- Waves Effect Plugin Js -->
+<script src={% static 'panel/plugins/node-waves/waves.js' %}></script>
+
+<!-- Jquery DataTable Plugin Js -->
+<script src={% static 'panel/plugins/jquery-datatable/jquery.dataTables.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.flash.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/jszip.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/pdfmake.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/vfs_fonts.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.html5.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.print.min.js' %}></script>
+
+<!-- Jquery CountTo Plugin Js -->
+<script src={% static 'panel/plugins/jquery-countto/jquery.countTo.js' %}></script>
+
+<!-- Morris Plugin Js -->
+<script src={% static 'panel/plugins/raphael/raphael.min.js' %}></script>
+<script src={% static 'panel/plugins/morrisjs/morris.js' %}></script>
+
+<!-- ChartJs -->
+<script src={% static 'panel/plugins/chartjs/Chart.bundle.js' %}></script>
+
+<!-- Flot Charts Plugin Js -->
+<script src={% static 'panel/plugins/flot-charts/jquery.flot.js' %}></script>
+<script src={% static 'panel/plugins/flot-charts/jquery.flot.resize.js' %}></script>
+<script src={% static 'panel/plugins/flot-charts/jquery.flot.pie.js' %}></script>
+<script src={% static 'panel/plugins/flot-charts/jquery.flot.categories.js' %}></script>
+<script src={% static 'panel/plugins/flot-charts/jquery.flot.time.js' %}></script>
+
+<!-- Sparkline Chart Plugin Js -->
+<script src={% static 'panel/plugins/jquery-sparkline/jquery.sparkline.js' %}></script>
+
+<!-- Custom Js -->
+<script src={% static 'panel/js/admin.js' %}></script>
+<script src={% static 'panel/js/pages/index.js' %}></script>
+<script src={% static 'panel/js/pages/tables/jquery-datatable.js' %}></script>
+<script src={% static 'panel/js/pages/forms/advanced-form-elements.js' %}></script>
+
+
+<!-- Demo Js -->
+<script src={% static 'panel/js/demo.js' %}></script>
+{% endblock %}

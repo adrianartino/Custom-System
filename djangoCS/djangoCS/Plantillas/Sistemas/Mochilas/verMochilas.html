@@ -123,6 +123,12 @@ Mochilas | Custom System
 
                                 {% if mochila.3 == "activoFuncional" %}
                                 <td ><label class="label bg-green">Activo Funcional</label></td>
+                                {% elif  mochila.3 == "stockUsado" %}
+                                <td ><label class="label bg-orange">Stock Usado</label></td>
+                                {% elif  mochila.3 == "stockNuevo" %}
+                                <td ><label class="label bg-orange">Stock Nuevo</label></td>
+                                {% elif  mochila.3 == "basura" %}
+                                <td ><label class="label bg-orange">Basura</label></td>
                                 {% endif %}
 
                                 <td>
@@ -165,21 +171,19 @@ Mochilas | Custom System
 
 
                                 <td>
-                                    <form action="/editarMonitor/" method="POST">{% csrf_token %}
-                                        <input type="hidden" name="idMonitorEditar" value="{{monitor.0}}">
-                                        <center>
-                                            <button type="submit" class="btn btn-warning waves-effect">
-                                                    <i class="material-icons">edit</i>
-                                            </button>
-                                        </center>
-                                    </form>
+                                    <center>
+                                        <button type="submit" class="btn btn-warning waves-effect" data-toggle="modal"
+                                        data-target="#editar{{mochila.0}}">
+                                            <i class="material-icons">edit</i>
+                                        </button>
+                                    </center>
                                 </td>
                                 
 
                                 <th>
                                     <center>
                                         <button type="button" class="btn bg-red waves-effect" data-toggle="modal"
-                                            data-target="#{{monitor.0}}">
+                                            data-target="#baja{{mochila.0}}">
                                             <i class="material-icons">cancel</i>
                                         </button>
                                     </center>
@@ -201,7 +205,7 @@ Mochilas | Custom System
                 <div class="row clear-fix">
                   
                     <div class="col-xs-12 col-sm-1">
-                        <form action="/xlMonitores/" method="POST">{% csrf_token %}
+                        <form action="/xlMochilas/" method="POST">{% csrf_token %}
                             <input type="hidden" name="activo" value="I">
                             <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
                                 data-toggle="tooltip" data-placement="bottom"
@@ -241,32 +245,32 @@ Mochilas | Custom System
                             </tr>
                         </tfoot>
                         <tbody>
-                            {% for monitor in monitoresStock %}
+                            {% for mochila in listaMochilasInactivas %}
                             <tr>
-                                <td>{{monitor.0}}</td>
+                                <td>{{mochila.id_mochila}}</td>
 
                                 
                                 
-                                <td>{{monitor.1}}</td>
-                                <td>{{monitor.2}}</td>
+                                <td>{{mochila.marca}}</td>
+                                <td>{{mochila.modelo}}</td>
 
-                                {% if monitor.3 == "stockUsado" %}
+                                {% if mochila.estado == "stockUsado" %}
                                 <td ><label class="label bg-orange">Usado</label></td>
-                                {% elif monitor.3 == "stockNuevo" %}
+                                {% elif mochila.estado == "stockNuevo" %}
                                 <td ><label class="label bg-green">Nuevo</label></td>
-                                {% elif monitor.3 == "basura" %}
+                                {% elif mochila.estado == "basura" %}
                                 <td ><label class="label bg-red">Basura</label></td>
                                 {% endif %}
 
                                 <td>
                                     <center>
-                                        <img src="{{monitor.4.url}}" width="60%" alt="empleado">
+                                        <img src="{{mochila.foto.url}}" width="60%" alt="empleado">
                                     </center>
                                 </td>
                                 <td>
                                     <center>
                                         <button type="button" class="btn bg-green waves-effect" data-toggle="modal"
-                                            data-target="#{{monitor.0}}">
+                                            data-target="#{{mochila.id_mochila}}">
                                             <i class="material-icons">upgrade</i>
                                         </button>
                                     </center>
@@ -285,21 +289,21 @@ Mochilas | Custom System
 </div>
 
 
-{% for monitor in monitoresActivos %}
+{% for mochila in mochilasActivas %}
 <!-- Default Size -->
-<div class="modal fade" id="{{monitor.0}}" tabindex="-1" role="dialog">
+<div class="modal fade" id="baja{{mochila.0}}" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content" style="border-radius: 16px;">
             <div class="modal-header">
                 <center>
-                    <h1 style="color: crimson; font-family: 'Oswald', sans-serif;">DAR DE BAJA MONITOR <i
+                    <h1 style="color: crimson; font-family: 'Oswald', sans-serif;">DAR DE BAJA MOCHILA <i
                             class="material-icons" style="color:black; font-size:100%">get_app</i></h1>
                     <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
 
                 </center>
             </div>
             <div class="modal-body">
-                <form action="/bajaMonitor/" method="POST">{% csrf_token %}
+                <form action="/bajaMochila/" method="POST">{% csrf_token %}
                     <div class="body table-responsive">
                         <table class="table">
                             <thead>
@@ -307,16 +311,23 @@ Mochilas | Custom System
                                     <th>Marca</th>
                                     <th>Modelo</th>
                                     <th>Imagen</th>
-                                    <th>Equipo</th>
+                                    <th>Responsable</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td style="color: black;">{{monitor.1}}</td>
-                                    <td style="color: black;">{{monitor.2}}</td>
-                                    <th> <img src="{{monitor.4.url}}" width="120" height="150" alt="lap">
+                                    <td style="color: black;">{{mochila.1}}</td>
+                                    <td style="color: black;">{{mochila.2}}</td>
+                                    <th> <img src="{{mochila.4.url}}" width="120" height="150" alt="lap">
                                     </th>
-                                    <td> <label class="bg-red" >{{monitor.6}}</label> </td>
+                                    <td>
+                                        <div>
+                                            <label class="bg-red" >{{mochila.5}}</label>
+                                        </div> 
+                                        <div>
+                                            <label class="{{mochila.7}}" >{{mochila.6}}</label>
+                                        </div> 
+                                    </td>
                                 </tr>
 
 
@@ -327,8 +338,8 @@ Mochilas | Custom System
 
                     </div>
                     <center>
-                        <input type="hidden" value="{{monitor.0}}" name="idMonitorBaja">
-                        <h3 style="color: black;">Seguro que desea dar de baja al monitor?</h3>
+                        <input type="hidden" value="{{mochila.0}}" name="idMochilaBaja">
+                        <h3 style="color: black;">Seguro que desea dar de baja la mochila?</h3>
                         <button type="submit" class="btn bg-red waves-effect">
                             <i class="material-icons">cancel</i>
                             <span>DAR DE BAJA</span>
@@ -342,22 +353,102 @@ Mochilas | Custom System
 
 {% endfor %}
 
-
-{% for monitor in monitoresStock %}
+{% for mochila in mochilasActivas %}
 <!-- Default Size -->
-<div class="modal fade" id="{{monitor.0}}" tabindex="-1" role="dialog">
+<div class="modal fade" id="editar{{mochila.0}}" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" style="border-radius: 16px;">
+            <div class="modal-header">
+                <center>
+                    <h1 style="color: rgb(10, 160, 135); font-family: 'Oswald', sans-serif;">EDITAR MOCHILA <i
+                            class="material-icons" style="color:black; font-size:100%">loop</i></h1>
+                    <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
+
+                </center>
+            </div>
+            <div class="modal-body">
+                <form action="/editarMochila/" method="POST">{% csrf_token %}
+                    <div class="body table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr class="bg-teal">
+                                    <th>Marca</th>
+                                    <th>Modelo</th>
+                                    <th>Imagen</th>
+                                    <th>Responsable</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="color: black;">{{mochila.1}}</td>
+                                    <td style="color: black;">{{mochila.2}}</td>
+                                    <th> <img src="{{mochila.4.url}}" width="120" height="150" alt="lap">
+                                    </th>
+                                    <td>
+                                        <div>
+                                            <label class="bg-red" >{{mochila.5}}</label>
+                                        </div> 
+                                        <div>
+                                            <label class="{{mochila.7}}" >{{mochila.6}}</label>
+                                        </div> 
+                                    </td>
+                                    <td>
+                                        <label for="email_address"><span style="color: #078F68;">* </span>Estado:</label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="material-icons">build</i>
+                                            </span>
+                                            <select class="form-control show-tick" name="estadoMochilaActualizar">
+                                                <option value="activoFuncional">Activo Funcional</option>
+                                                <option value="stockUsado">En Stock Usado</option>
+                                                <option value="stockNuevo">En Stock Nuevo</option>
+                                                <option value="basura">Basura</option>
+                                                
+                                            </select>
+                                        </div>
+                                    </td>
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+
+
+
+                    </div>
+                    <center>
+                        <input type="hidden" value="{{mochila.0}}" name="idMochilaEditar">
+                        <h3 style="color: black;">Seguro que desea editar la mochila?</h3>
+                        <button type="submit" class="btn bg-deep-purple waves-effect">
+                            <i class="material-icons">cancel</i>
+                            <span>EDITAR MOCHILA</span>
+                        </button>
+                    </center>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endfor %}
+
+
+{% for mochila in listaMochilasInactivas %}
+<!-- Default Size -->
+<div class="modal fade" id="{{mochila.id_mochila}}" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content" style="border-radius: 16px;">
             <div class="modal-header">
                 <center>
-                    <h1 style="color: green; font-family: 'Oswald', sans-serif;">DAR DE ALTA MONITOR <i
+                    <h1 style="color: green; font-family: 'Oswald', sans-serif;">DAR DE ALTA MOCHILA <i
                             class="material-icons" style="color:black; font-size:100%">upgrade</i></h1>
                     <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
 
                 </center>
             </div>
             <div class="modal-body">
-                <form action="/altaMonitor/" method="POST">{% csrf_token %}
+                <form action="/altaMochila/" method="POST">{% csrf_token %}
                     <div class="body table-responsive">
                         <table class="table">
                             <thead>
@@ -369,9 +460,9 @@ Mochilas | Custom System
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td style="color: black;">{{monitor.1}}</td>
-                                    <td style="color: black;">{{monitor.2}}</td>
-                                    <th> <img src="{{monitor.4.url}}" width="120" height="150" alt="lap">
+                                    <td style="color: black;">{{mochila.marca}}</td>
+                                    <td style="color: black;">{{mochila.modelo}}</td>
+                                    <th> <img src="{{mochila.foto.url}}" width="120" height="150" alt="lap">
                                     </th>
                               
                                     
@@ -385,8 +476,8 @@ Mochilas | Custom System
 
                     </div>
                     <center>
-                        <input type="hidden" value="{{monitor.0}}" name="idMonitorAlta">
-                        <h3 style="color: black;">Seguro que desea dar de alta al monitor?</h3>
+                        <input type="hidden" value="{{mochila.id_mochila}}" name="idMochilaAlta">
+                        <h3 style="color: black;">Seguro que desea dar de alta la mochila?</h3>
                         <button type="submit" class="btn bg-green waves-effect">
                             <i class="material-icons">upgrade</i>
                             <span>DAR DE ALTA</span>
@@ -403,6 +494,18 @@ Mochilas | Custom System
 
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 {% if alta %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Wuu..!',
+        text: ' {{mensaje}}',
+        footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
+
+{% if editado %}
 <script type="text/javascript">
     swal({
         icon: 'success',

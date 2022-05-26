@@ -74,6 +74,30 @@ class Mochilas (models.Model):
 
     def __str__(self):
         return self.id_mochila
+    
+class Celulares (models.Model):
+    id_celular = models.AutoField(primary_key=True)
+    marca = models.CharField(max_length=30)
+    modelo = models.CharField(max_length=30)
+    color = models.CharField(max_length=30)
+    tipo_cargador = models.CharField(max_length=20, null=True)
+    modelo_cargador = models.CharField(max_length=40, null=True)
+    ram = models.IntegerField()
+    numero_setie = models.CharField(max_length=40, null=True)
+    numero_imei = models.CharField(max_length=40, null=True)
+    telefono = models.CharField(max_length=10, null=True)
+    fecha_contratacion_plan = models.DateField(null=True)
+    meses_plan = models.IntegerField(null=True)
+    en_plan = models.CharField(max_length=2, null=True)
+    nombre_plan = models.CharField(max_length=40, null=True)
+    compañia = models.CharField(max_length=30, null=True)
+    foto = models.ImageField(upload_to="celulares", null = True)
+    estado = models.CharField(max_length=30)
+    id_empleado = models.ForeignKey(Empleados, on_delete=models.CASCADE, null=True)
+    activo = models.CharField(max_length=2)
+
+    def __str__(self):
+        return self.id_celular
 
 class Teclados (models.Model):
     id_teclado = models.AutoField(primary_key=True)

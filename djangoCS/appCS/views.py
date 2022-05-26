@@ -15,7 +15,7 @@ from django.shortcuts import redirect
 from django.db.models import Q
 
 #Importación de modelos
-from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Encuestas, Preguntas, Respuestas,Mouses, Teclados, Monitores, Telefonos, DiscosDuros, EmpleadosDiscosDuros, MemoriasUSB, PrestamosSistemas, SoportesTecnicos, ImplementacionSoluciones, Mochilas
+from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Encuestas, Preguntas, Respuestas,Mouses, Teclados, Monitores, Telefonos, DiscosDuros, EmpleadosDiscosDuros, MemoriasUSB, PrestamosSistemas, SoportesTecnicos, ImplementacionSoluciones, Mochilas, Celulares
 
 #Librería para manejar archivos en Python
 from django.core.files.base import ContentFile
@@ -47,6 +47,7 @@ from reportlab.lib.enums import TA_CENTER
 
 #Libreria excel.
 import xlwt
+
 
 def notificacionInsumos():
     
@@ -264,9 +265,12 @@ def inicio(request):
         limpiezas = CalendarioMantenimiento.objects.count()
         equipos = Equipos.objects.count()
         impresoras = Impresoras.objects.count()
-        empleados = Empleados.objects.count()
+        empleados = Empleados.objects.filter(activo = "A")
+        contadorEmpleadosActivos = 0
+        for empleado in empleados:
+            contadorEmpleadosActivos = contadorEmpleadosActivos +1
         cantidades = []
-        cantidades.append([limpiezas, equipos, impresoras, empleados])
+        cantidades.append([limpiezas, equipos, impresoras, contadorEmpleadosActivos])
         
         #próximas limpiezas
         limpiezas = CalendarioMantenimiento.objects.all()
@@ -9249,10 +9253,10 @@ def verMonitores(request):
                 return render(request, "Sistemas/Monitores/verMonitores.html", {"estaEnVerMonitores":estaEnVerMonitores,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,"monitoresActivos":monitoresActivos, "monitoresStock":monitoresStock,
             "monitoresActivosPrestamos":monitoresActivosPrestamos, "lista":lista, "idsMonitoresPrestamos":idsMonitoresPrestamos, "baja":baja, "mensaje":mensaje})
 
-            if "idMonitorBaja" in request.session:
+            if "idMonitorAlta" in request.session:
                 alta = True
-                mensaje = "Se dio de alta al monitor " + request.session['idMonitorBaja']
-                del request.session["idMonitorBaja"]
+                mensaje = "Se dio de alta al monitor " + request.session['idMonitorAlta']
+                del request.session["idMonitorAlta"]
                 return render(request, "Sistemas/Monitores/verMonitores.html", {"estaEnVerMonitores":estaEnVerMonitores,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,"monitoresActivos":monitoresActivos, "monitoresStock":monitoresStock,
             "monitoresActivosPrestamos":monitoresActivosPrestamos, "lista":lista, "idsMonitoresPrestamos":idsMonitoresPrestamos, "alta":alta, "mensaje":mensaje})
 
@@ -11089,6 +11093,9 @@ def agregarPrestamos(request):
         
         #USB
         memoriasUsb = MemoriasUSB.objects.all()
+        
+        #Mochilas
+        mochilas = Mochilas.objects.filter(activo="I")
 
         fecha = datetime.now()
         
@@ -11121,6 +11128,8 @@ def agregarPrestamos(request):
                     equipoAPrestar = request.POST['telefono']
                 elif tabla == "MemoriasUSB":
                     equipoAPrestar = request.POST['usb']
+                if tabla == "Mochilas":
+                    equipoAPrestar = request.POST['mochila']
                     
             cantidad = request.POST['cantidad']
             fecha_prestamo = request.POST['fecha']
@@ -11150,6 +11159,8 @@ def agregarPrestamos(request):
             if registroPrestamo:
                 prestamo = True
                 texto ="El prestamo ha sido creado satisfactoriamente"
+                if tabla == "Mochilas":
+                    consultaMochila = Mochilas.objects.filter(id_mochila = equipoAPrestar).update(activo = "A", id_empleado = Empleados.objects.get(id_empleado = empleadoSolicitante), estado = "activoFuncional")
             
             return render(request, "prestamos/agregarPrestamo.html", {"estaEnAgregarPrestamo":estaEnAgregarPrestamo,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,
             "empleados": empleados, "impresoras":impresoras, "computadoras":computadoras, "discosDuros":discosDuros, 
@@ -11164,7 +11175,7 @@ def agregarPrestamos(request):
     
         return render(request, "prestamos/agregarPrestamo.html", {"estaEnAgregarPrestamo":estaEnAgregarPrestamo,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,
         "empleados": empleados, "impresoras":impresoras, "computadoras":computadoras, "discosDuros":discosDuros, 
-        "monitores":monitores, "teclados":teclados, "mouses":mouses, "telefonos":telefonos, "memoriasUsb":memoriasUsb, "fecha":fecha})
+        "monitores":monitores, "teclados":teclados, "mouses":mouses, "telefonos":telefonos, "memoriasUsb":memoriasUsb, "fecha":fecha, "mochilas":mochilas})
     else:
         return redirect ('/login/')
 
@@ -11321,7 +11332,20 @@ def verPrestamos(request):
                         usb = marcaUsb + " " + modeloUsb + " " + capacidadUsb
                     equipoPrestadoClasificacion.append("Memoria USB " + usb)
                     fotosEquipos.append(fotoUsb)
-                   
+                    
+                elif prestamos.tabla  == "Mochilas":
+                    datosMochila = Mochilas.objects.filter(id_mochila = equipo)
+                    for datoMochila in datosMochila:
+                        
+                        marcaMochila = datoMochila.marca
+                        modeloMochila = datoMochila.modelo
+                        fotoMochila = datoMochila.foto
+                       
+                        mochila = marcaMochila + " " + modeloMochila
+                    equipoPrestadoClasificacion.append("Mochila " + mochila)
+                    fotosEquipos.append(fotoMochila)
+                    
+                    #actualizar datos de mochila
             
 
 
@@ -13366,6 +13390,7 @@ def verMochilas(request):
         
         #Lista de todos los mouses
         listaMochilas = Mochilas.objects.all()
+        listaMochilasInactivas = Mochilas.objects.filter(activo = "I")
         mochilasPrestadas = PrestamosSistemas.objects.filter(devolucion = "N", tabla = "Mochilas")
         for moP in mochilasPrestadas:
             idMochila = moP.id_producto
@@ -13422,8 +13447,10 @@ def verMochilas(request):
                         mochilasActivasPrestamos.append([fechaEntrega, firmaEn])
                 else:
                     mochilasActivasPrestamos.append("Sin prestamo")
+            if activo == "I":
+                mochilasActivasPrestamos.append([idMochila, marca, modelo, estado, fotoMochila])
                 
-            lista = zip(mochilasActivas, mochilasActivasPrestamos)
+        lista = zip(mochilasActivas, mochilasActivasPrestamos)
 
                 
                             
@@ -13434,25 +13461,32 @@ def verMochilas(request):
 
             #No tiene un equipo asignado, puede variar el estado..
             
-            if activo == "I":
-                mochilasActivasPrestamos.append([idMochila, marca, modelo, estado, fotoMochila])
+       
 
             
-            if "idMonitorBaja" in request.session:
-                baja = True
-                mensaje = "Se dio de baja al monitor " + request.session['idMonitorBaja']
-                del request.session["idMonitorBaja"]
-                return render(request, "Sistemas/Mochilas/verMochilas.html", {"estaEnVerMochilas":estaEnVerMochilas,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,"mochilasActivas":mochilasActivas, "mochilasActivasPrestamos":mochilasActivasPrestamos,
-            "mochilasActivasPrestamos":mochilasActivasPrestamos, "lista":lista, "idsMochilasPrestamos":idsMochilasPrestamos, "baja":baja, "mensaje":mensaje})
+        if "idMochilaBaja" in request.session:
+            baja = True
+            mensaje = "Se dio de baja la mochila " + request.session['idMochilaBaja']
+            del request.session["idMochilaBaja"]
+            return render(request, "Sistemas/Mochilas/verMochilas.html", {"estaEnVerMochilas":estaEnVerMochilas,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,"mochilasActivas":mochilasActivas, "mochilasActivasPrestamos":mochilasActivasPrestamos,
+            "mochilasActivasPrestamos":mochilasActivasPrestamos, "lista":lista, "idsMochilasPrestamos":idsMochilasPrestamos, "baja":baja, "mensaje":mensaje, "listaMochilasInactivas":listaMochilasInactivas})
 
-            if "idMonitorBaja" in request.session:
-                alta = True
-                mensaje = "Se dio de alta al monitor " + request.session['idMonitorBaja']
-                del request.session["idMonitorBaja"]
-                return render(request, "Sistemas/Mochilas/verMochilas.html", {"estaEnVerMochilas":estaEnVerMochilas,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,"mochilasActivas":mochilasActivas, "mochilasActivasPrestamos":mochilasActivasPrestamos,
-            "mochilasActivasPrestamos":mochilasActivasPrestamos, "lista":lista, "idsMochilasPrestamos":idsMochilasPrestamos, "alta":alta, "mensaje":mensaje})
+        if "idMochilaAlta" in request.session:
+            alta = True
+            mensaje = "Se dio de alta la mochila " + request.session['idMochilaAlta']
+            del request.session["idMochilaAlta"]
+            return render(request, "Sistemas/Mochilas/verMochilas.html", {"estaEnVerMochilas":estaEnVerMochilas,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,"mochilasActivas":mochilasActivas, "mochilasActivasPrestamos":mochilasActivasPrestamos,
+            "mochilasActivasPrestamos":mochilasActivasPrestamos, "lista":lista, "idsMochilasPrestamos":idsMochilasPrestamos, "alta":alta, "mensaje":mensaje, "listaMochilasInactivas":listaMochilasInactivas})
 
-        return render(request, "Sistemas/Mochilas/verMochilas.html", {"estaEnVerMochilas":estaEnVerMochilas,"id_admin":id_admin, "lista":lista, "mochilasActivasPrestamos":mochilasActivasPrestamos, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto, "mochilasActivas":mochilasActivas, "mochilasActivasPrestamos":mochilasActivasPrestamos})
+        if "mochilaEditada" in request.session:
+            editado = True
+            mensaje = "Se ha editado la mochila "+request.session['mochilaEditada']
+            del request.session['mochilaEditada']
+            return render(request, "Sistemas/Mochilas/verMochilas.html", {"estaEnVerMochilas":estaEnVerMochilas,"id_admin":id_admin, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto,"mochilasActivas":mochilasActivas, "mochilasActivasPrestamos":mochilasActivasPrestamos,
+            "mochilasActivasPrestamos":mochilasActivasPrestamos, "lista":lista, "idsMochilasPrestamos":idsMochilasPrestamos, "editado":editado, "mensaje":mensaje, "listaMochilasInactivas":listaMochilasInactivas})
+        
+        return render(request, "Sistemas/Mochilas/verMochilas.html", {"estaEnVerMochilas":estaEnVerMochilas,"id_admin":id_admin, "lista":lista, "mochilasActivasPrestamos":mochilasActivasPrestamos, "nombreCompleto":nombreCompleto, "correo":correo, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto, "mochilasActivas":mochilasActivas, "mochilasActivasPrestamos":mochilasActivasPrestamos,
+                                                                      "listaMochilasInactivas":listaMochilasInactivas})
     else:
         return redirect('/login/') #redirecciona a url de inicio
 
@@ -13515,3 +13549,909 @@ def agregarMochila(request):
                                                                             "empleados":empleados})
     else:
         return redirect('/login/') #redirecciona a url de inicio
+    
+def altaMochila(request):
+
+    if "idSesion" in request.session:
+    
+        id_empleado_admin = request.session['idSesion']
+        if request.method == "POST":
+        
+            idAlta= request.POST['idMochilaAlta']
+            datosMochila = Mochilas.objects.filter(id_mochila = idAlta)
+            
+            for dato in datosMochila:
+                idMochila = str(dato.id_mochila)
+                marca = dato.marca
+                modelo = dato.modelo
+  
+            nombreCompletoMonitor = marca + " " + modelo
+
+      
+
+            
+            actualizacion = Mochilas.objects.filter(id_mochila = idMochila).update(activo = "A", estado = "activoFuncional")
+            if actualizacion:    
+                request.session['idMochilaAlta'] = nombreCompletoMonitor
+                                
+                return redirect('/verMochilas/')
+    else:
+        return redirect('/login/') #redirecciona a url de 
+    
+    
+def bajaMochila(request):
+
+    if "idSesion" in request.session:
+    
+        id_empleado_admin = request.session['idSesion']
+        if request.method == "POST":
+        
+            idBaja= request.POST['idMochilaBaja']
+            
+            datosMochila = Mochilas.objects.filter(id_mochila = idBaja)
+            
+            
+            for dato in datosMochila:
+                idMochila = str(dato.id_mochila)
+                marca = dato.marca
+                modelo = dato.modelo
+            
+                
+        
+
+            
+            nombreCompletoMochila = marca + " " + modelo
+           
+
+            actualizacion = Mochilas.objects.filter(id_mochila = idMochila).update(activo = "I", estado = "stockUsado", id_empleado = "")
+
+            if actualizacion:
+                    
+                request.session['idMochilaBaja'] = nombreCompletoMochila
+                prestamo =  PrestamosSistemas.objects.filter(id_producto = idBaja)
+
+                if prestamo:
+                    mochila = int(idBaja)
+                    borrado = PrestamosSistemas.objects.get(id_producto = mochila, tabla = "Mochilas")
+                    borrado.delete()
+                    
+                return redirect('/verMochilas/')
+
+               
+                
+                            
+            
+  
+            
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+    
+    
+
+def xlMochilas(request):
+    if request.method == "POST":
+    
+        activoa= request.POST['activo'] #A o I
+            
+    response = HttpResponse(content_type='application/ms-excel')
+    if activoa == "A":
+        response['Content-Disposition'] = 'attachment; filename=Reporte Mochilas-'+str(datetime.today().strftime('%Y-%m-%d'))+'.xls'
+    else:
+        response['Content-Disposition'] = 'attachment; filename=Reporte Mochilas Inactivas-'+str(datetime.today().strftime('%Y-%m-%d'))+'.xls'
+    
+    #creación de libro de excel
+    libro = xlwt.Workbook(encoding='utf-8')
+    hoja = libro.add_sheet('Mochilas')
+    
+    numero_fila = 0
+    estilo_fuente = xlwt.XFStyle()
+    estilo_fuente.font.bold = True
+    
+    columnas = ['Id', 'Marca', 'Modelo', 'Estado','Empleado responsable']
+    for columna in range(len(columnas)):
+        hoja.write(numero_fila, columna, columnas[columna], estilo_fuente)
+        
+        
+    propietarioEmpleado = []
+    estados = []
+    
+    
+    infoMochilas = Mochilas.objects.filter(activo = activoa)
+        
+    for mochila in infoMochilas:
+        idEmpleado = mochila.id_empleado_id
+     
+        
+        if idEmpleado == None:
+            propietarioEm = "Sin propieatrio"
+            propietarioEmpleado.append(propietarioEm)
+            
+        else:
+            
+            infoEmple = Empleados.objects.filter(id_empleado = idEmpleado)
+            for dato in infoEmple:
+                nombre = dato.nombre
+                apellido = dato.apellidos
+            
+            propietarioEm = nombre + " " + apellido
+           
+            propietarioEmpleado.append(propietarioEm)
+        
+        
+           
+        
+  
+    estados = []
+    
+    #lista la lista de propietarios de equipos, incluyendo los que no tienen propietario.
+        
+    mochilas = Mochilas.objects.filter(activo = activoa)
+    
+    datosMochilas = []
+    cont=0
+    for x in mochilas:
+        cont+=1
+
+       
+
+        if x.estado == "activoFuncional":
+            estados.append("Activo Funcional")
+        elif x.estado == "stockUsado":
+            estados.append("Stock Usado")
+        elif x.estado == "stockNuevo":
+            estados.append("Stock Nuevo")
+        elif x.estado == "basura":
+            estados.append("Basura")
+
+
+        datosMochilas.append([x.id_mochila, x.marca, x.modelo, estados[cont-1], propietarioEmpleado[cont-1]])
+            
+        
+    estilo_fuente = xlwt.XFStyle()
+    for mochilita in datosMochilas:
+        numero_fila+=1
+        for columna in range(len(mochilita)):
+            hoja.write(numero_fila, columna, str(mochilita[columna]), estilo_fuente)
+    
+    libro.save(response)
+    return response    
+    #creación 
+    
+    
+def agregarCelulares(request):
+    
+    if "idSesion" in request.session:
+
+        estaEnAgregarCelulares = True
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        nombreCompleto = nombre + " " + apellidos
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+        foto = fotoAdmin(request)
+        
+        info_empleados = Empleados.objects.only('id_empleado', 'nombre', 'apellidos') #todos los empleados
+        empleadosEquipo = Equipos.objects.only('id_empleado_id') #Los ids de los empleados que estan con equipos
+        empleadosiEq= []
+        empleadosnoEq= []
+        
+        
+                    
+
+        
+        if request.method == "POST":
+        
+            marca_recibido = request.POST['marca']
+            modelo_recibida = request.POST['modelo']
+            color_recibido = request.POST['color']
+            imagen_recibido = request.FILES.get('imgcel')
+            memoriaram_recibida = request.POST['memram']
+            tipoCargadorRecibido = request.POST['tipoCargador']
+            modeloCargador = request.POST['modeloCargador']
+            estado_recibida = request.POST['estado']
+            num_serie_recibido = request.POST['numSerie']
+            num_imei_recibido = request.POST['numImei']
+            num_tel_recibido = request.POST['numTelefono']
+            propietario_recibida = request.POST['propietario']
+            nombre_plan = request.POST['nombrePlan']
+            fecha_contrato = request.POST['fechaContrato']
+            meses_contrato = request.POST['mesesContrato']
+            compañia = request.POST['compañia']
+            
+            intMeses = int(meses_contrato)
+            
+            if fecha_contrato != "":
+                fecha_separada = fecha_contrato.split("/") #29   06    2018            2018     29   06
+                fecha_normal = fecha_separada[2] + "-" + fecha_separada[0] + "-" + fecha_separada[1]
+
+            
+           
+            
+            if modeloCargador == "":
+                modeloCargador = "Sin cargador registrado"
+            
+            if nombre_plan == "" or fecha_contrato == "":
+                nombre_plan = "Sin plan registrado"
+                
+            
+            
+            
+                
+            if propietario_recibida == "nopropietario":
+                
+                if fecha_contrato == "":
+                
+                    registroCelular=Celulares(
+                        marca = marca_recibido,
+                        modelo = modelo_recibida,
+                        color = color_recibido,
+                        tipo_cargador = tipoCargadorRecibido,
+                        modelo_cargador = modeloCargador,
+                        ram = memoriaram_recibida,
+                        numero_setie = num_serie_recibido,
+                        numero_imei = num_imei_recibido,
+                        telefono = num_tel_recibido,
+                        en_plan = "N",
+                        nombre_plan = nombre_plan,
+                        compañia = compañia,
+                        foto = imagen_recibido, 
+                        estado = estado_recibida,
+                        activo = "I"
+                    )
+                else:
+                    registroCelular=Celulares(
+                        marca = marca_recibido,
+                        modelo = modelo_recibida,
+                        color = color_recibido,
+                        tipo_cargador = tipoCargadorRecibido,
+                        modelo_cargador = modeloCargador,
+                        ram = memoriaram_recibida,
+                        numero_setie = num_serie_recibido,
+                        numero_imei = num_imei_recibido,
+                        telefono = num_tel_recibido,
+                        fecha_contratacion_plan = fecha_normal,
+                        meses_plan = intMeses,
+                        en_plan = "S",
+                        nombre_plan = nombre_plan,
+                        compañia = compañia,
+                        foto = imagen_recibido, 
+                        estado = estado_recibida,
+                        activo = "I"
+                    )
+                if registroCelular:
+                    registroCelular.save()
+                    
+                    
+                
+                    celular= marca_recibido + " " + modelo_recibida
+                    texto= "Se agregó al celular " + celular 
+                    
+                    request.session['celularAgregado'] = texto
+                    
+                    return redirect('/verCelulares/')
+                
+                
+            elif propietario_recibida != "nopropietario":
+                
+                
+                if fecha_contrato == "":
+                
+                    registroCelular=Celulares(
+                        marca = marca_recibido,
+                        modelo = modelo_recibida,
+                        color = color_recibido,
+                        tipo_cargador = tipoCargadorRecibido,
+                        modelo_cargador = modeloCargador,
+                        ram = memoriaram_recibida,
+                        numero_setie = num_serie_recibido,
+                        numero_imei = num_imei_recibido,
+                        telefono = num_tel_recibido,
+                        en_plan = "N",
+                        nombre_plan = nombre_plan,
+                        compañia = compañia,
+                        foto = imagen_recibido, 
+                        estado = estado_recibida,
+                        activo = "A",
+                        id_empleado = Empleados.objects.get(id_empleado = propietario_recibida)
+                    )
+                else:
+                    registroCelular=Celulares(
+                        marca = marca_recibido,
+                        modelo = modelo_recibida,
+                        color = color_recibido,
+                        tipo_cargador = tipoCargadorRecibido,
+                        modelo_cargador = modeloCargador,
+                        ram = memoriaram_recibida,
+                        numero_setie = num_serie_recibido,
+                        numero_imei = num_imei_recibido,
+                        telefono = num_tel_recibido,
+                        fecha_contratacion_plan = fecha_normal,
+                        meses_plan = intMeses,
+                        en_plan = "S",
+                        nombre_plan = nombre_plan,
+                        compañia = compañia,
+                        foto = imagen_recibido, 
+                        estado = estado_recibida,
+                        activo = "A",
+                        id_empleado = Empleados.objects.get(id_empleado = propietario_recibida)
+                    )
+                    
+                if registroCelular:
+                    registroCelular.save()
+                    
+                    infoEmpleado = Empleados.objects.filter(id_empleado=propietario_recibida)
+                
+                    for dato in infoEmpleado:
+                        nombre = dato.nombre
+                        
+                    compuCon= True
+                    texto = "Se agregó al celular "+ marca_recibido + " " + modelo_recibida + " asignada al empleado " + nombre +"!"
+                    
+                    request.session['celularAgregado'] = texto
+                    
+                    return redirect('/verCelulares/')
+                        
+                return render(request,"Celulares/agregarCelular.html", {"estaEnAgregarCelulares ": estaEnAgregarCelulares, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "compuCon": compuCon, "textoCompu":textoCompu, 
+                                                                      "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+        
+        
+        
+        return render(request,"Celulares/agregarCelular.html", {"estaEnAgregarCelulares": estaEnAgregarCelulares, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo,"info_empleados": info_empleados, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+    
+def verCelulares(request):
+
+
+    if "idSesion" in request.session:
+        
+        estaEnVerCelulares = True
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        nombreCompleto = nombre + " " + apellidos
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+        foto = fotoAdmin(request)
+        
+        celularesActivos = Celulares.objects.filter(activo = "A")
+        celularesInactivos = Celulares.objects.filter(activo = "I")
+        
+        #empleados Actvos
+        empleadosEnActivos = []
+        datosAreasEnActivos = []
+        vencimientoEnMeses = []
+        
+        
+    
+        
+        for celular in celularesActivos:
+            fechaContratacionPlan = celular.fecha_contratacion_plan
+            
+            if fechaContratacionPlan == None:
+                vencimientoEnMeses.append("Nada")
+            else:
+                mesesContrato = celular.meses_plan
+                fechaFinal = fechaContratacionPlan + relativedelta(months=mesesContrato)
+                
+                
+                fechaFinalFormato = datetime.strptime(str(fechaFinal), "%Y-%m-%d")
+                fechaHoy = datetime.strptime(str(date.today()), "%Y-%m-%d")
+                
+                
+                x = (fechaFinal.year - fechaHoy.year) * 12 + fechaFinal.month - fechaHoy.month
+                
+                restantes = str(x) + " meses"
+                
+                if x <=0 : #Ya se va a vencer..
+                    vencimientoEnMeses.append(["Hay que renovar plan, vencimiento el "+str(fechaFinalFormato),"label bg-red"])
+                elif x <= 2: #Ya se va a vencer..
+                    vencimientoEnMeses.append([restantes,"label bg-red"])
+                else:
+                    vencimientoEnMeses.append([restantes,"label bg-green"])
+                
+            
+                
+            empleadosEnActivos.append(celular.id_empleado_id)
+            
+        
+            #areasEnActivos = ["1"]
+            
+        for id in empleadosEnActivos:
+            if id == None:
+                datosAreasEnActivos.append(["", "", "", ""])
+                
+            elif id != None:
+                datosEmpleado = Empleados.objects.filter(id_empleado = id) #["1", "Sistemas", "rojo"]
+                
+                if datosEmpleado:
+                    for dato in datosEmpleado:
+                        nombreEmpleado = dato.nombre
+                        apellidosEmpleado = dato.apellidos
+                        areaEmpleado = dato.id_area_id
+                        puesto = dato.puesto
+                        datosArea = Areas.objects.filter(id_area=areaEmpleado)
+                        
+                        if datosArea:
+                            for dato in datosArea:
+                                nombreArea = dato.nombre
+                                color = dato.color
+            
+                datosAreasEnActivos.append([nombreEmpleado, apellidosEmpleado, nombreArea, color, puesto])
+            
+        lista = zip(celularesActivos, datosAreasEnActivos, vencimientoEnMeses)
+        lista2=zip(celularesActivos, datosAreasEnActivos)
+        lista3=zip(celularesActivos, datosAreasEnActivos)
+        
+        listaInactivos = zip(celularesInactivos,vencimientoEnMeses)
+        
+        info_empleados = Empleados.objects.only('id_empleado', 'nombre', 'apellidos') #todos los empleados
+        
+        
+        
+        if "idCelularBaja" in request.session:
+            bajaEquipo=True
+            if "errorBD" in request.session:
+                bajaExito= "Error en la base de datos"
+            else:
+                bajaExito= "Se dió de baja el " + request.session["idCelularBaja"] + " con éxito!"
+            del request.session["idCelularBaja"]
+            return render(request, "Celulares/verCelulares.html", {"estaEnVerCelulares": estaEnVerCelulares, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "bajaEquipo":
+                bajaEquipo, "bajaExito": bajaExito, "celularesInactivos":celularesInactivos, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "celularesActivos":celularesActivos, "lista2":lista2, "foto":foto,  "listaInactivos":listaInactivos, 
+                "lista3":lista3, "info_empleados":info_empleados})
+            
+        if "idCelularAlta" in request.session:
+            altaEquipo= True
+            
+            
+            altaExito= "Se dió de alta el " + request.session["idCelularAlta"] + " con éxito"
+            del request.session["idCelularAlta"]
+            return render(request, "Celulares/verCelulares.html", {"estaEnVerCelulares": estaEnVerCelulares, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,
+                                                            "altaEquipo": altaEquipo, "altaExito":altaExito, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti,  "celularesActivos":celularesActivos, "lista2":lista2, "foto":foto, "celularesInactivos":celularesInactivos,  "listaInactivos":listaInactivos, 
+                                                            "lista3":lista3, "info_empleados":info_empleados})
+        if "celularEditado" in request.session:
+            celularEditado = True
+            
+            textoEditado = "Se ha editado el celular " + request.session['celularEditado'] + " con éxito!"
+            del request.session['celularEditado']
+            return render(request, "Celulares/verCelulares.html", {"estaEnVerCelulares": estaEnVerCelulares, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista,
+                                                            "celularEditado": celularEditado, "textoEditado":textoEditado, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti,  "celularesActivos":celularesActivos, "lista2":lista2, "foto":foto, "celularesInactivos":celularesInactivos,  "listaInactivos":listaInactivos, 
+                                                            "lista3":lista3, "info_empleados":info_empleados})
+        
+        return render(request, "Celulares/verCelulares.html", {"estaEnVerCelulares": estaEnVerCelulares, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista":lista, "celularesInactivos":celularesInactivos, 
+                                                           "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti,  "celularesActivos":celularesActivos, "lista2":lista2, "foto":foto, "listaInactivos":listaInactivos, "lista3":lista3, "info_empleados":info_empleados})
+
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+    
+def bajaCelular(request):
+
+    if "idSesion" in request.session:
+    
+        if request.method == "POST":
+        
+            idBaja= request.POST['idCelularBaja']
+            
+            datosCelular = Celulares.objects.filter(id_celular = idBaja)
+            
+            
+            for dato in datosCelular:
+                idCelular = str(dato.id_celular)
+                marca = dato.marca
+                modelo = dato.modelo
+            
+                
+        
+
+            
+            nombreCompletoCelular = marca + " " + modelo
+           
+
+            actualizacion = Celulares.objects.filter(id_celular = idCelular).update(activo = "I", estado = "Funcional", id_empleado = "")
+
+            if actualizacion:
+                    
+                request.session['idCelularBaja'] = nombreCompletoCelular
+                    
+                return redirect('/verCelulares/')
+
+               
+                
+                            
+            
+  
+            
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+    
+def altaCelular(request):
+
+    if "idSesion" in request.session:
+    
+        if request.method == "POST":
+        
+            idAlta= request.POST['idCelularAlta']
+            datosCelular = Celulares.objects.filter(id_celular = idAlta)
+            
+            for dato in datosCelular:
+                idCelular = str(dato.id_celular)
+                marca = dato.marca
+                modelo = dato.modelo
+  
+            nombreCompletoCelular = marca + " " + modelo
+
+      
+
+            
+            actualizacion = Celulares.objects.filter(id_celular = idCelular).update(activo = "A", estado = "Funcional")
+            if actualizacion:    
+                request.session['idCelularAlta'] = nombreCompletoCelular
+                                
+                return redirect('/verCelulares/')
+    else:
+        return redirect('/login/') #redirecciona a url de 
+    
+def editarMochila(request):
+
+    if "idSesion" in request.session:
+    
+        if request.method == "POST":
+        
+            idMochilaEditar= request.POST['idMochilaEditar']
+            estadoMochilaActualizar = request.POST['estadoMochilaActualizar']
+            
+            datosMochila = Mochilas.objects.filter(id_mochila = idMochilaEditar)
+            
+            
+            for dato in datosMochila:
+                idMochila = str(dato.id_mochila)
+                marca = dato.marca
+                modelo = dato.modelo
+            
+            nombreCompletoMochila = marca + " " + modelo
+           
+
+            actualizacion = Mochilas.objects.filter(id_mochila = idMochila).update(estado = estadoMochilaActualizar)
+
+            if actualizacion:
+                    
+                request.session['mochilaEditada'] = nombreCompletoMochila
+
+                
+                    
+                return redirect('/verMochilas/')
+
+               
+                
+                            
+            
+  
+            
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+    
+    
+def editarCelular(request):
+    
+    if "idSesion" in request.session:
+
+        
+        if request.method == "POST":
+            
+            idCelularEditar = request.POST['idCelularEditar']
+            
+            
+            propietario_recibida = request.POST['propietario']
+            num_tel_recibido = request.POST['numTelefono']
+            nombre_plan = request.POST['nombrePlan']
+            fecha_contrato = request.POST['fechaContrato']
+            meses_contrato = request.POST['mesesContrato']
+            compañia = request.POST['compañia']
+            
+            intMeses = int(meses_contrato)
+            
+            
+            
+           
+            
+                
+            if propietario_recibida == "nopropietario":
+                
+                if fecha_contrato == "":
+                
+                    actualizacionCelular=Celulares.objects.filter(id_celular = idCelularEditar).update(
+                        telefono = num_tel_recibido,
+                        en_plan = "N",
+                        nombre_plan = nombre_plan,
+                        compañia = compañia,
+                        activo = "A",
+                        id_empleado = ""
+                    )
+                else:
+                    actualizacionCelular=Celulares.objects.filter(id_celular = idCelularEditar).update(
+                        telefono = num_tel_recibido,
+                        en_plan = "S",
+                        nombre_plan = nombre_plan,
+                        fecha_contratacion_plan = fecha_contrato,
+                        meses_plan = intMeses,
+                        compañia = compañia,
+                        activo = "A",
+                        id_empleado = ""
+                    )
+                if actualizacionCelular:
+                    
+                    
+                    consultaCelular = Celulares.objects.filter(id_celular = idCelularEditar)
+                    for datoCelular in consultaCelular:
+                        marca = datoCelular.marca
+                        modelo = datoCelular.modelo
+                    celular= marca + " " + modelo
+                    texto= "Se ha editaro el celular " + celular 
+                    
+                    request.session['celularEditado'] = texto
+                    
+                    return redirect('/verCelulares/')
+                
+                
+            elif propietario_recibida != "nopropietario":
+                
+                
+                if fecha_contrato == "":
+                
+                    actualizacionCelular=Celulares.objects.filter(id_celular = idCelularEditar).update(
+                        telefono = num_tel_recibido,
+                        en_plan = "N",
+                        nombre_plan = nombre_plan,
+                        compañia = compañia,
+                        activo = "A",
+                        id_empleado = Empleados.objects.get(id_empleado = propietario_recibida)
+                    )
+                else:
+                    actualizacionCelular=Celulares.objects.filter(id_celular = idCelularEditar).update(
+                        telefono = num_tel_recibido,
+                        en_plan = "S",
+                        nombre_plan = nombre_plan,
+                        fecha_contratacion_plan = fecha_contrato,
+                        meses_plan = intMeses,
+                        compañia = compañia,
+                        activo = "A",
+                        id_empleado = Empleados.objects.get(id_empleado = propietario_recibida)
+                    )
+                if actualizacionCelular:
+                    
+                    
+                    consultaCelular = Celulares.objects.filter(id_celular = idCelularEditar)
+                    for datoCelular in consultaCelular:
+                        marca = datoCelular.marca
+                        modelo = datoCelular.modelo
+                    celular= marca + " " + modelo
+                    texto= "Se ha editaro el celular " + celular 
+                    
+                    request.session['celularEditado'] = texto
+                    
+                    return redirect('/verCelulares/')
+                        
+                
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+    
+    
+def xlCelulares(request):
+    if request.method == "POST":
+    
+        activoa= request.POST['activo'] #A o I
+            
+    response = HttpResponse(content_type='application/ms-excel')
+    
+    if activoa == "A":
+        response['Content-Disposition'] = 'attachment; filename=Reporte Celulares '+str(datetime.today().strftime('%Y-%m-%d'))+'.xls'
+    if activoa == "I":
+        response['Content-Disposition'] = 'attachment; filename=Reporte Celulares Inactivos '+str(datetime.today().strftime('%Y-%m-%d'))+'.xls'
+    
+    #creación de libro de excel
+    libro = xlwt.Workbook(encoding='utf-8')
+    hoja = libro.add_sheet('Equipos')
+    
+    numero_fila = 0
+    estilo_fuente = xlwt.XFStyle()
+    estilo_fuente.font.bold = True
+    
+    columnas = ['Id', 'Marca', 'Modelo', 'Color', 'Cargador', 'Modelo Cargador', 'Memoria RAM', 'Num Serie','IMEI', 'Estado', 'Teléfono', 'Responsable', 'Compañia', 'Plan Contratado?','Nombre plan', 'Fecha contratación', 'Meses plan', 'Fecha de vencimiento', '¿En cuantos mese vence el plan?']
+    for columna in range(len(columnas)):
+        hoja.write(numero_fila, columna, columnas[columna], estilo_fuente)
+        
+    propietarios = []
+    
+    cargadores = []
+    planBool = []
+    nombresPlanes = []
+    fechasPlanes = []
+    mesesPlanes = []
+    fechasVencimiento = []
+    mesesRestantes = []
+    infoCelulares = Celulares.objects.filter(activo = activoa)
+        
+    for celular in infoCelulares:
+        id_emp = celular.id_empleado_id
+        cargador = celular.modelo_cargador
+        
+        if cargador == "":
+            cargador = "Sin cargador"
+        
+            cargadores.append("Sin cargador")
+            
+        else:
+            cargadores.append(cargador)
+            
+        if id_emp == None:
+            propietarios.append("Sin responsable")
+        else:
+            consultaEmpleado = Empleados.objects.filter(id_empleado = id_emp)
+            for datoEmpleado in consultaEmpleado:
+                nombreEmpleado = datoEmpleado.nombre
+                apellidosEmpleado = datoEmpleado.apellidos
+                
+            nombreCompletoEmpleado = nombreEmpleado + " " + apellidosEmpleado
+            propietarios.append(nombreCompletoEmpleado)
+            
+        plan = celular.en_plan
+        
+        if plan == "S":
+            planBool.append("Si")
+            nombre_plan = celular.nombre_plan
+            fecha_contrato =celular.fecha_contratacion_plan
+            meses = celular.meses_plan
+            nombresPlanes.append(nombre_plan)
+            fechasPlanes.append(fecha_contrato)
+            mesesPlanes.append(meses)
+            
+            fechaFinal = fecha_contrato + relativedelta(months=meses)
+                
+                
+            fechaFinalFormato = datetime.strptime(str(fechaFinal), "%Y-%m-%d")
+            fechaHoy = datetime.strptime(str(date.today()), "%Y-%m-%d")
+                
+                
+            x = (fechaFinal.year - fechaHoy.year) * 12 + fechaFinal.month - fechaHoy.month
+                
+            restantes = str(x) + " meses"
+            
+            
+            fechasVencimiento.append(fechaFinalFormato)
+            mesesRestantes.append(restantes)
+            
+            
+        else:
+            planBool.append("No")
+            nombresPlanes.append("Sin datos")
+            fechasPlanes.append("Sin datos")
+            mesesPlanes.append("Sin datos")
+            fechasVencimiento.append("Sin datos")
+            mesesRestantes.append("Sin datos")
+            
+        
+        
+            
+        
+        
+    
+    #lista la lista de propietarios de equipos, incluyendo los que no tienen propietario.
+        
+    celulares = Celulares.objects.filter(activo = activoa)
+    
+    datosCelulares = []
+    cont=0
+    for x in celulares:
+        cont+=1
+        datosCelulares.append([x.id_celular, x.marca, x.modelo, x.color, x.tipo_cargador,cargadores[cont-1], 
+                             str(x.ram)+" GB", x.numero_setie,x.numero_imei, x.estado,x.telefono,propietarios[cont-1],x.compañia, planBool[cont-1],
+                             nombresPlanes[cont-1], fechasPlanes[cont-1], mesesPlanes[cont-1], fechasVencimiento[cont-1], mesesRestantes[cont-1]])
+            
+        
+    estilo_fuente = xlwt.XFStyle()
+    for celularcito in datosCelulares:
+        numero_fila+=1
+        for columna in range(len(celularcito)):
+            hoja.write(numero_fila, columna, str(celularcito[columna]), estilo_fuente)
+    
+    libro.save(response)
+    return response    
+    #creación 
+    
+    
+def agregarCartaCelulares(request):
+    
+    if "idSesion" in request.session:
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        nombreCompleto = nombre + " " + apellidos
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+        foto = fotoAdmin(request)
+        
+        equipos= Equipos.objects.all()
+        empledos=Empleados.objects.filter(activo="A", correo__icontains="@customco.com.mx")
+        cartas= Carta.objects.all()
+        fecha= datetime.now()
+        areas=[]
+        
+        
+        celularesInactivos = Celulares.objects.filter(id_empleado__isnull=True, estado="Funcional", activo = "I")
+        
+        for empleado in empledos:
+            idarea= int(empleado.id_area_id)
+            nombreArea= Areas.objects.filter(id_area=idarea)
+            
+            for area in nombreArea:
+                nombreAreas= area.nombre
+                areas.append([nombreAreas])
+                
+        lista=zip(empledos,areas)
+
+        if request.method == "POST":
+            
+            if request.POST['compuSeleccionada'] == "Ninguno":
+                hayError = True
+                error = "No hay computadora seleccionada disponible"
+                return render(request, "cartaCompromiso/agregarCarta.html", {"hayError": hayError, "textoError":error})
+            
+            compuS = request.POST['compuSeleccionada']
+            empleSeleccionado = request.POST['empleadoSeleccionado']
+            fechita = datetime.now()
+            
+            
+            computadora = int(compuS)
+            empleado = int(empleSeleccionado)
+            preregistro = Carta(id_empleado = Empleados.objects.get(id_empleado = empleado), id_equipo = Equipos.objects.get(id_equipo = computadora), fecha = fechita)
+            preregistro.save()
+            
+            actualizar_equipo = Equipos.objects.filter(id_equipo = compuS).update(id_empleado = Empleados.objects.get(id_empleado = empleSeleccionado),activo = "A")
+    
+               
+            
+            
+            #crear variables de sesión.
+            
+            fecha= datetime.now()
+            datosEquipo = Equipos.objects.filter(id_equipo = compuS)
+        
+            compuSeleccionada = True 
+            compuSeleccionada2 = True
+            empleadoDatos = Empleados.objects.filter(id_empleado=empleSeleccionado)
+            
+            for empleados in empleadoDatos:
+                idArea= empleados.id_area_id
+                
+            datosArea = Areas.objects.filter(id_area=idArea)
+            
+            for area in datosArea:
+                areaNombre= area.nombre
+                color= area.color
+
+            #Guardar datos en la tabla Carta de la base de datos
+
+            estaEnAgregarResponsivaCelulares = True
+            return render(request, "Celulares/agregarCartaCelular.html",{"estaEnAgregarResponsivaCelulares": estaEnAgregarResponsivaCelulares, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "equipos":equipos, "empleados": empledos, "lista":lista, "fecha":fecha,
+                                                                    "celularesInactivos": celularesInactivos, "compuSeleccionada":compuSeleccionada,"compuSeleccionada2":compuSeleccionada2, "datosEquipo":datosEquipo, "empleadoDatos": empleadoDatos, "areaNombre": areaNombre, "color":color,
+                                                                    "fecha": fecha, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+
+        estaEnAgregarResponsivaCelulares = True
+        return render(request, "Celulares/agregarCartaCelular.html",{"estaEnAgregarResponsivaCelulares": estaEnAgregarResponsivaCelulares, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "equipos":equipos, "empleados": empledos, "lista":lista, "fecha":fecha,
+                                                                 "celularesInactivos": celularesInactivos, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+        
+    
+
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+    

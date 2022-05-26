@@ -99,6 +99,7 @@ Agregar Prestamo | Custom System
                                     <option value="Mouses">Mouses</option>
                                     <option value="Telefonos">Teléfonos</option>
                                     <option value="MemoriasUSB">Memoria USB</option>
+                                    <option value="Mochilas">Mochilas</option>
 
 
                                 </select>
@@ -228,8 +229,22 @@ Agregar Prestamo | Custom System
                                 </span>
                                 <select class="form-control show-tick" name="usb">
                                     {% for memoria in memoriasUsb %}
-                                    <option value="{{memoria.id_telefono}}"># {{memoria.id_telefono}} -
+                                    <option value="{{memoria.id_usb}}"># {{memoria.id_telefono}} -
                                         {{memoria.marca}} {{memoria.modelo}} {{memoria.capacidad}} GB</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div id="selectMochilas" class="col-md-4 " style="display: none;">
+                            <label><span style="color: #078F68;">* </span>Selección de mochila:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">business_center</i>
+                                </span>
+                                <select class="form-control show-tick" name="mochila">
+                                    {% for mochila in mochilas %}
+                                    <option value="{{mochila.id_mochila}}"># {{mochila.id_mochila}} -
+                                        {{mochila.marca}} {{mochila.modelo}}</option>
                                     {% endfor %}
                                 </select>
                             </div>
@@ -386,6 +401,7 @@ Agregar Prestamo | Custom System
     var selectMouses = document.getElementById('selectMouses');
     var selectTelefonos = document.getElementById('selectTelefonos');
     var selectUsb = document.getElementById('selectUsb');
+    var selectMochilas = document.getElementById('selectMochilas');
 
 
     //Obtener el valor de select de clasificación
@@ -403,6 +419,7 @@ Agregar Prestamo | Custom System
             selectTelefonos.style.display = "none";
             selectUsb.style.display = "none";
             inputOtro.style.display = "block";
+            selectMochilas.style.display = "none";
 
         } else if (inputText === "Impresoras") {
             inputOtro.style.display = "none";
@@ -414,6 +431,7 @@ Agregar Prestamo | Custom System
             selectTelefonos.style.display = "none";
             selectUsb.style.display = "none";
             selectImpresoras.style.display = "block";
+            selectMochilas.style.display = "none";
 
         } else if (inputText === "Equipos") {
             inputOtro.style.display = "none";
@@ -425,6 +443,7 @@ Agregar Prestamo | Custom System
             selectTelefonos.style.display = "none";
             selectUsb.style.display = "none";
             selectComputadoras.style.display = "block";
+            selectMochilas.style.display = "none";
 
         } else if (inputText === "DiscosDuros") {
             inputOtro.style.display = "none";
@@ -436,6 +455,7 @@ Agregar Prestamo | Custom System
             selectTelefonos.style.display = "none";
             selectUsb.style.display = "none";
             selectDiscosduros.style.display = "block";
+            selectMochilas.style.display = "none";
 
         } else if (inputText === "Monitores") {
             inputOtro.style.display = "none";
@@ -447,6 +467,7 @@ Agregar Prestamo | Custom System
             selectTelefonos.style.display = "none";
             selectUsb.style.display = "none";
             selectMonitores.style.display = "block";
+            selectMochilas.style.display = "none";
 
         } else if (inputText === "Teclados") {
             inputOtro.style.display = "none";
@@ -458,6 +479,7 @@ Agregar Prestamo | Custom System
             selectTelefonos.style.display = "none";
             selectUsb.style.display = "none";
             selectTeclados.style.display = "block";
+            selectMochilas.style.display = "none";
 
         } else if (inputText === "Mouses") {
             inputOtro.style.display = "none";
@@ -469,6 +491,7 @@ Agregar Prestamo | Custom System
             selectTelefonos.style.display = "none";
             selectUsb.style.display = "none";
             selectMouses.style.display = "block";
+            selectMochilas.style.display = "none";
 
         } else if (inputText === "Telefonos") {
             inputOtro.style.display = "none";
@@ -480,6 +503,7 @@ Agregar Prestamo | Custom System
             selectMouses.style.display = "none";
             selectUsb.style.display = "none";
             selectTelefonos.style.display = "block";
+            selectMochilas.style.display = "none";
 
         } else if (inputText === "MemoriasUSB") {
             inputOtro.style.display = "none";
@@ -491,6 +515,19 @@ Agregar Prestamo | Custom System
             selectTelefonos.style.display = "none";
             selectMouses.style.display = "none";
             selectUsb.style.display = "block";
+            selectMochilas.style.display = "none";
+
+        }else if (inputText === "Mochilas") {
+            inputOtro.style.display = "none";
+            selectImpresoras.style.display = "none";
+            selectComputadoras.style.display = "none";
+            selectDiscosduros.style.display = "none";
+            selectMonitores.style.display = "none";
+            selectTeclados.style.display = "none";
+            selectTelefonos.style.display = "none";
+            selectMouses.style.display = "none";
+            selectUsb.style.display = "none";
+            selectMochilas.style.display = "block";
 
         }
 

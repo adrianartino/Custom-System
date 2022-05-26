@@ -1,0 +1,773 @@
+{% extends "Menu/menu.html" %}
+{% load static %}
+
+{% block titulo %}
+Celulares | Custom System
+{% endblock %}
+
+{% block estilos %}
+<!-- Favicon-->
+<link rel="icon" href={% static 'images/icons/ra.ico' %} type="image/x-icon">
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet"
+    type="text/css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+
+<!-- Bootstrap Core Css -->
+<link href={% static 'panel/plugins/bootstrap/css/bootstrap.css' %} rel="stylesheet">
+
+<!-- Waves Effect Css -->
+<link href={% static 'panel/plugins/node-waves/waves.css' %} rel="stylesheet" />
+
+<!-- Animation Css -->
+<link href={% static 'panel/plugins/animate-css/animate.css' %} rel="stylesheet" />
+<!-- Bootstrap Select Css -->
+<link href={% static 'panel/plugins/bootstrap-select/css/bootstrap-select.css' %} rel="stylesheet" />
+<!-- JQuery DataTable Css -->
+<link href={% static 'panel/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css' %} rel="stylesheet">
+
+
+<!-- Custom Css -->
+<link href={% static 'panel/css/style.css' %} rel="stylesheet">
+
+<!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+<link href={% static 'panel/css/themes/all-themes.css' %} rel="stylesheet" />
+{% endblock %}
+
+{% block contenido %}
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h2 style="font-family: 'Oswald', sans-serif;">
+                    EQUIPOS MÓVILES DE CUSTOM & CO
+                    <small style="color: #790C05;">Vista de listado de celulares utilizados en la empresa.</small>
+                </h2>
+                <br>
+                <label for="email_address">Filtro de estatus de celulares:</label>
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="material-icons">build</i>
+                    </span>
+                    <select class="form-control show-tick" id="filtroEquipo" onchange="cambioFiltro();">
+                        <option>En uso</option>
+                        <option>De baja</option>
+
+                    </select>
+                </div>
+
+            </div>
+            <div class="body" id="divActivos">
+                <div class="row clear-fix">
+                    
+                    <div class="col-xs-12 col-sm-1">
+                        <form action="/xlCelulares/" method="POST">{% csrf_token %}
+                            <input type="hidden" name="activo" value="A">
+                            <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
+                                data-toggle="tooltip" data-placement="bottom"
+                                title="Descargar reporte Celulares Activos en Excel.">
+                                <i class="material-icons">grid_on</i>
+                                <span>Excel</span>
+                            </button>
+                        </form>
+                    </div>
+                    <div class="col-xs-12 col-sm-4">
+                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarCelulares/">Agregar
+                            Celular</a>
+                    </div>
+
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                        <thead>
+                            <tr style="background-color: #fad60e; color:black">
+                                <th>ID Equipo</th>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>Color</th>
+                                <th>Imagen</th>
+                                <th style="white-space:nowrap!important;">Cargador</th>
+                                <th>RAM</th>
+                                <th>NS</th>
+                                <th>IMEI</th>
+                                <th style="white-space:nowrap!important;"># Teléfono</th>
+                                <th>Plan</th>
+                                <th>Compañía</th>
+                                <th>Propietario Actual</th>
+                                <th>Editar</th>
+                                <th>Baja</th>
+
+
+
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>ID Equipo</th>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>Color</th>
+                                <th>Imagen</th>
+                                <th style="white-space:nowrap!important;">Cargador</th>
+                                <th>RAM</th>
+                                <th>NS</th>
+                                <th>IMEI</th>
+                                <th style="white-space:nowrap!important;"># Teléfono</th>
+                                <th>Plan</th>
+                                <th>Compañía</th>
+                                <th>Propietario Actual</th>
+                                <th>Editar</th>
+                                <th>Baja</th>
+
+
+                            </tr>
+                        </tfoot>
+                        <tbody class="animate__animated animate__backInDown">
+                            {% for celular, empleado, fechaVencimiento in lista %}
+                            <tr>
+                                <th>
+                                    <form action="/infoCelular/" method="POST">{% csrf_token %}
+
+
+                                        <center>
+                                            <input type="text" style="border: none; background: none;" name="idCelular"
+                                                value="{{celular.id_celular}}" readonly size="1">
+                                            <button type="submit" class="btn  waves-effect"
+                                                style="background-color: #0A77F9;">
+                                                <i class="material-icons" style="color: white;">visibility</i>
+                                            </button>
+                                        </center>
+                                        <br>
+                                    </form>
+                                </th>
+                                <th>{{celular.marca}}</th>
+                                <th><p><span class="font-bold col-blue">{{celular.modelo}}</span></p></th>
+                                <th>{{celular.color}}</th>
+                                <th>
+                                    <center>
+                                        <img src="{{celular.foto.url}}" width="40%" alt="lap">
+                                    </center>
+                                </th>
+                                <th style="white-space:nowrap!important;">
+                                    {% if celular.modelo_cargador == "Sin cargador registrado" %}
+                                    <label class="label bg-red">Sin cargador registrado</label>
+                                    {% else %}
+                                    <div>
+                                        <p><span class="font-bold col-green">Tipo:</span> <span>{{celular.tipo_cargador}}</span></p>
+                                    </div>
+                                    <div>
+                                        <p><span class="font-bold col-green">Modelo:</span> <span>{{celular.modelo_cargador}}</span> </p>
+                                    </div>
+                                    {% endif %}
+                                </th>
+                                <th>{{celular.ram}} GB</th>
+                                <th  style="white-space:nowrap!important;">{{celular.numero_setie}}</th>
+                                <th  style="white-space:nowrap!important;">{{celular.numero_imei}}</th>
+                                <th  style="white-space:nowrap!important;">{{celular.telefono}}</th>
+                                <th>
+                                    {% if celular.en_plan == "N" %}
+                                    <label class="label bg-red">Sin plan registrado</label>
+                                    {% else %}
+                                    <div>
+                                        <p><span class="font-bold col-indigo">Plan: </span> <span>{{celular.nombre_plan}}</span></p>
+                                    </div>
+                                    <div>
+                                        <p><span class="font-bold col-indigo">Fecha Contratacion:</span> <span>{{celular.fecha_contratacion_plan}}</span></p>
+                                    </div>
+                                    <div>
+                                        <p><span class="font-bold col-indigo">Meses:</span> <span>{{celular.meses_plan}} meses</span></p>
+                                    </div>
+                                    <div>
+                                        <p><span class="font-bold col-indigo">Vence en:</span> <label class="{{fechaVencimiento.1}}">{{fechaVencimiento.0}}</label></p>
+                                    </div>
+                                    {% endif %}
+                                </th>
+                                <th>{{celular.compañia}}</th>
+                                <th>
+                                    {% if empleado.0 == "" %}
+                                    <div>
+                                        <label class="label bg-red">Sin propietario</label>
+                                    </div>
+                                    {% else %}
+                                    <div>
+                                        <p>{{empleado.0}} {{empleado.1}}</p>
+                                    </div>
+                                    <div>
+                                        <label class="label bg-teal">{{empleado.4}}</label>
+                                    </div>
+                                    <div>
+                                        <label class="{{empleado.3}}">{{empleado.2}}</label>
+                                    </div>
+                                    {% endif %}
+                                </th>
+                                
+
+                                <th>
+                                    
+                                    <center>
+                                        <button type="submit" class="btn btn-warning waves-effect" data-toggle="modal"
+                                        data-target="#editar{{celular.id_celular}}">
+                                            <i class="material-icons">edit</i>
+                                        </button>
+                                    </center>
+
+                                </th>
+
+
+                                <th>
+                                    <center>
+                                        <button type="button" class="btn bg-red waves-effect" data-toggle="modal"
+                                            data-target="#{{celular.id_celular}}">
+                                            <i class="material-icons">cancel</i>
+                                        </button>
+                                    </center>
+
+                                </th>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <br>
+
+            </div>
+            <div class="body" id="divInactivos">
+                <div class="row clear-fix">
+                    
+                    <div class="col-xs-12 col-sm-1">
+                        <form action="/xlCelulares/" method="POST">{% csrf_token %}
+                            <input type="hidden" name="activo" value="I">
+                            <button type="submit" class="btn bg-green waves-effect animate__animated animate__flipInX"
+                                data-toggle="tooltip" data-placement="bottom"
+                                title="Descargar reporte celulares de baja en Excel.">
+                                <i class="material-icons">grid_on</i>
+                                <span>Excel</span>
+                            </button>
+                        </form>
+                    </div>
+                    <div class="col-xs-12 col-sm-4">
+                        <a class="label bg-blue-grey" style="font-size:small; " href="/agregarEquipos/">Agregar
+                            Equipo</a>
+                    </div>
+
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover dataTable js-exportable ">
+                        <thead>
+                            <tr style="background-color: #E05D5D; color:black">
+                                <th>ID Equipo</th>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>Color</th>
+                                <th>Imagen</th>
+                                <th style="white-space:nowrap!important;">Cargador</th>
+                                <th>RAM</th>
+                                <th>NS</th>
+                                <th>IMEI</th>
+                                <th style="white-space:nowrap!important;"># Teléfono</th>
+                                <th>Plan</th>
+                                <th>Compañía</th>
+                                <th>Alta</th>
+
+
+
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>ID Equipo</th>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>Color</th>
+                                <th>Imagen</th>
+                                <th style="white-space:nowrap!important;">Cargador</th>
+                                <th>RAM</th>
+                                <th>NS</th>
+                                <th>IMEI</th>
+                                <th style="white-space:nowrap!important;"># Teléfono</th>
+                                <th>Plan</th>
+                                <th>Compañía</th>
+                                <th>Alta</th>
+
+
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            {% for celular, fechaVencimiento in listaInactivos %}
+                            <tr>
+                                <th>
+                                    {{celular.id_celular}}
+                                </th>
+                                <th>{{celular.marca}}</th>
+                                <th><p><span class="font-bold col-blue">{{celular.modelo}}</span></p></th>
+                                <th>{{celular.color}}</th>
+                                <th>
+                                    <center>
+                                        <img src="{{celular.foto.url}}" width="40%" alt="lap">
+                                    </center>
+                                </th>
+                                <th style="white-space:nowrap!important;">
+                                    {% if celular.modelo_cargador == "Sin cargador registrado" %}
+                                    <label class="label bg-red">Sin cargador registrado</label>
+                                    {% else %}
+                                    <div>
+                                        <p><span class="font-bold col-green">Tipo:</span> <span>{{celular.tipo_cargador}}</span></p>
+                                    </div>
+                                    <div>
+                                        <p><span class="font-bold col-green">Modelo:</span> <span>{{celular.modelo_cargador}}</span> </p>
+                                    </div>
+                                    {% endif %}
+                                </th>
+                                <th>{{celular.ram}} GB</th>
+                                <th  style="white-space:nowrap!important;">{{celular.numero_setie}}</th>
+                                <th  style="white-space:nowrap!important;">{{celular.numero_imei}}</th>
+                                <th  style="white-space:nowrap!important;">{{celular.telefono}}</th>
+                                <th>
+                                    {% if celular.en_plan == "N" %}
+                                    <label class="label bg-red">Sin plan registrado</label>
+                                    {% else %}
+                                    <div>
+                                        <p><span class="font-bold col-indigo">Plan: </span> <span>{{celular.nombre_plan}}</span></p>
+                                    </div>
+                                    <div>
+                                        <p><span class="font-bold col-indigo">Fecha Contratacion:</span> <span>{{celular.fecha_contratacion_plan}}</span></p>
+                                    </div>
+                                    <div>
+                                        <p><span class="font-bold col-indigo">Meses:</span> <span>{{celular.meses_plan}} meses</span></p>
+                                    </div>
+                                    <div>
+                                        <p><span class="font-bold col-indigo">Vence en:</span> <label class="{{fechaVencimiento.1}}">{{fechaVencimiento.0}}</label></p>
+                                    </div>
+                                    {% endif %}
+                                </th>
+                                <th>{{celular.compañia}}</th>
+                                
+                                
+
+                                
+
+
+                                <th>
+                                    <center>
+                                        <button type="button" class="btn bg-green waves-effect" data-toggle="modal"
+                                            data-target="#{{celular.id_celular}}">
+                                            <i class="material-icons">upgrade</i>
+                                        </button>
+                                    </center>
+
+                                </th>
+                            </tr>
+                            {% endfor %}
+
+
+
+                        </tbody>
+                    </table>
+
+                </div>
+                <br>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</div>
+
+{% for celular, empleado in lista2 %}
+<!-- Default Size -->
+<div class="modal fade" id="{{celular.id_celular}}" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="border-radius: 16px;">
+            <div class="modal-header">
+                <center>
+                    <h1 style="color: crimson; font-family: 'Oswald', sans-serif;">DAR DE BAJA CELULAR <i
+                            class="material-icons" style="color:black; font-size:100%">get_app</i></h1>
+                    <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
+
+                </center>
+            </div>
+            <div class="modal-body">
+                <form action="/bajaCelular/" method="POST">{% csrf_token %}
+                    <div class="body table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr class="bg-teal">
+                                    <th>Imagen</th>
+                                    <th>Marca</th>
+                                    <th>Modelo</th>
+                                    <th>Propietario</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th> <img src="{{celular.foto.url}}" width="150" height="200" alt="lap"></th>
+                                    <td style="color: black; white-space:nowrap!important;">{{celular.marca}}</td>
+                                    <td style="color: black; white-space:nowrap!important;">{{celular.modelo}}</td>
+                                    <th>
+                                        <div>
+                                        <p>{{empleado.0}} {{empleado.1}}</p>
+                                        </div>
+                                        <div>
+                                            <label class="label bg-teal">{{empleado.4}}</label>
+                                        </div>
+                                        <div>
+                                            <label class="{{empleado.3}}">{{empleado.2}}</label>
+                                        </div>
+                                    </th>
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+
+
+
+                    </div>
+                    <center>
+                        <input type="hidden" value="{{celular.id_celular}}" name="idCelularBaja">
+                        <h3 style="color: black;">Seguro que desea dar de baja el celular?</h3>
+                        <button type="submit" class="btn bg-red waves-effect">
+                            <i class="material-icons">cancel</i>
+                            <span>DAR DE BAJA</span>
+                        </button>
+                    </center>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endfor %}
+
+{% for celular, empleado in lista3 %}
+<!-- Default Size -->
+<div class="modal fade" id="editar{{celular.id_celular}}" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" style="border-radius: 16px;">
+            <div class="modal-header">
+                <center>
+                    <h1 style="color: rgb(18, 77, 202); font-family: 'Oswald', sans-serif;">EDITAR CELULAR <i
+                            class="material-icons" style="color:black; font-size:100%">get_app</i></h1>
+                    <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
+
+                </center>
+            </div>
+            <div class="modal-body">
+                <form action="/editarCelular/" method="POST">{% csrf_token %}
+                    <div class="body table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr class="bg-teal">
+                                    <th>Imagen</th>
+                                    <th>Marca</th>
+                                    <th>Modelo</th>
+                                    <th>Propietario</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th> <img src="{{celular.foto.url}}" width="150" height="200" alt="lap"></th>
+                                    <td style="color: black; white-space:nowrap!important;">{{celular.marca}}</td>
+                                    <td style="color: black; white-space:nowrap!important;">{{celular.modelo}}</td>
+                                    <th>
+                                        {% if empleado.0 == "" %}
+                                        <p>Sin responsable</p>
+                                        {% else %}
+                                        <p>Responsable</p>
+                                        <div>
+                                        <p>{{empleado.0}} {{empleado.1}}</p>
+                                        </div>
+                                        <div>
+                                            <label class="label bg-teal">{{empleado.4}}</label>
+                                        </div>
+                                        <div>
+                                            <label class="{{empleado.3}}">{{empleado.2}}</label>
+                                        </div>
+                                        {% endif %}
+                                        <div>
+                                            
+                                        </div>
+                                    </th>
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+
+
+
+                    </div>
+                    <div class="row clearfix">
+                        <div class="col-md-4">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Propietario:</label>
+                                <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="material-icons">badge</i>
+                                        </span>
+                                        <select class="form-control show-tick" name="propietario" required>
+                                            <option value="nopropietario">Sin propietario</option>
+                                            {% for propietario in info_empleados %}
+                                            <option value="{{propietario.id_empleado}}">{{propietario.nombre}}
+                                                {{propietario.apellidos}}</option>
+                                            {% endfor %}
+                                        </select>
+                                </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="email_address">Número de teléfono:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">phone</i>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" class="form-control date" placeholder="Ingresar # de teléfono" value="{{celular.telefono}}"
+                                        maxlength="50" name="numTelefono" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="email_address">Plan contratado:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">battery_charging_full</i>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" class="form-control date" placeholder="Ingresar plan contratado"
+                                        maxlength="50" name="nombrePlan" value="{{celular.nombre_plan}}">
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="row clearfix">
+                        
+                        <div class="col-md-4">
+                            <label><span style="color: #078F68;">* </span>Fecha de Contratación Plan (Ej. 2018-05-28):</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">date_range</i>
+                                </span>
+                                <div class="form-line" id="bs_datepicker_container">
+                                    <input type="text" class="form-control" name="fechaContrato"
+                                        placeholder="Seleccionar fecha" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label ><span style="color: #078F68;">* </span>Duración pagando en meses:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">date_range</i>
+                                </span>
+                                {% if celular.meses_plan == None %}
+                                <input type="number" max="48" min="1" step="1" name="mesesContrato" value="1" >
+                                {% else %}
+                                <input type="number" max="48" min="1" step="1" name="mesesContrato" value="{{celular.meses_plan}}" >
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="email_address"><span style="color: #078F68;">* </span>Compañía:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">build</i>
+                                </span>
+                                <select class="form-control show-tick" name="compañia" required>
+                                    <option value="Telcel">Telcel</option>
+                                    <option value="AT&T">AT&T</option>
+                                    <option value="Movistar">Movistar</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <center>
+                        <input type="hidden" value="{{celular.id_celular}}" name="idCelularEditar">
+                        <h3 style="color: black;">Seguro que desea editar el celular?</h3>
+                        <button type="submit" class="btn bg-deep-purple waves-effect">
+                            <i class="material-icons">cancel</i>
+                            <span>EDITAR CELULAR</span>
+                        </button>
+                    </center>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endfor %}
+
+{% for celularIna in celularesInactivos %}
+<!-- Default Size -->
+<div class="modal fade" id="{{celularIna.id_celular}}" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="border-radius: 16px;">
+            <div class="modal-header">
+                <center>
+                    <h1 style="color: green; font-family: 'Oswald', sans-serif;">DAR DE ALTA EQUIPO <i
+                            class="material-icons" style="color:black; font-size:100%">upgrade</i></h1>
+                    <h4 style=" font-family: 'Oswald', sans-serif;">Custom System</h4>
+
+                </center>
+            </div>
+            <div class="modal-body">
+                <form action="/altaCelular/" method="POST">{% csrf_token %}
+                    <div class="body table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr class="bg-teal">
+                                    <th>Imagen</th>
+                                    <th>Marca</th>
+                                    <th>Modelo</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th> <img src="{{celularIna.foto.url}}" width="150" height="200" alt="lap"></th>
+                                    <td style="color: black;">{{celularIna.marca}}</td>
+                                    <td style="color: black;">{{celularIna.modelo}}</td>
+
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+
+
+
+                    </div>
+                    <center>
+                        <input type="hidden" value="{{celularIna.id_celular}}" name="idCelularAlta">
+                        <h3 style="color: black;">Seguro que desea dar de alta al equipo?</h3>
+                        <h4>Se le asignará un propietario despues de dar de alta en la opción editar celular</h4>
+                        <button type="submit" class="btn bg-green waves-effect">
+                            <i class="material-icons">upgrade</i>
+                            <span>DAR DE ALTA</span>
+                        </button>
+                    </center>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endfor %}
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+{% if bajaEquipo %}
+<script type="text/javascript">
+    swal({
+        icon: 'error',
+        title: 'Wuu..!',
+        text: ' {{bajaExito}}',
+        footer: '<span style="color: red!important"> Vuelve a navegar por Custom System! </span>',
+        width: '40%'
+
+    });
+</script>
+{% endif %}
+{% if altaEquipo %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Wuu..!',
+        text: ' {{altaExito}}',
+        footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
+{% if celularEditado %}
+<script type="text/javascript">
+    swal({
+        icon: 'success',
+        title: 'Wuu..!',
+        text: ' {{textoEditado}}',
+        footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
+        width: '40%'
+    });
+</script>
+{% endif %}
+<script type="text/javascript">
+    function inicio() {
+        var div1 = document.getElementById("divInactivos");
+        div1.style.display = "none"; /* bloquear u ocultar la tabla..*/
+    }
+    window.onload = inicio;
+
+    function cambioFiltro() {
+        var div = document.getElementById("divActivos");
+        var div1 = document.getElementById("divInactivos");
+        /* Si la tabla de Empleados Activos está activa..*/
+        if (div.style.display === "none") {
+            //Bloquear la tabla de empleados Activos.. 
+            div.style.display = "block";
+            div1.style.display = "none";
+        } else { //Si la tabla de empleados Activos está inactiva
+            div.style.display = "none"; //Desbloquear la tabla de empleados Activos
+            div1.style.display = "block";
+        }
+
+    }
+</script>
+{% endblock %}
+
+{% block estilosJs %}
+<!-- Jquery Core Js -->
+<script src={% static 'panel/plugins/jquery/jquery.min.js' %}></script>
+
+<!-- Bootstrap Core Js -->
+<script src={% static 'panel/plugins/bootstrap/js/bootstrap.js' %}></script>
+
+<!-- Select Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-select/js/bootstrap-select.js' %}></script>
+
+<!-- Slimscroll Plugin Js -->
+<script src={% static 'panel/plugins/jquery-slimscroll/jquery.slimscroll.js' %}></script>
+<!-- Bootstrap Colorpicker Js -->
+<script src={% static 'panel/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js' %}></script>
+
+<!-- Dropzone Plugin Js -->
+<script src={% static 'panel/plugins/dropzone/dropzone.js' %}></script>
+
+<!-- Input Mask Plugin Js -->
+<script src={% static 'panel/plugins/jquery-inputmask/jquery.inputmask.bundle.js' %}></script>
+
+<!-- Multi Select Plugin Js -->
+<script src={% static 'panel/plugins/multi-select/js/jquery.multi-select.js' %}></script>
+
+<!-- Jquery Spinner Plugin Js -->
+<script src={% static 'panel/plugins/jquery-spinner/js/jquery.spinner.js' %}></script>
+
+<!-- Bootstrap Tags Input Plugin Js -->
+<script src={% static 'panel/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js' %}></script>
+
+<!-- noUISlider Plugin Js -->
+<script src={% static 'panel/plugins/nouislider/nouislider.js' %}></script>
+
+<!-- Waves Effect Plugin Js -->
+<script src={% static 'panel/plugins/node-waves/waves.js' %}></script>
+
+<!-- Jquery DataTable Plugin Js -->
+<script src={% static 'panel/plugins/jquery-datatable/jquery.dataTables.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.flash.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/jszip.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/pdfmake.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/vfs_fonts.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.html5.min.js' %}></script>
+<script src={% static 'panel/plugins/jquery-datatable/extensions/export/buttons.print.min.js' %}></script>
+
+<!-- Custom Js -->
+<script src={% static 'panel/js/admin.js' %}></script>
+<script src={% static 'panel/js/pages/ui/tooltips-popovers.js' %}></script>
+<script src={% static 'panel/js/pages/tables/jquery-datatable.js' %}></script>
+
+<!-- Demo Js -->
+<script src={% static 'panel/js/demo.js' %}></script>
+{% endblock %}
