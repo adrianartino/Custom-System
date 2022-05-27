@@ -14025,12 +14025,46 @@ def verCelulares(request):
                                 color = dato.color
             
                 datosAreasEnActivos.append([nombreEmpleado, apellidosEmpleado, nombreArea, color, puesto])
+                
+        vencimientoEnMesesIn = []
+        for celular in celularesInactivos:
+            fechaContratacionPlan = celular.fecha_contratacion_plan
+            
+            if fechaContratacionPlan == None:
+                vencimientoEnMesesIn.append("Nada")
+            else:
+                mesesContrato = celular.meses_plan
+                fechaFinal = fechaContratacionPlan + relativedelta(months=mesesContrato)
+                
+                
+                fechaFinalFormato = datetime.strptime(str(fechaFinal), "%Y-%m-%d")
+                fechaHoy = datetime.strptime(str(date.today()), "%Y-%m-%d")
+                
+                
+                x = (fechaFinal.year - fechaHoy.year) * 12 + fechaFinal.month - fechaHoy.month
+                
+                restantes = str(x) + " meses"
+                
+                if x <=0 : #Ya se va a vencer..
+                    vencimientoEnMesesIn.append(["Hay que renovar plan, vencimiento el "+str(fechaFinalFormato),"label bg-red"])
+                elif x <= 2: #Ya se va a vencer..
+                    vencimientoEnMesesIn.append([restantes,"label bg-red"])
+                else:
+                    vencimientoEnMesesIn.append([restantes,"label bg-green"])
+                
+            
+                
+            empleadosEnActivos.append(celular.id_empleado_id)
+            
+        
+            #areasEnActivos = ["1"]
+            
             
         lista = zip(celularesActivos, datosAreasEnActivos, vencimientoEnMeses)
         lista2=zip(celularesActivos, datosAreasEnActivos)
         lista3=zip(celularesActivos, datosAreasEnActivos)
         
-        listaInactivos = zip(celularesInactivos,vencimientoEnMeses)
+        listaInactivos = zip(celularesInactivos,vencimientoEnMesesIn)
         
         info_empleados = Empleados.objects.only('id_empleado', 'nombre', 'apellidos') #todos los empleados
         
