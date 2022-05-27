@@ -157,6 +157,13 @@ class Carta (models.Model):
     fecha=models.DateField()
     firma=models.ImageField(upload_to="firmas", null = True)
     
+class CartaCelular (models.Model):
+    id_carta_celular=models.AutoField(primary_key=True)
+    id_empleado=models.ForeignKey(Empleados, on_delete=models.CASCADE)
+    id_celular=models.ForeignKey(Celulares, on_delete=models.CASCADE)
+    fecha=models.DateField()
+    firma=models.ImageField(upload_to="firmasCartaCelular", null = True)
+    
 
 
 class Impresoras (models.Model):

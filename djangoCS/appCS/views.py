@@ -15,7 +15,7 @@ from django.shortcuts import redirect
 from django.db.models import Q
 
 #Importación de modelos
-from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Encuestas, Preguntas, Respuestas,Mouses, Teclados, Monitores, Telefonos, DiscosDuros, EmpleadosDiscosDuros, MemoriasUSB, PrestamosSistemas, SoportesTecnicos, ImplementacionSoluciones, Mochilas, Celulares
+from appCS.models import Areas, Empleados, Equipos, Carta, Impresoras, Cartuchos, CalendarioMantenimiento, Programas, ProgramasArea, EquipoPrograma, Bitacora, Renovacion_Equipos, Renovacion_Impresoras, Encuestas, Preguntas, Respuestas,Mouses, Teclados, Monitores, Telefonos, DiscosDuros, EmpleadosDiscosDuros, MemoriasUSB, PrestamosSistemas, SoportesTecnicos, ImplementacionSoluciones, Mochilas, Celulares, CartaCelular
 
 #Librería para manejar archivos en Python
 from django.core.files.base import ContentFile
@@ -2740,12 +2740,52 @@ def guardarImagen(request):
         registroFirma.firma = archivo
         registroFirma.save()
             
-            #preregistro = Carta(id_empleado = Empleados.objects.get(id_empleado = idEmpleado), id_equipo = Equipos.objects.get(id_equipo = idEquipo), fecha = fecha, firma = archivo)
-            #preregistro.save()
+        #Mandar correo
+        asunto = "CS | Nueva entrega de Equipo de computo a empleado."
+        plantilla = "cartaCompromiso/correoCartaRealizadaEquipo.html"
+                    
+        #Datos del empleado
+        ultimaFirma = 0
+        consultaCartas = Carta.objects.all()
+        for carta in consultaCartas:
+            ultimaFirma = carta.id_carta
+        consultaCarta = Carta.objects.filter(id_carta=ultimaFirma)
+        
+        for datoCarta in consultaCarta:
+            idCarta = datoCarta.id_carta
+            idEmpleado = datoCarta.id_empleado_id
+            fechaCarta = datoCarta.fecha
+            firmaEntrega = datoCarta.firma
+            idEquipo = datoCarta.id_equipo_id
+        
+        
+        consultaEmpleado = Empleados.objects.filter(id_empleado = idEmpleado)
+        for datoEmpleado in consultaEmpleado:
+            nombreEmpleado = datoEmpleado.nombre
+            apellidosEmpleado = datoEmpleado.apellidos
+            puesto = datoEmpleado.puesto
+            correoEmpleado = datoEmpleado.correo
+        
+        nombreEmpleadoCarta = nombreEmpleado + " " + apellidosEmpleado
+        
+        datosEquipo = Equipos.objects.filter(id_equipo = idEquipo)
+        
             
+                   
+        html_mensaje = render_to_string(plantilla, {"nombreEmpleadoCarta": nombreEmpleadoCarta, "correoEmpleado":correoEmpleado, "puesto":puesto,
+                                                                "fechaCarta":fechaCarta,
+                                                                "firmaEntrega":firmaEntrega, "idCarta":idCarta,
+                                                                "datosEquipo":datosEquipo})
+        email_remitente = settings.EMAIL_HOST_USER
+        email_destino = ['sistemas@customco.com.mx']
+        mensaje = EmailMessage(asunto, html_mensaje, email_remitente, email_destino)
+        mensaje.content_subtype = 'html'
+        mensaje.send()
+        
+        #Fin de mandar correo
+        
         imagenGuardada = True
         request.session['imagenGuardada'] = imagenGuardada
-            #acutalizacion = Equipos.objects.filter(id_equipo = idEquipo).update(id_empleado = Empleados.objects.get(id_empleado = idEmpleado), activo = "A")
             
             
         return redirect('/firmarCarta/')
@@ -14397,26 +14437,26 @@ def agregarCartaCelulares(request):
                 nombreAreas= area.nombre
                 areas.append([nombreAreas])
                 
-        lista=zip(empledos,areas)
+        lista=zip(empledos,areas) #Lista de empleados para el select.
 
-        if request.method == "POST":
+        if request.method == "POST": #Cuando se le da clic al botón de preguardar carta..
             
-            if request.POST['compuSeleccionada'] == "Ninguno":
+            if request.POST['celularSeleccionado'] == "Ninguno": #Si se selecciona nignun celular..
                 hayError = True
                 error = "No hay computadora seleccionada disponible"
-                return render(request, "cartaCompromiso/agregarCarta.html", {"hayError": hayError, "textoError":error})
+                return render(request, "Celulares/agregarCartaCelular.html", {"hayError": hayError, "textoError":error})
             
-            compuS = request.POST['compuSeleccionada']
+            celularSeleccionado = request.POST['celularSeleccionado']
             empleSeleccionado = request.POST['empleadoSeleccionado']
             fechita = datetime.now()
             
             
-            computadora = int(compuS)
+            idCelular = int(celularSeleccionado)
             empleado = int(empleSeleccionado)
-            preregistro = Carta(id_empleado = Empleados.objects.get(id_empleado = empleado), id_equipo = Equipos.objects.get(id_equipo = computadora), fecha = fechita)
+            preregistro = CartaCelular(id_empleado = Empleados.objects.get(id_empleado = empleado), id_celular = Celulares.objects.get(id_celular = idCelular), fecha = fechita)
             preregistro.save()
             
-            actualizar_equipo = Equipos.objects.filter(id_equipo = compuS).update(id_empleado = Empleados.objects.get(id_empleado = empleSeleccionado),activo = "A")
+            actualizar_equipo = Celulares.objects.filter(id_celular = idCelular).update(id_empleado = Empleados.objects.get(id_empleado = empleSeleccionado),activo = "A")
     
                
             
@@ -14424,10 +14464,50 @@ def agregarCartaCelulares(request):
             #crear variables de sesión.
             
             fecha= datetime.now()
-            datosEquipo = Equipos.objects.filter(id_equipo = compuS)
+            datosCelular = Celulares.objects.filter(id_celular = idCelular)
+            
+            datosAreasEnActivos = []
+            vencimientoEnMeses = []
+            
+            
         
-            compuSeleccionada = True 
-            compuSeleccionada2 = True
+            
+            for celular in datosCelular:
+                fechaContratacionPlan = celular.fecha_contratacion_plan
+                
+                if fechaContratacionPlan == None:
+                    vencimientoEnMeses.append("Nada")
+                else:
+                    mesesContrato = celular.meses_plan
+                    fechaFinal = fechaContratacionPlan + relativedelta(months=mesesContrato)
+                    
+                    
+                    fechaFinalFormato = datetime.strptime(str(fechaFinal), "%Y-%m-%d")
+                    fechaHoy = datetime.strptime(str(date.today()), "%Y-%m-%d")
+                    
+                    
+                    x = (fechaFinal.year - fechaHoy.year) * 12 + fechaFinal.month - fechaHoy.month
+                    
+                    restantes = str(x) + " meses"
+                    
+                    if x <=0 : #Ya se va a vencer..
+                        vencimientoEnMeses.append(["Hay que renovar plan, vencimiento el "+str(fechaFinalFormato),"label bg-red"])
+                    elif x <= 2: #Ya se va a vencer..
+                        vencimientoEnMeses.append([restantes,"label bg-red"])
+                    else:
+                        vencimientoEnMeses.append([restantes,"label bg-green"])
+                    
+                
+                    
+            
+                #areasEnActivos = ["1"]
+                
+           
+                
+            listaDatosCelular = zip(datosCelular, vencimientoEnMeses)
+        
+            celularSeleccionado = True 
+            celularSeleccionado2 = True
             empleadoDatos = Empleados.objects.filter(id_empleado=empleSeleccionado)
             
             for empleados in empleadoDatos:
@@ -14443,7 +14523,7 @@ def agregarCartaCelulares(request):
 
             estaEnAgregarResponsivaCelulares = True
             return render(request, "Celulares/agregarCartaCelular.html",{"estaEnAgregarResponsivaCelulares": estaEnAgregarResponsivaCelulares, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "equipos":equipos, "empleados": empledos, "lista":lista, "fecha":fecha,
-                                                                    "celularesInactivos": celularesInactivos, "compuSeleccionada":compuSeleccionada,"compuSeleccionada2":compuSeleccionada2, "datosEquipo":datosEquipo, "empleadoDatos": empleadoDatos, "areaNombre": areaNombre, "color":color,
+                                                                    "celularesInactivos": celularesInactivos, "celularSeleccionado":celularSeleccionado,"celularSeleccionado2":celularSeleccionado2, "listaDatosCelular":listaDatosCelular, "empleadoDatos": empleadoDatos, "areaNombre": areaNombre, "color":color,
                                                                     "fecha": fecha, "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
 
         estaEnAgregarResponsivaCelulares = True
@@ -14455,3 +14535,364 @@ def agregarCartaCelulares(request):
     else:
         return redirect('/login/') #redirecciona a url de inicio
     
+def guardarFirmaCelularSinQR(request):
+    
+        
+    estaEnAgregarResponsivaCelulares = True
+
+    if request.method == "POST":
+            
+        
+        idEmpleado= request.POST['idEmpleado']
+            
+        canvasLargo = request.POST['canvasData']
+        format, imgstr = canvasLargo.split(';base64,')
+        ext = format.split('/')[-1]
+        archivo = ContentFile(base64.b64decode(imgstr), name= idEmpleado+ '.' + ext)
+            
+        numeroFirmas = Carta.objects.count() #1
+        ultimaFirma = 0
+        consultaCartas = CartaCelular.objects.all()
+        for carta in consultaCartas:
+            ultimaFirma = carta.id_carta_celular
+            
+        registroFirma = CartaCelular.objects.get(id_carta_celular=ultimaFirma)
+        registroFirma.firma = archivo
+        registroFirma.save()
+        
+        #Mandar correo
+        asunto = "CS | Nueva entrega de Equipo Móvil a empleado."
+        plantilla = "Celulares/correoCartaRealizada.html"
+                    
+        #Datos del empleado
+        consultaCarta = CartaCelular.objects.filter(id_carta_celular=ultimaFirma)
+        
+        for datoCarta in consultaCarta:
+            idCarta = datoCarta.id_carta_celular
+            idEmpleado = datoCarta.id_empleado_id
+            fechaCarta = datoCarta.fecha
+            firmaEntrega = datoCarta.firma
+            idCelular = datoCarta.id_celular_id
+        
+        
+        consultaEmpleado = Empleados.objects.filter(id_empleado = idEmpleado)
+        for datoEmpleado in consultaEmpleado:
+            nombreEmpleado = datoEmpleado.nombre
+            apellidosEmpleado = datoEmpleado.apellidos
+            puesto = datoEmpleado.puesto
+            correoEmpleado = datoEmpleado.correo
+        
+        nombreEmpleadoCarta = nombreEmpleado + " " + apellidosEmpleado
+        
+        datosCelular = Celulares.objects.filter(id_celular = idCelular)
+        vencimientoEnMeses = []
+            
+            
+        
+            
+        for celular in datosCelular:
+            fechaContratacionPlan = celular.fecha_contratacion_plan
+                
+            if fechaContratacionPlan == None:
+                vencimientoEnMeses.append("Nada")
+            else:
+                mesesContrato = celular.meses_plan
+                fechaFinal = fechaContratacionPlan + relativedelta(months=mesesContrato)
+                    
+                    
+                fechaFinalFormato = datetime.strptime(str(fechaFinal), "%Y-%m-%d")
+                fechaHoy = datetime.strptime(str(date.today()), "%Y-%m-%d")
+                    
+                    
+                x = (fechaFinal.year - fechaHoy.year) * 12 + fechaFinal.month - fechaHoy.month
+                    
+                restantes = str(x) + " meses"
+                    
+                if x <=0 : #Ya se va a vencer..
+                    vencimientoEnMeses.append(["Hay que renovar plan, vencimiento el "+str(fechaFinalFormato),"label bg-red"])
+                elif x <= 2: #Ya se va a vencer..
+                    vencimientoEnMeses.append([restantes,"label bg-red"])
+                else:
+                    vencimientoEnMeses.append([restantes,"label bg-green"])
+                    
+                
+                
+        listaDatosCelular = zip(datosCelular, vencimientoEnMeses)
+                   
+        html_mensaje = render_to_string(plantilla, {"nombreEmpleadoCarta": nombreEmpleadoCarta, "correoEmpleado":correoEmpleado, "puesto":puesto,
+                                                                "fechaCarta":fechaCarta,
+                                                                "firmaEntrega":firmaEntrega, "idCarta":idCarta,
+                                                                "listaDatosCelular":listaDatosCelular})
+        email_remitente = settings.EMAIL_HOST_USER
+        email_destino = ['sistemas@customco.com.mx']
+        mensaje = EmailMessage(asunto, html_mensaje, email_remitente, email_destino)
+        mensaje.content_subtype = 'html'
+        mensaje.send()
+        
+        #Fin de mandar correo
+            
+            
+            
+        imagenGuardada = True
+        request.session['imagenGuardada'] = imagenGuardada
+            
+        return redirect('/firmarCartaCelularQR/')
+
+    return render(request, "cartaCompromiso/agregarCarta.html",{"estaEnAgregarResponsivaCelulares": estaEnAgregarResponsivaCelulares})
+
+def firmarCartaCelularQR(request):
+    
+    if "imagenGuardada" in request.session: #Si se guardo la carta con la firma sin QR...
+            
+        ultimaFirma = 0
+        consultaCartasFirmada = CartaCelular.objects.all()
+        for carta in consultaCartasFirmada:
+            ultimaFirma = carta.id_carta_celular
+            
+        registroFirma = CartaCelular.objects.get(id_carta_celular=ultimaFirma)
+            
+            
+        idCelular = registroFirma.id_celular_id
+        idEmpleado = registroFirma.id_empleado_id
+        imagen = registroFirma.firma
+        imagen2 = True
+            
+        fecha=datetime.now()
+                
+                
+        datosCelular = Celulares.objects.filter(id_celular = idCelular)
+        vencimientoEnMeses = []
+        
+        for celular in datosCelular:
+            fechaContratacionPlan = celular.fecha_contratacion_plan
+                
+            if fechaContratacionPlan == None:
+                vencimientoEnMeses.append("Nada")
+            else:
+                mesesContrato = celular.meses_plan
+                fechaFinal = fechaContratacionPlan + relativedelta(months=mesesContrato)
+                    
+                    
+                fechaFinalFormato = datetime.strptime(str(fechaFinal), "%Y-%m-%d")
+                fechaHoy = datetime.strptime(str(date.today()), "%Y-%m-%d")
+                    
+                    
+                x = (fechaFinal.year - fechaHoy.year) * 12 + fechaFinal.month - fechaHoy.month
+                    
+                restantes = str(x) + " meses"
+                    
+                if x <=0 : #Ya se va a vencer..
+                    vencimientoEnMeses.append(["Hay que renovar plan, vencimiento el "+str(fechaFinalFormato),"label bg-red"])
+                elif x <= 2: #Ya se va a vencer..
+                    vencimientoEnMeses.append([restantes,"label bg-red"])
+                else:
+                    vencimientoEnMeses.append([restantes,"label bg-green"])
+                    
+                
+           
+                
+        listaDatosCelular = zip(datosCelular, vencimientoEnMeses)
+        
+        
+        datosEmpleado = Empleados.objects.filter(id_empleado = idEmpleado)
+                
+        for dato in datosEmpleado:
+            idArea = dato.id_area_id
+                    
+        datos_area = Areas.objects.filter(id_area = idArea)
+                
+        for datoArea in datos_area:
+            nombre = datoArea.nombre
+            color = datoArea.color
+            
+            
+
+        del request.session["imagenGuardada"]
+        return render(request, "Celulares/firmarCartaCelularQr.html", {"listaDatosCelular":listaDatosCelular, "datosEmpleado":datosEmpleado, "nombre":nombre, "color":color, "fecha":fecha, "imagen":imagen, "imagen2":imagen2}) 
+        
+    else: #Le dio para firmar con código QR..
+            
+        ultimaFirma = 0
+        consultaCartasFirmada = CartaCelular.objects.all()
+        for carta in consultaCartasFirmada:
+            ultimaFirma = carta.id_carta_celular
+            
+        registroFirma = CartaCelular.objects.get(id_carta_celular=ultimaFirma)
+            
+            
+        idCelular = registroFirma.id_celular_id
+        idEmpleado = registroFirma.id_empleado_id
+        imagen = registroFirma.firma
+        imagen2 = True
+            
+        fecha=datetime.now()
+                
+                
+        datosCelular = Celulares.objects.filter(id_celular = idCelular)
+        vencimientoEnMeses = []
+        
+        for celular in datosCelular:
+            fechaContratacionPlan = celular.fecha_contratacion_plan
+                
+            if fechaContratacionPlan == None:
+                vencimientoEnMeses.append("Nada")
+            else:
+                mesesContrato = celular.meses_plan
+                fechaFinal = fechaContratacionPlan + relativedelta(months=mesesContrato)
+                    
+                    
+                fechaFinalFormato = datetime.strptime(str(fechaFinal), "%Y-%m-%d")
+                fechaHoy = datetime.strptime(str(date.today()), "%Y-%m-%d")
+                    
+                    
+                x = (fechaFinal.year - fechaHoy.year) * 12 + fechaFinal.month - fechaHoy.month
+                    
+                restantes = str(x) + " meses"
+                    
+                if x <=0 : #Ya se va a vencer..
+                    vencimientoEnMeses.append(["Hay que renovar plan, vencimiento el "+str(fechaFinalFormato),"label bg-red"])
+                elif x <= 2: #Ya se va a vencer..
+                    vencimientoEnMeses.append([restantes,"label bg-red"])
+                else:
+                    vencimientoEnMeses.append([restantes,"label bg-green"])
+                    
+                
+           
+                
+        listaDatosCelular = zip(datosCelular, vencimientoEnMeses)
+        
+        
+        datosEmpleado = Empleados.objects.filter(id_empleado = idEmpleado)
+                
+        for dato in datosEmpleado:
+            idArea = dato.id_area_id
+                    
+        datos_area = Areas.objects.filter(id_area = idArea)
+                
+        for datoArea in datos_area:
+            nombre = datoArea.nombre
+            color = datoArea.color
+            
+
+                
+        faltaFirma = True
+
+        return render(request, "Celulares/firmarCartaCelularQr.html", {"listaDatosCelular":listaDatosCelular, "datosEmpleado":datosEmpleado, "nombre":nombre, "color":color, "fecha":fecha,"faltaFirma":faltaFirma}) 
+    
+def cartasCelulares(request):
+    
+    if "idSesion" in request.session:
+        
+        estaEnVerCartasCelulares = True
+        id_admin=request.session["idSesion"]
+        nombre = request.session['nombres']
+        apellidos = request.session['apellidos']
+        correo = request.session['correoSesion']
+        nombreCompleto = nombre + " " + apellidos
+        
+        cartuchosNoti = notificacionInsumos()
+        mantenimientosNoti = notificacionLimpiezas()
+        numeroNoti = numNoti()
+        foto = fotoAdmin(request)
+        
+        datosRegistro = CartaCelular.objects.all()
+        
+        empleados=[]
+        equipos=[]
+        
+        for registros in datosRegistro:
+            empleado= registros.id_empleado_id
+            celular = registros.id_celular_id
+            
+            datosEmpleado = Empleados.objects.filter(id_empleado=empleado)
+            for datos in datosEmpleado:
+                nombres= datos.nombre
+                apellido= datos.apellidos
+                area = datos.id_area_id
+                consultaArea = Areas.objects.filter(id_area = area)
+                for datoArea in consultaArea:
+                    nombre = datoArea.nombre
+                    color = datoArea.color
+                
+            datosCelular =Celulares.objects.filter(id_celular=celular)
+            for datos in datosCelular:
+                marca=datos.marca
+                modelo=datos.modelo
+                fotoa = datos.foto
+                
+            empleados.append([nombres,apellido, nombre, color])
+            equipos.append([marca, modelo,fotoa])
+        
+        lista1=zip(datosRegistro,empleados,equipos)
+        
+        
+        
+        
+        return render(request,"Celulares/verCartas.html", {"estaEnVerCartasCelulares": estaEnVerCartasCelulares, "id_admin":id_admin,"nombreCompleto":nombreCompleto, "correo":correo, "lista1":lista1, 
+                                                                "cartuchosNoti":cartuchosNoti, "mantenimientosNoti": mantenimientosNoti, "numeroNoti":numeroNoti, "foto":foto})
+
+    else:
+        return redirect('/login/') #redirecciona a url de inicio
+    
+def imprimirCartaCelular(request):
+    
+    if "idSesion" in request.session:
+    
+        if request.method == "POST":
+            id_carta_recibida = request.POST['idCarta']
+            
+            datos_carta = CartaCelular.objects.filter(id_carta_celular = id_carta_recibida)
+            
+            for dato in datos_carta:
+                empleado = int(dato.id_empleado_id)
+                celular = int(dato.id_celular_id)
+                fecha = dato.fecha
+                imagen_firma = dato.firma
+                
+            info_empleado = Empleados.objects.filter(id_empleado = empleado)
+            for dato_empleado in info_empleado:
+                area = int(dato_empleado.id_area_id)
+                
+            info_area = Areas.objects.filter(id_area = area)
+                
+            for dato_area in info_area:
+                nombre_area = dato_area.nombre
+                color_area = dato_area.color
+            
+            info_celular = Celulares.objects.filter(id_celular = celular)
+            vencimientoEnMeses = []
+        
+            for celular in info_celular:
+                fechaContratacionPlan = celular.fecha_contratacion_plan
+                    
+                if fechaContratacionPlan == None:
+                    vencimientoEnMeses.append("Nada")
+                else:
+                    mesesContrato = celular.meses_plan
+                    fechaFinal = fechaContratacionPlan + relativedelta(months=mesesContrato)
+                        
+                        
+                    fechaFinalFormato = datetime.strptime(str(fechaFinal), "%Y-%m-%d")
+                    fechaHoy = datetime.strptime(str(date.today()), "%Y-%m-%d")
+                        
+                        
+                    x = (fechaFinal.year - fechaHoy.year) * 12 + fechaFinal.month - fechaHoy.month
+                        
+                    restantes = str(x) + " meses"
+                        
+                    if x <=0 : #Ya se va a vencer..
+                        vencimientoEnMeses.append(["Hay que renovar plan, vencimiento el "+str(fechaFinalFormato),"label bg-red"])
+                    elif x <= 2: #Ya se va a vencer..
+                        vencimientoEnMeses.append([restantes,"label bg-red"])
+                    else:
+                        vencimientoEnMeses.append([restantes,"label bg-green"])
+                    
+                
+           
+                
+            listaDatosCelular = zip(info_celular, vencimientoEnMeses)
+                
+            
+            return render(request, "Celulares/imprimirCartaCelular.html",{"listaDatosCelular":listaDatosCelular, "info_empleado":info_empleado, "nombre_area":nombre_area, "color_area":color_area, "fecha":fecha, "imagen_firma":imagen_firma})
+    else:
+        return redirect('/login/') #redirecciona a url de inicio

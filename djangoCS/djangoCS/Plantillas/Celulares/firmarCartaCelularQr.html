@@ -1,8 +1,7 @@
-{% extends "Menu/menu.html" %}
 {% load static %}
 
 {% block titulo %}
-Responsiva Celular | CS
+<title>Firmar Carta</title>
 {% endblock %}
 
 {% block estilos %}
@@ -35,12 +34,21 @@ Responsiva Celular | CS
 <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
 <link href={% static 'panel/css/themes/all-themes.css' %} rel="stylesheet" />
 
+<link href={% static 'css/firma.css' %} rel="stylesheet" />
+
 {% endblock %}
 
 {% block contenido %}
 <div class="row clearfix">
-    <div >
+    <div>
         <div class="card">
+            <div class="header">
+                <h2>
+                    Nueva Carta
+                </h2>
+
+                
+            </div>
             <div class="body">
                 <center>
                     <h1>CARTA COMPROMISO Y ENTREGA DE EQUIPO MÓVIL.</h1>
@@ -115,98 +123,28 @@ Responsiva Celular | CS
                     del mismo tales como daño de la pantalla, daños causados por humedad o mojar el equipo o sobrecalentamiento, el costo de estas 
                     reparaciones correrá por cuenta del usuario.
                 </h4>
-                {% if celularSeleccionado %}
-
-                {% else %}
-                <div class="body">
-                    <form id="form_validation" action="/agregarCartaCelulares/" method="POST">{% csrf_token %}
-                        <div class="row clearfix">
-                            <div class="col-md-3">
-
-                            </div>
-                            <div class="col-md-6">
-                                <label for="email_address">Celular:</label>
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <i class="material-icons">computer</i>
-                                    </span>
-                                    
-                                    <select class="form-control show-tick" name="celularSeleccionado">
-                                        {% if celularesInactivos %}
-                                            {% for celular in celularesInactivos %}
-                                            <option value="{{celular.id_celular}}">ID: {{celular.id_celular}} - {{celular.marca}} - {{celular.modelo}}
-                                                {{equipo.modelo}}</option>
-                                            {% endfor %}
-                                        {% else %}
-                                            <option value="Ninguno">No hay celulares para asignar</option>
-                                        {% endif %}
-                                    </select>
-                                    
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-
-                            </div>
-                        </div>
-                        <div class="row clearfix">
-                            <div class="col-md-3">
-
-                            </div>
-                            <div class="col-md-6">
-                                <label for="email_address">Empleado:</label>
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <i class="material-icons">person</i>
-                                    </span>
-
-                                    <select class="form-control show-tick" name="empleadoSeleccionado">
-                                        {% for empleado, area in lista %}
-                                        <option value="{{empleado.id_empleado}}">{{empleado.nombre}}
-                                            {{empleado.apellidos}} - {{area.0}}</option>
-                                        {% endfor %}
-                                    </select>
-
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-
-                            </div>
-                        </div>
-                        <center>
-                            {% if celularesInactivos %}
-                            <button type="submit" class="btn btn-warning m-t-15 waves-effect"><i
-                                class="material-icons">save</i> Preguardar Celular</button>
-                                         
-                            {% else %}
-                                <h1>No se puede realizar carta porque no hay equipos inactivos.</h1>
-                            {% endif %}
-                            
-                        </center>
-
-                    </form>
-                </div>
-                <center>
-
-                    <h2>{{fecha}}</h2>
-
-                </center>
-                {% endif %}
-
-                {% if celularSeleccionado %}
-
-                <p class="m-t-10 m-b-30">
-                    Por medio de la presente hago constar que he recibido del departamento de sistemas de la empresa
-                    Custom&Co S.A de C.V. equipo móvil que consta de:
-                </p>
-                
+                <h2>{{compuSeleccionada}}</h2>
 
                 <div class="row clearfix">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="card">
                             <div class="header">
                                 <h2>
-                                    CARACTERÍSTICAS DE EQUIPO MOVIL
+                                    CARACTERÍSTICAS DE EQUIPO MÓVIL
                                 </h2>
+                                <ul class="header-dropdown m-r--5">
+                                    <li class="dropdown">
+                                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"
+                                            role="button" aria-haspopup="true" aria-expanded="false">
+                                            <i class="material-icons">more_vert</i>
+                                        </a>
+                                        <ul class="dropdown-menu pull-right">
+                                            <li><a href="javascript:void(0);">Action</a></li>
+                                            <li><a href="javascript:void(0);">Another action</a></li>
+                                            <li><a href="javascript:void(0);">Something else here</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
                             </div>
                             <div class="body">
                                 <div class="table-responsive">
@@ -243,11 +181,10 @@ Responsiva Celular | CS
                                                 <th style="white-space:nowrap!important;"># Teléfono</th>
                                                 <th>Plan</th>
                                                 <th>Compañía</th>
-
                                             </tr>
                                         </tfoot>
                                         <tbody>
-
+                                            <tr>
                                                 {% for celular, fechaVencimiento in listaDatosCelular %}
                                                 <tr>
                                                     <th>
@@ -303,6 +240,7 @@ Responsiva Celular | CS
                                                     
                                                 </tr>
                                                 {% endfor %}
+                                            </tr>
 
 
 
@@ -323,8 +261,7 @@ Responsiva Celular | CS
                 </p>
                 <p class="m-t-10 m-b-30">
                     Así mismo en cso de tener el equipo un daño o perjuicio por mal uso u operación, este será bajo mi
-                    responsabilidad y costo según lo establecido en la "POLÍTICA DE ASIGNACIÓN Y USO DE EQUIPO DE
-                    CÓMPUTO"
+                    responsabilidad y costo según lo establecido en la "POLÍTICA DE ASIGNACIÓN Y USO DE EQUIPO CELULAR"
                     vigente, la cual se me entrega una copia junto con esta responsiva.
                 </p>
                 <div class="row clearfix">
@@ -353,7 +290,7 @@ Responsiva Celular | CS
                                     <table
                                         class="table table-bordered table-striped table-hover dataTable js-exportable">
                                         <thead>
-                                            <tr style="background-color: #7ddbac; color:black">
+                                            <tr style="background-color: #5af1e5; color:black">
                                                 <th>ID Empleado</th>
                                                 <th>Nombre</th>
                                                 <th>Apellidos</th>
@@ -380,16 +317,15 @@ Responsiva Celular | CS
                                         </tfoot>
                                         <tbody>
                                             <tr>
-                                                {% for empleados in empleadoDatos%}
-                                                <td>{{empleados.id_empleado}}</td>
-                                                <td>{{empleados.nombre}}</td>
-                                                <td>{{empleados.apellidos}}</td>
-                                                <td><span class="{{color}}">{{areaNombre}}</span></td>
-                                                <td>{{empleados.puesto}}</td>
-                                                <td>{{empleados.correo}}</td>
-                                                <td>{{empleados.activo}}</td>
+                                                {% for dato in datosEmpleado %}
+                                                <td>{{dato.id_empleado}}</td>
+                                                <td>{{dato.nombre}}</td>
+                                                <td>{{dato.apellidos}}</td>
+                                                <td><span class="{{color}}">{{nombre}}</span></td>
+                                                <td>{{dato.puesto}}</td>
+                                                <td>{{dato.correo}}</td>
+                                                <td>{{dato.activo}}</td>
                                                 {% endfor %}
-
 
                                             </tr>
 
@@ -402,23 +338,34 @@ Responsiva Celular | CS
                         </div>
                     </div>
                 </div>
+                <center>
+                    {% if imagen2 %}
+                    <h2>Fecha: {{fecha}}</h2>
+                    <img src="{{imagen.url}}" alt="firma">
+                    <h3>Administrador de Custom System - Versión 1.0.0.</h3>
+                    {% endif %}
+
+
+
+
+
+                </center>
                 
-                {% else %}
-
-                {% endif %}
-
 
 
             </div>
         </div>
-
-        {% if celularSeleccionado2 %}
+        {% if faltaFirma %}
         <!-- aqui va lo del canvas -->
+        
         <div style="background-color: #fff; background-clip: border-box;
         border: 1px solid rgba(0, 0, 0, 0.125);
         border-radius: 0.25rem;">
             <div class="row clearfix" > 
                 <center>
+                    <H2>Escanear QR para firmar en teléfono.</H2>
+                    <img src="{% static 'images/qrCelular.png' %}" width="10%" alt="qr">
+                    <h2>Fecha: {{fecha}}</h2>
                     <h2>Ingresar Firma Electrónica</h2>
                     <h4>Se solicita ingresar la firma electrónica del empleado para el archivo virtual.</h4>
                 </center>
@@ -439,7 +386,7 @@ Responsiva Celular | CS
                         {% for cel, fecha in listaDatosCelular %}
                         <input type="hidden" name="idCelular" value="{{cel.id_celular}}">
                         {% endfor %}
-                        {% for empleado in empleadoDatos %}
+                        {% for empleado in datosEmpleado %}
                         <input type="hidden" name="idEmpleado" value="{{empleado.id_empleado}}">
                         {% endfor %}
                         <input type="hidden" name="canvasData" id="my_hidden">
@@ -448,33 +395,25 @@ Responsiva Celular | CS
                     <i class="material-icons">save</i> Guardar carta</button>
                     </form>
                     <br>
-                    
-
-                    <form action="/firmarCartaCelularQR/" method="POST">{% csrf_token %}
-                        {% for cel, fecha in listaDatosCelular %}
-                        <input type="hidden" name="idCelular" value="{{cel.id_celular}}">
-                        {% endfor %}
-                        {% for empleado in empleadoDatos %}
-                        <input type="hidden" name="idEmpleado" value="{{empleado.id_empleado}}">
-                        {% endfor %}
-                        <button type="submit" class="btn bg-red waves-effect"><i class="material-icons">blur_on</i>QR</button>
-                    </form>
                 <div>
                 <br>
             </center>
             
         </div>
         {% endif %}
+        
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-{% if hayError %}
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+{% if imagen2 %}
 <script type="text/javascript">
-    Swal.fire({
-        icon: 'error',
-        title: 'Algo salio mal..',
-        text: ' {{textoError}}',
-        footer: '<span style="color: red!important"> Corrige los datos para realizar carta! </span>',
+    swal({
+        icon: 'success',
+        title: 'Enhorabuena!!',
+        text: ' Firma Guardada con éxito!',
+        footer: '<span style="color: green!important"> Vuelve a navegar por Custom System! </span>',
         width: '40%'
     });
 </script>
@@ -503,6 +442,10 @@ Responsiva Celular | CS
         canvas[method+"EventListener"](stop, g.closePath);
     };
 
+    canvas.addEventListener("touchstart",  function(event) {event.preventDefault()})
+    canvas.addEventListener("touchmove",   function(event) {event.preventDefault()})
+    canvas.addEventListener("touchend",    function(event) {event.preventDefault()})
+    canvas.addEventListener("touchcancel", function(event) {event.preventDefault()})
     canvas.addEventListener("mousedown", draw("add","mousemove","mouseup"));
     canvas.addEventListener("touchstart", draw("add","touchmove","touchend"));
     canvas.addEventListener("mouseup", draw("remove","mousemove","mouseup"));
@@ -520,8 +463,14 @@ Responsiva Celular | CS
     }
 
     
+    
+    
+    
 
 </script>
+
+
+
 {% endblock %}
 
 {% block estilosJs %}

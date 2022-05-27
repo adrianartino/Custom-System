@@ -204,7 +204,7 @@
                                     <table
                                         class="table table-bordered table-striped table-hover dataTable js-exportable">
                                         <thead>
-                                            <tr>
+                                            <tr style="background-color: #fad60e; color:black">
                                                 <th>ID Equipo</th>
                                                 <th>Tipo</th>
                                                 <th>Marca</th>
@@ -306,7 +306,7 @@
                                     <table
                                         class="table table-bordered table-striped table-hover dataTable js-exportable">
                                         <thead>
-                                            <tr>
+                                            <tr  style="background-color: #5af1e5; color:black">
                                                 <th>ID Empleado</th>
                                                 <th>Nombre</th>
                                                 <th>Apellidos</th>
@@ -459,6 +459,10 @@
         canvas[method+"EventListener"](stop, g.closePath);
     };
 
+    canvas.addEventListener("touchstart",  function(event) {event.preventDefault()})
+    canvas.addEventListener("touchmove",   function(event) {event.preventDefault()})
+    canvas.addEventListener("touchend",    function(event) {event.preventDefault()})
+    canvas.addEventListener("touchcancel", function(event) {event.preventDefault()})
     canvas.addEventListener("mousedown", draw("add","mousemove","mouseup"));
     canvas.addEventListener("touchstart", draw("add","touchmove","touchend"));
     canvas.addEventListener("mouseup", draw("remove","mousemove","mouseup"));

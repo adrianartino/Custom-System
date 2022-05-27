@@ -128,19 +128,8 @@ Celulares | Custom System
                             {% for celular, empleado, fechaVencimiento in lista %}
                             <tr>
                                 <th>
-                                    <form action="/infoCelular/" method="POST">{% csrf_token %}
-
-
-                                        <center>
-                                            <input type="text" style="border: none; background: none;" name="idCelular"
-                                                value="{{celular.id_celular}}" readonly size="1">
-                                            <button type="submit" class="btn  waves-effect"
-                                                style="background-color: #0A77F9;">
-                                                <i class="material-icons" style="color: white;">visibility</i>
-                                            </button>
-                                        </center>
-                                        <br>
-                                    </form>
+                                    <label class="label bg-black">{{celular.id_celular}}</label>
+                                    
                                 </th>
                                 <th>{{celular.marca}}</th>
                                 <th><p><span class="font-bold col-blue">{{celular.modelo}}</span></p></th>
@@ -166,7 +155,7 @@ Celulares | Custom System
                                 <th  style="white-space:nowrap!important;">{{celular.numero_setie}}</th>
                                 <th  style="white-space:nowrap!important;">{{celular.numero_imei}}</th>
                                 <th  style="white-space:nowrap!important;">{{celular.telefono}}</th>
-                                <th>
+                                <th style="white-space:nowrap!important;">
                                     {% if celular.en_plan == "N" %}
                                     <label class="label bg-red">Sin plan registrado</label>
                                     {% else %}

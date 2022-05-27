@@ -238,7 +238,11 @@ urlpatterns = [
     path("altaCelular/", views.altaCelular),
     path("editarCelular/", views.editarCelular),
     path("xlCelulares/", views.xlCelulares),
-    path("agregarCartaCelulares/", views.agregarCartaCelulares)
+    path("agregarCartaCelulares/", views.agregarCartaCelulares),
+    path("guardarFirmaCelularSinQR/", views.guardarFirmaCelularSinQR),
+    path("firmarCartaCelularQR/", views.firmarCartaCelularQR),
+    path("cartasCelulares/", views.cartasCelulares),
+    path("imprimirCartaCelular/", views.imprimirCartaCelular)
 
 
 ]
