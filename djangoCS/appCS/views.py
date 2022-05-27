@@ -14624,7 +14624,7 @@ def guardarFirmaCelularSinQR(request):
                                                                 "firmaEntrega":firmaEntrega, "idCarta":idCarta,
                                                                 "listaDatosCelular":listaDatosCelular})
         email_remitente = settings.EMAIL_HOST_USER
-        email_destino = ['sistemas@customco.com.mx']
+        email_destino = ['sistemas@customco.com.mx', correoEmpleado]
         mensaje = EmailMessage(asunto, html_mensaje, email_remitente, email_destino)
         mensaje.content_subtype = 'html'
         mensaje.send()
