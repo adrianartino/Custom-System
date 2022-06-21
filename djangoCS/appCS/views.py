@@ -3,7 +3,7 @@ from cmath import sin
 from glob import escape
 import mimetypes
 import os
-import base64
+import base64S
 from io  import BytesIO
 from sre_parse import expand_template
 
